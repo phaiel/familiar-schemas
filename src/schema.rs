@@ -5,27 +5,19 @@ use chrono::{DateTime, Utc};
 use crate::checksum::Checksum;
 use crate::version::SchemaVersion;
 
-/// Type of schema
+/// Type of schema - represents the FORMAT, not the source
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SchemaType {
-    /// Rust entity types (from familiar-core/src/entities)
-    RustEntity,
-    /// Rust primitive types (from familiar-primitives)
-    RustPrimitive,
-    /// Rust component types (from familiar-core/src/components)
-    RustComponent,
-    /// Rust type definitions (from familiar-core/src/types)
-    RustType,
+    /// JSON Schema - the universal validation format
+    JsonSchema,
     /// AVRO schemas for Kafka/Redpanda
     Avro,
-    /// TypeScript types (generated)
+    /// TypeScript type definitions (future)
     TypeScript,
-    /// Python/Pydantic models (generated)
+    /// Python Pydantic models (future)
     Python,
-    /// JSON Schema definitions
-    JsonSchema,
-    /// OpenAPI specifications
+    /// OpenAPI specifications (future)
     OpenApi,
 }
 
@@ -33,14 +25,10 @@ impl SchemaType {
     /// Get the directory name for this schema type
     pub fn dir_name(&self) -> &'static str {
         match self {
-            SchemaType::RustEntity => "rust/entities",
-            SchemaType::RustPrimitive => "rust/primitives",
-            SchemaType::RustComponent => "rust/components",
-            SchemaType::RustType => "rust/types",
+            SchemaType::JsonSchema => "json-schema",
             SchemaType::Avro => "avro",
             SchemaType::TypeScript => "typescript",
             SchemaType::Python => "python",
-            SchemaType::JsonSchema => "json-schema",
             SchemaType::OpenApi => "openapi",
         }
     }
@@ -48,12 +36,10 @@ impl SchemaType {
     /// Get the file extension for this schema type
     pub fn extension(&self) -> &'static str {
         match self {
-            SchemaType::RustEntity | SchemaType::RustPrimitive 
-            | SchemaType::RustComponent | SchemaType::RustType => "json",
-            SchemaType::Avro => "avsc",
-            SchemaType::TypeScript => "ts",
-            SchemaType::Python => "py",
             SchemaType::JsonSchema => "schema.json",
+            SchemaType::Avro => "avsc",
+            SchemaType::TypeScript => "d.ts",
+            SchemaType::Python => "py",
             SchemaType::OpenApi => "yaml",
         }
     }
@@ -64,15 +50,18 @@ impl SchemaType {
 pub struct Schema {
     /// Unique name of the schema (e.g., "User", "CommandEnvelope")
     pub name: String,
-    /// Type of schema
+    /// Type/format of schema (JsonSchema, Avro, etc.)
     pub schema_type: SchemaType,
     /// The actual schema content (as JSON)
     pub content: serde_json::Value,
-    /// Original source file path (if applicable)
-    pub source_path: Option<String>,
-    /// Category for organization (e.g., "auth", "primitives", "agentic")
+    /// Category for organization (e.g., "auth", "primitives", "tools")
+    pub category: String,
+    /// Source crate (e.g., "familiar-primitives", "familiar-core", "familiar-contracts")
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub category: Option<String>,
+    pub source_crate: Option<String>,
+    /// Original source file path (if applicable)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_path: Option<String>,
 }
 
 impl Schema {
@@ -82,25 +71,37 @@ impl Schema {
             name: name.into(),
             schema_type,
             content,
+            category: "types".to_string(), // default category
+            source_crate: None,
             source_path: None,
-            category: None,
         }
     }
 
     /// Create a new schema with category
-    pub fn with_category(name: impl Into<String>, schema_type: SchemaType, content: serde_json::Value, category: impl Into<String>) -> Self {
+    pub fn with_category(
+        name: impl Into<String>,
+        schema_type: SchemaType,
+        content: serde_json::Value,
+        category: impl Into<String>,
+    ) -> Self {
         Self {
             name: name.into(),
             schema_type,
             content,
+            category: category.into(),
+            source_crate: None,
             source_path: None,
-            category: Some(category.into()),
         }
     }
 
     /// Set the category
     pub fn set_category(&mut self, category: impl Into<String>) {
-        self.category = Some(category.into());
+        self.category = category.into();
+    }
+
+    /// Set the source crate
+    pub fn set_source_crate(&mut self, crate_name: impl Into<String>) {
+        self.source_crate = Some(crate_name.into());
     }
 
     /// Compute the checksum for this schema
@@ -182,27 +183,49 @@ pub struct VersionManifest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ManifestStats {
     pub total_schemas: usize,
-    pub rust_entities: usize,
-    pub rust_primitives: usize,
-    pub rust_components: usize,
-    pub rust_types: usize,
+    pub json_schemas: usize,
     pub avro_schemas: usize,
     pub typescript_schemas: usize,
     pub python_schemas: usize,
+    /// Categories and their counts
+    #[serde(default)]
+    pub by_category: std::collections::HashMap<String, usize>,
+    /// Source crates and their counts
+    #[serde(default)]
+    pub by_source_crate: std::collections::HashMap<String, usize>,
 }
 
 impl VersionManifest {
     /// Create a new manifest from schemas
     pub fn new(version: SchemaVersion, schemas: Vec<SchemaEntry>) -> Self {
+        // Count by type
+        let json_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::JsonSchema).count();
+        let avro_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Avro).count();
+        let typescript_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::TypeScript).count();
+        let python_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Python).count();
+
+        // Count by category
+        let mut by_category: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        for s in &schemas {
+            *by_category.entry(s.schema.category.clone()).or_insert(0) += 1;
+        }
+
+        // Count by source crate
+        let mut by_source_crate: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        for s in &schemas {
+            if let Some(ref crate_name) = s.schema.source_crate {
+                *by_source_crate.entry(crate_name.clone()).or_insert(0) += 1;
+            }
+        }
+
         let stats = ManifestStats {
             total_schemas: schemas.len(),
-            rust_entities: schemas.iter().filter(|s| s.schema.schema_type == SchemaType::RustEntity).count(),
-            rust_primitives: schemas.iter().filter(|s| s.schema.schema_type == SchemaType::RustPrimitive).count(),
-            rust_components: schemas.iter().filter(|s| s.schema.schema_type == SchemaType::RustComponent).count(),
-            rust_types: schemas.iter().filter(|s| s.schema.schema_type == SchemaType::RustType).count(),
-            avro_schemas: schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Avro).count(),
-            typescript_schemas: schemas.iter().filter(|s| s.schema.schema_type == SchemaType::TypeScript).count(),
-            python_schemas: schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Python).count(),
+            json_schemas,
+            avro_schemas,
+            typescript_schemas,
+            python_schemas,
+            by_category,
+            by_source_crate,
         };
 
         // Compute manifest checksum from all schema checksums
@@ -232,5 +255,10 @@ impl VersionManifest {
     /// Get all schemas of a specific type
     pub fn get_schemas_by_type(&self, schema_type: SchemaType) -> Vec<&SchemaEntry> {
         self.schemas.iter().filter(|s| s.schema.schema_type == schema_type).collect()
+    }
+
+    /// Get all schemas in a category
+    pub fn get_schemas_by_category(&self, category: &str) -> Vec<&SchemaEntry> {
+        self.schemas.iter().filter(|s| s.schema.category == category).collect()
     }
 }

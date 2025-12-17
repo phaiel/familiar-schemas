@@ -165,9 +165,7 @@ impl CompatibilityChecker {
             SchemaType::Avro => {
                 self.detect_avro_changes(&old.schema.content, &new.schema.content, &mut changes)?;
             }
-            SchemaType::RustEntity | SchemaType::RustPrimitive 
-            | SchemaType::RustComponent | SchemaType::RustType 
-            | SchemaType::JsonSchema => {
+            SchemaType::JsonSchema => {
                 self.detect_json_schema_changes(&old.schema.content, &new.schema.content, "", &mut changes)?;
             }
             _ => {

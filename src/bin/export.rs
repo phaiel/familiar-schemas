@@ -25,7 +25,7 @@ struct Cli {
     #[arg(short, long)]
     source: Option<PathBuf>,
 
-    /// Version to create (e.g., "0.1.0")
+    /// Version to create (e.g., "0.3.0")
     #[arg(short = 'V', long)]
     version: String,
 
@@ -46,24 +46,28 @@ struct Cli {
 struct CrateInfo {
     name: &'static str,
     schemas_dir: &'static str,
-    category: &'static str,
+    source_crate: &'static str,
+    default_category: &'static str,
 }
 
 const WORKSPACE_CRATES: &[CrateInfo] = &[
     CrateInfo {
         name: "familiar-primitives",
         schemas_dir: "generated/schemas",
-        category: "primitives",
+        source_crate: "familiar-primitives",
+        default_category: "primitives",
     },
     CrateInfo {
         name: "familiar-contracts",
         schemas_dir: "generated/schemas",
-        category: "contracts",
+        source_crate: "familiar-contracts",
+        default_category: "contracts",
     },
     CrateInfo {
         name: "familiar-core",
         schemas_dir: "generated/schemas",
-        category: "core",
+        source_crate: "familiar-core",
+        default_category: "types",
     },
 ];
 
@@ -81,7 +85,7 @@ fn main() {
 }
 
 fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
-    println!("📦 Schema Export");
+    println!("📦 Schema Export (Simplified Structure)");
     println!("  Version: {}", cli.version);
     println!();
 
@@ -99,7 +103,7 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
             if schemas_dir.exists() {
                 println!("📂 {} - {:?}", crate_info.name, schemas_dir);
                 let count_before = schemas.len();
-                collect_json_schemas(&schemas_dir, crate_info.category, &mut schemas)?;
+                collect_json_schemas(&schemas_dir, crate_info, &mut schemas)?;
                 println!("   Collected: {} schemas", schemas.len() - count_before);
             } else {
                 println!("⚠️  {} - No schemas found at {:?}", crate_info.name, schemas_dir);
@@ -118,10 +122,17 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
         // Single crate mode
         println!("📂 Single crate mode: {:?}", source);
         
+        let crate_info = CrateInfo {
+            name: "custom",
+            schemas_dir: "generated/schemas",
+            source_crate: "custom",
+            default_category: "types",
+        };
+        
         let json_schemas_dir = source.join("generated/schemas");
         if json_schemas_dir.exists() {
             println!("📂 Loading JSON Schemas from {:?}", json_schemas_dir);
-            collect_json_schemas(&json_schemas_dir, "types", &mut schemas)?;
+            collect_json_schemas(&json_schemas_dir, &crate_info, &mut schemas)?;
         }
 
         let avro_schemas_dir = source.join("schemas");
@@ -140,29 +151,35 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
     // Group by category
     let mut by_category: std::collections::HashMap<String, Vec<&Schema>> = std::collections::HashMap::new();
     for schema in &schemas {
-        let cat = schema.category.clone().unwrap_or_else(|| "uncategorized".to_string());
-        by_category.entry(cat).or_default().push(schema);
+        by_category.entry(schema.category.clone()).or_default().push(schema);
     }
     
-    for (category, cat_schemas) in &by_category {
+    // Sort categories for consistent output
+    let mut categories: Vec<_> = by_category.keys().collect();
+    categories.sort();
+    
+    for category in categories {
+        let cat_schemas = &by_category[category];
         println!("  {} ({}):", category, cat_schemas.len());
-        for schema in cat_schemas.iter().take(5) {
+        for schema in cat_schemas.iter().take(3) {
             println!("    - {}", schema.name);
         }
-        if cat_schemas.len() > 5 {
-            println!("    ... and {} more", cat_schemas.len() - 5);
+        if cat_schemas.len() > 3 {
+            println!("    ... and {} more", cat_schemas.len() - 3);
         }
     }
     
-    // Group by type
-    let mut type_counts: std::collections::HashMap<SchemaType, usize> = std::collections::HashMap::new();
-    for schema in &schemas {
-        *type_counts.entry(schema.schema_type).or_insert(0) += 1;
-    }
+    // Group by source crate
     println!();
-    println!("  By type:");
-    for (schema_type, count) in &type_counts {
-        println!("    {:?}: {}", schema_type, count);
+    println!("  By source crate:");
+    let mut by_crate: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    for schema in &schemas {
+        if let Some(ref crate_name) = schema.source_crate {
+            *by_crate.entry(crate_name.clone()).or_insert(0) += 1;
+        }
+    }
+    for (crate_name, count) in &by_crate {
+        println!("    {}: {}", crate_name, count);
     }
 
     if cli.dry_run {
@@ -186,10 +203,23 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
     )?;
 
     println!("✅ Successfully registered version {}", cli.version);
+    println!();
+    println!("📁 Directory structure:");
+    println!("   versions/v{}/", cli.version);
+    println!("   ├── json-schema/");
+    println!("   │   ├── primitives/    # familiar-primitives");
+    println!("   │   ├── contracts/     # familiar-contracts");
+    println!("   │   ├── auth/          # familiar-core/auth");
+    println!("   │   ├── tools/         # familiar-core/tools");
+    println!("   │   └── ...            # other categories");
+    println!("   ├── avro/              # Kafka schemas");
+    println!("   ├── manifest.json");
+    println!("   └── checksums.sha256");
+    
     Ok(())
 }
 
-fn extract_category(path: &str) -> Option<String> {
+fn extract_category(path: &str, default: &str) -> String {
     // Extract category from path like ".../generated/schemas/auth/User.schema.json"
     let parts: Vec<&str> = path.split('/').collect();
     
@@ -199,18 +229,22 @@ fn extract_category(path: &str) -> Option<String> {
             let next = parts[i + 1];
             // Skip if it's a .json file (no category subdirectory)
             if !next.ends_with(".json") {
-                return Some(next.to_string());
+                return next.to_string();
             }
         }
     }
-    None
+    default.to_string()
 }
 
-fn collect_json_schemas(dir: &PathBuf, default_category: &str, schemas: &mut Vec<Schema>) -> Result<(), Box<dyn std::error::Error>> {
+fn collect_json_schemas(
+    dir: &PathBuf, 
+    crate_info: &CrateInfo, 
+    schemas: &mut Vec<Schema>
+) -> Result<(), Box<dyn std::error::Error>> {
     for entry in walkdir::WalkDir::new(dir).into_iter().filter_map(|e| e.ok()) {
         let path = entry.path();
         
-        // Only process .schema.json or .json files
+        // Only process .json files
         if !path.is_file() {
             continue;
         }
@@ -228,11 +262,8 @@ fn collect_json_schemas(dir: &PathBuf, default_category: &str, schemas: &mut Vec
         let stem = path.file_stem().unwrap().to_string_lossy();
         let path_str = path.to_string_lossy().to_string();
         
-        // Determine schema type based on path
-        let schema_type = determine_schema_type(&path_str);
-        
-        // Extract category from path (e.g., "auth" from ".../schemas/auth/User.schema.json")
-        let category = extract_category(&path_str).unwrap_or_else(|| default_category.to_string());
+        // Extract category from path
+        let category = extract_category(&path_str, crate_info.default_category);
 
         let content: serde_json::Value = serde_json::from_str(&fs::read_to_string(path)?)?;
         
@@ -242,27 +273,13 @@ fn collect_json_schemas(dir: &PathBuf, default_category: &str, schemas: &mut Vec
             .trim_end_matches("_schema")
             .to_string();
 
-        let mut schema = Schema::new(name, schema_type, content);
+        // All JSON schemas use SchemaType::JsonSchema
+        let mut schema = Schema::with_category(name, SchemaType::JsonSchema, content, category);
         schema.source_path = Some(path_str);
-        schema.set_category(&category);
+        schema.set_source_crate(crate_info.source_crate);
         schemas.push(schema);
     }
     Ok(())
-}
-
-fn determine_schema_type(path: &str) -> SchemaType {
-    // Order matters - check more specific paths first
-    if path.contains("/primitives/") || path.contains("familiar-primitives") {
-        SchemaType::RustPrimitive
-    } else if path.contains("/entities/") {
-        SchemaType::RustEntity
-    } else if path.contains("/components/") {
-        SchemaType::RustComponent
-    } else if path.contains("familiar-contracts") || path.contains("/contracts/") {
-        SchemaType::RustType
-    } else {
-        SchemaType::JsonSchema
-    }
 }
 
 fn collect_avro_schemas(dir: &PathBuf, schemas: &mut Vec<Schema>) -> Result<(), Box<dyn std::error::Error>> {
@@ -278,9 +295,10 @@ fn collect_avro_schemas(dir: &PathBuf, schemas: &mut Vec<Schema>) -> Result<(), 
             let filename = path.file_stem().unwrap().to_string_lossy().to_string();
             let content: serde_json::Value = serde_json::from_str(&fs::read_to_string(&path)?)?;
             
-            let mut schema = Schema::new(filename, SchemaType::Avro, content);
+            // AVRO schemas go in the "avro" category
+            let mut schema = Schema::with_category(filename, SchemaType::Avro, content, "kafka");
             schema.source_path = Some(path.to_string_lossy().to_string());
-            schema.set_category("avro");
+            schema.set_source_crate("familiar-core");
             schemas.push(schema);
         }
     }

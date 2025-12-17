@@ -132,14 +132,15 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
             println!();
             println!("📊 Statistics:");
             println!("  Total schemas: {}", manifest.stats.total_schemas);
-            println!("  Rust entities: {}", manifest.stats.rust_entities);
-            println!("  Rust primitives: {}", manifest.stats.rust_primitives);
-            println!("  Rust components: {}", manifest.stats.rust_components);
-            println!("  Rust types: {}", manifest.stats.rust_types);
+            println!("  JSON schemas: {}", manifest.stats.json_schemas);
             println!("  AVRO schemas: {}", manifest.stats.avro_schemas);
             println!("  TypeScript schemas: {}", manifest.stats.typescript_schemas);
             println!("  Python schemas: {}", manifest.stats.python_schemas);
             println!();
+            println!("  By category:");
+            for (cat, count) in &manifest.stats.by_category {
+                println!("    {}: {}", cat, count);
+            }
             println!("📄 Schemas:");
             for entry in &manifest.schemas {
                 println!("  {} ({:?})", entry.schema.name, entry.schema.schema_type);
@@ -233,10 +234,7 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
             println!();
             println!("Schemas by type (latest):");
             for schema_type in [
-                SchemaType::RustEntity,
-                SchemaType::RustPrimitive,
-                SchemaType::RustComponent,
-                SchemaType::RustType,
+                SchemaType::JsonSchema,
                 SchemaType::Avro,
                 SchemaType::TypeScript,
                 SchemaType::Python,

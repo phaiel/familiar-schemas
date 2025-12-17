@@ -95,6 +95,9 @@ impl SchemaRegistry {
     /// Register a new version with schemas
     /// 
     /// This is an append-only operation - existing versions cannot be modified
+    /// 
+    /// Directory structure: versions/{version}/{schema_type}/{category}/{filename}
+    /// Example: versions/v0.3.0/json-schema/auth/User.schema.json
     pub fn register_version(
         &mut self,
         version: SchemaVersion,
@@ -128,14 +131,13 @@ impl SchemaRegistry {
             let mut entry = SchemaEntry::new(schema, version.clone());
             entry.created_by = author.map(String::from);
             
-            // Write schema file - use category for subdirectory if present
-            let mut type_dir = version_dir.join(entry.schema.schema_type.dir_name());
-            if let Some(ref category) = entry.schema.category {
-                type_dir = type_dir.join(category);
-            }
-            fs::create_dir_all(&type_dir)?;
+            // Directory structure: {schema_type}/{category}/{filename}
+            // e.g., json-schema/auth/User.schema.json
+            let type_dir = version_dir.join(entry.schema.schema_type.dir_name());
+            let category_dir = type_dir.join(&entry.schema.category);
+            fs::create_dir_all(&category_dir)?;
             
-            let schema_path = type_dir.join(entry.schema.filename());
+            let schema_path = category_dir.join(entry.schema.filename());
             let content = serde_json::to_string_pretty(&entry.schema.content)?;
             fs::write(&schema_path, &content)?;
             
@@ -153,7 +155,12 @@ impl SchemaRegistry {
         let checksums_content: String = manifest
             .schemas
             .iter()
-            .map(|s| format!("{}  {}/{}", s.checksum, s.schema.schema_type.dir_name(), s.schema.filename()))
+            .map(|s| format!("{}  {}/{}/{}", 
+                s.checksum, 
+                s.schema.schema_type.dir_name(),
+                s.schema.category,
+                s.schema.filename()
+            ))
             .collect::<Vec<_>>()
             .join("\n");
         fs::write(&checksums_path, &checksums_content)?;
@@ -305,7 +312,7 @@ impl SchemaRegistry {
     }
 
     /// Get the HEAD commit if it exists
-    fn get_head_commit(&self) -> Option<Commit> {
+    fn get_head_commit(&self) -> Option<Commit<'_>> {
         self.repo
             .head()
             .ok()
@@ -324,10 +331,12 @@ impl SchemaRegistry {
         fs::create_dir_all(output)?;
 
         for entry in &manifest.schemas {
+            // Export to: {schema_type}/{category}/{filename}
             let type_dir = output.join(entry.schema.schema_type.dir_name());
-            fs::create_dir_all(&type_dir)?;
+            let category_dir = type_dir.join(&entry.schema.category);
+            fs::create_dir_all(&category_dir)?;
 
-            let schema_path = type_dir.join(entry.schema.filename());
+            let schema_path = category_dir.join(entry.schema.filename());
             let content = serde_json::to_string_pretty(&entry.schema.content)?;
             fs::write(&schema_path, &content)?;
         }
@@ -359,7 +368,7 @@ mod tests {
         let mut registry = SchemaRegistry::open(dir.path()).unwrap();
 
         let version = SchemaVersion::parse("0.1.0").unwrap();
-        let schema = Schema::new(
+        let schema = Schema::with_category(
             "TestSchema",
             SchemaType::JsonSchema,
             serde_json::json!({
@@ -368,6 +377,7 @@ mod tests {
                     "name": { "type": "string" }
                 }
             }),
+            "test",
         );
 
         registry.register_version(version, vec![schema], None, None).unwrap();
@@ -382,7 +392,7 @@ mod tests {
         let mut registry = SchemaRegistry::open(dir.path()).unwrap();
 
         let version = SchemaVersion::parse("0.1.0").unwrap();
-        let schema = Schema::new("Test", SchemaType::JsonSchema, serde_json::json!({}));
+        let schema = Schema::with_category("Test", SchemaType::JsonSchema, serde_json::json!({}), "test");
 
         registry.register_version(version.clone(), vec![schema.clone()], None, None).unwrap();
 
@@ -391,4 +401,3 @@ mod tests {
         assert!(result.is_err());
     }
 }
-
