@@ -1,0 +1,67 @@
+{
+  "fields": [
+    {
+      "name": "course_id",
+      "type": {
+        "logicalType": "uuid",
+        "type": "string"
+      }
+    },
+    {
+      "name": "seq",
+      "type": "long"
+    },
+    {
+      "name": "span_id",
+      "type": "string"
+    },
+    {
+      "name": "parent_span_id",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "occurred_at",
+      "type": {
+        "logicalType": "timestamp-millis",
+        "type": "long"
+      }
+    },
+    {
+      "name": "kind",
+      "type": {
+        "name": "com.familiar.kafka.TraceKind",
+        "symbols": [
+          "step",
+          "tool",
+          "route",
+          "log",
+          "token",
+          "result"
+        ],
+        "type": "enum"
+      }
+    },
+    {
+      "name": "status",
+      "type": {
+        "name": "com.familiar.kafka.TraceStatus",
+        "symbols": [
+          "started",
+          "succeeded",
+          "failed",
+          "skipped"
+        ],
+        "type": "enum"
+      }
+    },
+    {
+      "name": "payload_json",
+      "type": "string"
+    }
+  ],
+  "name": "com.familiar.kafka.TraceEnvelope",
+  "type": "record"
+}

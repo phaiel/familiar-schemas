@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "category": "agentic",
+  "description": "Physics hints for entity positioning",
+  "properties": {
+    "arousal": {
+      "default": null,
+      "description": "Arousal (0.0 to 1.0, calm to excited)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "significance": {
+      "default": null,
+      "description": "Significance (0.0 to 1.0, mass)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "valence": {
+      "default": null,
+      "description": "Valence (-1.0 to 1.0, negative to positive)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "title": "PhysicsHint",
+  "type": "object"
+}

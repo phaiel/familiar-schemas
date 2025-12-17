@@ -1,0 +1,4161 @@
+{
+  "version": {
+    "version": "0.1.0",
+    "commit_hash": null,
+    "tag": null,
+    "created_at": "2025-12-17T16:59:44.740376Z",
+    "created_by": null,
+    "notes": null,
+    "previous_version": null
+  },
+  "schemas": [
+    {
+      "schema": {
+        "name": "LogLevel",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Log level for agent log messages",
+          "enum": [
+            "debug",
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "LogLevel",
+          "type": "string"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/LogLevel.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "3c4928fed3db7e6c6052c49029b2b2632308e444fb310dd76c76bb2102b23bf7",
+      "created_at": "2025-12-17T16:59:44.740600Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "OrchestrationOutput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "AgentState": {
+              "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+              "properties": {
+                "conversation_context": {
+                  "default": [],
+                  "description": "Conversation history for context",
+                  "items": {
+                    "$ref": "#/definitions/ConversationTurn"
+                  },
+                  "type": "array"
+                },
+                "current_speaker": {
+                  "default": null,
+                  "description": "Currently active speaker (None means orchestrator decides)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "is_authenticated": {
+                  "default": false,
+                  "description": "Whether the user is authenticated",
+                  "type": "boolean"
+                },
+                "just_finished": {
+                  "default": false,
+                  "description": "Whether the current agent just finished its task",
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "default": null,
+                  "description": "Custom metadata for extensibility"
+                },
+                "tenant_id": {
+                  "description": "Tenant ID for multi-tenancy",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "default": null,
+                  "description": "Current thread ID (if in a thread)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "tenant_id"
+              ],
+              "type": "object"
+            },
+            "ConversationTurn": {
+              "description": "A single turn in a conversation (for context tracking)",
+              "properties": {
+                "content": {
+                  "description": "Content of the message",
+                  "type": "string"
+                },
+                "role": {
+                  "description": "Role of the speaker (user, assistant, system)",
+                  "type": "string"
+                },
+                "speaker": {
+                  "default": null,
+                  "description": "Optional speaker identifier (for multi-agent)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "timestamp": {
+                  "default": null,
+                  "description": "Timestamp of the turn",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "content",
+                "role"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "Output from the orchestration agent",
+          "properties": {
+            "forwarded_message": {
+              "default": null,
+              "description": "Optional message to pass to next agent",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "next_speaker": {
+              "description": "Which agent should speak next",
+              "type": "string"
+            },
+            "should_continue": {
+              "description": "Whether the orchestration loop should continue",
+              "type": "boolean"
+            },
+            "state": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AgentState"
+                }
+              ],
+              "description": "Updated state"
+            }
+          },
+          "required": [
+            "next_speaker",
+            "should_continue",
+            "state"
+          ],
+          "title": "OrchestrationOutput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/OrchestrationOutput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "eb89f85f80407053efd54b2945dc7b02386c5981178d51586d5387246f5248e7",
+      "created_at": "2025-12-17T16:59:44.741055Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ThreadSummary",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Summary of a thread for list views",
+          "properties": {
+            "id": {
+              "description": "Thread ID",
+              "format": "uuid",
+              "type": "string"
+            },
+            "is_open": {
+              "description": "Whether thread is open",
+              "type": "boolean"
+            },
+            "message_count": {
+              "description": "Number of messages",
+              "format": "uint",
+              "minimum": 0.0,
+              "type": "integer"
+            },
+            "preview": {
+              "description": "Preview text (truncated first message)",
+              "type": "string"
+            },
+            "updated_at": {
+              "description": "Last updated timestamp",
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "is_open",
+            "message_count",
+            "preview",
+            "updated_at"
+          ],
+          "title": "ThreadSummary",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ThreadSummary.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "21322657f30c2947aaedcf59aa60c01c75ee5a74f7f940c62fa78087268f53ab",
+      "created_at": "2025-12-17T16:59:44.741316Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "RAGInput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Input to the RAG agent",
+          "properties": {
+            "filters": {
+              "default": null,
+              "description": "Optional filters"
+            },
+            "limit": {
+              "default": 10,
+              "description": "Maximum results to return",
+              "format": "uint",
+              "minimum": 0.0,
+              "type": "integer"
+            },
+            "query": {
+              "description": "Search query",
+              "type": "string"
+            },
+            "request_id": {
+              "description": "Request ID for tracing",
+              "type": "string"
+            },
+            "state": {
+              "description": "Current agent state"
+            }
+          },
+          "required": [
+            "query",
+            "request_id",
+            "state"
+          ],
+          "title": "RAGInput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/RAGInput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "f3a36f2887d9a6055057b88396f775433739d924c3fc5e2de4978c0c0a32bf6f",
+      "created_at": "2025-12-17T16:59:44.741495Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ConciergeOutput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "AgentResponse": {
+              "description": "Response from an agent",
+              "properties": {
+                "content": {
+                  "description": "Content of the response",
+                  "type": "string"
+                },
+                "message_type": {
+                  "default": "text",
+                  "description": "Type of message (text, question, etc.)",
+                  "type": "string"
+                },
+                "options": {
+                  "default": null,
+                  "description": "Options for questions",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "content"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "Output from the concierge agent",
+          "properties": {
+            "done": {
+              "default": false,
+              "description": "Whether the task is done",
+              "type": "boolean"
+            },
+            "response": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AgentResponse"
+                }
+              ],
+              "description": "Response to send to user"
+            },
+            "state": {
+              "description": "Updated state"
+            }
+          },
+          "required": [
+            "response",
+            "state"
+          ],
+          "title": "ConciergeOutput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ConciergeOutput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "a9b933bb06dd6a00c53f1d5595b5b83641e072c2d7c5d7025ffc0c716faccfd1",
+      "created_at": "2025-12-17T16:59:44.741680Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ToolCallResult",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Result from a tool invocation",
+          "properties": {
+            "call_id": {
+              "description": "ID of the original call",
+              "type": "string"
+            },
+            "error": {
+              "default": null,
+              "description": "Error message (if failed)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "result": {
+              "default": null,
+              "description": "Result data (if successful)"
+            },
+            "success": {
+              "description": "Whether the call succeeded",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "call_id",
+            "success"
+          ],
+          "title": "ToolCallResult",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ToolCallResult.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "35464805f644302f22820398bb577e39c29eefb3a2d4d81e109da5f44d12c97b",
+      "created_at": "2025-12-17T16:59:44.741839Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ToolCallRequest",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "A request to invoke a tool",
+          "properties": {
+            "arguments": {
+              "description": "Arguments to pass to the tool"
+            },
+            "call_id": {
+              "description": "Unique ID for this tool call",
+              "type": "string"
+            },
+            "tool_name": {
+              "description": "Name of the tool to invoke",
+              "type": "string"
+            }
+          },
+          "required": [
+            "arguments",
+            "call_id",
+            "tool_name"
+          ],
+          "title": "ToolCallRequest",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ToolCallRequest.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "a5dd5d21534bdebb9abd271c34f29490da3270530377e91b59b2df80beb2119b",
+      "created_at": "2025-12-17T16:59:44.741978Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ThreadMessage",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "AgentMessageType": {
+              "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+              "oneOf": [
+                {
+                  "description": "A log message from the agent (debugging, status updates)",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "$ref": "#/definitions/LogLevel"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "log"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "level",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A question the agent is asking the user",
+                  "properties": {
+                    "message_type": {
+                      "enum": [
+                        "question"
+                      ],
+                      "type": "string"
+                    },
+                    "options": {
+                      "default": null,
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": [
+                        "array",
+                        "null"
+                      ]
+                    },
+                    "prompt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message_type",
+                    "prompt"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "An insight derived by the agent",
+                  "properties": {
+                    "confidence": {
+                      "format": "double",
+                      "type": "number"
+                    },
+                    "domain": {
+                      "default": null,
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "message_type": {
+                      "enum": [
+                        "insight"
+                      ],
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "confidence",
+                    "message_type",
+                    "summary"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A detailed analysis result",
+                  "properties": {
+                    "domain": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "items": {
+                        "$ref": "#/definitions/Finding"
+                      },
+                      "type": "array"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "analysis"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "domain",
+                    "findings",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A command/action the agent wants to execute",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "command"
+                      ],
+                      "type": "string"
+                    },
+                    "parameters": true
+                  },
+                  "required": [
+                    "action",
+                    "message_type",
+                    "parameters"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A simple text response",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "text"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "Progress update during long-running tasks",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "progress"
+                      ],
+                      "type": "string"
+                    },
+                    "percent_complete": {
+                      "default": null,
+                      "format": "double",
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "message_type"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "Finding": {
+              "description": "A finding from an analysis agent",
+              "properties": {
+                "confidence": {
+                  "default": null,
+                  "description": "Confidence score (0.0 to 1.0)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "description": "Detailed description",
+                  "type": "string"
+                },
+                "related_entities": {
+                  "default": [],
+                  "description": "Related entity IDs",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "title": {
+                  "description": "Title or label of the finding",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "description",
+                "title"
+              ],
+              "type": "object"
+            },
+            "LogLevel": {
+              "description": "Log level for agent log messages",
+              "enum": [
+                "debug",
+                "info",
+                "warning",
+                "error"
+              ],
+              "type": "string"
+            },
+            "MessageRole": {
+              "description": "Role in a chat conversation",
+              "oneOf": [
+                {
+                  "description": "System instructions",
+                  "enum": [
+                    "system"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "description": "User input",
+                  "enum": [
+                    "user"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "description": "Assistant response",
+                  "enum": [
+                    "assistant"
+                  ],
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "description": "A single message within a conversation thread",
+          "properties": {
+            "agent_speaker": {
+              "default": null,
+              "description": "Which agent sent this message (if role is Assistant)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "content": {
+              "default": null,
+              "description": "Text content of the message",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "id": {
+              "description": "Unique message ID",
+              "format": "uuid",
+              "type": "string"
+            },
+            "message_type": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/AgentMessageType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Structured message type (for agent messages)"
+            },
+            "metadata": {
+              "default": null,
+              "description": "Optional metadata"
+            },
+            "role": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/MessageRole"
+                }
+              ],
+              "description": "Role of the message sender"
+            },
+            "thread_id": {
+              "description": "ID of the thread this message belongs to",
+              "format": "uuid",
+              "type": "string"
+            },
+            "timestamp": {
+              "description": "When the message was created",
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "role",
+            "thread_id",
+            "timestamp"
+          ],
+          "title": "ThreadMessage",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ThreadMessage.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "cc7646e1dbdd369a41110c985b864abe44726a649c96e0c3bbdec93ebdfc3aef",
+      "created_at": "2025-12-17T16:59:44.742376Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "CommandResult",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Result of processing a command",
+          "properties": {
+            "accepted": {
+              "description": "Whether the command was accepted",
+              "type": "boolean"
+            },
+            "error": {
+              "default": null,
+              "description": "Error message if not accepted",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "job_id": {
+              "default": null,
+              "description": "Job ID for async tracking",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "thread_id": {
+              "default": null,
+              "description": "Thread ID (for SendMessage commands)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "ws_url": {
+              "default": null,
+              "description": "WebSocket URL for streaming events",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "accepted"
+          ],
+          "title": "CommandResult",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/CommandResult.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "b0666a77449de0f88a5944540b1705b6cf94ef0f652ee737da4e753fed8c128a",
+      "created_at": "2025-12-17T16:59:44.742690Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ContinuationInput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Input to the continuation agent",
+          "properties": {
+            "original_request": {
+              "default": null,
+              "description": "Original user request",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "request_id": {
+              "description": "Request ID for tracing",
+              "type": "string"
+            },
+            "state": {
+              "description": "Current agent state"
+            }
+          },
+          "required": [
+            "request_id",
+            "state"
+          ],
+          "title": "ContinuationInput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ContinuationInput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "ef084e2d1e25331dad812325385804aa3de118ddb12e7e33fe568c2925652b1e",
+      "created_at": "2025-12-17T16:59:44.742824Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ConciergeInput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Input to the concierge agent",
+          "properties": {
+            "is_first_message": {
+              "default": false,
+              "description": "Whether this is the first message in a conversation",
+              "type": "boolean"
+            },
+            "request_id": {
+              "description": "Request ID for tracing",
+              "type": "string"
+            },
+            "state": {
+              "description": "Current agent state"
+            },
+            "user_message": {
+              "default": null,
+              "description": "User message content",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "request_id",
+            "state"
+          ],
+          "title": "ConciergeInput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ConciergeInput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "6b103b4220fd8b2e06392b1d43a2f511b8bd2987efc6e1e1ca54242d64162f00",
+      "created_at": "2025-12-17T16:59:44.742971Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "AgentMessageType",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "Finding": {
+              "description": "A finding from an analysis agent",
+              "properties": {
+                "confidence": {
+                  "default": null,
+                  "description": "Confidence score (0.0 to 1.0)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "description": "Detailed description",
+                  "type": "string"
+                },
+                "related_entities": {
+                  "default": [],
+                  "description": "Related entity IDs",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "title": {
+                  "description": "Title or label of the finding",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "description",
+                "title"
+              ],
+              "type": "object"
+            },
+            "LogLevel": {
+              "description": "Log level for agent log messages",
+              "enum": [
+                "debug",
+                "info",
+                "warning",
+                "error"
+              ],
+              "type": "string"
+            }
+          },
+          "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+          "oneOf": [
+            {
+              "description": "A log message from the agent (debugging, status updates)",
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "level": {
+                  "$ref": "#/definitions/LogLevel"
+                },
+                "message_type": {
+                  "enum": [
+                    "log"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "content",
+                "level",
+                "message_type"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "A question the agent is asking the user",
+              "properties": {
+                "message_type": {
+                  "enum": [
+                    "question"
+                  ],
+                  "type": "string"
+                },
+                "options": {
+                  "default": null,
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                },
+                "prompt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message_type",
+                "prompt"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "An insight derived by the agent",
+              "properties": {
+                "confidence": {
+                  "format": "double",
+                  "type": "number"
+                },
+                "domain": {
+                  "default": null,
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "message_type": {
+                  "enum": [
+                    "insight"
+                  ],
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "confidence",
+                "message_type",
+                "summary"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "A detailed analysis result",
+              "properties": {
+                "domain": {
+                  "type": "string"
+                },
+                "findings": {
+                  "items": {
+                    "$ref": "#/definitions/Finding"
+                  },
+                  "type": "array"
+                },
+                "message_type": {
+                  "enum": [
+                    "analysis"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "domain",
+                "findings",
+                "message_type"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "A command/action the agent wants to execute",
+              "properties": {
+                "action": {
+                  "type": "string"
+                },
+                "message_type": {
+                  "enum": [
+                    "command"
+                  ],
+                  "type": "string"
+                },
+                "parameters": true
+              },
+              "required": [
+                "action",
+                "message_type",
+                "parameters"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "A simple text response",
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "message_type": {
+                  "enum": [
+                    "text"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "content",
+                "message_type"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "Progress update during long-running tasks",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "message_type": {
+                  "enum": [
+                    "progress"
+                  ],
+                  "type": "string"
+                },
+                "percent_complete": {
+                  "default": null,
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "message",
+                "message_type"
+              ],
+              "type": "object"
+            }
+          ],
+          "title": "AgentMessageType"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/AgentMessageType.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "8352aa9989460e8b7fa9d9b8bd796306225a9a21cd167b9360b26c753e892581",
+      "created_at": "2025-12-17T16:59:44.743296Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "AgentResponse",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Response from an agent",
+          "properties": {
+            "content": {
+              "description": "Content of the response",
+              "type": "string"
+            },
+            "message_type": {
+              "default": "text",
+              "description": "Type of message (text, question, etc.)",
+              "type": "string"
+            },
+            "options": {
+              "default": null,
+              "description": "Options for questions",
+              "items": {
+                "type": "string"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "content"
+          ],
+          "title": "AgentResponse",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/AgentResponse.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "e98f84bf7ee8ab28bfd3c4c7ce5c766b4a383bb138f50f9200fdbb617fc901de",
+      "created_at": "2025-12-17T16:59:44.743524Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "OrchestrationInput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "AgentState": {
+              "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+              "properties": {
+                "conversation_context": {
+                  "default": [],
+                  "description": "Conversation history for context",
+                  "items": {
+                    "$ref": "#/definitions/ConversationTurn"
+                  },
+                  "type": "array"
+                },
+                "current_speaker": {
+                  "default": null,
+                  "description": "Currently active speaker (None means orchestrator decides)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "is_authenticated": {
+                  "default": false,
+                  "description": "Whether the user is authenticated",
+                  "type": "boolean"
+                },
+                "just_finished": {
+                  "default": false,
+                  "description": "Whether the current agent just finished its task",
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "default": null,
+                  "description": "Custom metadata for extensibility"
+                },
+                "tenant_id": {
+                  "description": "Tenant ID for multi-tenancy",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "default": null,
+                  "description": "Current thread ID (if in a thread)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "tenant_id"
+              ],
+              "type": "object"
+            },
+            "ConversationTurn": {
+              "description": "A single turn in a conversation (for context tracking)",
+              "properties": {
+                "content": {
+                  "description": "Content of the message",
+                  "type": "string"
+                },
+                "role": {
+                  "description": "Role of the speaker (user, assistant, system)",
+                  "type": "string"
+                },
+                "speaker": {
+                  "default": null,
+                  "description": "Optional speaker identifier (for multi-agent)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "timestamp": {
+                  "default": null,
+                  "description": "Timestamp of the turn",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "content",
+                "role"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "Input payload for the orchestration agent",
+          "properties": {
+            "request_id": {
+              "description": "Request ID for tracing",
+              "type": "string"
+            },
+            "state": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AgentState"
+                }
+              ],
+              "description": "Current agent state"
+            },
+            "user_message": {
+              "default": null,
+              "description": "User's message content",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "request_id",
+            "state"
+          ],
+          "title": "OrchestrationInput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/OrchestrationInput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "eb848a7be57097badb9ea06c6336b334fdb0f7724a0ebaa494d255019070298d",
+      "created_at": "2025-12-17T16:59:44.743768Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "RAGOutput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "RAGResult": {
+              "description": "A single RAG result",
+              "properties": {
+                "content": {
+                  "description": "Content text",
+                  "type": "string"
+                },
+                "entity_type": {
+                  "description": "Entity type",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Result ID",
+                  "type": "string"
+                },
+                "metadata": {
+                  "default": null,
+                  "description": "Optional metadata"
+                },
+                "score": {
+                  "description": "Relevance score",
+                  "format": "double",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "content",
+                "entity_type",
+                "id",
+                "score"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "Output from the RAG agent",
+          "properties": {
+            "done": {
+              "default": true,
+              "description": "Whether the task is done",
+              "type": "boolean"
+            },
+            "query": {
+              "description": "Original query",
+              "type": "string"
+            },
+            "response_message": {
+              "description": "Response message",
+              "type": "string"
+            },
+            "results": {
+              "description": "Search results",
+              "items": {
+                "$ref": "#/definitions/RAGResult"
+              },
+              "type": "array"
+            },
+            "state": {
+              "description": "Updated state"
+            },
+            "total_count": {
+              "description": "Total count (may be more than returned)",
+              "format": "uint",
+              "minimum": 0.0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "query",
+            "response_message",
+            "results",
+            "state",
+            "total_count"
+          ],
+          "title": "RAGOutput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/RAGOutput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "29f36a8c58f043700d6f66c683f03e2c24eaea3a06bfc722a58a4c9344c9b61b",
+      "created_at": "2025-12-17T16:59:44.743998Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ConversationTurn",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "A single turn in a conversation (for context tracking)",
+          "properties": {
+            "content": {
+              "description": "Content of the message",
+              "type": "string"
+            },
+            "role": {
+              "description": "Role of the speaker (user, assistant, system)",
+              "type": "string"
+            },
+            "speaker": {
+              "default": null,
+              "description": "Optional speaker identifier (for multi-agent)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "timestamp": {
+              "default": null,
+              "description": "Timestamp of the turn",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "content",
+            "role"
+          ],
+          "title": "ConversationTurn",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ConversationTurn.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "af4bc626e9bc649143f0704f9b1da4fdebe067989a99ccd93552d2be62a11cf2",
+      "created_at": "2025-12-17T16:59:44.744152Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ClassifierInput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Input to the classifier agent",
+          "properties": {
+            "request_id": {
+              "description": "Request ID for tracing",
+              "type": "string"
+            },
+            "state": {
+              "description": "Current agent state"
+            },
+            "text": {
+              "description": "Text to classify",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "state",
+            "text"
+          ],
+          "title": "ClassifierInput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ClassifierInput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "d61c8930dba0dc353f78a92626fa350eb880451e0a757503439d75308c0371ff",
+      "created_at": "2025-12-17T16:59:44.744280Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ContinuationOutput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Output from the continuation agent",
+          "properties": {
+            "has_more_tasks": {
+              "description": "Whether there are more tasks to do",
+              "type": "boolean"
+            },
+            "message": {
+              "description": "Message describing the decision",
+              "type": "string"
+            },
+            "next_request": {
+              "default": null,
+              "description": "Next request to process",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "state": {
+              "description": "Updated state"
+            }
+          },
+          "required": [
+            "has_more_tasks",
+            "message",
+            "state"
+          ],
+          "title": "ContinuationOutput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ContinuationOutput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "52ddc7c253fb96898158ffd94a9b2522bd0ae2f281b83c4695a02aa1aac91ac3",
+      "created_at": "2025-12-17T16:59:44.744407Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "PhysicsOutput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Output from the physics agent",
+          "properties": {
+            "done": {
+              "default": true,
+              "description": "Whether the task is done",
+              "type": "boolean"
+            },
+            "operation": {
+              "description": "Operation performed",
+              "type": "string"
+            },
+            "response_message": {
+              "description": "Response message",
+              "type": "string"
+            },
+            "result": {
+              "description": "Result data"
+            },
+            "state": {
+              "description": "Updated state"
+            }
+          },
+          "required": [
+            "operation",
+            "response_message",
+            "result",
+            "state"
+          ],
+          "title": "PhysicsOutput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/PhysicsOutput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "73d30102176cb079f43efb69ef44a464ac211cab030b1ebf77fc029778f29d63",
+      "created_at": "2025-12-17T16:59:44.744536Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "AgentState",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "ConversationTurn": {
+              "description": "A single turn in a conversation (for context tracking)",
+              "properties": {
+                "content": {
+                  "description": "Content of the message",
+                  "type": "string"
+                },
+                "role": {
+                  "description": "Role of the speaker (user, assistant, system)",
+                  "type": "string"
+                },
+                "speaker": {
+                  "default": null,
+                  "description": "Optional speaker identifier (for multi-agent)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "timestamp": {
+                  "default": null,
+                  "description": "Timestamp of the turn",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "content",
+                "role"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+          "properties": {
+            "conversation_context": {
+              "default": [],
+              "description": "Conversation history for context",
+              "items": {
+                "$ref": "#/definitions/ConversationTurn"
+              },
+              "type": "array"
+            },
+            "current_speaker": {
+              "default": null,
+              "description": "Currently active speaker (None means orchestrator decides)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "is_authenticated": {
+              "default": false,
+              "description": "Whether the user is authenticated",
+              "type": "boolean"
+            },
+            "just_finished": {
+              "default": false,
+              "description": "Whether the current agent just finished its task",
+              "type": "boolean"
+            },
+            "metadata": {
+              "default": null,
+              "description": "Custom metadata for extensibility"
+            },
+            "tenant_id": {
+              "description": "Tenant ID for multi-tenancy",
+              "type": "string"
+            },
+            "thread_id": {
+              "default": null,
+              "description": "Current thread ID (if in a thread)",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "tenant_id"
+          ],
+          "title": "AgentState",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/AgentState.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "543320f9bcad8687093ec4e19d4b33082cd7c9702e5839ed6dd259a6e3dd4149",
+      "created_at": "2025-12-17T16:59:44.744758Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "VAEPosition",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Position in 3D VAE space (quantized coordinates)",
+          "properties": {
+            "arousal": {
+              "description": "Energy/activation (-10M to +10M)",
+              "format": "int64",
+              "type": "integer"
+            },
+            "epistemic": {
+              "description": "Knowledge certainty (-10M to +10M)",
+              "format": "int64",
+              "type": "integer"
+            },
+            "valence": {
+              "description": "Emotional polarity (-10M to +10M)",
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "arousal",
+            "epistemic",
+            "valence"
+          ],
+          "title": "VAEPosition",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/VAEPosition.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "59361351fdfeded46cba41c66240e43f2b6400d059d20d8568b1fd475a1229d5",
+      "created_at": "2025-12-17T16:59:44.745078Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "AgenticCommand",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "WeaveBlock": {
+              "description": "Input block types for multimodal weave requests",
+              "oneOf": [
+                {
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "text"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "alt_text": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "analyze": {
+                      "default": true,
+                      "description": "Request vision analysis",
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "description": "base64 data URI or URL",
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "image"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "duration_secs": {
+                      "format": "double",
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "transcript": {
+                      "description": "Pre-transcribed (skip Whisper)",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": {
+                      "enum": [
+                        "audio"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "filename": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "mime_type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "document"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "extract_images": {
+                      "default": false,
+                      "description": "Whether to extract images from the page",
+                      "type": "boolean"
+                    },
+                    "selector": {
+                      "description": "Optional CSS selector to extract specific content",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": {
+                      "enum": [
+                        "webpage"
+                      ],
+                      "type": "string"
+                    },
+                    "url": {
+                      "description": "URL to scrape",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "url"
+                  ],
+                  "type": "object"
+                }
+              ]
+            }
+          },
+          "description": "Commands that can be sent to the agentic system\n\nThese commands are the primary interface for interacting with the multi-agent orchestration system. They can be sent directly via HTTP or published to a message broker.",
+          "oneOf": [
+            {
+              "description": "Send a new message to the agentic system",
+              "properties": {
+                "blocks": {
+                  "default": null,
+                  "description": "Optional multimodal blocks (images, audio, etc.)",
+                  "items": {
+                    "$ref": "#/definitions/WeaveBlock"
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                },
+                "command_type": {
+                  "enum": [
+                    "send_message"
+                  ],
+                  "type": "string"
+                },
+                "content": {
+                  "description": "Text content of the message",
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Request ID for tracing",
+                  "type": "string"
+                },
+                "tenant_id": {
+                  "description": "Tenant ID",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "default": null,
+                  "description": "Thread ID (None = start new thread)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "command_type",
+                "content",
+                "request_id",
+                "tenant_id"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "Continue processing in an existing thread",
+              "properties": {
+                "command_type": {
+                  "enum": [
+                    "continue_thread"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "description": "Request ID for tracing",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "description": "ID of the thread to continue",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "command_type",
+                "request_id",
+                "thread_id"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "Cancel a running task",
+              "properties": {
+                "command_type": {
+                  "enum": [
+                    "cancel_task"
+                  ],
+                  "type": "string"
+                },
+                "reason": {
+                  "default": null,
+                  "description": "Reason for cancellation",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "task_id": {
+                  "description": "ID of the task to cancel",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "command_type",
+                "task_id"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "Request thread history",
+              "properties": {
+                "command_type": {
+                  "enum": [
+                    "get_thread_history"
+                  ],
+                  "type": "string"
+                },
+                "limit": {
+                  "default": null,
+                  "description": "Maximum number of messages to return",
+                  "format": "uint",
+                  "minimum": 0.0,
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "thread_id": {
+                  "description": "ID of the thread",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "command_type",
+                "thread_id"
+              ],
+              "type": "object"
+            }
+          ],
+          "title": "AgenticCommand"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/AgenticCommand.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "8dc7f14f2ca002c0801a9c4e172287df7b72f3ff07aaea4833b419f7805718b5",
+      "created_at": "2025-12-17T16:59:44.745510Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ConversationThread",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "AgentMessageType": {
+              "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+              "oneOf": [
+                {
+                  "description": "A log message from the agent (debugging, status updates)",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "$ref": "#/definitions/LogLevel"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "log"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "level",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A question the agent is asking the user",
+                  "properties": {
+                    "message_type": {
+                      "enum": [
+                        "question"
+                      ],
+                      "type": "string"
+                    },
+                    "options": {
+                      "default": null,
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": [
+                        "array",
+                        "null"
+                      ]
+                    },
+                    "prompt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message_type",
+                    "prompt"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "An insight derived by the agent",
+                  "properties": {
+                    "confidence": {
+                      "format": "double",
+                      "type": "number"
+                    },
+                    "domain": {
+                      "default": null,
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "message_type": {
+                      "enum": [
+                        "insight"
+                      ],
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "confidence",
+                    "message_type",
+                    "summary"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A detailed analysis result",
+                  "properties": {
+                    "domain": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "items": {
+                        "$ref": "#/definitions/Finding"
+                      },
+                      "type": "array"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "analysis"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "domain",
+                    "findings",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A command/action the agent wants to execute",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "command"
+                      ],
+                      "type": "string"
+                    },
+                    "parameters": true
+                  },
+                  "required": [
+                    "action",
+                    "message_type",
+                    "parameters"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A simple text response",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "text"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "Progress update during long-running tasks",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "progress"
+                      ],
+                      "type": "string"
+                    },
+                    "percent_complete": {
+                      "default": null,
+                      "format": "double",
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "message_type"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "Finding": {
+              "description": "A finding from an analysis agent",
+              "properties": {
+                "confidence": {
+                  "default": null,
+                  "description": "Confidence score (0.0 to 1.0)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "description": "Detailed description",
+                  "type": "string"
+                },
+                "related_entities": {
+                  "default": [],
+                  "description": "Related entity IDs",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "title": {
+                  "description": "Title or label of the finding",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "description",
+                "title"
+              ],
+              "type": "object"
+            },
+            "LogLevel": {
+              "description": "Log level for agent log messages",
+              "enum": [
+                "debug",
+                "info",
+                "warning",
+                "error"
+              ],
+              "type": "string"
+            },
+            "MessageRole": {
+              "description": "Role in a chat conversation",
+              "oneOf": [
+                {
+                  "description": "System instructions",
+                  "enum": [
+                    "system"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "description": "User input",
+                  "enum": [
+                    "user"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "description": "Assistant response",
+                  "enum": [
+                    "assistant"
+                  ],
+                  "type": "string"
+                }
+              ]
+            },
+            "ThreadMessage": {
+              "description": "A single message within a conversation thread",
+              "properties": {
+                "agent_speaker": {
+                  "default": null,
+                  "description": "Which agent sent this message (if role is Assistant)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "content": {
+                  "default": null,
+                  "description": "Text content of the message",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "id": {
+                  "description": "Unique message ID",
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "message_type": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/AgentMessageType"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Structured message type (for agent messages)"
+                },
+                "metadata": {
+                  "default": null,
+                  "description": "Optional metadata"
+                },
+                "role": {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/MessageRole"
+                    }
+                  ],
+                  "description": "Role of the message sender"
+                },
+                "thread_id": {
+                  "description": "ID of the thread this message belongs to",
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "timestamp": {
+                  "description": "When the message was created",
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "role",
+                "thread_id",
+                "timestamp"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "A conversation thread (Slack-like linear threading)\n\nEach thread starts with a user message and contains all responses and follow-up messages in a linear sequence.",
+          "properties": {
+            "created_at": {
+              "description": "When the thread was created",
+              "format": "date-time",
+              "type": "string"
+            },
+            "id": {
+              "description": "Unique thread ID",
+              "format": "uuid",
+              "type": "string"
+            },
+            "is_open": {
+              "description": "Whether the thread is still active/open",
+              "type": "boolean"
+            },
+            "messages": {
+              "description": "All messages in the thread (in chronological order)",
+              "items": {
+                "$ref": "#/definitions/ThreadMessage"
+              },
+              "type": "array"
+            },
+            "metadata": {
+              "default": null,
+              "description": "Optional metadata"
+            },
+            "parent_message_id": {
+              "description": "ID of the original user message that started the thread",
+              "format": "uuid",
+              "type": "string"
+            },
+            "summary": {
+              "default": null,
+              "description": "Summary of the thread (for display in lists)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tenant_id": {
+              "description": "Tenant ID for multi-tenancy",
+              "format": "uuid",
+              "type": "string"
+            },
+            "updated_at": {
+              "description": "When the thread was last updated",
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "required": [
+            "created_at",
+            "id",
+            "is_open",
+            "messages",
+            "parent_message_id",
+            "tenant_id",
+            "updated_at"
+          ],
+          "title": "ConversationThread",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ConversationThread.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "7204cf2c0c4d1d64b1de4dd44d8c4ca6432f9d659e4a47175d8af16ecde6b6b0",
+      "created_at": "2025-12-17T16:59:44.746196Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ClassificationResult",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Result of classification",
+          "properties": {
+            "entity_type": {
+              "description": "Entity type",
+              "type": "string"
+            },
+            "probability": {
+              "description": "Probability score",
+              "format": "double",
+              "type": "number"
+            }
+          },
+          "required": [
+            "entity_type",
+            "probability"
+          ],
+          "title": "ClassificationResult",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ClassificationResult.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "c7f46a5aa59e1eedfb677f5154c94daf39a9dee2346071bfbb11f07dc7d332e2",
+      "created_at": "2025-12-17T16:59:44.746589Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "RAGResult",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "A single RAG result",
+          "properties": {
+            "content": {
+              "description": "Content text",
+              "type": "string"
+            },
+            "entity_type": {
+              "description": "Entity type",
+              "type": "string"
+            },
+            "id": {
+              "description": "Result ID",
+              "type": "string"
+            },
+            "metadata": {
+              "default": null,
+              "description": "Optional metadata"
+            },
+            "score": {
+              "description": "Relevance score",
+              "format": "double",
+              "type": "number"
+            }
+          },
+          "required": [
+            "content",
+            "entity_type",
+            "id",
+            "score"
+          ],
+          "title": "RAGResult",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/RAGResult.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "938da074f4b9f05f2a4edf5d4e227a5c201c96d34636fc526b780f4c328d4ec2",
+      "created_at": "2025-12-17T16:59:44.746753Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "ClassifierOutput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "ClassificationResult": {
+              "description": "Result of classification",
+              "properties": {
+                "entity_type": {
+                  "description": "Entity type",
+                  "type": "string"
+                },
+                "probability": {
+                  "description": "Probability score",
+                  "format": "double",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "entity_type",
+                "probability"
+              ],
+              "type": "object"
+            },
+            "PhysicsHint": {
+              "description": "Physics hints for entity positioning",
+              "properties": {
+                "arousal": {
+                  "default": null,
+                  "description": "Arousal (0.0 to 1.0, calm to excited)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "significance": {
+                  "default": null,
+                  "description": "Significance (0.0 to 1.0, mass)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "valence": {
+                  "default": null,
+                  "description": "Valence (-1.0 to 1.0, negative to positive)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "type": "object"
+            }
+          },
+          "description": "Output from the classifier agent",
+          "properties": {
+            "classifications": {
+              "description": "Classification results",
+              "items": {
+                "$ref": "#/definitions/ClassificationResult"
+              },
+              "type": "array"
+            },
+            "done": {
+              "default": true,
+              "description": "Whether the task is done",
+              "type": "boolean"
+            },
+            "physics_hint": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/PhysicsHint"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Physics hints"
+            },
+            "primary_thread": {
+              "default": null,
+              "description": "Primary thread reference",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "response_message": {
+              "description": "Response message",
+              "type": "string"
+            },
+            "secondary_threads": {
+              "default": [],
+              "description": "Secondary thread references",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "state": {
+              "description": "Updated state"
+            },
+            "temporal_marker": {
+              "default": null,
+              "description": "Temporal marker (today, yesterday, etc.)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "text": {
+              "description": "Original text",
+              "type": "string"
+            }
+          },
+          "required": [
+            "classifications",
+            "response_message",
+            "state",
+            "text"
+          ],
+          "title": "ClassifierOutput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/ClassifierOutput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "cc2300bdb4df0a495e16fd0c0c14c980cd66a58f469044e6610074d710cea2c5",
+      "created_at": "2025-12-17T16:59:44.747031Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "PhysicsInput",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "PhysicsHint": {
+              "description": "Physics hints for entity positioning",
+              "properties": {
+                "arousal": {
+                  "default": null,
+                  "description": "Arousal (0.0 to 1.0, calm to excited)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "significance": {
+                  "default": null,
+                  "description": "Significance (0.0 to 1.0, mass)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "valence": {
+                  "default": null,
+                  "description": "Valence (-1.0 to 1.0, negative to positive)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "type": "object"
+            },
+            "VAEPosition": {
+              "description": "Position in 3D VAE space (quantized coordinates)",
+              "properties": {
+                "arousal": {
+                  "description": "Energy/activation (-10M to +10M)",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "epistemic": {
+                  "description": "Knowledge certainty (-10M to +10M)",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "valence": {
+                  "description": "Emotional polarity (-10M to +10M)",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "arousal",
+                "epistemic",
+                "valence"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "Input to the physics agent",
+          "properties": {
+            "current_position": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/VAEPosition"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Current position (for calculations)"
+            },
+            "entity_type": {
+              "default": null,
+              "description": "Entity type (for spawn_position)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "operation": {
+              "description": "Operation to perform",
+              "type": "string"
+            },
+            "physics_hint": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/PhysicsHint"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Physics hints"
+            },
+            "request_id": {
+              "description": "Request ID for tracing",
+              "type": "string"
+            },
+            "state": {
+              "description": "Current agent state"
+            }
+          },
+          "required": [
+            "operation",
+            "request_id",
+            "state"
+          ],
+          "title": "PhysicsInput",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/PhysicsInput.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "e23527b21912192ba317d3ded7ccaba610efc3c66865384908cb5aef98481e70",
+      "created_at": "2025-12-17T16:59:44.747348Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "Finding",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "A finding from an analysis agent",
+          "properties": {
+            "confidence": {
+              "default": null,
+              "description": "Confidence score (0.0 to 1.0)",
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "description": {
+              "description": "Detailed description",
+              "type": "string"
+            },
+            "related_entities": {
+              "default": [],
+              "description": "Related entity IDs",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": {
+              "description": "Title or label of the finding",
+              "type": "string"
+            }
+          },
+          "required": [
+            "description",
+            "title"
+          ],
+          "title": "Finding",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/Finding.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "208f37d9cc69094803e7229a1fe14c45200f95e7a5ad4560f7e4860aa67220ef",
+      "created_at": "2025-12-17T16:59:44.747566Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "PhysicsHint",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Physics hints for entity positioning",
+          "properties": {
+            "arousal": {
+              "default": null,
+              "description": "Arousal (0.0 to 1.0, calm to excited)",
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "significance": {
+              "default": null,
+              "description": "Significance (0.0 to 1.0, mass)",
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "valence": {
+              "default": null,
+              "description": "Valence (-1.0 to 1.0, negative to positive)",
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          },
+          "title": "PhysicsHint",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/PhysicsHint.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "070d67f45359db0f87c0f0718fd47676b3e49176058d9f078e9a2750fe7bc9a8",
+      "created_at": "2025-12-17T16:59:44.747736Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "AgenticEvent",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "AgentMessageType": {
+              "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+              "oneOf": [
+                {
+                  "description": "A log message from the agent (debugging, status updates)",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "$ref": "#/definitions/LogLevel"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "log"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "level",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A question the agent is asking the user",
+                  "properties": {
+                    "message_type": {
+                      "enum": [
+                        "question"
+                      ],
+                      "type": "string"
+                    },
+                    "options": {
+                      "default": null,
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": [
+                        "array",
+                        "null"
+                      ]
+                    },
+                    "prompt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message_type",
+                    "prompt"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "An insight derived by the agent",
+                  "properties": {
+                    "confidence": {
+                      "format": "double",
+                      "type": "number"
+                    },
+                    "domain": {
+                      "default": null,
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "message_type": {
+                      "enum": [
+                        "insight"
+                      ],
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "confidence",
+                    "message_type",
+                    "summary"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A detailed analysis result",
+                  "properties": {
+                    "domain": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "items": {
+                        "$ref": "#/definitions/Finding"
+                      },
+                      "type": "array"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "analysis"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "domain",
+                    "findings",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A command/action the agent wants to execute",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "command"
+                      ],
+                      "type": "string"
+                    },
+                    "parameters": true
+                  },
+                  "required": [
+                    "action",
+                    "message_type",
+                    "parameters"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "A simple text response",
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "text"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "message_type"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "description": "Progress update during long-running tasks",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "message_type": {
+                      "enum": [
+                        "progress"
+                      ],
+                      "type": "string"
+                    },
+                    "percent_complete": {
+                      "default": null,
+                      "format": "double",
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "message_type"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "AgentState": {
+              "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+              "properties": {
+                "conversation_context": {
+                  "default": [],
+                  "description": "Conversation history for context",
+                  "items": {
+                    "$ref": "#/definitions/ConversationTurn"
+                  },
+                  "type": "array"
+                },
+                "current_speaker": {
+                  "default": null,
+                  "description": "Currently active speaker (None means orchestrator decides)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "is_authenticated": {
+                  "default": false,
+                  "description": "Whether the user is authenticated",
+                  "type": "boolean"
+                },
+                "just_finished": {
+                  "default": false,
+                  "description": "Whether the current agent just finished its task",
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "default": null,
+                  "description": "Custom metadata for extensibility"
+                },
+                "tenant_id": {
+                  "description": "Tenant ID for multi-tenancy",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "default": null,
+                  "description": "Current thread ID (if in a thread)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "tenant_id"
+              ],
+              "type": "object"
+            },
+            "ConversationTurn": {
+              "description": "A single turn in a conversation (for context tracking)",
+              "properties": {
+                "content": {
+                  "description": "Content of the message",
+                  "type": "string"
+                },
+                "role": {
+                  "description": "Role of the speaker (user, assistant, system)",
+                  "type": "string"
+                },
+                "speaker": {
+                  "default": null,
+                  "description": "Optional speaker identifier (for multi-agent)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "timestamp": {
+                  "default": null,
+                  "description": "Timestamp of the turn",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "content",
+                "role"
+              ],
+              "type": "object"
+            },
+            "Finding": {
+              "description": "A finding from an analysis agent",
+              "properties": {
+                "confidence": {
+                  "default": null,
+                  "description": "Confidence score (0.0 to 1.0)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "description": "Detailed description",
+                  "type": "string"
+                },
+                "related_entities": {
+                  "default": [],
+                  "description": "Related entity IDs",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "title": {
+                  "description": "Title or label of the finding",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "description",
+                "title"
+              ],
+              "type": "object"
+            },
+            "LogLevel": {
+              "description": "Log level for agent log messages",
+              "enum": [
+                "debug",
+                "info",
+                "warning",
+                "error"
+              ],
+              "type": "string"
+            }
+          },
+          "description": "Events emitted by the agentic system\n\nThese events notify clients about state changes and results from the multi-agent system. They can be delivered via WebSocket, SSE, or consumed from a message broker.",
+          "oneOf": [
+            {
+              "description": "A new message was received/generated",
+              "properties": {
+                "agent": {
+                  "default": null,
+                  "description": "Which agent sent this",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "content": {
+                  "default": null,
+                  "description": "Message content",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "event_type": {
+                  "enum": [
+                    "message_received"
+                  ],
+                  "type": "string"
+                },
+                "message_id": {
+                  "description": "Message ID",
+                  "type": "string"
+                },
+                "message_type": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/AgentMessageType"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Structured message type"
+                },
+                "role": {
+                  "description": "Role (user, assistant, system)",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "description": "Thread ID",
+                  "type": "string"
+                },
+                "timestamp": {
+                  "description": "Timestamp",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "event_type",
+                "message_id",
+                "role",
+                "thread_id",
+                "timestamp"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "An agent is now speaking/processing",
+              "properties": {
+                "agent": {
+                  "description": "Which agent is speaking",
+                  "type": "string"
+                },
+                "event_type": {
+                  "enum": [
+                    "agent_speaking"
+                  ],
+                  "type": "string"
+                },
+                "status": {
+                  "default": null,
+                  "description": "Optional status message",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "thread_id": {
+                  "description": "Thread ID",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "agent",
+                "event_type",
+                "thread_id"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "A task was completed successfully",
+              "properties": {
+                "event_type": {
+                  "enum": [
+                    "task_completed"
+                  ],
+                  "type": "string"
+                },
+                "result": {
+                  "description": "Result data"
+                },
+                "task_id": {
+                  "description": "Task ID (same as request_id)",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "description": "Thread ID",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "event_type",
+                "result",
+                "task_id",
+                "thread_id"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "An error occurred",
+              "properties": {
+                "code": {
+                  "description": "Error code",
+                  "type": "string"
+                },
+                "details": {
+                  "default": null,
+                  "description": "Additional details"
+                },
+                "error": {
+                  "description": "Error message",
+                  "type": "string"
+                },
+                "event_type": {
+                  "enum": [
+                    "error"
+                  ],
+                  "type": "string"
+                },
+                "thread_id": {
+                  "default": null,
+                  "description": "Thread ID (if applicable)",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "code",
+                "error",
+                "event_type"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "Thread state was updated",
+              "properties": {
+                "event_type": {
+                  "enum": [
+                    "thread_state_changed"
+                  ],
+                  "type": "string"
+                },
+                "state": {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/AgentState"
+                    }
+                  ],
+                  "description": "Updated agent state"
+                },
+                "thread_id": {
+                  "description": "Thread ID",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "event_type",
+                "state",
+                "thread_id"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "Progress update for long-running operations",
+              "properties": {
+                "event_type": {
+                  "enum": [
+                    "progress"
+                  ],
+                  "type": "string"
+                },
+                "message": {
+                  "description": "Progress message",
+                  "type": "string"
+                },
+                "percent": {
+                  "default": null,
+                  "description": "Percent complete (0-100)",
+                  "format": "double",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "task_id": {
+                  "description": "Task ID",
+                  "type": "string"
+                },
+                "thread_id": {
+                  "description": "Thread ID",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "event_type",
+                "message",
+                "task_id",
+                "thread_id"
+              ],
+              "type": "object"
+            }
+          ],
+          "title": "AgenticEvent"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/AgenticEvent.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "02d2ef5e3bfdffedb87074bfd9ba55356a0b19a25e03182fc13ed77336d186e2",
+      "created_at": "2025-12-17T16:59:44.748505Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "AgentSpeaker",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "description": "Speaker/agent identifiers for the orchestration system\n\nEach speaker is a specialized agent that handles specific types of tasks. The orchestrator routes to the appropriate speaker based on user intent.",
+          "oneOf": [
+            {
+              "description": "Main user-facing agent - greets users, explains capabilities",
+              "enum": [
+                "concierge"
+              ],
+              "type": "string"
+            },
+            {
+              "description": "Classification agent - determines entity types, message intent",
+              "enum": [
+                "classifier"
+              ],
+              "type": "string"
+            },
+            {
+              "description": "Physics simulation agent - handles VAE space calculations",
+              "enum": [
+                "physics"
+              ],
+              "type": "string"
+            },
+            {
+              "description": "Retrieval-augmented generation agent (future)",
+              "enum": [
+                "rag"
+              ],
+              "type": "string"
+            },
+            {
+              "description": "Memory/context management agent",
+              "enum": [
+                "memory"
+              ],
+              "type": "string"
+            },
+            {
+              "description": "Task execution agent",
+              "enum": [
+                "task_executor"
+              ],
+              "type": "string"
+            }
+          ],
+          "title": "AgentSpeaker"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/AgentSpeaker.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "08f0baccb29aea9a3cce19456e468e717974868e202cb311365cb2a40e9cfa76",
+      "created_at": "2025-12-17T16:59:44.749359Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "PhysicsState",
+        "schema_type": "rust_type",
+        "content": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "category": "agentic",
+          "definitions": {
+            "VAEPosition": {
+              "description": "Position in 3D VAE space (quantized coordinates)",
+              "properties": {
+                "arousal": {
+                  "description": "Energy/activation (-10M to +10M)",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "epistemic": {
+                  "description": "Knowledge certainty (-10M to +10M)",
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "valence": {
+                  "description": "Emotional polarity (-10M to +10M)",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "arousal",
+                "epistemic",
+                "valence"
+              ],
+              "type": "object"
+            }
+          },
+          "description": "Full physics state for an entity",
+          "properties": {
+            "energy": {
+              "default": 0.5,
+              "description": "Energy (0.0 to 1.0)",
+              "format": "double",
+              "type": "number"
+            },
+            "mass": {
+              "default": 0.5,
+              "description": "Mass (0.0 to 1.0)",
+              "format": "double",
+              "type": "number"
+            },
+            "position": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/VAEPosition"
+                }
+              ],
+              "description": "Position in VAE space"
+            },
+            "temperature": {
+              "default": 0.5,
+              "description": "Temperature (0.0 to 1.0)",
+              "format": "double",
+              "type": "number"
+            },
+            "velocity": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/VAEPosition"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Velocity vector"
+            }
+          },
+          "required": [
+            "position"
+          ],
+          "title": "PhysicsState",
+          "type": "object"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/generated/schemas/agentic/PhysicsState.schema.json"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "e0c543203c2c56de25f469e3ae211af9ae352957be4ccc089a2afe1f200c7057",
+      "created_at": "2025-12-17T16:59:44.749591Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "CommandEnvelope",
+        "schema_type": "avro",
+        "content": {
+          "fields": [
+            {
+              "name": "command_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "course_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "tenant_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "user_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "created_at",
+              "type": {
+                "logicalType": "timestamp-millis",
+                "type": "long"
+              }
+            },
+            {
+              "name": "schema_version",
+              "type": "int"
+            },
+            {
+              "name": "payload_json",
+              "type": "string"
+            }
+          ],
+          "name": "com.familiar.kafka.CommandEnvelope",
+          "type": "record"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/schemas/CommandEnvelope.avsc"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "15b3beb24f2de3a08ebbe687cf650f7bb251f6129f51bccfc97a0824ec7fbfba",
+      "created_at": "2025-12-17T16:59:44.749778Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "EventEnvelope",
+        "schema_type": "avro",
+        "content": {
+          "fields": [
+            {
+              "name": "event_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "course_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "tenant_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "occurred_at",
+              "type": {
+                "logicalType": "timestamp-millis",
+                "type": "long"
+              }
+            },
+            {
+              "name": "schema_version",
+              "type": "int"
+            },
+            {
+              "name": "payload_json",
+              "type": "string"
+            }
+          ],
+          "name": "com.familiar.kafka.EventEnvelope",
+          "type": "record"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/schemas/EventEnvelope.avsc"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "bc73085498913471f234b22a0e8fd69973f94fe744104c66a6780e69fd507287",
+      "created_at": "2025-12-17T16:59:44.749979Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    },
+    {
+      "schema": {
+        "name": "TraceEnvelope",
+        "schema_type": "avro",
+        "content": {
+          "fields": [
+            {
+              "name": "course_id",
+              "type": {
+                "logicalType": "uuid",
+                "type": "string"
+              }
+            },
+            {
+              "name": "seq",
+              "type": "long"
+            },
+            {
+              "name": "span_id",
+              "type": "string"
+            },
+            {
+              "name": "parent_span_id",
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            {
+              "name": "occurred_at",
+              "type": {
+                "logicalType": "timestamp-millis",
+                "type": "long"
+              }
+            },
+            {
+              "name": "kind",
+              "type": {
+                "name": "com.familiar.kafka.TraceKind",
+                "symbols": [
+                  "step",
+                  "tool",
+                  "route",
+                  "log",
+                  "token",
+                  "result"
+                ],
+                "type": "enum"
+              }
+            },
+            {
+              "name": "status",
+              "type": {
+                "name": "com.familiar.kafka.TraceStatus",
+                "symbols": [
+                  "started",
+                  "succeeded",
+                  "failed",
+                  "skipped"
+                ],
+                "type": "enum"
+              }
+            },
+            {
+              "name": "payload_json",
+              "type": "string"
+            }
+          ],
+          "name": "com.familiar.kafka.TraceEnvelope",
+          "type": "record"
+        },
+        "source_path": "/Users/erictheiss/familiar/docs/v4/familiar-core/schemas/TraceEnvelope.avsc"
+      },
+      "version": {
+        "version": "0.1.0",
+        "commit_hash": null,
+        "tag": null,
+        "created_at": "2025-12-17T16:59:44.740376Z",
+        "created_by": null,
+        "notes": null,
+        "previous_version": null
+      },
+      "checksum": "60b62fb3cddd0099dcf16cc2da000dc8f9eefc63ebb07db274306c286354e291",
+      "created_at": "2025-12-17T16:59:44.750148Z",
+      "created_by": "Eric Theiss",
+      "compatible_with": [],
+      "breaking_change": false,
+      "change_notes": null
+    }
+  ],
+  "created_at": "2025-12-17T16:59:44.750457Z",
+  "manifest_checksum": "5da3774e2fd1c0a429d7f6a7f0511752a47dcf171590e416f90ebd984883af1c",
+  "stats": {
+    "total_schemas": 35,
+    "rust_entities": 0,
+    "rust_primitives": 0,
+    "rust_components": 0,
+    "rust_types": 32,
+    "avro_schemas": 3,
+    "typescript_schemas": 0,
+    "python_schemas": 0
+  }
+}
