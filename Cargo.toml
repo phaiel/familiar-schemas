@@ -45,6 +45,12 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 # File walking
 walkdir = "2.4"
+ignore = "0.4"
+
+# Configuration
+config_crate = { package = "config", version = "0.14", features = ["toml"] }
+toml = "0.8"
+directories = "5.0"
 
 [dev-dependencies]
 tempfile = "3.8"
@@ -61,3 +67,10 @@ path = "src/bin/validator.rs"
 name = "schema-export"
 path = "src/bin/export.rs"
 
+[[bin]]
+name = "schema-drift"
+path = "src/bin/drift.rs"
+
+[[bin]]
+name = "schema-config"
+path = "src/bin/config.rs"

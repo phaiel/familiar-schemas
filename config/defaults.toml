@@ -1,0 +1,46 @@
+# Default configuration for familiar-schemas
+# This file is embedded in the binary as fallback defaults
+
+[registry]
+path = "."
+immutable = true
+
+[export]
+output_format = "pretty"
+include_checksums = true
+include_manifest = true
+create_latest_symlink = true
+
+[workspace]
+# root = "../docs/v4"  # Set via CLI or env
+
+[[workspace.crates]]
+name = "familiar-primitives"
+schemas_dir = "generated/schemas"
+default_category = "primitives"
+
+[[workspace.crates]]
+name = "familiar-contracts"
+schemas_dir = "generated/schemas"
+default_category = "contracts"
+
+[[workspace.crates]]
+name = "familiar-core"
+schemas_dir = "generated/schemas"
+default_category = "core"
+
+[validation]
+strict_json_schema = true
+validate_avro = true
+fail_on_breaking = false
+ignore_paths = [
+    "src/analysis/",
+    "src/bin/",
+    "tests/",
+    "examples/",
+]
+
+[categories]
+# Map categories to source locations
+# auth = "familiar-core/src/auth"
+# tools = "familiar-core/src/tools"
