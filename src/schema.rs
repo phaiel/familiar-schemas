@@ -70,6 +70,9 @@ pub struct Schema {
     pub content: serde_json::Value,
     /// Original source file path (if applicable)
     pub source_path: Option<String>,
+    /// Category for organization (e.g., "auth", "primitives", "agentic")
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
 }
 
 impl Schema {
@@ -80,7 +83,24 @@ impl Schema {
             schema_type,
             content,
             source_path: None,
+            category: None,
         }
+    }
+
+    /// Create a new schema with category
+    pub fn with_category(name: impl Into<String>, schema_type: SchemaType, content: serde_json::Value, category: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            schema_type,
+            content,
+            source_path: None,
+            category: Some(category.into()),
+        }
+    }
+
+    /// Set the category
+    pub fn set_category(&mut self, category: impl Into<String>) {
+        self.category = Some(category.into());
     }
 
     /// Compute the checksum for this schema
@@ -214,4 +234,3 @@ impl VersionManifest {
         self.schemas.iter().filter(|s| s.schema.schema_type == schema_type).collect()
     }
 }
-

@@ -128,8 +128,11 @@ impl SchemaRegistry {
             let mut entry = SchemaEntry::new(schema, version.clone());
             entry.created_by = author.map(String::from);
             
-            // Write schema file
-            let type_dir = version_dir.join(entry.schema.schema_type.dir_name());
+            // Write schema file - use category for subdirectory if present
+            let mut type_dir = version_dir.join(entry.schema.schema_type.dir_name());
+            if let Some(ref category) = entry.schema.category {
+                type_dir = type_dir.join(category);
+            }
             fs::create_dir_all(&type_dir)?;
             
             let schema_path = type_dir.join(entry.schema.filename());
