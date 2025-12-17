@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "category": "agentic",
+  "description": "A single RAG result",
+  "properties": {
+    "content": {
+      "description": "Content text",
+      "type": "string"
+    },
+    "entity_type": {
+      "description": "Entity type",
+      "type": "string"
+    },
+    "id": {
+      "description": "Result ID",
+      "type": "string"
+    },
+    "metadata": {
+      "default": null,
+      "description": "Optional metadata"
+    },
+    "score": {
+      "description": "Relevance score",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "content",
+    "entity_type",
+    "id",
+    "score"
+  ],
+  "title": "RAGResult",
+  "type": "object"
+}

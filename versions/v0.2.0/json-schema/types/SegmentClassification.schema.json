@@ -1,0 +1,212 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationPhysics": {
+      "description": "Physics hints extracted during classification",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "description": "How significant/important: 0.0 to 1.0",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "HeddleEntityType": {
+      "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+      "oneOf": [
+        {
+          "description": "A specific event that happened in the past (Narrative/External Particle)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A definition of a person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A statement about the quality of a relationship (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An internal state snapshot (Internal Particle)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "enum": [
+            "LOG"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "enum": [
+            "QUERY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "enum": [
+            "INFER"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "enum": [
+            "REFERENCE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "enum": [
+            "REFLECT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "enum": [
+            "COMMAND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "enum": [
+            "SOCIAL"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Classification for a single segment",
+  "properties": {
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/HeddleEntityType"
+        }
+      ],
+      "description": "The entity type (MOMENT, PULSE, INTENT) - relevant for LOG purpose"
+    },
+    "physics": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ClassificationPhysics"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints for entity spawning (only for LOG purpose)"
+    },
+    "purpose": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MessageIntent"
+        }
+      ],
+      "default": "LOG",
+      "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
+    },
+    "segment_index": {
+      "description": "Index of the segment being classified",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "weight": {
+      "default": 1.0,
+      "description": "Confidence weight (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "entity_type",
+    "segment_index"
+  ],
+  "title": "SegmentClassification",
+  "type": "object"
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Core identity component that all entities possess",
+  "properties": {
+    "created_at": {
+      "description": "When this entity was created",
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "format": "uuid",
+      "type": "string"
+    },
+    "tenant_id": {
+      "description": "Tenant (family/user) this entity belongs to",
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "tenant_id"
+  ],
+  "title": "Identity",
+  "type": "object"
+}

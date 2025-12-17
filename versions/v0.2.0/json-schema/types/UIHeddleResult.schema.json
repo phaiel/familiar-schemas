@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "UIClassification": {
+      "description": "A classification result",
+      "properties": {
+        "confidence": {
+          "format": "double",
+          "type": "number"
+        },
+        "entity_type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "confidence",
+        "entity_type"
+      ],
+      "type": "object"
+    },
+    "UIHeddleSegment": {
+      "description": "A segment from Heddle",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "subject": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object"
+    },
+    "UIPhysicsResult": {
+      "description": "Physics simulation result",
+      "properties": {
+        "energy": {
+          "format": "double",
+          "type": "number"
+        },
+        "position": {
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "temperature": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "energy",
+        "position",
+        "temperature"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Structured result from the Heddle classification pipeline",
+  "properties": {
+    "classifications": {
+      "default": [],
+      "description": "Classification results",
+      "items": {
+        "$ref": "#/definitions/UIClassification"
+      },
+      "type": "array"
+    },
+    "physics": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/UIPhysicsResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints"
+    },
+    "purpose": {
+      "default": null,
+      "description": "Detected purpose/intent",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "segments": {
+      "default": [],
+      "description": "Segmented content",
+      "items": {
+        "$ref": "#/definitions/UIHeddleSegment"
+      },
+      "type": "array"
+    }
+  },
+  "title": "UIHeddleResult",
+  "type": "object"
+}

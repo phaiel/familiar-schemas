@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of trace events",
+  "oneOf": [
+    {
+      "description": "Agent thinking/reasoning step",
+      "enum": [
+        "step"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Tool invocation",
+      "enum": [
+        "tool"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Routing decision between agents",
+      "enum": [
+        "route"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Safe log message",
+      "enum": [
+        "log"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Response token stream (for streaming responses)",
+      "enum": [
+        "token"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Final result",
+      "enum": [
+        "result"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "TraceKind"
+}

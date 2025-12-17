@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Validation constraints for parameters",
+  "properties": {
+    "allowed_values": {
+      "default": null,
+      "description": "Allowed values (enum constraint)",
+      "items": {
+        "type": "string"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "max": {
+      "default": null,
+      "description": "Maximum value (for numbers) or length (for strings/arrays)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "min": {
+      "default": null,
+      "description": "Minimum value (for numbers) or length (for strings/arrays)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "pattern": {
+      "default": null,
+      "description": "Regex pattern for string validation",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "ParameterConstraints",
+  "type": "object"
+}

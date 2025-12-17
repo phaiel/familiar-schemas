@@ -1,0 +1,233 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Errors that can occur during database operations",
+  "oneOf": [
+    {
+      "description": "Connection failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Connection"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Query execution failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "query": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Query"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Entity not found",
+      "properties": {
+        "details": {
+          "properties": {
+            "entity_type": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "entity_type",
+            "id"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "NotFound"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Constraint violation (unique, foreign key, etc.)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Constraint"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Serialization/deserialization error",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Serialization"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Transaction failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Transaction"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Migration error",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Migration"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Operation failed (e.g. S3/MinIO)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Operation"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "DbStoreError"
+}

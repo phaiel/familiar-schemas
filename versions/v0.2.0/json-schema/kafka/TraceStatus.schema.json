@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Status of a trace span",
+  "oneOf": [
+    {
+      "description": "Span has started",
+      "enum": [
+        "started"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Span completed successfully",
+      "enum": [
+        "succeeded"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Span failed",
+      "enum": [
+        "failed"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Span was skipped",
+      "enum": [
+        "skipped"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "TraceStatus"
+}

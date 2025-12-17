@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Interaction frequency",
+  "enum": [
+    "daily",
+    "weekly",
+    "monthly",
+    "quarterly",
+    "yearly",
+    "rarely"
+  ],
+  "title": "InteractionFrequency",
+  "type": "string"
+}

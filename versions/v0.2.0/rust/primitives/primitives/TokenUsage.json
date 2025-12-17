@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Token usage statistics from a completion",
+  "properties": {
+    "completion_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "prompt_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "total_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "completion_tokens",
+    "prompt_tokens",
+    "total_tokens"
+  ],
+  "title": "TokenUsage",
+  "type": "object"
+}

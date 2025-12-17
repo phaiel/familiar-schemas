@@ -1,0 +1,351 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ConditionOperator": {
+      "description": "Condition operators",
+      "enum": [
+        "equals",
+        "not_equals",
+        "greater_than",
+        "less_than",
+        "contains",
+        "not_contains",
+        "is_null",
+        "is_not_null",
+        "in"
+      ],
+      "type": "string"
+    },
+    "ConditionType": {
+      "description": "Types of conditions",
+      "oneOf": [
+        {
+          "description": "Check output value",
+          "enum": [
+            "output_value"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Check if step succeeded",
+          "enum": [
+            "step_success"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Check if step failed",
+          "enum": [
+            "step_failed"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Check output exists",
+          "enum": [
+            "output_exists"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ExecutionOrder": {
+      "description": "Execution order types",
+      "oneOf": [
+        {
+          "description": "Execute in sequence",
+          "enum": [
+            "sequential"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Execute in parallel with other parallel steps",
+          "enum": [
+            "parallel"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Execute only if condition is met",
+          "enum": [
+            "conditional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Execute as fallback if previous failed",
+          "enum": [
+            "fallback"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "InputMapping": {
+      "description": "Input mapping from previous step output",
+      "properties": {
+        "from_path": {
+          "description": "Path in source output",
+          "type": "string"
+        },
+        "from_step": {
+          "description": "Source step ID",
+          "type": "string"
+        },
+        "to_path": {
+          "description": "Path in this step's input",
+          "type": "string"
+        },
+        "transform": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/InputTransform"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Transform to apply"
+        }
+      },
+      "required": [
+        "from_path",
+        "from_step",
+        "to_path"
+      ],
+      "type": "object"
+    },
+    "InputTransform": {
+      "description": "Transforms for input mapping",
+      "oneOf": [
+        {
+          "description": "Direct pass-through",
+          "properties": {
+            "type": {
+              "enum": [
+                "identity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Extract array item",
+          "properties": {
+            "index": {
+              "format": "uint",
+              "minimum": 0.0,
+              "type": "integer"
+            },
+            "type": {
+              "enum": [
+                "array_item"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "index",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Filter array by condition",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "array_filter"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "type",
+            "value"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Map array items",
+          "properties": {
+            "template": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "array_map"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "template",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Concatenate strings",
+          "properties": {
+            "separator": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "concat"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "separator",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Custom transform function",
+          "properties": {
+            "function": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "function",
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "StepCondition": {
+      "description": "Condition for conditional execution",
+      "properties": {
+        "condition_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ConditionType"
+            }
+          ],
+          "description": "Type of condition"
+        },
+        "operator": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ConditionOperator"
+            }
+          ],
+          "description": "Operator"
+        },
+        "path": {
+          "description": "Path to check",
+          "type": "string"
+        },
+        "source_step": {
+          "description": "Source step to check",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value to compare"
+        }
+      },
+      "required": [
+        "condition_type",
+        "operator",
+        "path",
+        "source_step",
+        "value"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A step in a tool chain",
+  "properties": {
+    "condition": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/StepCondition"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Condition for execution (if conditional)"
+    },
+    "execution_order": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExecutionOrder"
+        }
+      ],
+      "description": "Execution order"
+    },
+    "id": {
+      "description": "Step identifier",
+      "type": "string"
+    },
+    "input_mapping": {
+      "default": [],
+      "description": "Input mapping from previous steps",
+      "items": {
+        "$ref": "#/definitions/InputMapping"
+      },
+      "type": "array"
+    },
+    "parallel_with": {
+      "default": [],
+      "description": "Steps to run in parallel with this one",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "required": {
+      "default": true,
+      "description": "Whether step is required or optional",
+      "type": "boolean"
+    },
+    "timeout_ms": {
+      "default": null,
+      "description": "Timeout in milliseconds",
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "tool": {
+      "description": "Tool to execute",
+      "type": "string"
+    }
+  },
+  "required": [
+    "execution_order",
+    "id",
+    "tool"
+  ],
+  "title": "ToolChainStep",
+  "type": "object"
+}

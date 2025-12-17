@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "category": "agentic",
+  "description": "Input to the concierge agent",
+  "properties": {
+    "is_first_message": {
+      "default": false,
+      "description": "Whether this is the first message in a conversation",
+      "type": "boolean"
+    },
+    "request_id": {
+      "description": "Request ID for tracing",
+      "type": "string"
+    },
+    "state": {
+      "description": "Current agent state"
+    },
+    "user_message": {
+      "default": null,
+      "description": "User message content",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "request_id",
+    "state"
+  ],
+  "title": "ConciergeInput",
+  "type": "object"
+}

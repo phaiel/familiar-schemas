@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "category": "agentic",
+  "description": "Result of classification",
+  "properties": {
+    "entity_type": {
+      "description": "Entity type",
+      "type": "string"
+    },
+    "probability": {
+      "description": "Probability score",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "entity_type",
+    "probability"
+  ],
+  "title": "ClassificationResult",
+  "type": "object"
+}

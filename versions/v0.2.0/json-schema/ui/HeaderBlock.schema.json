@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "PlainTextObject": {
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A header with large, bold text",
+  "properties": {
+    "text": {
+      "$ref": "#/definitions/PlainTextObject"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "HeaderBlock",
+  "type": "object"
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role of a tenant member",
+  "enum": [
+    "admin",
+    "member",
+    "guest"
+  ],
+  "title": "MemberRole",
+  "type": "string"
+}

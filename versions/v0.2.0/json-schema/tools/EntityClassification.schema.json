@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationEvidence": {
+      "description": "Evidence for a classification",
+      "properties": {
+        "description": {
+          "description": "Description of evidence",
+          "type": "string"
+        },
+        "evidence_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EvidenceType"
+            }
+          ],
+          "description": "Type of evidence"
+        },
+        "weight": {
+          "description": "How much this evidence contributes",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "description",
+        "evidence_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "EntityType": {
+      "description": "Entity types from the Symmetric Seven ontology",
+      "oneOf": [
+        {
+          "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Definition of person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relationship between entities (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "EvidenceType": {
+      "description": "Types of evidence for classification",
+      "oneOf": [
+        {
+          "description": "Verb type (action vs state)",
+          "enum": [
+            "verb_type"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Keywords detected",
+          "enum": [
+            "keywords"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal indicators",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional indicators",
+          "enum": [
+            "emotional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity mentions",
+          "enum": [
+            "entity_mention"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relational language",
+          "enum": [
+            "relational"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Pattern indicators",
+          "enum": [
+            "pattern"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Context from surrounding content",
+          "enum": [
+            "context"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "A single entity classification with probability",
+  "properties": {
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityType"
+        }
+      ],
+      "description": "Entity type"
+    },
+    "evidence": {
+      "default": [],
+      "description": "Evidence supporting this classification",
+      "items": {
+        "$ref": "#/definitions/ClassificationEvidence"
+      },
+      "type": "array"
+    },
+    "probability": {
+      "description": "Probability (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "entity_type",
+    "probability"
+  ],
+  "title": "EntityClassification",
+  "type": "object"
+}

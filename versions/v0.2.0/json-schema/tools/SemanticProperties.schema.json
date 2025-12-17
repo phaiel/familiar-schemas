@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Semantic properties of binding",
+  "properties": {
+    "relationship_description": {
+      "default": null,
+      "description": "Relationship description",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "shared_concepts": {
+      "default": [],
+      "description": "Shared concepts/topics",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "similarity": {
+      "description": "Semantic similarity score",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "similarity"
+  ],
+  "title": "SemanticProperties",
+  "type": "object"
+}
