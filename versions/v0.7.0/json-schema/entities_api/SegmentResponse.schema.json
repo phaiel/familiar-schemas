@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A raw segment from Phase 1 (no classification)",
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "mentions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporal": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content"
+  ],
+  "title": "SegmentResponse",
+  "type": "object"
+}

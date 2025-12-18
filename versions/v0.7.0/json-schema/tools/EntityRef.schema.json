@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EntityType": {
+      "description": "Entity types from the Symmetric Seven ontology",
+      "oneOf": [
+        {
+          "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Definition of person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relationship between entities (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Reference to an entity for binding",
+  "properties": {
+    "content": {
+      "description": "Content/description",
+      "type": "string"
+    },
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityType"
+        }
+      ],
+      "description": "Entity type"
+    },
+    "id": {
+      "default": null,
+      "description": "Entity ID (if existing)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "timestamp": {
+      "default": null,
+      "description": "When created (for temporal binding)",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content",
+    "entity_type"
+  ],
+  "title": "EntityRef",
+  "type": "object"
+}

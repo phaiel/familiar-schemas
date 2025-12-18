@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Producer metadata for tracing and debugging",
+  "properties": {
+    "build": {
+      "description": "Build version (git hash, version tag)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "instance": {
+      "description": "Instance identifier (e.g., pod name, hostname)",
+      "type": "string"
+    },
+    "service": {
+      "description": "Service name (e.g., \"familiar-api\", \"familiar-worker\")",
+      "type": "string"
+    }
+  },
+  "required": [
+    "instance",
+    "service"
+  ],
+  "title": "ProducerInfo",
+  "type": "object"
+}

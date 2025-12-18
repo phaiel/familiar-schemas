@@ -1,0 +1,484 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EmotionalTone": {
+      "description": "Emotional tone detected in segment",
+      "properties": {
+        "arousal": {
+          "description": "Arousal (0.0 calm to 1.0 excited)",
+          "format": "double",
+          "type": "number"
+        },
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "primary": {
+          "description": "Primary emotion",
+          "type": "string"
+        },
+        "valence": {
+          "description": "Valence (-1.0 negative to 1.0 positive)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "arousal",
+        "confidence",
+        "primary",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "EntityMention": {
+      "description": "An entity mention within a segment",
+      "properties": {
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "end": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityMentionType"
+            }
+          ],
+          "description": "Type of entity mentioned"
+        },
+        "resolved_id": {
+          "default": null,
+          "description": "Resolved entity ID (if matched to known entity)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start": {
+          "description": "Position in segment",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "text": {
+          "description": "The text of the mention",
+          "type": "string"
+        }
+      },
+      "required": [
+        "confidence",
+        "end",
+        "entity_type",
+        "start",
+        "text"
+      ],
+      "type": "object"
+    },
+    "EntityMentionType": {
+      "description": "Types of entity mentions",
+      "enum": [
+        "PERSON",
+        "PLACE",
+        "ORGANIZATION",
+        "DATE_TIME",
+        "EVENT",
+        "CONCEPT",
+        "OBJECT",
+        "ACTIVITY"
+      ],
+      "type": "string"
+    },
+    "ExistingBond": {
+      "description": "An existing bond for context",
+      "properties": {
+        "head_thread_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "relationship_type": {
+          "$ref": "#/definitions/RelationshipType"
+        },
+        "strength": {
+          "format": "double",
+          "type": "number"
+        },
+        "tail_thread_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "head_thread_id",
+        "id",
+        "relationship_type",
+        "strength",
+        "tail_thread_id"
+      ],
+      "type": "object"
+    },
+    "Modality": {
+      "description": "Supported input modalities",
+      "enum": [
+        "text",
+        "audio",
+        "vision",
+        "video"
+      ],
+      "type": "string"
+    },
+    "ParsedTemporal": {
+      "description": "Parsed temporal information",
+      "properties": {
+        "date": {
+          "default": null,
+          "description": "ISO 8601 date if specific",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relative_days": {
+          "default": null,
+          "description": "Relative offset (e.g., -1 for \"yesterday\")",
+          "format": "int32",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "time_of_day": {
+          "default": null,
+          "description": "Time of day if mentioned",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "RelationshipType": {
+      "description": "Types of relationships",
+      "enum": [
+        "family",
+        "friend",
+        "close_friend",
+        "best_friend",
+        "romantic",
+        "ex_romantic",
+        "spouse",
+        "parent",
+        "child",
+        "sibling",
+        "colleague",
+        "manager",
+        "direct_report",
+        "mentor",
+        "mentee",
+        "client",
+        "vendor",
+        "partner",
+        "acquaintance",
+        "neighbor",
+        "classmate",
+        "teammate",
+        "adversary",
+        "rival",
+        "service_provider",
+        "other"
+      ],
+      "type": "string"
+    },
+    "Segment": {
+      "description": "A segmented unit of content",
+      "properties": {
+        "boundaries": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SegmentBoundaries"
+            }
+          ],
+          "description": "Segment boundaries"
+        },
+        "confidence": {
+          "description": "Confidence in segmentation decision",
+          "format": "double",
+          "type": "number"
+        },
+        "content": {
+          "description": "The segmented content",
+          "type": "string"
+        },
+        "features": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SegmentFeatures"
+            }
+          ],
+          "description": "Extracted features"
+        },
+        "id": {
+          "description": "Unique segment ID",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index in the sequence",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "modality": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Modality"
+            }
+          ],
+          "description": "Original modality"
+        }
+      },
+      "required": [
+        "boundaries",
+        "confidence",
+        "content",
+        "features",
+        "id",
+        "index",
+        "modality"
+      ],
+      "type": "object"
+    },
+    "SegmentBoundaries": {
+      "description": "Boundaries of a segment within the original input",
+      "properties": {
+        "end": {
+          "description": "End position",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "speaker_id": {
+          "default": null,
+          "description": "For audio/video: speaker ID if detected",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start": {
+          "description": "Start position (char index for text, milliseconds for audio/video)",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "end",
+        "start"
+      ],
+      "type": "object"
+    },
+    "SegmentFeatures": {
+      "description": "Extracted features from a segment",
+      "properties": {
+        "emotional_tone": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/EmotionalTone"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Emotional tone (if detectable)"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords extracted",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "language": {
+          "default": null,
+          "description": "Language detected",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mentions": {
+          "default": [],
+          "description": "Entity mentions found",
+          "items": {
+            "$ref": "#/definitions/EntityMention"
+          },
+          "type": "array"
+        },
+        "subject": {
+          "default": null,
+          "description": "Primary subject/actor mentioned",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal_markers": {
+          "default": [],
+          "description": "Temporal markers detected",
+          "items": {
+            "$ref": "#/definitions/TemporalMarker"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "TemporalMarker": {
+      "description": "A temporal marker in the segment",
+      "properties": {
+        "marker_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalMarkerType"
+            }
+          ],
+          "description": "Type of temporal reference"
+        },
+        "parsed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ParsedTemporal"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parsed temporal value (if parseable)"
+        },
+        "text": {
+          "description": "The text of the marker",
+          "type": "string"
+        }
+      },
+      "required": [
+        "marker_type",
+        "text"
+      ],
+      "type": "object"
+    },
+    "TemporalMarkerType": {
+      "description": "Types of temporal markers",
+      "oneOf": [
+        {
+          "description": "Specific date (January 5th)",
+          "enum": [
+            "absolute"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relative reference (yesterday, last week)",
+          "enum": [
+            "relative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Duration (for 2 hours)",
+          "enum": [
+            "duration"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Frequency (every day, weekly)",
+          "enum": [
+            "frequency"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Time of day (in the morning)",
+          "enum": [
+            "time_of_day"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "description": "Aliases for matching",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Input for bond hint generation",
+  "properties": {
+    "known_bonds": {
+      "default": [],
+      "description": "Known bonds for context",
+      "items": {
+        "$ref": "#/definitions/ExistingBond"
+      },
+      "type": "array"
+    },
+    "segment": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Segment"
+        }
+      ],
+      "description": "The segment containing relationship information"
+    },
+    "threads": {
+      "description": "Detected threads in the segment",
+      "items": {
+        "$ref": "#/definitions/ThreadReference"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "segment",
+    "threads"
+  ],
+  "title": "BondHintInput",
+  "type": "object"
+}

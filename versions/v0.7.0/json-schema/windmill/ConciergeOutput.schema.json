@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AgentResponse": {
+      "description": "Response from an agent",
+      "properties": {
+        "content": {
+          "description": "Content of the response",
+          "type": "string"
+        },
+        "message_type": {
+          "default": "text",
+          "description": "Type of message (text, question, etc.)",
+          "type": "string"
+        },
+        "options": {
+          "default": null,
+          "description": "Options for questions",
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Output from the concierge agent",
+  "properties": {
+    "done": {
+      "default": false,
+      "description": "Whether the task is done",
+      "type": "boolean"
+    },
+    "response": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AgentResponse"
+        }
+      ],
+      "description": "Response to send to user"
+    },
+    "state": {
+      "description": "Updated state"
+    }
+  },
+  "required": [
+    "response",
+    "state"
+  ],
+  "title": "ConciergeOutput",
+  "type": "object"
+}

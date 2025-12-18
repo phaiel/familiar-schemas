@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InviteRole": {
+      "description": "Role to assign when invitation is accepted",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for creating a code invitation",
+  "properties": {
+    "expires_in_days": {
+      "default": null,
+      "description": "Expiry in days (None = never)",
+      "format": "int64",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "max_uses": {
+      "default": 1,
+      "description": "Max number of uses (default 1, 0 = unlimited)",
+      "format": "int32",
+      "type": "integer"
+    },
+    "role": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/InviteRole"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id"
+  ],
+  "title": "CreateCodeInviteInput",
+  "type": "object"
+}

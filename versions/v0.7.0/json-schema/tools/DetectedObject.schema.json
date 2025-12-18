@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BoundingBox": {
+      "description": "Bounding box for object detection",
+      "properties": {
+        "height": {
+          "format": "double",
+          "type": "number"
+        },
+        "width": {
+          "format": "double",
+          "type": "number"
+        },
+        "x": {
+          "format": "double",
+          "type": "number"
+        },
+        "y": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "height",
+        "width",
+        "x",
+        "y"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A detected object in vision",
+  "properties": {
+    "bounding_box": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/BoundingBox"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "confidence": {
+      "format": "double",
+      "type": "number"
+    },
+    "label": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "confidence",
+    "label"
+  ],
+  "title": "DetectedObject",
+  "type": "object"
+}

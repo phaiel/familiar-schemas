@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BondIndicatorType": {
+      "description": "Types of bond indicators",
+      "oneOf": [
+        {
+          "description": "Explicit label (\"my friend\", \"my boss\")",
+          "enum": [
+            "explicit_label"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Action indicating relationship (\"had dinner with\")",
+          "enum": [
+            "relational_action"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional language about entity",
+          "enum": [
+            "emotional_language"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Possessive language (\"my\", \"our\")",
+          "enum": [
+            "possessive_language"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Frequency indicators (\"always see\", \"often talk\")",
+          "enum": [
+            "frequency_indicator"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Context from previous interactions",
+          "enum": [
+            "contextual_inference"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Evidence for bond detection",
+  "properties": {
+    "indicator_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BondIndicatorType"
+        }
+      ],
+      "description": "Type of indicator"
+    },
+    "indicators": {
+      "default": [],
+      "description": "Specific indicators found",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "trigger_text": {
+      "description": "Text that indicates the relationship",
+      "type": "string"
+    }
+  },
+  "required": [
+    "indicator_type",
+    "trigger_text"
+  ],
+  "title": "BondEvidence",
+  "type": "object"
+}

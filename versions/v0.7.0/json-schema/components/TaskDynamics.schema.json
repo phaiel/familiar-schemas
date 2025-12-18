@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "description": "Models the state of a Task/Intent using Cybernetics and Thermodynamics principles.",
+  "properties": {
+    "activation_energy": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Activation Energy (Invested Work)** Thermodynamics: The cumulative work performed on the system. Used to calculate \"Sunk Cost\" gravity."
+    },
+    "completion": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Completion (Inverse Discrepancy)** Cybernetics: 1.0 - Error Signal. How close the system is to the Goal State."
+    },
+    "entropy": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Entropy (Disorder)** Information Theory: The uncertainty or \"noise\" in the process. High Entropy: Exploring, Brainstorming, Chaotic. Low Entropy: Executing, Refined, Linear."
+    },
+    "primary_status_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "activation_energy",
+    "completion",
+    "entropy"
+  ],
+  "title": "TaskDynamics",
+  "type": "object"
+}

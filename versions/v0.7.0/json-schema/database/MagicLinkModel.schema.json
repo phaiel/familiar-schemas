@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MagicLinkPurpose": {
+      "enum": [
+        "Login",
+        "Signup",
+        "VerifyEmail",
+        "PasswordReset"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "metadata": true,
+    "purpose": {
+      "$ref": "#/definitions/MagicLinkPurpose"
+    },
+    "token_hash": {
+      "type": "string"
+    },
+    "used_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "expires_at",
+    "id",
+    "metadata",
+    "purpose",
+    "token_hash"
+  ],
+  "title": "Model",
+  "type": "object"
+}

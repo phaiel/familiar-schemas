@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Status of a trace unit",
+  "oneOf": [
+    {
+      "description": "Step started",
+      "enum": [
+        "started"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Step in progress (for long-running)",
+      "enum": [
+        "in_progress"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Step completed successfully",
+      "enum": [
+        "completed"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Step failed",
+      "enum": [
+        "failed"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Step was cancelled",
+      "enum": [
+        "cancelled"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "TraceStatus"
+}

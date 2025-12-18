@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Message delivery status",
+  "enum": [
+    "sending",
+    "sent",
+    "delivered",
+    "read",
+    "failed"
+  ],
+  "title": "MessageStatusType",
+  "type": "string"
+}

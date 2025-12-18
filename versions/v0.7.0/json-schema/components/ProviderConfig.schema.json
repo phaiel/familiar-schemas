@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AIProvider": {
+      "description": "AI Provider enumeration",
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "mock"
+      ],
+      "type": "string"
+    },
+    "ApiKey": {
+      "description": "A secure wrapper for API keys that prevents accidental logging.",
+      "type": "string"
+    }
+  },
+  "description": "Configuration for an AI provider connection",
+  "properties": {
+    "api_key": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ApiKey"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "writeOnly": true
+    },
+    "api_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "base_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "organization_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "$ref": "#/definitions/AIProvider"
+    }
+  },
+  "required": [
+    "provider"
+  ],
+  "title": "ProviderConfig",
+  "type": "object"
+}

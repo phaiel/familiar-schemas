@@ -1,0 +1,790 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BindingHints": {
+      "description": "Hints for cognitive binding between entities",
+      "properties": {
+        "binding_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/BindingType"
+            }
+          ],
+          "description": "Type of cognitive binding"
+        },
+        "context": {
+          "default": null,
+          "description": "Context explaining the binding",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "directionality": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Directionality"
+            }
+          ],
+          "description": "Directionality of binding"
+        },
+        "source": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityReference"
+            }
+          ],
+          "description": "Source entity"
+        },
+        "strength": {
+          "description": "Strength of binding (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "target": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityReference"
+            }
+          ],
+          "description": "Target entity"
+        },
+        "temporal": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TemporalBinding"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Temporal aspect of binding"
+        }
+      },
+      "required": [
+        "binding_type",
+        "directionality",
+        "source",
+        "strength",
+        "target"
+      ],
+      "type": "object"
+    },
+    "BindingType": {
+      "description": "Types of cognitive binding",
+      "oneOf": [
+        {
+          "description": "Cause leads to effect",
+          "enum": [
+            "causal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal sequence (before/after)",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Associated by proximity/context",
+          "enum": [
+            "associative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Part-whole relationship",
+          "enum": [
+            "compositional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Contrast/opposition",
+          "enum": [
+            "contrastive"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Similarity/analogy",
+          "enum": [
+            "analogical"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Enables/prerequisite",
+          "enum": [
+            "enabling"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Thematic connection",
+          "enum": [
+            "thematic"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "BondHints": {
+      "description": "Hints for relationship bonds",
+      "properties": {
+        "description": {
+          "default": null,
+          "description": "Description of relationship",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reciprocity": {
+          "default": 0.5,
+          "description": "Reciprocity (0.0 one-way to 1.0 mutual)",
+          "format": "double",
+          "type": "number"
+        },
+        "relationship_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/RelationshipType"
+            }
+          ],
+          "description": "Relationship type"
+        },
+        "source": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadReference"
+            }
+          ],
+          "description": "Source entity (head of relationship)"
+        },
+        "strength": {
+          "description": "Strength of relationship (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "target": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadReference"
+            }
+          ],
+          "description": "Target entity (tail of relationship)"
+        },
+        "valence": {
+          "description": "Valence of relationship (-1.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "relationship_type",
+        "source",
+        "strength",
+        "target",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "Directionality": {
+      "description": "Directionality of binding",
+      "oneOf": [
+        {
+          "description": "Only source → target",
+          "enum": [
+            "unidirectional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Both directions",
+          "enum": [
+            "bidirectional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "No inherent direction",
+          "enum": [
+            "undirected"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "EntityContent": {
+      "description": "Content for the spawned entity",
+      "properties": {
+        "enriched_text": {
+          "default": null,
+          "description": "Enriched/contextualized content",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "default": [],
+          "description": "Tags extracted",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "text": {
+          "description": "Primary content text",
+          "type": "string"
+        },
+        "title": {
+          "default": null,
+          "description": "Title/summary",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "type": "object"
+    },
+    "EntityReference": {
+      "description": "Reference to an entity for binding",
+      "properties": {
+        "description": {
+          "description": "Description for matching",
+          "type": "string"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityType"
+            }
+          ],
+          "description": "Entity type"
+        },
+        "id": {
+          "default": null,
+          "description": "Entity ID (if existing)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "description",
+        "entity_type"
+      ],
+      "type": "object"
+    },
+    "EntityType": {
+      "description": "Entity types from the Symmetric Seven ontology",
+      "oneOf": [
+        {
+          "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Definition of person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relationship between entities (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "PhysicsHints": {
+      "description": "Hints for physics/VAE space positioning",
+      "properties": {
+        "arousal": {
+          "description": "Arousal: 0.0 (calm) to 1.0 (excited/energized)",
+          "format": "double",
+          "type": "number"
+        },
+        "certainty": {
+          "default": 0.5,
+          "description": "Epistemic certainty: 0.0 (uncertain) to 1.0 (certain)",
+          "format": "double",
+          "type": "number"
+        },
+        "reasoning": {
+          "default": null,
+          "description": "Reasoning for physics values",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "significance": {
+          "description": "Significance/mass: 0.0 (trivial) to 1.0 (very important)",
+          "format": "double",
+          "type": "number"
+        },
+        "valence": {
+          "description": "Valence: -1.0 (negative) to 1.0 (positive)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "arousal",
+        "significance",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "RelationshipType": {
+      "description": "Types of relationships",
+      "enum": [
+        "family",
+        "friend",
+        "close_friend",
+        "best_friend",
+        "romantic",
+        "ex_romantic",
+        "spouse",
+        "parent",
+        "child",
+        "sibling",
+        "colleague",
+        "manager",
+        "direct_report",
+        "mentor",
+        "mentee",
+        "client",
+        "vendor",
+        "partner",
+        "acquaintance",
+        "neighbor",
+        "classmate",
+        "teammate",
+        "adversary",
+        "rival",
+        "service_provider",
+        "other"
+      ],
+      "type": "string"
+    },
+    "SpawnAction": {
+      "description": "Action to take for spawn",
+      "oneOf": [
+        {
+          "description": "Auto-spawn without user confirmation",
+          "enum": [
+            "auto_spawn"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Suggest to user for review",
+          "enum": [
+            "suggest"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Skip but log for analysis",
+          "enum": [
+            "skip"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Request clarification from user",
+          "enum": [
+            "clarify"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "SpawnHints": {
+      "description": "All hints for a spawned entity",
+      "properties": {
+        "binding": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BindingHints"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Binding hints for cognitive connections"
+        },
+        "bond": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BondHints"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Bond hints for relationships"
+        },
+        "physics": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/PhysicsHints"
+            }
+          ],
+          "description": "Physics hints for VAE space positioning"
+        },
+        "thread": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadHints"
+            }
+          ],
+          "description": "Thread hints for narrative connections"
+        }
+      },
+      "required": [
+        "physics",
+        "thread"
+      ],
+      "type": "object"
+    },
+    "SpawnSuggestion": {
+      "description": "A suggestion to spawn an entity",
+      "properties": {
+        "action": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SpawnAction"
+            }
+          ],
+          "description": "Spawn action"
+        },
+        "confidence": {
+          "description": "Confidence in this spawn",
+          "format": "double",
+          "type": "number"
+        },
+        "content": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityContent"
+            }
+          ],
+          "description": "Content to use for entity"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityType"
+            }
+          ],
+          "description": "Entity type to spawn"
+        },
+        "hints": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SpawnHints"
+            }
+          ],
+          "description": "All hints for the entity"
+        },
+        "reason": {
+          "description": "Reason for suggestion",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action",
+        "confidence",
+        "content",
+        "entity_type",
+        "hints",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "SpawnSummary": {
+      "description": "Summary of spawn decisions",
+      "properties": {
+        "auto_spawn_count": {
+          "description": "Auto-spawn count",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "primary_type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/EntityType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Primary entity type suggested"
+        },
+        "review_count": {
+          "description": "Needs review count",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "skipped_count": {
+          "description": "Skipped count",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "total_suggestions": {
+          "description": "Total suggestions",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "auto_spawn_count",
+        "review_count",
+        "skipped_count",
+        "total_suggestions"
+      ],
+      "type": "object"
+    },
+    "TemporalBinding": {
+      "description": "Temporal aspect of binding",
+      "properties": {
+        "gap": {
+          "default": null,
+          "description": "Time gap (if known)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relation": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalRelation"
+            }
+          ],
+          "description": "Time relationship"
+        }
+      },
+      "required": [
+        "relation"
+      ],
+      "type": "object"
+    },
+    "TemporalRelation": {
+      "description": "Temporal relationships",
+      "enum": [
+        "before",
+        "after",
+        "during",
+        "simultaneous",
+        "overlapping"
+      ],
+      "type": "string"
+    },
+    "ThreadHints": {
+      "description": "Hints for thread/narrative connections",
+      "properties": {
+        "create_if_missing": {
+          "default": false,
+          "description": "Should create new thread if no match?",
+          "type": "boolean"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords for thread matching",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "primary_subject": {
+          "description": "Primary subject/actor",
+          "type": "string"
+        },
+        "related_threads": {
+          "default": [],
+          "description": "Related threads to link",
+          "items": {
+            "$ref": "#/definitions/ThreadReference"
+          },
+          "type": "array"
+        },
+        "thread_role": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadRole"
+            }
+          ],
+          "description": "Role of entity in narrative"
+        }
+      },
+      "required": [
+        "primary_subject",
+        "thread_role"
+      ],
+      "type": "object"
+    },
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "description": "Aliases for matching",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "type": "object"
+    },
+    "ThreadRole": {
+      "description": "Role of entity relative to threads",
+      "oneOf": [
+        {
+          "description": "Entity is the actor/doer",
+          "enum": [
+            "actor"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is the subject being discussed",
+          "enum": [
+            "subject"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is observing/witnessing",
+          "enum": [
+            "observer"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is the target of action",
+          "enum": [
+            "target"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is setting/location",
+          "enum": [
+            "setting"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is an instrument/tool",
+          "enum": [
+            "instrument"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Output from spawn suggestion tool",
+  "properties": {
+    "suggestions": {
+      "description": "Entities to spawn",
+      "items": {
+        "$ref": "#/definitions/SpawnSuggestion"
+      },
+      "type": "array"
+    },
+    "summary": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SpawnSummary"
+        }
+      ],
+      "description": "Overall spawn decision summary"
+    }
+  },
+  "required": [
+    "suggestions",
+    "summary"
+  ],
+  "title": "SpawnSuggesterOutput",
+  "type": "object"
+}

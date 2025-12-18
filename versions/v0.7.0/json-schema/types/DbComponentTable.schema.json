@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Component tables (hypertables for time-series, regular for static)",
+  "oneOf": [
+    {
+      "description": "Field excitations (hypertable - time-series physics state)",
+      "enum": [
+        "FieldExcitations"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Quantum states (vector table for embeddings)",
+      "enum": [
+        "QuantumStates"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Content payloads",
+      "enum": [
+        "Content"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Cognitive optics",
+      "enum": [
+        "CognitiveOptics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Relational dynamics",
+      "enum": [
+        "RelationalDynamics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Bond physics",
+      "enum": [
+        "BondPhysics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Task dynamics",
+      "enum": [
+        "TaskDynamics"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "DbComponentTable"
+}

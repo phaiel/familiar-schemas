@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "format": "double",
+      "type": "number"
+    },
+    "SignedNormalizedFloat": {
+      "description": "A floating-point value normalized between -1.0 and 1.0. Used for polarity (Valence), alignment (Phase), and gradients.",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "properties": {
+    "formalism": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Formalism (Transactionalism / Spring Stiffness):** 1.0 = Rigid/Brittle (High k). Hard to move, snaps if stretched. 0.0 = Fluid/Elastic (Low k). Easy to stretch, adapts to change."
+    },
+    "intimacy": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Intimacy (Communal Strength / Rest Length):** 1.0 = Fusion (Rest Length 0). The entities want to occupy the same space. 0.0 = Estrangement (Max Rest Length)."
+    },
+    "power_dynamic": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SignedNormalizedFloat"
+        }
+      ],
+      "description": "**Power Dynamic (Authority Gradient / Mass Bias):** -1.0 = Target is the Anchor (Infinite Mass relative to Source). 0.0 = Equal Mass (Both move equally). +1.0 = Source is the Anchor."
+    },
+    "primary_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spectral_signature": {
+      "description": "**Color Filter (Spectral Gating):** If set, this bond only \"lights up\" under specific emotional light. e.g., A \"Work Friend\" bond might only reflect \"Professional\" (Blue) light. Stored as a hex code or vector for the shader.",
+      "items": {
+        "format": "float",
+        "type": "number"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "transparency": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Transparency (Refractive Index):** 1.0 = Clear. Looking at the Source reveals the Target (e.g., \"Honest\"). 0.0 = Opaque. The relationship hides the Target (e.g., \"Secretive\")."
+    }
+  },
+  "required": [
+    "formalism",
+    "intimacy",
+    "power_dynamic",
+    "transparency"
+  ],
+  "title": "RelationalDynamics",
+  "type": "object"
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MessageRole": {
+      "description": "Role in a chat conversation",
+      "oneOf": [
+        {
+          "description": "System instructions",
+          "enum": [
+            "system"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "User input",
+          "enum": [
+            "user"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Assistant response",
+          "enum": [
+            "assistant"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "A single message in a chat conversation",
+  "properties": {
+    "content": {
+      "description": "The message content",
+      "type": "string"
+    },
+    "role": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MessageRole"
+        }
+      ],
+      "description": "The role of the message sender"
+    }
+  },
+  "required": [
+    "content",
+    "role"
+  ],
+  "title": "ChatMessage",
+  "type": "object"
+}

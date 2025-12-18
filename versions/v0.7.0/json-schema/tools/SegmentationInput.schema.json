@@ -1,0 +1,655 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EmotionalTone": {
+      "description": "Emotional tone detected in segment",
+      "properties": {
+        "arousal": {
+          "description": "Arousal (0.0 calm to 1.0 excited)",
+          "format": "double",
+          "type": "number"
+        },
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "primary": {
+          "description": "Primary emotion",
+          "type": "string"
+        },
+        "valence": {
+          "description": "Valence (-1.0 negative to 1.0 positive)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "arousal",
+        "confidence",
+        "primary",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "EntityMention": {
+      "description": "An entity mention within a segment",
+      "properties": {
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "end": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityMentionType"
+            }
+          ],
+          "description": "Type of entity mentioned"
+        },
+        "resolved_id": {
+          "default": null,
+          "description": "Resolved entity ID (if matched to known entity)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start": {
+          "description": "Position in segment",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "text": {
+          "description": "The text of the mention",
+          "type": "string"
+        }
+      },
+      "required": [
+        "confidence",
+        "end",
+        "entity_type",
+        "start",
+        "text"
+      ],
+      "type": "object"
+    },
+    "EntityMentionType": {
+      "description": "Types of entity mentions",
+      "enum": [
+        "PERSON",
+        "PLACE",
+        "ORGANIZATION",
+        "DATE_TIME",
+        "EVENT",
+        "CONCEPT",
+        "OBJECT",
+        "ACTIVITY"
+      ],
+      "type": "string"
+    },
+    "KnownEntity": {
+      "description": "Known entity for reference resolution",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "entity_type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "entity_type",
+        "id",
+        "name"
+      ],
+      "type": "object"
+    },
+    "Modality": {
+      "description": "Supported input modalities",
+      "enum": [
+        "text",
+        "audio",
+        "vision",
+        "video"
+      ],
+      "type": "string"
+    },
+    "ModalityInput": {
+      "description": "Input container for different modalities",
+      "oneOf": [
+        {
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "language": {
+              "default": null,
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "modality": {
+              "enum": [
+                "text"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "modality"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "description": "Base64 encoded audio data",
+              "type": "string"
+            },
+            "duration_seconds": {
+              "default": null,
+              "description": "Duration in seconds",
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "format": {
+              "description": "Audio format (mp3, wav, etc.)",
+              "type": "string"
+            },
+            "modality": {
+              "enum": [
+                "audio"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "data",
+            "format",
+            "modality"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "description": "Base64 encoded image data",
+              "type": "string"
+            },
+            "format": {
+              "description": "Image format (png, jpg, etc.)",
+              "type": "string"
+            },
+            "height": {
+              "default": null,
+              "format": "uint32",
+              "minimum": 0.0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "modality": {
+              "enum": [
+                "vision"
+              ],
+              "type": "string"
+            },
+            "width": {
+              "default": null,
+              "description": "Image dimensions",
+              "format": "uint32",
+              "minimum": 0.0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "data",
+            "format",
+            "modality"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "description": "Base64 encoded video data or URL",
+              "type": "string"
+            },
+            "duration_seconds": {
+              "default": null,
+              "description": "Duration in seconds",
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "format": {
+              "description": "Video format (mp4, webm, etc.)",
+              "type": "string"
+            },
+            "fps": {
+              "default": null,
+              "description": "Frame rate",
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "modality": {
+              "enum": [
+                "video"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "data",
+            "format",
+            "modality"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ParsedTemporal": {
+      "description": "Parsed temporal information",
+      "properties": {
+        "date": {
+          "default": null,
+          "description": "ISO 8601 date if specific",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relative_days": {
+          "default": null,
+          "description": "Relative offset (e.g., -1 for \"yesterday\")",
+          "format": "int32",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "time_of_day": {
+          "default": null,
+          "description": "Time of day if mentioned",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "Segment": {
+      "description": "A segmented unit of content",
+      "properties": {
+        "boundaries": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SegmentBoundaries"
+            }
+          ],
+          "description": "Segment boundaries"
+        },
+        "confidence": {
+          "description": "Confidence in segmentation decision",
+          "format": "double",
+          "type": "number"
+        },
+        "content": {
+          "description": "The segmented content",
+          "type": "string"
+        },
+        "features": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SegmentFeatures"
+            }
+          ],
+          "description": "Extracted features"
+        },
+        "id": {
+          "description": "Unique segment ID",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index in the sequence",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "modality": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Modality"
+            }
+          ],
+          "description": "Original modality"
+        }
+      },
+      "required": [
+        "boundaries",
+        "confidence",
+        "content",
+        "features",
+        "id",
+        "index",
+        "modality"
+      ],
+      "type": "object"
+    },
+    "SegmentBoundaries": {
+      "description": "Boundaries of a segment within the original input",
+      "properties": {
+        "end": {
+          "description": "End position",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "speaker_id": {
+          "default": null,
+          "description": "For audio/video: speaker ID if detected",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start": {
+          "description": "Start position (char index for text, milliseconds for audio/video)",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "end",
+        "start"
+      ],
+      "type": "object"
+    },
+    "SegmentFeatures": {
+      "description": "Extracted features from a segment",
+      "properties": {
+        "emotional_tone": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/EmotionalTone"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Emotional tone (if detectable)"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords extracted",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "language": {
+          "default": null,
+          "description": "Language detected",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mentions": {
+          "default": [],
+          "description": "Entity mentions found",
+          "items": {
+            "$ref": "#/definitions/EntityMention"
+          },
+          "type": "array"
+        },
+        "subject": {
+          "default": null,
+          "description": "Primary subject/actor mentioned",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal_markers": {
+          "default": [],
+          "description": "Temporal markers detected",
+          "items": {
+            "$ref": "#/definitions/TemporalMarker"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "SegmentationConfig": {
+      "description": "Configuration for segmentation behavior",
+      "properties": {
+        "extract_entities": {
+          "default": true,
+          "description": "Whether to extract entity mentions",
+          "type": "boolean"
+        },
+        "extract_temporal": {
+          "default": true,
+          "description": "Whether to extract temporal markers",
+          "type": "boolean"
+        },
+        "language": {
+          "default": null,
+          "description": "Language hint (ISO 639-1)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "max_segments": {
+          "default": 20,
+          "description": "Maximum number of segments to produce",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "min_segment_length": {
+          "default": null,
+          "description": "Minimum segment length (chars for text, seconds for audio/video)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "SegmentationContext": {
+      "description": "Context for segmentation",
+      "properties": {
+        "current_speaker": {
+          "default": null,
+          "description": "Current speaker (if known)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "known_entities": {
+          "default": [],
+          "description": "Known entities for reference resolution",
+          "items": {
+            "$ref": "#/definitions/KnownEntity"
+          },
+          "type": "array"
+        },
+        "previous_segments": {
+          "default": [],
+          "description": "Previous segments in the conversation",
+          "items": {
+            "$ref": "#/definitions/Segment"
+          },
+          "type": "array"
+        },
+        "tenant_id": {
+          "description": "Tenant ID for multi-tenancy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tenant_id"
+      ],
+      "type": "object"
+    },
+    "TemporalMarker": {
+      "description": "A temporal marker in the segment",
+      "properties": {
+        "marker_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalMarkerType"
+            }
+          ],
+          "description": "Type of temporal reference"
+        },
+        "parsed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ParsedTemporal"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parsed temporal value (if parseable)"
+        },
+        "text": {
+          "description": "The text of the marker",
+          "type": "string"
+        }
+      },
+      "required": [
+        "marker_type",
+        "text"
+      ],
+      "type": "object"
+    },
+    "TemporalMarkerType": {
+      "description": "Types of temporal markers",
+      "oneOf": [
+        {
+          "description": "Specific date (January 5th)",
+          "enum": [
+            "absolute"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relative reference (yesterday, last week)",
+          "enum": [
+            "relative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Duration (for 2 hours)",
+          "enum": [
+            "duration"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Frequency (every day, weekly)",
+          "enum": [
+            "frequency"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Time of day (in the morning)",
+          "enum": [
+            "time_of_day"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Input for segmentation tools",
+  "properties": {
+    "config": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentationConfig"
+        }
+      ],
+      "default": {
+        "extract_entities": true,
+        "extract_temporal": true,
+        "language": null,
+        "max_segments": 20,
+        "min_segment_length": null
+      },
+      "description": "Configuration options"
+    },
+    "context": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SegmentationContext"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Context from conversation/session"
+    },
+    "input": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ModalityInput"
+        }
+      ],
+      "description": "The input to segment"
+    }
+  },
+  "required": [
+    "input"
+  ],
+  "title": "SegmentationInput",
+  "type": "object"
+}

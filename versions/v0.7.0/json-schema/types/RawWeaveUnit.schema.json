@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "HeddleEntityType": {
+      "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+      "oneOf": [
+        {
+          "description": "A specific event that happened in the past (Narrative/External Particle)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A definition of a person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A statement about the quality of a relationship (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An internal state snapshot (Internal Particle)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "enum": [
+            "LOG"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "enum": [
+            "QUERY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "enum": [
+            "INFER"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "enum": [
+            "REFERENCE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "enum": [
+            "REFLECT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "enum": [
+            "COMMAND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "enum": [
+            "SOCIAL"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "RawClassification": {
+      "description": "Raw classification from LLM output",
+      "properties": {
+        "entity_type": {
+          "$ref": "#/definitions/HeddleEntityType"
+        },
+        "weight": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  "description": "Raw weave unit from LLM output (before validation)",
+  "properties": {
+    "classifications": {
+      "description": "Classifications in superposition",
+      "items": {
+        "$ref": "#/definitions/RawClassification"
+      },
+      "type": "array"
+    },
+    "content": {
+      "description": "The extracted/cleaned text content for this weave unit",
+      "type": "string"
+    },
+    "physics_hint": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/RawPhysicsHint"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
+    },
+    "primary_thread": {
+      "default": null,
+      "description": "Primary thread: the main subject/actor of this unit",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "purpose": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MessageIntent"
+        }
+      ],
+      "default": "LOG",
+      "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
+    },
+    "secondary_threads": {
+      "default": null,
+      "description": "Secondary threads: other people/places/things mentioned",
+      "items": {
+        "type": "string"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "temporal_marker": {
+      "default": null,
+      "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "classifications",
+    "content"
+  ],
+  "title": "RawWeaveUnit",
+  "type": "object"
+}

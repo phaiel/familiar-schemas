@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ParameterConstraints": {
+      "description": "Validation constraints for parameters",
+      "properties": {
+        "allowed_values": {
+          "default": null,
+          "description": "Allowed values (enum constraint)",
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "max": {
+          "default": null,
+          "description": "Maximum value (for numbers) or length (for strings/arrays)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "min": {
+          "default": null,
+          "description": "Minimum value (for numbers) or length (for strings/arrays)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "pattern": {
+          "default": null,
+          "description": "Regex pattern for string validation",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "ParameterType": {
+      "description": "Supported parameter types",
+      "oneOf": [
+        {
+          "enum": [
+            "string",
+            "integer",
+            "float",
+            "boolean",
+            "array",
+            "object"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Reference to another entity",
+          "enum": [
+            "entity_ref"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Base64 encoded binary data",
+          "enum": [
+            "binary"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Parameter definition with type and validation",
+  "properties": {
+    "constraints": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ParameterConstraints"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Validation constraints"
+    },
+    "default_value": {
+      "default": null,
+      "description": "Default value if not provided"
+    },
+    "description": {
+      "description": "Description of what this parameter does",
+      "type": "string"
+    },
+    "name": {
+      "description": "Parameter name",
+      "type": "string"
+    },
+    "param_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ParameterType"
+        }
+      ],
+      "description": "Data type"
+    },
+    "required": {
+      "description": "Whether this parameter is required",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "description",
+    "name",
+    "param_type",
+    "required"
+  ],
+  "title": "ToolParameter",
+  "type": "object"
+}

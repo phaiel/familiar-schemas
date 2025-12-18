@@ -1,0 +1,147 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AIProvider": {
+      "description": "AI Provider enumeration",
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "mock"
+      ],
+      "type": "string"
+    },
+    "MaxTokens": {
+      "description": "Maximum number of tokens for input/output",
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "ModelConfig": {
+      "description": "Model definition with all configuration",
+      "properties": {
+        "api_model_id": {
+          "description": "The actual API model ID to send to the provider",
+          "type": "string"
+        },
+        "context_window": {
+          "description": "Context window size (tokens)",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "deprecated": {
+          "default": false,
+          "description": "Whether this model is deprecated",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Unique identifier (e.g., \"gpt-4o\", \"claude-sonnet-4\")",
+          "type": "string"
+        },
+        "name": {
+          "description": "Human-readable name",
+          "type": "string"
+        },
+        "notes": {
+          "default": null,
+          "description": "Notes about the model",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/AIProvider"
+            }
+          ],
+          "description": "The provider"
+        },
+        "supports_json_mode": {
+          "description": "Whether the model supports JSON mode",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "api_model_id",
+        "context_window",
+        "id",
+        "name",
+        "provider",
+        "supports_json_mode"
+      ],
+      "type": "object"
+    },
+    "RetryConfig": {
+      "description": "Configuration for retry behavior on transient failures",
+      "properties": {
+        "backoff_factor": {
+          "format": "double",
+          "type": "number"
+        },
+        "initial_delay_ms": {
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "max_delay_ms": {
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "max_retries": {
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "backoff_factor",
+        "initial_delay_ms",
+        "max_delay_ms",
+        "max_retries"
+      ],
+      "type": "object"
+    },
+    "Temperature": {
+      "description": "Temperature controls randomness in LLM outputs. Range: 0.0 (deterministic) to 2.0 (very random)",
+      "format": "float",
+      "type": "number"
+    }
+  },
+  "description": "Configuration for an AI completion request",
+  "properties": {
+    "json_mode": {
+      "type": "boolean"
+    },
+    "max_tokens": {
+      "$ref": "#/definitions/MaxTokens"
+    },
+    "model": {
+      "$ref": "#/definitions/ModelConfig"
+    },
+    "retry": {
+      "$ref": "#/definitions/RetryConfig"
+    },
+    "temperature": {
+      "$ref": "#/definitions/Temperature"
+    },
+    "timeout_ms": {
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "json_mode",
+    "max_tokens",
+    "model",
+    "retry",
+    "temperature",
+    "timeout_ms"
+  ],
+  "title": "RequestConfig",
+  "type": "object"
+}

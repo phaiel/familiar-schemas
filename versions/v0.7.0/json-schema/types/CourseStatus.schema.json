@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Processing status for a Course",
+  "oneOf": [
+    {
+      "description": "User input received, not yet segmented",
+      "enum": [
+        "received"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Segmenting the input via Heddle",
+      "enum": [
+        "segmenting"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "All shuttles are processing segments",
+      "enum": [
+        "processing"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "All shuttles complete, generating response",
+      "enum": [
+        "responding"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Course complete with response",
+      "enum": [
+        "complete"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Course failed",
+      "enum": [
+        "failed"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "CourseStatus"
+}

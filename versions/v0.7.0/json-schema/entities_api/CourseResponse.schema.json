@@ -1,0 +1,618 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationResponse": {
+      "description": "Classification with weight",
+      "properties": {
+        "entity_type": {
+          "type": "string"
+        },
+        "weight": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "EntityResponse": {
+      "description": "A spawned entity in the response",
+      "properties": {
+        "content_preview": {
+          "type": "string"
+        },
+        "entity_type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PhysicsResponse"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit_index": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "content_preview",
+        "entity_type",
+        "id",
+        "unit_index"
+      ],
+      "type": "object"
+    },
+    "LlmRequestDebug": {
+      "description": "Debug info about the LLM request",
+      "properties": {
+        "system_prompt": {
+          "type": "string"
+        },
+        "user_prompt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "system_prompt",
+        "user_prompt"
+      ],
+      "type": "object"
+    },
+    "MediaRef": {
+      "properties": {
+        "bucket_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "media_type": {
+          "$ref": "#/definitions/MediaType"
+        },
+        "metadata": true,
+        "normalized_text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "media_type",
+        "metadata",
+        "normalized_text"
+      ],
+      "type": "object"
+    },
+    "MediaType": {
+      "enum": [
+        "Image",
+        "Audio",
+        "Document",
+        "Webpage"
+      ],
+      "type": "string"
+    },
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "enum": [
+            "LOG"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "enum": [
+            "QUERY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "enum": [
+            "INFER"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "enum": [
+            "REFERENCE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "enum": [
+            "REFLECT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "enum": [
+            "COMMAND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "enum": [
+            "SOCIAL"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "MessageIntentResponse": {
+      "description": "Classified message intent (what the user is trying to do)",
+      "properties": {
+        "confidence": {
+          "description": "Confidence score 0.0-1.0",
+          "format": "double",
+          "type": "number"
+        },
+        "intent": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ],
+          "description": "Primary intent: LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL"
+        },
+        "query_target": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/QueryTarget"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what is being queried"
+        },
+        "query_type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/QueryType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what type of query"
+        }
+      },
+      "required": [
+        "confidence",
+        "intent"
+      ],
+      "type": "object"
+    },
+    "PhysicsHintResponse": {
+      "description": "Physics hints from LLM",
+      "properties": {
+        "arousal": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "PhysicsResponse": {
+      "description": "Physics state on spawned entity",
+      "properties": {
+        "amplitude": {
+          "format": "double",
+          "type": "number"
+        },
+        "energy": {
+          "format": "double",
+          "type": "number"
+        },
+        "position": {
+          "description": "Position in VAE space [Valence, Arousal, Epistemic]",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "temperature": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "amplitude",
+        "energy",
+        "position",
+        "temperature"
+      ],
+      "type": "object"
+    },
+    "QueryTarget": {
+      "description": "Query target - what data is the query looking for?",
+      "properties": {
+        "entity_types": {
+          "default": [],
+          "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords extracted from the query",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "temporal_scope": {
+          "default": null,
+          "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_hints": {
+          "default": [],
+          "description": "Specific thread hints (names, concepts) to search for",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "QueryType": {
+      "description": "The type of query (when MessageIntent is QUERY)",
+      "oneOf": [
+        {
+          "description": "When did X happen? Time-based lookup",
+          "enum": [
+            "TEMPORAL"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Who/what questions - entity lookup",
+          "enum": [
+            "ENTITY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "How often? Pattern/frequency questions",
+          "enum": [
+            "PATTERN"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Compare X and Y",
+          "enum": [
+            "COMPARISON"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Give me a summary/overview",
+          "enum": [
+            "SUMMARY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Count/quantity questions (how many?)",
+          "enum": [
+            "QUANTITATIVE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Yes/no questions (did X happen?)",
+          "enum": [
+            "BOOLEAN"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Why questions - causation",
+          "enum": [
+            "CAUSAL"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Location-based questions",
+          "enum": [
+            "SPATIAL"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Open-ended/exploratory",
+          "enum": [
+            "EXPLORATORY"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "SegmentResponse": {
+      "description": "A raw segment from Phase 1 (no classification)",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "mentions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object"
+    },
+    "WeaveUnitResponse": {
+      "description": "A weave unit in the response",
+      "properties": {
+        "classifications": {
+          "items": {
+            "$ref": "#/definitions/ClassificationResponse"
+          },
+          "type": "array"
+        },
+        "content": {
+          "type": "string"
+        },
+        "index": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "physics_hint": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PhysicsHintResponse"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "primary_thread": {
+          "description": "Primary thread (main subject/actor)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "description": "Purpose of this specific weave unit (LOG, QUERY, COMMAND, INFER, REFERENCE)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "secondary_threads": {
+          "default": [],
+          "description": "Secondary threads (other people/places/things)",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "spawned_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "temporal_marker": {
+          "default": null,
+          "description": "Temporal marker (when: absolute, relative, frequency, duration) Always included in output for debugging (even if null)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "classifications",
+        "content",
+        "index"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Response payload for POST /weave",
+  "properties": {
+    "course_id": {
+      "description": "Course ID (the workflow container)",
+      "type": "string"
+    },
+    "debug_llm_request": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/LlmRequestDebug"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Raw prompt sent to LLM (system + user message)"
+    },
+    "debug_llm_response": {
+      "description": "Raw JSON response from LLM (before processing)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "entities": {
+      "description": "Entities spawned from weave units (by Spawner, not LLM)",
+      "items": {
+        "$ref": "#/definitions/EntityResponse"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "error": {
+      "description": "Error message if failed",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "media_refs": {
+      "description": "Media references from multimodal input",
+      "items": {
+        "$ref": "#/definitions/MediaRef"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "message_intent": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MessageIntentResponse"
+        }
+      ],
+      "description": "What is the user trying to do with this message?"
+    },
+    "metadata": {
+      "description": "Processing metadata"
+    },
+    "original_weave": {
+      "description": "The original user input (preserved for context)",
+      "type": "string"
+    },
+    "provider": {
+      "description": "Provider used",
+      "type": "string"
+    },
+    "segments": {
+      "default": [],
+      "description": "Raw segments before classification (Phase 1 output)",
+      "items": {
+        "$ref": "#/definitions/SegmentResponse"
+      },
+      "type": "array"
+    },
+    "shuttle_id": {
+      "description": "Shuttle ID (carries the weave units)",
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "unit_count": {
+      "description": "Number of weave units extracted (0 for queries)",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "weave_units": {
+      "description": "The classified weave units (for LOG intent)",
+      "items": {
+        "$ref": "#/definitions/WeaveUnitResponse"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "course_id",
+    "message_intent",
+    "original_weave",
+    "provider",
+    "shuttle_id",
+    "success",
+    "unit_count",
+    "weave_units"
+  ],
+  "title": "CourseResponse",
+  "type": "object"
+}

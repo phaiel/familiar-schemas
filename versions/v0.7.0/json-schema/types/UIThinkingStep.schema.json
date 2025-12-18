@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A thinking/reasoning step for chain-of-thought visibility",
+  "properties": {
+    "agent": {
+      "description": "Which agent produced this thought",
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique ID",
+      "type": "string"
+    },
+    "thought": {
+      "description": "The thought/reasoning content",
+      "type": "string"
+    },
+    "timestamp": {
+      "default": null,
+      "description": "Timestamp",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "agent",
+    "id",
+    "thought"
+  ],
+  "title": "UIThinkingStep",
+  "type": "object"
+}
