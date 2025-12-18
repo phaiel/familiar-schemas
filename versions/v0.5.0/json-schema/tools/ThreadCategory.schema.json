@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ThreadCategory",
+  "description": "Categories for threads",
+  "oneOf": [
+    {
+      "description": "People (friends, family, colleagues)",
+      "type": "string",
+      "enum": [
+        "people"
+      ]
+    },
+    {
+      "description": "Places (home, work, cities)",
+      "type": "string",
+      "enum": [
+        "places"
+      ]
+    },
+    {
+      "description": "Activities (hobbies, work tasks)",
+      "type": "string",
+      "enum": [
+        "activities"
+      ]
+    },
+    {
+      "description": "Projects (ongoing endeavors)",
+      "type": "string",
+      "enum": [
+        "projects"
+      ]
+    },
+    {
+      "description": "Topics (interests, subjects)",
+      "type": "string",
+      "enum": [
+        "topics"
+      ]
+    },
+    {
+      "description": "Events (recurring or one-time)",
+      "type": "string",
+      "enum": [
+        "events"
+      ]
+    },
+    {
+      "description": "Groups (teams, organizations)",
+      "type": "string",
+      "enum": [
+        "groups"
+      ]
+    },
+    {
+      "description": "Health (physical, mental)",
+      "type": "string",
+      "enum": [
+        "health"
+      ]
+    },
+    {
+      "description": "Finance (money, investments)",
+      "type": "string",
+      "enum": [
+        "finance"
+      ]
+    },
+    {
+      "description": "Relationships",
+      "type": "string",
+      "enum": [
+        "relationships"
+      ]
+    }
+  ]
+}

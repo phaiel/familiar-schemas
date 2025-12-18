@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DetectedEmotion",
+  "description": "A detected emotion in the content",
+  "type": "object",
+  "required": [
+    "emotion",
+    "evidence",
+    "intensity"
+  ],
+  "properties": {
+    "emotion": {
+      "description": "Emotion name",
+      "type": "string"
+    },
+    "evidence": {
+      "description": "Evidence for detection",
+      "type": "string"
+    },
+    "intensity": {
+      "description": "Intensity (0.0 to 1.0)",
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

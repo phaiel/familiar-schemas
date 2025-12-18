@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReviewJoinRequestInput",
+  "description": "Input for reviewing a join request",
+  "type": "object",
+  "required": [
+    "approved"
+  ],
+  "properties": {
+    "approved": {
+      "type": "boolean"
+    },
+    "note": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

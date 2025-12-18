@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EvidenceType",
+  "description": "Types of evidence for classification",
+  "oneOf": [
+    {
+      "description": "Verb type (action vs state)",
+      "type": "string",
+      "enum": [
+        "verb_type"
+      ]
+    },
+    {
+      "description": "Keywords detected",
+      "type": "string",
+      "enum": [
+        "keywords"
+      ]
+    },
+    {
+      "description": "Temporal indicators",
+      "type": "string",
+      "enum": [
+        "temporal"
+      ]
+    },
+    {
+      "description": "Emotional indicators",
+      "type": "string",
+      "enum": [
+        "emotional"
+      ]
+    },
+    {
+      "description": "Entity mentions",
+      "type": "string",
+      "enum": [
+        "entity_mention"
+      ]
+    },
+    {
+      "description": "Relational language",
+      "type": "string",
+      "enum": [
+        "relational"
+      ]
+    },
+    {
+      "description": "Pattern indicators",
+      "type": "string",
+      "enum": [
+        "pattern"
+      ]
+    },
+    {
+      "description": "Context from surrounding content",
+      "type": "string",
+      "enum": [
+        "context"
+      ]
+    }
+  ]
+}

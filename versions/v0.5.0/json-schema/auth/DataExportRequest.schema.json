@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataExportRequest",
+  "description": "A data export request",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "status",
+    "user_id"
+  ],
+  "properties": {
+    "completed_at": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "error_message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expires_at": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "export_format": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "export_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "file_size_bytes": {
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int64"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "started_at": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "status": {
+      "$ref": "#/definitions/ExportStatus"
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "definitions": {
+    "ExportStatus": {
+      "description": "Status of a data export request",
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "ready",
+        "expired",
+        "failed"
+      ]
+    }
+  }
+}

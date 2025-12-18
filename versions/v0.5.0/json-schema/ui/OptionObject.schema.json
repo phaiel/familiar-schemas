@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OptionObject",
+  "type": "object",
+  "required": [
+    "text",
+    "value"
+  ],
+  "properties": {
+    "description": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PlainTextObject"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "text": {
+      "$ref": "#/definitions/PlainTextObject"
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "PlainTextObject": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

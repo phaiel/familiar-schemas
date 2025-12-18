@@ -1,0 +1,466 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolChain",
+  "description": "A chain of tools to execute",
+  "type": "object",
+  "required": [
+    "context_strategy",
+    "description",
+    "error_strategy",
+    "id",
+    "name",
+    "steps"
+  ],
+  "properties": {
+    "context_strategy": {
+      "description": "How context flows between steps",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ContextStrategy"
+        }
+      ]
+    },
+    "description": {
+      "description": "Description",
+      "type": "string"
+    },
+    "error_strategy": {
+      "description": "Error handling strategy",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ErrorStrategy"
+        }
+      ]
+    },
+    "id": {
+      "description": "Chain identifier",
+      "type": "string"
+    },
+    "name": {
+      "description": "Human-readable name",
+      "type": "string"
+    },
+    "steps": {
+      "description": "Steps in the chain",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolChainStep"
+      }
+    }
+  },
+  "definitions": {
+    "ConditionOperator": {
+      "description": "Condition operators",
+      "type": "string",
+      "enum": [
+        "equals",
+        "not_equals",
+        "greater_than",
+        "less_than",
+        "contains",
+        "not_contains",
+        "is_null",
+        "is_not_null",
+        "in"
+      ]
+    },
+    "ConditionType": {
+      "description": "Types of conditions",
+      "oneOf": [
+        {
+          "description": "Check output value",
+          "type": "string",
+          "enum": [
+            "output_value"
+          ]
+        },
+        {
+          "description": "Check if step succeeded",
+          "type": "string",
+          "enum": [
+            "step_success"
+          ]
+        },
+        {
+          "description": "Check if step failed",
+          "type": "string",
+          "enum": [
+            "step_failed"
+          ]
+        },
+        {
+          "description": "Check output exists",
+          "type": "string",
+          "enum": [
+            "output_exists"
+          ]
+        }
+      ]
+    },
+    "ContextStrategy": {
+      "description": "How context flows between tools",
+      "oneOf": [
+        {
+          "description": "Pass full context to every tool",
+          "type": "string",
+          "enum": [
+            "full_context"
+          ]
+        },
+        {
+          "description": "Only pass relevant context (filtered)",
+          "type": "string",
+          "enum": [
+            "filtered_context"
+          ]
+        },
+        {
+          "description": "Accumulate results as context grows",
+          "type": "string",
+          "enum": [
+            "accumulating_context"
+          ]
+        },
+        {
+          "description": "Each step gets fresh context",
+          "type": "string",
+          "enum": [
+            "isolated_context"
+          ]
+        }
+      ]
+    },
+    "ErrorStrategy": {
+      "description": "Error handling strategy",
+      "oneOf": [
+        {
+          "description": "Fail the entire chain on any error",
+          "type": "string",
+          "enum": [
+            "fail_fast"
+          ]
+        },
+        {
+          "description": "Continue with remaining steps",
+          "type": "string",
+          "enum": [
+            "continue_on_error"
+          ]
+        },
+        {
+          "description": "Retry failed steps",
+          "type": "string",
+          "enum": [
+            "retry_on_error"
+          ]
+        },
+        {
+          "description": "Use fallback tool",
+          "type": "string",
+          "enum": [
+            "use_fallback"
+          ]
+        }
+      ]
+    },
+    "ExecutionOrder": {
+      "description": "Execution order types",
+      "oneOf": [
+        {
+          "description": "Execute in sequence",
+          "type": "string",
+          "enum": [
+            "sequential"
+          ]
+        },
+        {
+          "description": "Execute in parallel with other parallel steps",
+          "type": "string",
+          "enum": [
+            "parallel"
+          ]
+        },
+        {
+          "description": "Execute only if condition is met",
+          "type": "string",
+          "enum": [
+            "conditional"
+          ]
+        },
+        {
+          "description": "Execute as fallback if previous failed",
+          "type": "string",
+          "enum": [
+            "fallback"
+          ]
+        }
+      ]
+    },
+    "InputMapping": {
+      "description": "Input mapping from previous step output",
+      "type": "object",
+      "required": [
+        "from_path",
+        "from_step",
+        "to_path"
+      ],
+      "properties": {
+        "from_path": {
+          "description": "Path in source output",
+          "type": "string"
+        },
+        "from_step": {
+          "description": "Source step ID",
+          "type": "string"
+        },
+        "to_path": {
+          "description": "Path in this step's input",
+          "type": "string"
+        },
+        "transform": {
+          "description": "Transform to apply",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/InputTransform"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "InputTransform": {
+      "description": "Transforms for input mapping",
+      "oneOf": [
+        {
+          "description": "Direct pass-through",
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "identity"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Extract array item",
+          "type": "object",
+          "required": [
+            "index",
+            "type"
+          ],
+          "properties": {
+            "index": {
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0.0
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "array_item"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Filter array by condition",
+          "type": "object",
+          "required": [
+            "path",
+            "type",
+            "value"
+          ],
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "array_filter"
+              ]
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "description": "Map array items",
+          "type": "object",
+          "required": [
+            "template",
+            "type"
+          ],
+          "properties": {
+            "template": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "array_map"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Concatenate strings",
+          "type": "object",
+          "required": [
+            "separator",
+            "type"
+          ],
+          "properties": {
+            "separator": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "concat"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Custom transform function",
+          "type": "object",
+          "required": [
+            "function",
+            "type"
+          ],
+          "properties": {
+            "function": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "custom"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "StepCondition": {
+      "description": "Condition for conditional execution",
+      "type": "object",
+      "required": [
+        "condition_type",
+        "operator",
+        "path",
+        "source_step",
+        "value"
+      ],
+      "properties": {
+        "condition_type": {
+          "description": "Type of condition",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ConditionType"
+            }
+          ]
+        },
+        "operator": {
+          "description": "Operator",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ConditionOperator"
+            }
+          ]
+        },
+        "path": {
+          "description": "Path to check",
+          "type": "string"
+        },
+        "source_step": {
+          "description": "Source step to check",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value to compare"
+        }
+      }
+    },
+    "ToolChainStep": {
+      "description": "A step in a tool chain",
+      "type": "object",
+      "required": [
+        "execution_order",
+        "id",
+        "tool"
+      ],
+      "properties": {
+        "condition": {
+          "description": "Condition for execution (if conditional)",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StepCondition"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "execution_order": {
+          "description": "Execution order",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ExecutionOrder"
+            }
+          ]
+        },
+        "id": {
+          "description": "Step identifier",
+          "type": "string"
+        },
+        "input_mapping": {
+          "description": "Input mapping from previous steps",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InputMapping"
+          }
+        },
+        "parallel_with": {
+          "description": "Steps to run in parallel with this one",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required": {
+          "description": "Whether step is required or optional",
+          "default": true,
+          "type": "boolean"
+        },
+        "timeout_ms": {
+          "description": "Timeout in milliseconds",
+          "default": null,
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "tool": {
+          "description": "Tool to execute",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

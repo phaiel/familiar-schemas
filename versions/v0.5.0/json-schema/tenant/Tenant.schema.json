@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tenant",
+  "description": "A tenant (family) in the system\n\nUses `SystemEntityMeta` because tenants are top-level entities that don't belong to another tenant.",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "name",
+    "updated_at"
+  ],
+  "properties": {
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "settings": {
+      "default": null
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

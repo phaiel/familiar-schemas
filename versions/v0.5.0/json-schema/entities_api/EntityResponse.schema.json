@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EntityResponse",
+  "description": "A spawned entity in the response",
+  "type": "object",
+  "required": [
+    "content_preview",
+    "entity_type",
+    "id",
+    "unit_index"
+  ],
+  "properties": {
+    "content_preview": {
+      "type": "string"
+    },
+    "entity_type": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "physics": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PhysicsResponse"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "unit_index": {
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    }
+  },
+  "definitions": {
+    "PhysicsResponse": {
+      "description": "Physics state on spawned entity",
+      "type": "object",
+      "required": [
+        "amplitude",
+        "energy",
+        "position",
+        "temperature"
+      ],
+      "properties": {
+        "amplitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "energy": {
+          "type": "number",
+          "format": "double"
+        },
+        "position": {
+          "description": "Position in VAE space [Valence, Arousal, Epistemic]",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "temperature": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    }
+  }
+}

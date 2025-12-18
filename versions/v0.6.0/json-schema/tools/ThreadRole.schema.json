@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role of entity relative to threads",
+  "oneOf": [
+    {
+      "description": "Entity is the actor/doer",
+      "enum": [
+        "actor"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is the subject being discussed",
+      "enum": [
+        "subject"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is observing/witnessing",
+      "enum": [
+        "observer"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is the target of action",
+      "enum": [
+        "target"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is setting/location",
+      "enum": [
+        "setting"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is an instrument/tool",
+      "enum": [
+        "instrument"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ThreadRole"
+}

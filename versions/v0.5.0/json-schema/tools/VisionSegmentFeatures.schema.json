@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VisionSegmentFeatures",
+  "description": "Vision-specific segment features",
+  "type": "object",
+  "required": [
+    "objects",
+    "scene_description"
+  ],
+  "properties": {
+    "actions": {
+      "description": "Actions/activities",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DetectedAction"
+      }
+    },
+    "objects": {
+      "description": "Objects detected",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DetectedObject"
+      }
+    },
+    "people": {
+      "description": "People detected",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DetectedPerson"
+      }
+    },
+    "scene_description": {
+      "description": "Scene description",
+      "type": "string"
+    },
+    "text_content": {
+      "description": "Text in image (OCR)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "BoundingBox": {
+      "description": "Bounding box for object detection",
+      "type": "object",
+      "required": [
+        "height",
+        "width",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "height": {
+          "type": "number",
+          "format": "double"
+        },
+        "width": {
+          "type": "number",
+          "format": "double"
+        },
+        "x": {
+          "type": "number",
+          "format": "double"
+        },
+        "y": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "DetectedAction": {
+      "description": "A detected action in vision",
+      "type": "object",
+      "required": [
+        "action",
+        "confidence"
+      ],
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "actor": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "DetectedObject": {
+      "description": "A detected object in vision",
+      "type": "object",
+      "required": [
+        "confidence",
+        "label"
+      ],
+      "properties": {
+        "bounding_box": {
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "DetectedPerson": {
+      "description": "A detected person in vision",
+      "type": "object",
+      "properties": {
+        "bounding_box": {
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BoundingBox"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "emotion": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "face_id": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

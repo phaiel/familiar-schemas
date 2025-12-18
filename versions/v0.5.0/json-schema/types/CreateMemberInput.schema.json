@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CreateMemberInput",
+  "description": "Input for creating a new tenant member",
+  "type": "object",
+  "required": [
+    "name",
+    "tenant_id"
+  ],
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/MemberRole"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "definitions": {
+    "MemberRole": {
+      "description": "Role of a tenant member",
+      "type": "string",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ]
+    }
+  }
+}

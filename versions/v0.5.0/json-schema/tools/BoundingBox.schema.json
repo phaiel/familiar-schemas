@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BoundingBox",
+  "description": "Bounding box for object detection",
+  "type": "object",
+  "required": [
+    "height",
+    "width",
+    "x",
+    "y"
+  ],
+  "properties": {
+    "height": {
+      "type": "number",
+      "format": "double"
+    },
+    "width": {
+      "type": "number",
+      "format": "double"
+    },
+    "x": {
+      "type": "number",
+      "format": "double"
+    },
+    "y": {
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

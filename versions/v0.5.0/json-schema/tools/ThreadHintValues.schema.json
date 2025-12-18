@@ -1,0 +1,309 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ThreadHintValues",
+  "description": "Thread hint values",
+  "type": "object",
+  "required": [
+    "primary_subject",
+    "thread_role"
+  ],
+  "properties": {
+    "categories": {
+      "description": "Thread categories",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThreadCategory"
+      }
+    },
+    "create_if_missing": {
+      "description": "Whether to create thread if no match found",
+      "default": false,
+      "type": "boolean"
+    },
+    "keywords": {
+      "description": "Keywords for thread matching",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "primary_subject": {
+      "description": "Primary subject/actor (who/what is the main focus)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubjectReference"
+        }
+      ]
+    },
+    "related_threads": {
+      "description": "Related threads",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThreadReference"
+      }
+    },
+    "thread_role": {
+      "description": "Role of entity relative to thread",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadRole"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "SubjectReference": {
+      "description": "Reference to a subject",
+      "type": "object",
+      "required": [
+        "confidence",
+        "name",
+        "subject_type"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence in identification",
+          "type": "number",
+          "format": "double"
+        },
+        "name": {
+          "description": "Name/label of subject",
+          "type": "string"
+        },
+        "subject_type": {
+          "description": "Type of subject",
+          "allOf": [
+            {
+              "$ref": "#/definitions/SubjectType"
+            }
+          ]
+        },
+        "thread_id": {
+          "description": "Matched thread ID (if resolved)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "SubjectType": {
+      "description": "Types of subjects",
+      "oneOf": [
+        {
+          "description": "The user themselves",
+          "type": "string",
+          "enum": [
+            "self_"
+          ]
+        },
+        {
+          "description": "Another person",
+          "type": "string",
+          "enum": [
+            "person"
+          ]
+        },
+        {
+          "description": "A place",
+          "type": "string",
+          "enum": [
+            "place"
+          ]
+        },
+        {
+          "description": "An organization",
+          "type": "string",
+          "enum": [
+            "organization"
+          ]
+        },
+        {
+          "description": "A concept/topic",
+          "type": "string",
+          "enum": [
+            "concept"
+          ]
+        },
+        {
+          "description": "An event",
+          "type": "string",
+          "enum": [
+            "event"
+          ]
+        },
+        {
+          "description": "An object/thing",
+          "type": "string",
+          "enum": [
+            "object"
+          ]
+        },
+        {
+          "description": "Unknown/other",
+          "type": "string",
+          "enum": [
+            "other"
+          ]
+        }
+      ]
+    },
+    "ThreadCategory": {
+      "description": "Categories for threads",
+      "oneOf": [
+        {
+          "description": "People (friends, family, colleagues)",
+          "type": "string",
+          "enum": [
+            "people"
+          ]
+        },
+        {
+          "description": "Places (home, work, cities)",
+          "type": "string",
+          "enum": [
+            "places"
+          ]
+        },
+        {
+          "description": "Activities (hobbies, work tasks)",
+          "type": "string",
+          "enum": [
+            "activities"
+          ]
+        },
+        {
+          "description": "Projects (ongoing endeavors)",
+          "type": "string",
+          "enum": [
+            "projects"
+          ]
+        },
+        {
+          "description": "Topics (interests, subjects)",
+          "type": "string",
+          "enum": [
+            "topics"
+          ]
+        },
+        {
+          "description": "Events (recurring or one-time)",
+          "type": "string",
+          "enum": [
+            "events"
+          ]
+        },
+        {
+          "description": "Groups (teams, organizations)",
+          "type": "string",
+          "enum": [
+            "groups"
+          ]
+        },
+        {
+          "description": "Health (physical, mental)",
+          "type": "string",
+          "enum": [
+            "health"
+          ]
+        },
+        {
+          "description": "Finance (money, investments)",
+          "type": "string",
+          "enum": [
+            "finance"
+          ]
+        },
+        {
+          "description": "Relationships",
+          "type": "string",
+          "enum": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "properties": {
+        "aliases": {
+          "description": "Aliases for matching",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      }
+    },
+    "ThreadRole": {
+      "description": "Role of entity relative to threads",
+      "oneOf": [
+        {
+          "description": "Entity is the actor/doer",
+          "type": "string",
+          "enum": [
+            "actor"
+          ]
+        },
+        {
+          "description": "Entity is the subject being discussed",
+          "type": "string",
+          "enum": [
+            "subject"
+          ]
+        },
+        {
+          "description": "Entity is observing/witnessing",
+          "type": "string",
+          "enum": [
+            "observer"
+          ]
+        },
+        {
+          "description": "Entity is the target of action",
+          "type": "string",
+          "enum": [
+            "target"
+          ]
+        },
+        {
+          "description": "Entity is setting/location",
+          "type": "string",
+          "enum": [
+            "setting"
+          ]
+        },
+        {
+          "description": "Entity is an instrument/tool",
+          "type": "string",
+          "enum": [
+            "instrument"
+          ]
+        }
+      ]
+    }
+  }
+}

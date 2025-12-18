@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TenantMember",
+  "description": "A member of a tenant (user-tenant association with role)\n\nNote: Uses UserId as the entity ID since this is a join table where the user_id + tenant_id forms the unique key.",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "name",
+    "role",
+    "tenant_id",
+    "updated_at"
+  ],
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "$ref": "#/definitions/MemberRole"
+    },
+    "settings": {
+      "default": null
+    },
+    "tenant_id": {
+      "description": "Tenant (family) this entity belongs to",
+      "type": "string",
+      "format": "uuid"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "MemberRole": {
+      "description": "Role of a tenant member",
+      "type": "string",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ]
+    }
+  }
+}

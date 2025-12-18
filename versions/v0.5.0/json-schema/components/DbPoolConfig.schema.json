@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DbPoolConfig",
+  "description": "Database pool configuration",
+  "type": "object",
+  "required": [
+    "connect_timeout_secs",
+    "connection",
+    "idle_timeout_secs",
+    "max_connections",
+    "min_connections"
+  ],
+  "properties": {
+    "connect_timeout_secs": {
+      "description": "Connection timeout in seconds",
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "connection": {
+      "description": "Database connection string",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DbConnectionString"
+        }
+      ]
+    },
+    "idle_timeout_secs": {
+      "description": "Idle timeout in seconds",
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "max_connections": {
+      "description": "Maximum pool size",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DbPoolSize"
+        }
+      ]
+    },
+    "min_connections": {
+      "description": "Minimum pool size",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DbPoolSize"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "DbConnectionString": {
+      "description": "A validated PostgreSQL/TimescaleDB connection string",
+      "type": "string"
+    },
+    "DbPoolSize": {
+      "description": "Connection pool size configuration",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0.0
+    }
+  }
+}

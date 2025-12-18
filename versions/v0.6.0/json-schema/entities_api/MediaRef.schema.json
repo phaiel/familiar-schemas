@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MediaType": {
+      "enum": [
+        "Image",
+        "Audio",
+        "Document",
+        "Webpage"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "bucket_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "type": "string"
+    },
+    "media_type": {
+      "$ref": "#/definitions/MediaType"
+    },
+    "metadata": true,
+    "normalized_text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "media_type",
+    "metadata",
+    "normalized_text"
+  ],
+  "title": "MediaRef",
+  "type": "object"
+}

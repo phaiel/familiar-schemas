@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ButtonElement",
+  "type": "object",
+  "required": [
+    "action_id",
+    "text"
+  ],
+  "properties": {
+    "action_id": {
+      "type": "string"
+    },
+    "style": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ButtonStyle"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "text": {
+      "$ref": "#/definitions/PlainTextObject"
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "ButtonStyle": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "danger"
+      ]
+    },
+    "PlainTextObject": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

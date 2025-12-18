@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TemporalMarker",
+  "description": "A temporal marker in the segment",
+  "type": "object",
+  "required": [
+    "marker_type",
+    "text"
+  ],
+  "properties": {
+    "marker_type": {
+      "description": "Type of temporal reference",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TemporalMarkerType"
+        }
+      ]
+    },
+    "parsed": {
+      "description": "Parsed temporal value (if parseable)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ParsedTemporal"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "text": {
+      "description": "The text of the marker",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "ParsedTemporal": {
+      "description": "Parsed temporal information",
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "ISO 8601 date if specific",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relative_days": {
+          "description": "Relative offset (e.g., -1 for \"yesterday\")",
+          "default": null,
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "time_of_day": {
+          "description": "Time of day if mentioned",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "TemporalMarkerType": {
+      "description": "Types of temporal markers",
+      "oneOf": [
+        {
+          "description": "Specific date (January 5th)",
+          "type": "string",
+          "enum": [
+            "absolute"
+          ]
+        },
+        {
+          "description": "Relative reference (yesterday, last week)",
+          "type": "string",
+          "enum": [
+            "relative"
+          ]
+        },
+        {
+          "description": "Duration (for 2 hours)",
+          "type": "string",
+          "enum": [
+            "duration"
+          ]
+        },
+        {
+          "description": "Frequency (every day, weekly)",
+          "type": "string",
+          "enum": [
+            "frequency"
+          ]
+        },
+        {
+          "description": "Time of day (in the morning)",
+          "type": "string",
+          "enum": [
+            "time_of_day"
+          ]
+        }
+      ]
+    }
+  }
+}

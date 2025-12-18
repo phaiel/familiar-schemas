@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExistingBond",
+  "description": "An existing bond for context",
+  "type": "object",
+  "required": [
+    "head_thread_id",
+    "id",
+    "relationship_type",
+    "strength",
+    "tail_thread_id"
+  ],
+  "properties": {
+    "head_thread_id": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "relationship_type": {
+      "$ref": "#/definitions/RelationshipType"
+    },
+    "strength": {
+      "type": "number",
+      "format": "double"
+    },
+    "tail_thread_id": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "RelationshipType": {
+      "description": "Types of relationships",
+      "type": "string",
+      "enum": [
+        "family",
+        "friend",
+        "close_friend",
+        "best_friend",
+        "romantic",
+        "ex_romantic",
+        "spouse",
+        "parent",
+        "child",
+        "sibling",
+        "colleague",
+        "manager",
+        "direct_report",
+        "mentor",
+        "mentee",
+        "client",
+        "vendor",
+        "partner",
+        "acquaintance",
+        "neighbor",
+        "classmate",
+        "teammate",
+        "adversary",
+        "rival",
+        "service_provider",
+        "other"
+      ]
+    }
+  }
+}

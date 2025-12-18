@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ParsedTemporal",
+  "description": "Parsed temporal information",
+  "type": "object",
+  "properties": {
+    "date": {
+      "description": "ISO 8601 date if specific",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relative_days": {
+      "description": "Relative offset (e.g., -1 for \"yesterday\")",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "int32"
+    },
+    "time_of_day": {
+      "description": "Time of day if mentioned",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

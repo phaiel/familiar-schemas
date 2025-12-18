@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DetectedThread",
+  "description": "A detected thread reference",
+  "type": "object",
+  "required": [
+    "confidence",
+    "detection_method",
+    "role",
+    "thread",
+    "trigger_text"
+  ],
+  "properties": {
+    "confidence": {
+      "description": "Confidence in match",
+      "type": "number",
+      "format": "double"
+    },
+    "detection_method": {
+      "description": "How it was detected",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DetectionMethod"
+        }
+      ]
+    },
+    "role": {
+      "description": "Role in this entity",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadRole"
+        }
+      ]
+    },
+    "thread": {
+      "description": "The matched thread",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadReference"
+        }
+      ]
+    },
+    "trigger_text": {
+      "description": "Text that triggered detection",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "DetectionMethod": {
+      "description": "How a thread was detected",
+      "oneOf": [
+        {
+          "description": "Exact name match",
+          "type": "string",
+          "enum": [
+            "exact_match"
+          ]
+        },
+        {
+          "description": "Alias match",
+          "type": "string",
+          "enum": [
+            "alias_match"
+          ]
+        },
+        {
+          "description": "Fuzzy/similar match",
+          "type": "string",
+          "enum": [
+            "fuzzy_match"
+          ]
+        },
+        {
+          "description": "Pronoun resolution from context",
+          "type": "string",
+          "enum": [
+            "pronoun_resolution"
+          ]
+        },
+        {
+          "description": "Keyword match",
+          "type": "string",
+          "enum": [
+            "keyword_match"
+          ]
+        },
+        {
+          "description": "Semantic similarity",
+          "type": "string",
+          "enum": [
+            "semantic_match"
+          ]
+        }
+      ]
+    },
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "properties": {
+        "aliases": {
+          "description": "Aliases for matching",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      }
+    },
+    "ThreadRole": {
+      "description": "Role of entity relative to threads",
+      "oneOf": [
+        {
+          "description": "Entity is the actor/doer",
+          "type": "string",
+          "enum": [
+            "actor"
+          ]
+        },
+        {
+          "description": "Entity is the subject being discussed",
+          "type": "string",
+          "enum": [
+            "subject"
+          ]
+        },
+        {
+          "description": "Entity is observing/witnessing",
+          "type": "string",
+          "enum": [
+            "observer"
+          ]
+        },
+        {
+          "description": "Entity is the target of action",
+          "type": "string",
+          "enum": [
+            "target"
+          ]
+        },
+        {
+          "description": "Entity is setting/location",
+          "type": "string",
+          "enum": [
+            "setting"
+          ]
+        },
+        {
+          "description": "Entity is an instrument/tool",
+          "type": "string",
+          "enum": [
+            "instrument"
+          ]
+        }
+      ]
+    }
+  }
+}

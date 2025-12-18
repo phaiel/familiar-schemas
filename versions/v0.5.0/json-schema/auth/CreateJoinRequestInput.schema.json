@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CreateJoinRequestInput",
+  "description": "Input for creating a join request",
+  "type": "object",
+  "required": [
+    "tenant_id"
+  ],
+  "properties": {
+    "message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  }
+}

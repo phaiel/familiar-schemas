@@ -1,0 +1,216 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MessageIntentResponse",
+  "description": "Classified message intent (what the user is trying to do)",
+  "type": "object",
+  "required": [
+    "confidence",
+    "intent"
+  ],
+  "properties": {
+    "confidence": {
+      "description": "Confidence score 0.0-1.0",
+      "type": "number",
+      "format": "double"
+    },
+    "intent": {
+      "description": "Primary intent: LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MessageIntent"
+        }
+      ]
+    },
+    "query_target": {
+      "description": "If QUERY: what is being queried",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/QueryTarget"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "query_type": {
+      "description": "If QUERY: what type of query",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/QueryType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        }
+      ]
+    },
+    "QueryTarget": {
+      "description": "Query target - what data is the query looking for?",
+      "type": "object",
+      "properties": {
+        "entity_types": {
+          "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keywords": {
+          "description": "Keywords extracted from the query",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporal_scope": {
+          "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_hints": {
+          "description": "Specific thread hints (names, concepts) to search for",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "QueryType": {
+      "description": "The type of query (when MessageIntent is QUERY)",
+      "oneOf": [
+        {
+          "description": "When did X happen? Time-based lookup",
+          "type": "string",
+          "enum": [
+            "TEMPORAL"
+          ]
+        },
+        {
+          "description": "Who/what questions - entity lookup",
+          "type": "string",
+          "enum": [
+            "ENTITY"
+          ]
+        },
+        {
+          "description": "How often? Pattern/frequency questions",
+          "type": "string",
+          "enum": [
+            "PATTERN"
+          ]
+        },
+        {
+          "description": "Compare X and Y",
+          "type": "string",
+          "enum": [
+            "COMPARISON"
+          ]
+        },
+        {
+          "description": "Give me a summary/overview",
+          "type": "string",
+          "enum": [
+            "SUMMARY"
+          ]
+        },
+        {
+          "description": "Count/quantity questions (how many?)",
+          "type": "string",
+          "enum": [
+            "QUANTITATIVE"
+          ]
+        },
+        {
+          "description": "Yes/no questions (did X happen?)",
+          "type": "string",
+          "enum": [
+            "BOOLEAN"
+          ]
+        },
+        {
+          "description": "Why questions - causation",
+          "type": "string",
+          "enum": [
+            "CAUSAL"
+          ]
+        },
+        {
+          "description": "Location-based questions",
+          "type": "string",
+          "enum": [
+            "SPATIAL"
+          ]
+        },
+        {
+          "description": "Open-ended/exploratory",
+          "type": "string",
+          "enum": [
+            "EXPLORATORY"
+          ]
+        }
+      ]
+    }
+  }
+}

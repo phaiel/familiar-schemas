@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseDetails",
+  "description": "Workflow metadata for a Course",
+  "type": "object",
+  "properties": {
+    "latency_ms": {
+      "description": "Total processing time in milliseconds",
+      "default": 0,
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "model": {
+      "description": "Model used for classification",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "description": "AI provider used for classification",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spawn_count": {
+      "description": "Number of entities spawned into the simulation",
+      "default": 0,
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "unit_count": {
+      "description": "Number of weave units (segments)",
+      "default": 0,
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    }
+  }
+}

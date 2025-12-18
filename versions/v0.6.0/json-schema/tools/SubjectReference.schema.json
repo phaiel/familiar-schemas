@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "SubjectType": {
+      "description": "Types of subjects",
+      "oneOf": [
+        {
+          "description": "The user themselves",
+          "enum": [
+            "self_"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Another person",
+          "enum": [
+            "person"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A place",
+          "enum": [
+            "place"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An organization",
+          "enum": [
+            "organization"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A concept/topic",
+          "enum": [
+            "concept"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An event",
+          "enum": [
+            "event"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An object/thing",
+          "enum": [
+            "object"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Unknown/other",
+          "enum": [
+            "other"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Reference to a subject",
+  "properties": {
+    "confidence": {
+      "description": "Confidence in identification",
+      "format": "double",
+      "type": "number"
+    },
+    "name": {
+      "description": "Name/label of subject",
+      "type": "string"
+    },
+    "subject_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubjectType"
+        }
+      ],
+      "description": "Type of subject"
+    },
+    "thread_id": {
+      "default": null,
+      "description": "Matched thread ID (if resolved)",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "confidence",
+    "name",
+    "subject_type"
+  ],
+  "title": "SubjectReference",
+  "type": "object"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhysicsOutput",
+  "description": "Output from the physics agent",
+  "type": "object",
+  "required": [
+    "operation",
+    "response_message",
+    "result",
+    "state"
+  ],
+  "properties": {
+    "done": {
+      "description": "Whether the task is done",
+      "default": true,
+      "type": "boolean"
+    },
+    "operation": {
+      "description": "Operation performed",
+      "type": "string"
+    },
+    "response_message": {
+      "description": "Response message",
+      "type": "string"
+    },
+    "result": {
+      "description": "Result data"
+    },
+    "state": {
+      "description": "Updated state"
+    }
+  }
+}

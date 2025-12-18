@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EntityClassificationContext",
+  "description": "Context for entity classification",
+  "type": "object",
+  "properties": {
+    "following": {
+      "description": "Following segment content (for context)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "known_threads": {
+      "description": "Known threads for reference",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThreadReference"
+      }
+    },
+    "preceding": {
+      "description": "Preceding segment content (for context)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_patterns": {
+      "description": "User's entity type distribution",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EntityPatterns"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "EntityPatterns": {
+      "description": "User's historical entity patterns",
+      "type": "object",
+      "required": [
+        "primary_type"
+      ],
+      "properties": {
+        "distribution": {
+          "description": "Distribution (entity_type -> frequency)",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "primary_type": {
+          "description": "Most common entity type",
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityType"
+            }
+          ]
+        }
+      }
+    },
+    "EntityType": {
+      "description": "Entity types from the Symmetric Seven ontology",
+      "oneOf": [
+        {
+          "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+          "type": "string",
+          "enum": [
+            "MOMENT"
+          ]
+        },
+        {
+          "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+          "type": "string",
+          "enum": [
+            "PULSE"
+          ]
+        },
+        {
+          "description": "Definition of person, place, or concept (Definitional/Object)",
+          "type": "string",
+          "enum": [
+            "THREAD"
+          ]
+        },
+        {
+          "description": "Relationship between entities (Relational/Connection)",
+          "type": "string",
+          "enum": [
+            "BOND"
+          ]
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "type": "string",
+          "enum": [
+            "MOTIF"
+          ]
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "type": "string",
+          "enum": [
+            "FILAMENT"
+          ]
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "type": "string",
+          "enum": [
+            "FOCUS"
+          ]
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "type": "string",
+          "enum": [
+            "INTENT"
+          ]
+        }
+      ]
+    },
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "properties": {
+        "aliases": {
+          "description": "Aliases for matching",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

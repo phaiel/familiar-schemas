@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RequestDeletionInput",
+  "description": "Input for requesting deletion",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

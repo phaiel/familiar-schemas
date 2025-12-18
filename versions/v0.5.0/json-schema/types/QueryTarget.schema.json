@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QueryTarget",
+  "description": "Query target - what data is the query looking for?",
+  "type": "object",
+  "properties": {
+    "entity_types": {
+      "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "keywords": {
+      "description": "Keywords extracted from the query",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "temporal_scope": {
+      "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thread_hints": {
+      "description": "Specific thread hints (names, concepts) to search for",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

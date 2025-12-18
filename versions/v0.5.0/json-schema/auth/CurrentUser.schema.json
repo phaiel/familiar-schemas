@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CurrentUser",
+  "description": "Current user info (for /api/auth/me)",
+  "type": "object",
+  "required": [
+    "memberships",
+    "user"
+  ],
+  "properties": {
+    "memberships": {
+      "description": "User's family memberships",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UserMembership"
+      }
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    }
+  },
+  "definitions": {
+    "InviteRole": {
+      "description": "Role to assign when invitation is accepted",
+      "type": "string",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ]
+    },
+    "User": {
+      "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
+      "type": "object",
+      "required": [
+        "created_at",
+        "email",
+        "email_verified",
+        "id",
+        "name",
+        "updated_at"
+      ],
+      "properties": {
+        "avatar_url": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletion_requested_at": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "email": {
+          "type": "string"
+        },
+        "email_verified": {
+          "type": "boolean"
+        },
+        "gdpr_consents": {
+          "default": null
+        },
+        "id": {
+          "description": "Unique identifier for this entity",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "primary_tenant_id": {
+          "description": "The user's primary family (can be changed)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "settings": {
+          "default": null
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "UserMembership": {
+      "description": "A user's membership in a family",
+      "type": "object",
+      "required": [
+        "is_primary",
+        "joined_at",
+        "role",
+        "tenant_id",
+        "tenant_name"
+      ],
+      "properties": {
+        "is_primary": {
+          "type": "boolean"
+        },
+        "joined_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "role": {
+          "$ref": "#/definitions/InviteRole"
+        },
+        "tenant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "tenant_name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

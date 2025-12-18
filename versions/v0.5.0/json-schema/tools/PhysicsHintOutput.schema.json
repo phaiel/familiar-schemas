@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhysicsHintOutput",
+  "description": "Output from physics hint generation",
+  "type": "object",
+  "required": [
+    "analysis",
+    "hints",
+    "position"
+  ],
+  "properties": {
+    "analysis": {
+      "description": "Analysis that led to these values",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PhysicsAnalysis"
+        }
+      ]
+    },
+    "hints": {
+      "description": "The computed physics hints",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PhysicsHintValues"
+        }
+      ]
+    },
+    "position": {
+      "description": "Computed VAE position",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VAEPosition"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "DetectedEmotion": {
+      "description": "A detected emotion in the content",
+      "type": "object",
+      "required": [
+        "emotion",
+        "evidence",
+        "intensity"
+      ],
+      "properties": {
+        "emotion": {
+          "description": "Emotion name",
+          "type": "string"
+        },
+        "evidence": {
+          "description": "Evidence for detection",
+          "type": "string"
+        },
+        "intensity": {
+          "description": "Intensity (0.0 to 1.0)",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "PhysicsAnalysis": {
+      "description": "Analysis that led to physics values",
+      "type": "object",
+      "required": [
+        "reasoning"
+      ],
+      "properties": {
+        "certainty_indicators": {
+          "description": "Certainty indicators",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "emotions": {
+          "description": "Detected emotions",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetectedEmotion"
+          }
+        },
+        "reasoning": {
+          "description": "Overall reasoning",
+          "type": "string"
+        },
+        "significance_indicators": {
+          "description": "Significance indicators",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "PhysicsHintValues": {
+      "description": "Physics hint values",
+      "type": "object",
+      "required": [
+        "arousal",
+        "energy",
+        "epistemic",
+        "significance",
+        "temperature",
+        "valence"
+      ],
+      "properties": {
+        "arousal": {
+          "description": "Arousal/activation: 0.0 (calm/low energy) to 1.0 (excited/high energy) Maps to Y-axis in VAE space",
+          "type": "number",
+          "format": "double"
+        },
+        "energy": {
+          "description": "Energy level for simulation",
+          "type": "number",
+          "format": "double"
+        },
+        "epistemic": {
+          "description": "Epistemic certainty: 0.0 (uncertain) to 1.0 (certain) Maps to Z-axis in VAE space",
+          "type": "number",
+          "format": "double"
+        },
+        "significance": {
+          "description": "Significance/mass: 0.0 (trivial) to 1.0 (very important) Affects physics simulation weight",
+          "type": "number",
+          "format": "double"
+        },
+        "temperature": {
+          "description": "Temperature (volatility/changeability)",
+          "type": "number",
+          "format": "double"
+        },
+        "valence": {
+          "description": "Emotional valence: -1.0 (very negative) to 1.0 (very positive) Maps to X-axis in VAE space",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "VAEPosition": {
+      "description": "VAE space position (quantized for physics)",
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "description": "X: Valence (emotional polarity)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "y": {
+          "description": "Y: Arousal (energy/activation)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "z": {
+          "description": "Z: Epistemic (certainty)",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

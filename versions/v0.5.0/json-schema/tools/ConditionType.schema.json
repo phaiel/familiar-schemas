@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConditionType",
+  "description": "Types of conditions",
+  "oneOf": [
+    {
+      "description": "Check output value",
+      "type": "string",
+      "enum": [
+        "output_value"
+      ]
+    },
+    {
+      "description": "Check if step succeeded",
+      "type": "string",
+      "enum": [
+        "step_success"
+      ]
+    },
+    {
+      "description": "Check if step failed",
+      "type": "string",
+      "enum": [
+        "step_failed"
+      ]
+    },
+    {
+      "description": "Check output exists",
+      "type": "string",
+      "enum": [
+        "output_exists"
+      ]
+    }
+  ]
+}

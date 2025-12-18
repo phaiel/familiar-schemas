@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OverflowElement",
+  "type": "object",
+  "required": [
+    "action_id",
+    "options"
+  ],
+  "properties": {
+    "action_id": {
+      "type": "string"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OptionObject"
+      }
+    }
+  },
+  "definitions": {
+    "OptionObject": {
+      "type": "object",
+      "required": [
+        "text",
+        "value"
+      ],
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PlainTextObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "$ref": "#/definitions/PlainTextObject"
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "PlainTextObject": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

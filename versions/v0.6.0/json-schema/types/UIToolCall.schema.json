@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ToolCallStatus": {
+      "description": "Status of a tool call during execution",
+      "enum": [
+        "pending",
+        "running",
+        "complete",
+        "error"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A tool call with real-time status updates for UI display",
+  "properties": {
+    "arguments": {
+      "default": null,
+      "description": "Arguments passed to the tool"
+    },
+    "id": {
+      "description": "Unique ID for this tool call",
+      "type": "string"
+    },
+    "result": {
+      "default": null,
+      "description": "Result from the tool"
+    },
+    "status": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ToolCallStatus"
+        }
+      ],
+      "description": "Current status"
+    },
+    "tool": {
+      "description": "Name of the tool",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "status",
+    "tool"
+  ],
+  "title": "UIToolCall",
+  "type": "object"
+}

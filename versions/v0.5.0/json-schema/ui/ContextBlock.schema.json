@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContextBlock",
+  "description": "Displays contextual info (small grey text, images)",
+  "type": "object",
+  "required": [
+    "elements"
+  ],
+  "properties": {
+    "elements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContextElement"
+      }
+    }
+  },
+  "definitions": {
+    "ContextElement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "mrkdwn"
+              ]
+            },
+            "verbatim": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "emoji": {
+              "default": false,
+              "type": "boolean"
+            },
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "plain_text"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

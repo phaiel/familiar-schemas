@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SubjectType",
+  "description": "Types of subjects",
+  "oneOf": [
+    {
+      "description": "The user themselves",
+      "type": "string",
+      "enum": [
+        "self_"
+      ]
+    },
+    {
+      "description": "Another person",
+      "type": "string",
+      "enum": [
+        "person"
+      ]
+    },
+    {
+      "description": "A place",
+      "type": "string",
+      "enum": [
+        "place"
+      ]
+    },
+    {
+      "description": "An organization",
+      "type": "string",
+      "enum": [
+        "organization"
+      ]
+    },
+    {
+      "description": "A concept/topic",
+      "type": "string",
+      "enum": [
+        "concept"
+      ]
+    },
+    {
+      "description": "An event",
+      "type": "string",
+      "enum": [
+        "event"
+      ]
+    },
+    {
+      "description": "An object/thing",
+      "type": "string",
+      "enum": [
+        "object"
+      ]
+    },
+    {
+      "description": "Unknown/other",
+      "type": "string",
+      "enum": [
+        "other"
+      ]
+    }
+  ]
+}

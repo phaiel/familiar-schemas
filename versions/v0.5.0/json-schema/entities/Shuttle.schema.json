@@ -1,0 +1,315 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shuttle",
+  "description": "A Shuttle carries WeaveUnits (segments) for processing",
+  "type": "object",
+  "required": [
+    "course_id",
+    "created_at",
+    "id",
+    "status"
+  ],
+  "properties": {
+    "completed_at": {
+      "description": "When processing completed (or failed)",
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "course_id": {
+      "description": "Reference to the parent Course (1:1)",
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "description": "When this shuttle was created",
+      "type": "string",
+      "format": "date-time"
+    },
+    "error": {
+      "description": "Error message if shuttle failed",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "description": "Unique identifier for this shuttle",
+      "type": "string",
+      "format": "uuid"
+    },
+    "status": {
+      "description": "Processing status",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShuttleStatus"
+        }
+      ]
+    },
+    "weave_units": {
+      "description": "The weave units (segments) being carried",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WeaveUnit"
+      }
+    }
+  },
+  "definitions": {
+    "HeddleEntityType": {
+      "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+      "oneOf": [
+        {
+          "description": "A specific event that happened in the past (Narrative/External Particle)",
+          "type": "string",
+          "enum": [
+            "MOMENT"
+          ]
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "type": "string",
+          "enum": [
+            "INTENT"
+          ]
+        },
+        {
+          "description": "A definition of a person, place, or concept (Definitional/Object)",
+          "type": "string",
+          "enum": [
+            "THREAD"
+          ]
+        },
+        {
+          "description": "A statement about the quality of a relationship (Relational/Connection)",
+          "type": "string",
+          "enum": [
+            "BOND"
+          ]
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "type": "string",
+          "enum": [
+            "MOTIF"
+          ]
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "type": "string",
+          "enum": [
+            "FILAMENT"
+          ]
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "type": "string",
+          "enum": [
+            "FOCUS"
+          ]
+        },
+        {
+          "description": "An internal state snapshot (Internal Particle)",
+          "type": "string",
+          "enum": [
+            "PULSE"
+          ]
+        }
+      ]
+    },
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        }
+      ]
+    },
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "type": "number",
+      "format": "double"
+    },
+    "ShuttleStatus": {
+      "description": "Processing status for a Shuttle",
+      "oneOf": [
+        {
+          "description": "Segment received, not yet processed",
+          "type": "string",
+          "enum": [
+            "pending"
+          ]
+        },
+        {
+          "description": "Currently being classified by LLM",
+          "type": "string",
+          "enum": [
+            "classifying"
+          ]
+        },
+        {
+          "description": "Classification complete, spawning entities",
+          "type": "string",
+          "enum": [
+            "spawning"
+          ]
+        },
+        {
+          "description": "All processing complete",
+          "type": "string",
+          "enum": [
+            "complete"
+          ]
+        },
+        {
+          "description": "Processing failed",
+          "type": "string",
+          "enum": [
+            "failed"
+          ]
+        }
+      ]
+    },
+    "WeaveUnit": {
+      "description": "A WeaveUnit is a single segment extracted from a Weave. It's a transient container used for classification routing. Physics are extracted by the LLM but passed directly to spawned entities, not stored on the WeaveUnit itself.",
+      "type": "object",
+      "required": [
+        "content",
+        "index"
+      ],
+      "properties": {
+        "classifications": {
+          "description": "Classifications in superposition (determines which entity types to spawn)",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeaveUnitClassification"
+          }
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this segment",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index of this unit within the shuttle (0-based)",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "primary_thread": {
+          "description": "Primary thread: the main subject/actor of this unit Used for entity resolution (Stitch) downstream",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, INFER, REFERENCE) Determines how this unit is processed - only LOG units spawn entities",
+          "default": "LOG",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ]
+        },
+        "secondary_threads": {
+          "description": "Secondary threads: other people/places/things mentioned Allows capturing companions, locations, etc.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "spawned_entity_ids": {
+          "description": "IDs of entities spawned from this unit (the actual simulation objects)",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "temporal_marker": {
+          "description": "Temporal marker: when this event/state occurred Can be absolute (\"6pm\"), relative (\"today\"), or frequency (\"once per hour\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "WeaveUnitClassification": {
+      "description": "Classification result for a weave unit (determines which entity type to spawn)",
+      "type": "object",
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "properties": {
+        "entity_type": {
+          "description": "The entity type this unit may become",
+          "allOf": [
+            {
+              "$ref": "#/definitions/HeddleEntityType"
+            }
+          ]
+        },
+        "weight": {
+          "description": "Confidence weight (0.0 to 1.0)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/NormalizedFloat"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

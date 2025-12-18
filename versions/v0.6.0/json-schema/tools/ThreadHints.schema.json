@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "description": "Aliases for matching",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "type": "object"
+    },
+    "ThreadRole": {
+      "description": "Role of entity relative to threads",
+      "oneOf": [
+        {
+          "description": "Entity is the actor/doer",
+          "enum": [
+            "actor"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is the subject being discussed",
+          "enum": [
+            "subject"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is observing/witnessing",
+          "enum": [
+            "observer"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is the target of action",
+          "enum": [
+            "target"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is setting/location",
+          "enum": [
+            "setting"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity is an instrument/tool",
+          "enum": [
+            "instrument"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Hints for thread/narrative connections",
+  "properties": {
+    "create_if_missing": {
+      "default": false,
+      "description": "Should create new thread if no match?",
+      "type": "boolean"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords for thread matching",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "primary_subject": {
+      "description": "Primary subject/actor",
+      "type": "string"
+    },
+    "related_threads": {
+      "default": [],
+      "description": "Related threads to link",
+      "items": {
+        "$ref": "#/definitions/ThreadReference"
+      },
+      "type": "array"
+    },
+    "thread_role": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadRole"
+        }
+      ],
+      "description": "Role of entity in narrative"
+    }
+  },
+  "required": [
+    "primary_subject",
+    "thread_role"
+  ],
+  "title": "ThreadHints",
+  "type": "object"
+}

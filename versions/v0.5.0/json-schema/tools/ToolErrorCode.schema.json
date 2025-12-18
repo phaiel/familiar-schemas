@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolErrorCode",
+  "description": "Error codes for tool failures",
+  "oneOf": [
+    {
+      "description": "Invalid input parameters",
+      "type": "string",
+      "enum": [
+        "INVALID_INPUT"
+      ]
+    },
+    {
+      "description": "Missing required parameter",
+      "type": "string",
+      "enum": [
+        "MISSING_PARAMETER"
+      ]
+    },
+    {
+      "description": "Parameter validation failed",
+      "type": "string",
+      "enum": [
+        "VALIDATION_FAILED"
+      ]
+    },
+    {
+      "description": "Tool execution timed out",
+      "type": "string",
+      "enum": [
+        "TIMEOUT"
+      ]
+    },
+    {
+      "description": "Rate limit exceeded",
+      "type": "string",
+      "enum": [
+        "RATE_LIMITED"
+      ]
+    },
+    {
+      "description": "External service unavailable",
+      "type": "string",
+      "enum": [
+        "SERVICE_UNAVAILABLE"
+      ]
+    },
+    {
+      "description": "LLM API error",
+      "type": "string",
+      "enum": [
+        "LLM_ERROR"
+      ]
+    },
+    {
+      "description": "Internal tool error",
+      "type": "string",
+      "enum": [
+        "INTERNAL_ERROR"
+      ]
+    },
+    {
+      "description": "Resource not found",
+      "type": "string",
+      "enum": [
+        "NOT_FOUND"
+      ]
+    },
+    {
+      "description": "Permission denied",
+      "type": "string",
+      "enum": [
+        "PERMISSION_DENIED"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Request context for audit logging",
+  "properties": {
+    "ip_address": {
+      "description": "Client IP address (may be behind proxy)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "request_id": {
+      "description": "Request ID for correlation",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_agent": {
+      "description": "User agent string",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "RequestContext",
+  "type": "object"
+}

@@ -1,0 +1,500 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "CourseDetails": {
+      "description": "Workflow metadata for a Course",
+      "properties": {
+        "latency_ms": {
+          "default": 0,
+          "description": "Total processing time in milliseconds",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "model": {
+          "description": "Model used for classification",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider": {
+          "description": "AI provider used for classification",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "spawn_count": {
+          "default": 0,
+          "description": "Number of entities spawned into the simulation",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "unit_count": {
+          "default": 0,
+          "description": "Number of weave units (segments)",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "CourseStatus": {
+      "description": "Processing status for a Course",
+      "oneOf": [
+        {
+          "description": "User input received, not yet segmented",
+          "enum": [
+            "received"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Segmenting the input via Heddle",
+          "enum": [
+            "segmenting"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "All shuttles are processing segments",
+          "enum": [
+            "processing"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "All shuttles complete, generating response",
+          "enum": [
+            "responding"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Course complete with response",
+          "enum": [
+            "complete"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Course failed",
+          "enum": [
+            "failed"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "HeddleEntityType": {
+      "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+      "oneOf": [
+        {
+          "description": "A specific event that happened in the past (Narrative/External Particle)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A definition of a person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A statement about the quality of a relationship (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An internal state snapshot (Internal Particle)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "enum": [
+            "LOG"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "enum": [
+            "QUERY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "enum": [
+            "INFER"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "enum": [
+            "REFERENCE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "enum": [
+            "REFLECT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "enum": [
+            "COMMAND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "enum": [
+            "SOCIAL"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "format": "double",
+      "type": "number"
+    },
+    "Shuttle": {
+      "description": "A Shuttle carries WeaveUnits (segments) for processing",
+      "properties": {
+        "completed_at": {
+          "description": "When processing completed (or failed)",
+          "format": "date-time",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "course_id": {
+          "description": "Reference to the parent Course (1:1)",
+          "format": "uuid",
+          "type": "string"
+        },
+        "created_at": {
+          "description": "When this shuttle was created",
+          "format": "date-time",
+          "type": "string"
+        },
+        "error": {
+          "description": "Error message if shuttle failed",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "description": "Unique identifier for this shuttle",
+          "format": "uuid",
+          "type": "string"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ShuttleStatus"
+            }
+          ],
+          "description": "Processing status"
+        },
+        "weave_units": {
+          "default": [],
+          "description": "The weave units (segments) being carried",
+          "items": {
+            "$ref": "#/definitions/WeaveUnit"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "course_id",
+        "created_at",
+        "id",
+        "status"
+      ],
+      "type": "object"
+    },
+    "ShuttleStatus": {
+      "description": "Processing status for a Shuttle",
+      "oneOf": [
+        {
+          "description": "Segment received, not yet processed",
+          "enum": [
+            "pending"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Currently being classified by LLM",
+          "enum": [
+            "classifying"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Classification complete, spawning entities",
+          "enum": [
+            "spawning"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "All processing complete",
+          "enum": [
+            "complete"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Processing failed",
+          "enum": [
+            "failed"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "Weave": {
+      "description": "A Weave is the raw user input - their message to Familiar",
+      "properties": {
+        "context": {
+          "description": "Optional context provided with the message",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw_content": {
+          "description": "The raw text content from the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "raw_content"
+      ],
+      "type": "object"
+    },
+    "WeaveUnit": {
+      "description": "A WeaveUnit is a single segment extracted from a Weave. It's a transient container used for classification routing. Physics are extracted by the LLM but passed directly to spawned entities, not stored on the WeaveUnit itself.",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classifications in superposition (determines which entity types to spawn)",
+          "items": {
+            "$ref": "#/definitions/WeaveUnitClassification"
+          },
+          "type": "array"
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this segment",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index of this unit within the shuttle (0-based)",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "primary_thread": {
+          "description": "Primary thread: the main subject/actor of this unit Used for entity resolution (Stitch) downstream",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, INFER, REFERENCE) Determines how this unit is processed - only LOG units spawn entities"
+        },
+        "secondary_threads": {
+          "description": "Secondary threads: other people/places/things mentioned Allows capturing companions, locations, etc.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "spawned_entity_ids": {
+          "default": [],
+          "description": "IDs of entities spawned from this unit (the actual simulation objects)",
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "temporal_marker": {
+          "description": "Temporal marker: when this event/state occurred Can be absolute (\"6pm\"), relative (\"today\"), or frequency (\"once per hour\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content",
+        "index"
+      ],
+      "type": "object"
+    },
+    "WeaveUnitClassification": {
+      "description": "Classification result for a weave unit (determines which entity type to spawn)",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/HeddleEntityType"
+            }
+          ],
+          "description": "The entity type this unit may become"
+        },
+        "weight": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/NormalizedFloat"
+            }
+          ],
+          "description": "Confidence weight (0.0 to 1.0)"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A Course is a workflow container for a single user interaction",
+  "properties": {
+    "completed_at": {
+      "description": "When workflow completed (or failed)",
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "description": "When this course was created",
+      "format": "date-time",
+      "type": "string"
+    },
+    "details": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CourseDetails"
+        }
+      ],
+      "description": "Workflow metadata"
+    },
+    "id": {
+      "description": "Unique identifier for this course",
+      "format": "uuid",
+      "type": "string"
+    },
+    "response": {
+      "description": "The final user-facing response",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "shuttle": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Shuttle"
+        }
+      ],
+      "description": "The carrier of work (Shuttle) - 1:1 with Course"
+    },
+    "status": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CourseStatus"
+        }
+      ],
+      "description": "Workflow status"
+    },
+    "tenant_id": {
+      "description": "Tenant (family/user) this course belongs to",
+      "format": "uuid",
+      "type": "string"
+    },
+    "weave": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Weave"
+        }
+      ],
+      "description": "The user's input (Weave)"
+    }
+  },
+  "required": [
+    "created_at",
+    "details",
+    "id",
+    "shuttle",
+    "status",
+    "tenant_id",
+    "weave"
+  ],
+  "title": "Course",
+  "type": "object"
+}

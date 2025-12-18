@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AuthResponse",
+  "description": "Response after successful authentication",
+  "type": "object",
+  "required": [
+    "is_new_user",
+    "needs_family",
+    "session",
+    "user"
+  ],
+  "properties": {
+    "is_new_user": {
+      "description": "True if this is a new user (just signed up)",
+      "type": "boolean"
+    },
+    "needs_family": {
+      "description": "True if user needs to create/join a family",
+      "type": "boolean"
+    },
+    "session": {
+      "$ref": "#/definitions/SessionCreated"
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    }
+  },
+  "definitions": {
+    "SessionCreated": {
+      "description": "Result of creating a session (includes the raw token)",
+      "type": "object",
+      "required": [
+        "expires_at",
+        "session_id",
+        "token"
+      ],
+      "properties": {
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
+      "type": "object",
+      "required": [
+        "created_at",
+        "email",
+        "email_verified",
+        "id",
+        "name",
+        "updated_at"
+      ],
+      "properties": {
+        "avatar_url": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletion_requested_at": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "email": {
+          "type": "string"
+        },
+        "email_verified": {
+          "type": "boolean"
+        },
+        "gdpr_consents": {
+          "default": null
+        },
+        "id": {
+          "description": "Unique identifier for this entity",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "primary_tenant_id": {
+          "description": "The user's primary family (can be changed)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "settings": {
+          "default": null
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseEvent",
+  "description": "Course lifecycle events",
+  "oneOf": [
+    {
+      "description": "Course has started processing",
+      "type": "object",
+      "required": [
+        "type",
+        "weave_id"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "started"
+          ]
+        },
+        "weave_id": {
+          "description": "The weave that started this course",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    {
+      "description": "Segmentation phase completed",
+      "type": "object",
+      "required": [
+        "type",
+        "unit_count"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "segmented"
+          ]
+        },
+        "unit_count": {
+          "description": "Number of segments/units identified",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        }
+      }
+    },
+    {
+      "description": "Classification phase completed",
+      "type": "object",
+      "required": [
+        "entity_types",
+        "type"
+      ],
+      "properties": {
+        "entity_types": {
+          "description": "Entity types identified",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "physics_summary": {
+          "description": "Physics hints computed (optional)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "classified"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Course completed successfully",
+      "type": "object",
+      "required": [
+        "duration_ms",
+        "response",
+        "type"
+      ],
+      "properties": {
+        "duration_ms": {
+          "description": "Duration in milliseconds",
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "response": {
+          "description": "The final response to send to user",
+          "type": "string"
+        },
+        "tokens_used": {
+          "description": "Token usage (if tracked)",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "completed"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Course failed",
+      "type": "object",
+      "required": [
+        "error",
+        "type"
+      ],
+      "properties": {
+        "error": {
+          "description": "Error message (sanitized for storage)",
+          "type": "string"
+        },
+        "error_code": {
+          "description": "Error code for programmatic handling",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "retryable": {
+          "description": "Whether this is retryable",
+          "default": false,
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "failed"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Course was cancelled",
+      "type": "object",
+      "required": [
+        "cancelled_by",
+        "type"
+      ],
+      "properties": {
+        "cancelled_by": {
+          "description": "Who cancelled (user, system, timeout)",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Reason for cancellation",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "cancelled"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Course is being retried",
+      "type": "object",
+      "required": [
+        "attempt",
+        "original_error",
+        "type"
+      ],
+      "properties": {
+        "attempt": {
+          "description": "Retry attempt number",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "original_error": {
+          "description": "Original error that triggered retry",
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "retrying"
+          ]
+        }
+      }
+    }
+  ]
+}

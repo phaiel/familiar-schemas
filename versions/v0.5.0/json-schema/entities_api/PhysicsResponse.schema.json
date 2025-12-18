@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhysicsResponse",
+  "description": "Physics state on spawned entity",
+  "type": "object",
+  "required": [
+    "amplitude",
+    "energy",
+    "position",
+    "temperature"
+  ],
+  "properties": {
+    "amplitude": {
+      "type": "number",
+      "format": "double"
+    },
+    "energy": {
+      "type": "number",
+      "format": "double"
+    },
+    "position": {
+      "description": "Position in VAE space [Valence, Arousal, Epistemic]",
+      "type": "array",
+      "items": {
+        "type": "number",
+        "format": "double"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "temperature": {
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RecordConsentInput",
+  "description": "Input for recording consent",
+  "type": "object",
+  "required": [
+    "consent_type",
+    "granted"
+  ],
+  "properties": {
+    "consent_type": {
+      "$ref": "#/definitions/ConsentType"
+    },
+    "granted": {
+      "type": "boolean"
+    },
+    "version": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "ConsentType": {
+      "description": "Type of consent",
+      "type": "string",
+      "enum": [
+        "terms_of_service",
+        "privacy_policy",
+        "marketing_emails",
+        "ai_processing",
+        "data_sharing",
+        "analytics"
+      ]
+    }
+  }
+}

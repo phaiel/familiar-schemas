@@ -1,0 +1,414 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BondHintOutput",
+  "description": "Output from bond hint generation",
+  "type": "object",
+  "required": [
+    "bonds"
+  ],
+  "properties": {
+    "bond_updates": {
+      "description": "Updates to existing bonds",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BondUpdate"
+      }
+    },
+    "bonds": {
+      "description": "Detected bonds",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DetectedBond"
+      }
+    }
+  },
+  "definitions": {
+    "BondChanges": {
+      "description": "Changes to bond characteristics",
+      "type": "object",
+      "properties": {
+        "new_relationship_type": {
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RelationshipType"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "strength_delta": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "trust_delta": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "valence_delta": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "BondCharacteristics": {
+      "description": "Bond characteristics",
+      "type": "object",
+      "required": [
+        "intimacy",
+        "reciprocity",
+        "relationship_type",
+        "strength",
+        "trust",
+        "valence"
+      ],
+      "properties": {
+        "duration": {
+          "description": "Duration of relationship",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RelationshipDuration"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "interaction_frequency": {
+          "description": "Frequency of interaction",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/InteractionFrequency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "intimacy": {
+          "description": "Intimacy level (0.0 distant to 1.0 close)",
+          "type": "number",
+          "format": "double"
+        },
+        "reciprocity": {
+          "description": "Reciprocity (0.0 one-sided to 1.0 mutual)",
+          "type": "number",
+          "format": "double"
+        },
+        "relationship_type": {
+          "description": "Type of relationship",
+          "allOf": [
+            {
+              "$ref": "#/definitions/RelationshipType"
+            }
+          ]
+        },
+        "strength": {
+          "description": "Strength of relationship (0.0 weak to 1.0 strong)",
+          "type": "number",
+          "format": "double"
+        },
+        "trust": {
+          "description": "Trust level (0.0 to 1.0)",
+          "type": "number",
+          "format": "double"
+        },
+        "valence": {
+          "description": "Valence (-1.0 negative to 1.0 positive)",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "BondEvidence": {
+      "description": "Evidence for bond detection",
+      "type": "object",
+      "required": [
+        "indicator_type",
+        "trigger_text"
+      ],
+      "properties": {
+        "indicator_type": {
+          "description": "Type of indicator",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BondIndicatorType"
+            }
+          ]
+        },
+        "indicators": {
+          "description": "Specific indicators found",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "trigger_text": {
+          "description": "Text that indicates the relationship",
+          "type": "string"
+        }
+      }
+    },
+    "BondIndicatorType": {
+      "description": "Types of bond indicators",
+      "oneOf": [
+        {
+          "description": "Explicit label (\"my friend\", \"my boss\")",
+          "type": "string",
+          "enum": [
+            "explicit_label"
+          ]
+        },
+        {
+          "description": "Action indicating relationship (\"had dinner with\")",
+          "type": "string",
+          "enum": [
+            "relational_action"
+          ]
+        },
+        {
+          "description": "Emotional language about entity",
+          "type": "string",
+          "enum": [
+            "emotional_language"
+          ]
+        },
+        {
+          "description": "Possessive language (\"my\", \"our\")",
+          "type": "string",
+          "enum": [
+            "possessive_language"
+          ]
+        },
+        {
+          "description": "Frequency indicators (\"always see\", \"often talk\")",
+          "type": "string",
+          "enum": [
+            "frequency_indicator"
+          ]
+        },
+        {
+          "description": "Context from previous interactions",
+          "type": "string",
+          "enum": [
+            "contextual_inference"
+          ]
+        }
+      ]
+    },
+    "BondUpdate": {
+      "description": "Update to an existing bond",
+      "type": "object",
+      "required": [
+        "bond_id",
+        "changes",
+        "reason"
+      ],
+      "properties": {
+        "bond_id": {
+          "description": "ID of bond to update",
+          "type": "string"
+        },
+        "changes": {
+          "description": "Changes to apply",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BondChanges"
+            }
+          ]
+        },
+        "reason": {
+          "description": "Reason for update",
+          "type": "string"
+        }
+      }
+    },
+    "DetectedBond": {
+      "description": "A detected bond between entities",
+      "type": "object",
+      "required": [
+        "characteristics",
+        "confidence",
+        "evidence",
+        "head",
+        "tail"
+      ],
+      "properties": {
+        "characteristics": {
+          "description": "Bond characteristics",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BondCharacteristics"
+            }
+          ]
+        },
+        "confidence": {
+          "description": "Confidence in detection",
+          "type": "number",
+          "format": "double"
+        },
+        "evidence": {
+          "description": "Evidence for this bond",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BondEvidence"
+            }
+          ]
+        },
+        "head": {
+          "description": "Source entity (head)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadReference"
+            }
+          ]
+        },
+        "tail": {
+          "description": "Target entity (tail)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadReference"
+            }
+          ]
+        }
+      }
+    },
+    "DurationCategory": {
+      "description": "Duration categories",
+      "type": "string",
+      "enum": [
+        "new",
+        "recent",
+        "established",
+        "long_term",
+        "lifelong"
+      ]
+    },
+    "InteractionFrequency": {
+      "description": "Interaction frequency",
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "yearly",
+        "rarely"
+      ]
+    },
+    "RelationshipDuration": {
+      "description": "Relationship duration",
+      "type": "object",
+      "required": [
+        "category"
+      ],
+      "properties": {
+        "category": {
+          "description": "Duration category",
+          "allOf": [
+            {
+              "$ref": "#/definitions/DurationCategory"
+            }
+          ]
+        },
+        "since": {
+          "description": "Start date if known",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "years": {
+          "description": "How long the relationship has existed",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "RelationshipType": {
+      "description": "Types of relationships",
+      "type": "string",
+      "enum": [
+        "family",
+        "friend",
+        "close_friend",
+        "best_friend",
+        "romantic",
+        "ex_romantic",
+        "spouse",
+        "parent",
+        "child",
+        "sibling",
+        "colleague",
+        "manager",
+        "direct_report",
+        "mentor",
+        "mentee",
+        "client",
+        "vendor",
+        "partner",
+        "acquaintance",
+        "neighbor",
+        "classmate",
+        "teammate",
+        "adversary",
+        "rival",
+        "service_provider",
+        "other"
+      ]
+    },
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "properties": {
+        "aliases": {
+          "description": "Aliases for matching",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

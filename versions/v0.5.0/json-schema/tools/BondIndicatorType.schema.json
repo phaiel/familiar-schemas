@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BondIndicatorType",
+  "description": "Types of bond indicators",
+  "oneOf": [
+    {
+      "description": "Explicit label (\"my friend\", \"my boss\")",
+      "type": "string",
+      "enum": [
+        "explicit_label"
+      ]
+    },
+    {
+      "description": "Action indicating relationship (\"had dinner with\")",
+      "type": "string",
+      "enum": [
+        "relational_action"
+      ]
+    },
+    {
+      "description": "Emotional language about entity",
+      "type": "string",
+      "enum": [
+        "emotional_language"
+      ]
+    },
+    {
+      "description": "Possessive language (\"my\", \"our\")",
+      "type": "string",
+      "enum": [
+        "possessive_language"
+      ]
+    },
+    {
+      "description": "Frequency indicators (\"always see\", \"often talk\")",
+      "type": "string",
+      "enum": [
+        "frequency_indicator"
+      ]
+    },
+    {
+      "description": "Context from previous interactions",
+      "type": "string",
+      "enum": [
+        "contextual_inference"
+      ]
+    }
+  ]
+}

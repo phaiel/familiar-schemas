@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SuggestedThread",
+  "description": "A suggested new thread to create",
+  "type": "object",
+  "required": [
+    "category",
+    "confidence",
+    "name",
+    "reason",
+    "thread_type"
+  ],
+  "properties": {
+    "aliases": {
+      "description": "Aliases to register",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "category": {
+      "description": "Category",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadCategory"
+        }
+      ]
+    },
+    "confidence": {
+      "description": "Confidence in suggestion",
+      "type": "number",
+      "format": "double"
+    },
+    "name": {
+      "description": "Suggested name",
+      "type": "string"
+    },
+    "reason": {
+      "description": "Why this thread should be created",
+      "type": "string"
+    },
+    "thread_type": {
+      "description": "Type of thread",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubjectType"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "SubjectType": {
+      "description": "Types of subjects",
+      "oneOf": [
+        {
+          "description": "The user themselves",
+          "type": "string",
+          "enum": [
+            "self_"
+          ]
+        },
+        {
+          "description": "Another person",
+          "type": "string",
+          "enum": [
+            "person"
+          ]
+        },
+        {
+          "description": "A place",
+          "type": "string",
+          "enum": [
+            "place"
+          ]
+        },
+        {
+          "description": "An organization",
+          "type": "string",
+          "enum": [
+            "organization"
+          ]
+        },
+        {
+          "description": "A concept/topic",
+          "type": "string",
+          "enum": [
+            "concept"
+          ]
+        },
+        {
+          "description": "An event",
+          "type": "string",
+          "enum": [
+            "event"
+          ]
+        },
+        {
+          "description": "An object/thing",
+          "type": "string",
+          "enum": [
+            "object"
+          ]
+        },
+        {
+          "description": "Unknown/other",
+          "type": "string",
+          "enum": [
+            "other"
+          ]
+        }
+      ]
+    },
+    "ThreadCategory": {
+      "description": "Categories for threads",
+      "oneOf": [
+        {
+          "description": "People (friends, family, colleagues)",
+          "type": "string",
+          "enum": [
+            "people"
+          ]
+        },
+        {
+          "description": "Places (home, work, cities)",
+          "type": "string",
+          "enum": [
+            "places"
+          ]
+        },
+        {
+          "description": "Activities (hobbies, work tasks)",
+          "type": "string",
+          "enum": [
+            "activities"
+          ]
+        },
+        {
+          "description": "Projects (ongoing endeavors)",
+          "type": "string",
+          "enum": [
+            "projects"
+          ]
+        },
+        {
+          "description": "Topics (interests, subjects)",
+          "type": "string",
+          "enum": [
+            "topics"
+          ]
+        },
+        {
+          "description": "Events (recurring or one-time)",
+          "type": "string",
+          "enum": [
+            "events"
+          ]
+        },
+        {
+          "description": "Groups (teams, organizations)",
+          "type": "string",
+          "enum": [
+            "groups"
+          ]
+        },
+        {
+          "description": "Health (physical, mental)",
+          "type": "string",
+          "enum": [
+            "health"
+          ]
+        },
+        {
+          "description": "Finance (money, investments)",
+          "type": "string",
+          "enum": [
+            "finance"
+          ]
+        },
+        {
+          "description": "Relationships",
+          "type": "string",
+          "enum": [
+            "relationships"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EntityContent",
+  "description": "Content for the spawned entity",
+  "type": "object",
+  "required": [
+    "text"
+  ],
+  "properties": {
+    "enriched_text": {
+      "description": "Enriched/contextualized content",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tags": {
+      "description": "Tags extracted",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "text": {
+      "description": "Primary content text",
+      "type": "string"
+    },
+    "title": {
+      "description": "Title/summary",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "enum": [
+            "LOG"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "enum": [
+            "QUERY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "enum": [
+            "INFER"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "enum": [
+            "REFERENCE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "enum": [
+            "REFLECT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "enum": [
+            "COMMAND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "enum": [
+            "SOCIAL"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "QueryTarget": {
+      "description": "Query target - what data is the query looking for?",
+      "properties": {
+        "entity_types": {
+          "default": [],
+          "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords extracted from the query",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "temporal_scope": {
+          "default": null,
+          "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_hints": {
+          "default": [],
+          "description": "Specific thread hints (names, concepts) to search for",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "QueryType": {
+      "description": "The type of query (when MessageIntent is QUERY)",
+      "oneOf": [
+        {
+          "description": "When did X happen? Time-based lookup",
+          "enum": [
+            "TEMPORAL"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Who/what questions - entity lookup",
+          "enum": [
+            "ENTITY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "How often? Pattern/frequency questions",
+          "enum": [
+            "PATTERN"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Compare X and Y",
+          "enum": [
+            "COMPARISON"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Give me a summary/overview",
+          "enum": [
+            "SUMMARY"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Count/quantity questions (how many?)",
+          "enum": [
+            "QUANTITATIVE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Yes/no questions (did X happen?)",
+          "enum": [
+            "BOOLEAN"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Why questions - causation",
+          "enum": [
+            "CAUSAL"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Location-based questions",
+          "enum": [
+            "SPATIAL"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Open-ended/exploratory",
+          "enum": [
+            "EXPLORATORY"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Raw message intent classification from LLM",
+  "properties": {
+    "confidence": {
+      "default": 1.0,
+      "description": "Confidence in classification (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "intent": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/MessageIntent"
+        }
+      ],
+      "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)"
+    },
+    "query_target": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/QueryTarget"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY: what entities/threads are being queried"
+    },
+    "query_type": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/QueryType"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY: what type of query"
+    }
+  },
+  "required": [
+    "intent"
+  ],
+  "title": "RawMessageIntent",
+  "type": "object"
+}

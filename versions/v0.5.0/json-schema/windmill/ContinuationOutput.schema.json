@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContinuationOutput",
+  "description": "Output from the continuation agent",
+  "type": "object",
+  "required": [
+    "has_more_tasks",
+    "message",
+    "state"
+  ],
+  "properties": {
+    "has_more_tasks": {
+      "description": "Whether there are more tasks to do",
+      "type": "boolean"
+    },
+    "message": {
+      "description": "Message describing the decision",
+      "type": "string"
+    },
+    "next_request": {
+      "description": "Next request to process",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "state": {
+      "description": "Updated state"
+    }
+  }
+}

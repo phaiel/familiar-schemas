@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TemporalMarkerType",
+  "description": "Types of temporal markers",
+  "oneOf": [
+    {
+      "description": "Specific date (January 5th)",
+      "type": "string",
+      "enum": [
+        "absolute"
+      ]
+    },
+    {
+      "description": "Relative reference (yesterday, last week)",
+      "type": "string",
+      "enum": [
+        "relative"
+      ]
+    },
+    {
+      "description": "Duration (for 2 hours)",
+      "type": "string",
+      "enum": [
+        "duration"
+      ]
+    },
+    {
+      "description": "Frequency (every day, weekly)",
+      "type": "string",
+      "enum": [
+        "frequency"
+      ]
+    },
+    {
+      "description": "Time of day (in the morning)",
+      "type": "string",
+      "enum": [
+        "time_of_day"
+      ]
+    }
+  ]
+}

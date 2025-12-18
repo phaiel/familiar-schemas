@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ResponseMetadata",
+  "description": "Metadata about an AI completion response",
+  "type": "object",
+  "required": [
+    "latency_ms",
+    "model_id",
+    "model_name",
+    "provider"
+  ],
+  "properties": {
+    "latency_ms": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "model_id": {
+      "type": "string"
+    },
+    "model_name": {
+      "type": "string"
+    },
+    "provider": {
+      "$ref": "#/definitions/AIProvider"
+    },
+    "request_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "usage": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TokenUsage"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "AIProvider": {
+      "description": "AI Provider enumeration",
+      "type": "string",
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "mock"
+      ]
+    },
+    "TokenUsage": {
+      "description": "Token usage statistics from a completion",
+      "type": "object",
+      "required": [
+        "completion_tokens",
+        "prompt_tokens",
+        "total_tokens"
+      ],
+      "properties": {
+        "completion_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "prompt_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    }
+  }
+}

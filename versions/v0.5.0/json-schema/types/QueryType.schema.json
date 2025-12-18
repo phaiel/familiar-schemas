@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QueryType",
+  "description": "The type of query (when MessageIntent is QUERY)",
+  "oneOf": [
+    {
+      "description": "When did X happen? Time-based lookup",
+      "type": "string",
+      "enum": [
+        "TEMPORAL"
+      ]
+    },
+    {
+      "description": "Who/what questions - entity lookup",
+      "type": "string",
+      "enum": [
+        "ENTITY"
+      ]
+    },
+    {
+      "description": "How often? Pattern/frequency questions",
+      "type": "string",
+      "enum": [
+        "PATTERN"
+      ]
+    },
+    {
+      "description": "Compare X and Y",
+      "type": "string",
+      "enum": [
+        "COMPARISON"
+      ]
+    },
+    {
+      "description": "Give me a summary/overview",
+      "type": "string",
+      "enum": [
+        "SUMMARY"
+      ]
+    },
+    {
+      "description": "Count/quantity questions (how many?)",
+      "type": "string",
+      "enum": [
+        "QUANTITATIVE"
+      ]
+    },
+    {
+      "description": "Yes/no questions (did X happen?)",
+      "type": "string",
+      "enum": [
+        "BOOLEAN"
+      ]
+    },
+    {
+      "description": "Why questions - causation",
+      "type": "string",
+      "enum": [
+        "CAUSAL"
+      ]
+    },
+    {
+      "description": "Location-based questions",
+      "type": "string",
+      "enum": [
+        "SPATIAL"
+      ]
+    },
+    {
+      "description": "Open-ended/exploratory",
+      "type": "string",
+      "enum": [
+        "EXPLORATORY"
+      ]
+    }
+  ]
+}

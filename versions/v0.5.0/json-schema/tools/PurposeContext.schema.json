@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PurposeContext",
+  "description": "Context for purpose classification",
+  "type": "object",
+  "properties": {
+    "conversation_history": {
+      "description": "Previous messages in conversation",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConversationTurn"
+      }
+    },
+    "previous_classifications": {
+      "description": "Previous classifications detected",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ClassifiedPurpose"
+      }
+    },
+    "user_patterns": {
+      "description": "User's typical patterns (if known)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/UserPurposePatterns"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "ClassifiedPurpose": {
+      "description": "A classified purpose with confidence",
+      "type": "object",
+      "required": [
+        "confidence",
+        "purpose"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence score (0.0 to 1.0)",
+          "type": "number",
+          "format": "double"
+        },
+        "evidence": {
+          "description": "Evidence/reasoning for classification",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "purpose": {
+          "description": "The purpose of the message",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ToolPurpose"
+            }
+          ]
+        }
+      }
+    },
+    "ConversationTurn": {
+      "description": "A single turn in a conversation (for context tracking)",
+      "type": "object",
+      "required": [
+        "content",
+        "role"
+      ],
+      "properties": {
+        "content": {
+          "description": "Content of the message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role of the speaker (user, assistant, system)",
+          "type": "string"
+        },
+        "speaker": {
+          "description": "Optional speaker identifier (for multi-agent)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp": {
+          "description": "Timestamp of the turn",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ToolPurpose": {
+      "description": "Primary purpose of user's message",
+      "oneOf": [
+        {
+          "description": "Recording memories, events, observations - wants to store",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information returned",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Making connections, deriving insights - wants system to infer",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities - wants existing data",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis or reflection - wants patterns identified",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "System command/instruction - wants action taken",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Social/conversational - greeting, acknowledgment",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        },
+        {
+          "description": "Clarifying or continuing previous message",
+          "type": "string",
+          "enum": [
+            "CONTINUATION"
+          ]
+        },
+        {
+          "description": "Editing or correcting previous input",
+          "type": "string",
+          "enum": [
+            "CORRECTION"
+          ]
+        }
+      ]
+    },
+    "UserPurposePatterns": {
+      "description": "User's historical purpose patterns",
+      "type": "object",
+      "required": [
+        "primary_purpose"
+      ],
+      "properties": {
+        "primary_purpose": {
+          "description": "Most common purpose",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ToolPurpose"
+            }
+          ]
+        },
+        "purpose_distribution": {
+          "description": "Distribution of purposes (purpose -> frequency)",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      }
+    }
+  }
+}

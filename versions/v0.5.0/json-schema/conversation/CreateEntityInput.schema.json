@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CreateEntityInput",
+  "description": "Input for creating a new familiar entity",
+  "type": "object",
+  "required": [
+    "content",
+    "entity_type",
+    "tenant_id"
+  ],
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "entity_type": {
+      "$ref": "#/definitions/FamiliarEntityType"
+    },
+    "metadata": {
+      "default": null
+    },
+    "physics": {
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EntityPhysics"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_channel_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "source_message_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "status": {
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EntityStatus"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "subject": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "definitions": {
+    "EntityPhysics": {
+      "description": "Physics state for an entity",
+      "type": "object",
+      "required": [
+        "arousal",
+        "epistemic",
+        "significance",
+        "valence"
+      ],
+      "properties": {
+        "arousal": {
+          "type": "number",
+          "format": "double"
+        },
+        "epistemic": {
+          "type": "number",
+          "format": "double"
+        },
+        "significance": {
+          "type": "number",
+          "format": "double"
+        },
+        "valence": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "EntityStatus": {
+      "description": "HILT (Human in the Loop) status for entity approval",
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "auto_spawned"
+      ]
+    },
+    "FamiliarEntityType": {
+      "description": "Type of familiar entity",
+      "type": "string",
+      "enum": [
+        "MOMENT",
+        "PULSE",
+        "INTENT",
+        "THREAD",
+        "BOND",
+        "MOTIF",
+        "FILAMENT",
+        "FOCUS"
+      ]
+    }
+  }
+}

@@ -1,0 +1,356 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UIChannel",
+  "description": "A channel (persistent conversation space)",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "messages",
+    "name",
+    "updated_at"
+  ],
+  "properties": {
+    "created_at": {
+      "description": "When created",
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique ID",
+      "type": "string"
+    },
+    "messages": {
+      "description": "Messages in this channel",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UIChannelMessage"
+      }
+    },
+    "name": {
+      "description": "Display name",
+      "type": "string"
+    },
+    "updated_at": {
+      "description": "When last updated",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "ToolCallStatus": {
+      "description": "Status of a tool call during execution",
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "complete",
+        "error"
+      ]
+    },
+    "UIChannelMessage": {
+      "description": "A user message that starts a thread in a channel",
+      "type": "object",
+      "required": [
+        "content",
+        "id",
+        "thread",
+        "timestamp"
+      ],
+      "properties": {
+        "content": {
+          "description": "Original user message content",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "is_active": {
+          "description": "Is this the active/latest message?",
+          "default": false,
+          "type": "boolean"
+        },
+        "is_expanded": {
+          "description": "Is thread expanded in UI?",
+          "default": false,
+          "type": "boolean"
+        },
+        "thread": {
+          "description": "Thread of responses and follow-ups",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UIThreadItem"
+          }
+        },
+        "timestamp": {
+          "description": "When posted",
+          "type": "string"
+        }
+      }
+    },
+    "UIClassification": {
+      "description": "A classification result",
+      "type": "object",
+      "required": [
+        "confidence",
+        "entity_type"
+      ],
+      "properties": {
+        "confidence": {
+          "type": "number",
+          "format": "double"
+        },
+        "entity_type": {
+          "type": "string"
+        }
+      }
+    },
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "type": "object",
+      "properties": {
+        "classifications": {
+          "description": "Classification results",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UIClassification"
+          }
+        },
+        "physics": {
+          "description": "Physics hints",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UIPhysicsResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purpose": {
+          "description": "Detected purpose/intent",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "description": "Segmented content",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UIHeddleSegment"
+          }
+        }
+      }
+    },
+    "UIHeddleSegment": {
+      "description": "A segment from Heddle",
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "subject": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "UIPhysicsResult": {
+      "description": "Physics simulation result",
+      "type": "object",
+      "required": [
+        "energy",
+        "position",
+        "temperature"
+      ],
+      "properties": {
+        "energy": {
+          "type": "number",
+          "format": "double"
+        },
+        "position": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "temperature": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "UIThinkingStep": {
+      "description": "A thinking/reasoning step for chain-of-thought visibility",
+      "type": "object",
+      "required": [
+        "agent",
+        "id",
+        "thought"
+      ],
+      "properties": {
+        "agent": {
+          "description": "Which agent produced this thought",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "thought": {
+          "description": "The thought/reasoning content",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "UIThreadItem": {
+      "description": "An item in a conversation thread (user message or AI response)",
+      "type": "object",
+      "required": [
+        "content",
+        "id",
+        "role",
+        "timestamp"
+      ],
+      "properties": {
+        "agent_speaker": {
+          "description": "For assistant messages: which agent",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "description": "Text content",
+          "type": "string"
+        },
+        "current_activity": {
+          "description": "Activity description for typing state",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "heddle_result": {
+          "description": "Heddle classification result",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UIHeddleResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "is_typing": {
+          "description": "Is this message still being generated?",
+          "default": false,
+          "type": "boolean"
+        },
+        "role": {
+          "description": "Role: \"user\" or \"assistant\"",
+          "type": "string"
+        },
+        "status": {
+          "description": "Current status",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "description": "Summary for collapsed display",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thinking_steps": {
+          "description": "Chain of thought steps",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UIThinkingStep"
+          }
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "type": "string"
+        },
+        "tool_calls": {
+          "description": "Tool calls made",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UIToolCall"
+          }
+        }
+      }
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "type": "object",
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "properties": {
+        "arguments": {
+          "description": "Arguments passed to the tool",
+          "default": null
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "description": "Result from the tool",
+          "default": null
+        },
+        "status": {
+          "description": "Current status",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ToolCallStatus"
+            }
+          ]
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

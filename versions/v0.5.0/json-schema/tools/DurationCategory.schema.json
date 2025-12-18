@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DurationCategory",
+  "description": "Duration categories",
+  "type": "string",
+  "enum": [
+    "new",
+    "recent",
+    "established",
+    "long_term",
+    "lifelong"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CreateUserInput",
+  "description": "Input for creating a new user",
+  "type": "object",
+  "required": [
+    "email",
+    "name"
+  ],
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "password_hash": {
+      "description": "Password hash (already hashed by API layer)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "primary_tenant_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    }
+  }
+}

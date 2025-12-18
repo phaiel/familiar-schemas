@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BindingEvidence",
+  "description": "Evidence for a detected binding",
+  "type": "object",
+  "required": [
+    "evidence_type",
+    "explanation",
+    "trigger_text"
+  ],
+  "properties": {
+    "evidence_type": {
+      "description": "Type of evidence",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BindingEvidenceType"
+        }
+      ]
+    },
+    "explanation": {
+      "description": "Explanation",
+      "type": "string"
+    },
+    "markers": {
+      "description": "Specific markers found",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "trigger_text": {
+      "description": "Text that triggered detection",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "BindingEvidenceType": {
+      "description": "Types of binding evidence",
+      "oneOf": [
+        {
+          "description": "Explicit linguistic marker",
+          "type": "string",
+          "enum": [
+            "linguistic_marker"
+          ]
+        },
+        {
+          "description": "Temporal proximity",
+          "type": "string",
+          "enum": [
+            "temporal_proximity"
+          ]
+        },
+        {
+          "description": "Semantic similarity",
+          "type": "string",
+          "enum": [
+            "semantic_similarity"
+          ]
+        },
+        {
+          "description": "Entity co-reference",
+          "type": "string",
+          "enum": [
+            "co_reference"
+          ]
+        },
+        {
+          "description": "Emotional similarity",
+          "type": "string",
+          "enum": [
+            "emotional_similarity"
+          ]
+        },
+        {
+          "description": "Narrative continuity",
+          "type": "string",
+          "enum": [
+            "narrative_continuity"
+          ]
+        },
+        {
+          "description": "User explicit statement",
+          "type": "string",
+          "enum": [
+            "explicit_statement"
+          ]
+        },
+        {
+          "description": "Inferred from context",
+          "type": "string",
+          "enum": [
+            "contextual_inference"
+          ]
+        }
+      ]
+    }
+  }
+}

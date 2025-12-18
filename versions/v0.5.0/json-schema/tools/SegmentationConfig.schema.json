@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SegmentationConfig",
+  "description": "Configuration for segmentation behavior",
+  "type": "object",
+  "properties": {
+    "extract_entities": {
+      "description": "Whether to extract entity mentions",
+      "default": true,
+      "type": "boolean"
+    },
+    "extract_temporal": {
+      "description": "Whether to extract temporal markers",
+      "default": true,
+      "type": "boolean"
+    },
+    "language": {
+      "description": "Language hint (ISO 639-1)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "max_segments": {
+      "description": "Maximum number of segments to produce",
+      "default": 20,
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "min_segment_length": {
+      "description": "Minimum segment length (chars for text, seconds for audio/video)",
+      "default": null,
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    }
+  }
+}

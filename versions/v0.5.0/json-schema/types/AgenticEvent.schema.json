@@ -1,0 +1,550 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgenticEvent",
+  "description": "Events emitted by the agentic system\n\nThese events notify clients about state changes and results from the multi-agent system. They can be delivered via WebSocket, SSE, or consumed from a message broker.",
+  "oneOf": [
+    {
+      "description": "A new message was received/generated",
+      "type": "object",
+      "required": [
+        "event_type",
+        "message_id",
+        "role",
+        "thread_id",
+        "timestamp"
+      ],
+      "properties": {
+        "agent": {
+          "description": "Which agent sent this",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "description": "Message content",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "message_received"
+          ]
+        },
+        "message_id": {
+          "description": "Message ID",
+          "type": "string"
+        },
+        "message_type": {
+          "description": "Structured message type",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AgentMessageType"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "role": {
+          "description": "Role (user, assistant, system)",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "An agent is now speaking/processing",
+      "type": "object",
+      "required": [
+        "agent",
+        "event_type",
+        "thread_id"
+      ],
+      "properties": {
+        "agent": {
+          "description": "Which agent is speaking",
+          "type": "string"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "agent_speaking"
+          ]
+        },
+        "status": {
+          "description": "Optional status message",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "A task was completed successfully",
+      "type": "object",
+      "required": [
+        "event_type",
+        "result",
+        "task_id",
+        "thread_id"
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "task_completed"
+          ]
+        },
+        "result": {
+          "description": "Result data"
+        },
+        "task_id": {
+          "description": "Task ID (same as request_id)",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "An error occurred",
+      "type": "object",
+      "required": [
+        "code",
+        "error",
+        "event_type"
+      ],
+      "properties": {
+        "code": {
+          "description": "Error code",
+          "type": "string"
+        },
+        "details": {
+          "description": "Additional details",
+          "default": null
+        },
+        "error": {
+          "description": "Error message",
+          "type": "string"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "error"
+          ]
+        },
+        "thread_id": {
+          "description": "Thread ID (if applicable)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Thread state was updated",
+      "type": "object",
+      "required": [
+        "event_type",
+        "state",
+        "thread_id"
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "thread_state_changed"
+          ]
+        },
+        "state": {
+          "description": "Updated agent state",
+          "allOf": [
+            {
+              "$ref": "#/definitions/AgentState"
+            }
+          ]
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Progress update for long-running operations",
+      "type": "object",
+      "required": [
+        "event_type",
+        "message",
+        "task_id",
+        "thread_id"
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "progress"
+          ]
+        },
+        "message": {
+          "description": "Progress message",
+          "type": "string"
+        },
+        "percent": {
+          "description": "Percent complete (0-100)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "task_id": {
+          "description": "Task ID",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "AgentMessageType": {
+      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+      "oneOf": [
+        {
+          "description": "A log message from the agent (debugging, status updates)",
+          "type": "object",
+          "required": [
+            "content",
+            "level",
+            "message_type"
+          ],
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/definitions/LogLevel"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "log"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A question the agent is asking the user",
+          "type": "object",
+          "required": [
+            "message_type",
+            "prompt"
+          ],
+          "properties": {
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "question"
+              ]
+            },
+            "options": {
+              "default": null,
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "prompt": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "description": "An insight derived by the agent",
+          "type": "object",
+          "required": [
+            "confidence",
+            "message_type",
+            "summary"
+          ],
+          "properties": {
+            "confidence": {
+              "type": "number",
+              "format": "double"
+            },
+            "domain": {
+              "default": null,
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "insight"
+              ]
+            },
+            "summary": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "description": "A detailed analysis result",
+          "type": "object",
+          "required": [
+            "domain",
+            "findings",
+            "message_type"
+          ],
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "findings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Finding"
+              }
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "analysis"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A command/action the agent wants to execute",
+          "type": "object",
+          "required": [
+            "action",
+            "message_type",
+            "parameters"
+          ],
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "command"
+              ]
+            },
+            "parameters": true
+          }
+        },
+        {
+          "description": "A simple text response",
+          "type": "object",
+          "required": [
+            "content",
+            "message_type"
+          ],
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "text"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Progress update during long-running tasks",
+          "type": "object",
+          "required": [
+            "message",
+            "message_type"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "progress"
+              ]
+            },
+            "percent_complete": {
+              "default": null,
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            }
+          }
+        }
+      ]
+    },
+    "AgentState": {
+      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+      "type": "object",
+      "required": [
+        "tenant_id"
+      ],
+      "properties": {
+        "conversation_context": {
+          "description": "Conversation history for context",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConversationTurn"
+          }
+        },
+        "current_speaker": {
+          "description": "Currently active speaker (None means orchestrator decides)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_authenticated": {
+          "description": "Whether the user is authenticated",
+          "default": false,
+          "type": "boolean"
+        },
+        "just_finished": {
+          "description": "Whether the current agent just finished its task",
+          "default": false,
+          "type": "boolean"
+        },
+        "metadata": {
+          "description": "Custom metadata for extensibility",
+          "default": null
+        },
+        "tenant_id": {
+          "description": "Tenant ID for multi-tenancy",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Current thread ID (if in a thread)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ConversationTurn": {
+      "description": "A single turn in a conversation (for context tracking)",
+      "type": "object",
+      "required": [
+        "content",
+        "role"
+      ],
+      "properties": {
+        "content": {
+          "description": "Content of the message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role of the speaker (user, assistant, system)",
+          "type": "string"
+        },
+        "speaker": {
+          "description": "Optional speaker identifier (for multi-agent)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp": {
+          "description": "Timestamp of the turn",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Finding": {
+      "description": "A finding from an analysis agent",
+      "type": "object",
+      "required": [
+        "description",
+        "title"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence score (0.0 to 1.0)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "description": {
+          "description": "Detailed description",
+          "type": "string"
+        },
+        "related_entities": {
+          "description": "Related entity IDs",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "description": "Title or label of the finding",
+          "type": "string"
+        }
+      }
+    },
+    "LogLevel": {
+      "description": "Log level for agent log messages",
+      "type": "string",
+      "enum": [
+        "debug",
+        "info",
+        "warning",
+        "error"
+      ]
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ErrorStrategy",
+  "description": "Error handling strategy",
+  "oneOf": [
+    {
+      "description": "Fail the entire chain on any error",
+      "type": "string",
+      "enum": [
+        "fail_fast"
+      ]
+    },
+    {
+      "description": "Continue with remaining steps",
+      "type": "string",
+      "enum": [
+        "continue_on_error"
+      ]
+    },
+    {
+      "description": "Retry failed steps",
+      "type": "string",
+      "enum": [
+        "retry_on_error"
+      ]
+    },
+    {
+      "description": "Use fallback tool",
+      "type": "string",
+      "enum": [
+        "use_fallback"
+      ]
+    }
+  ]
+}

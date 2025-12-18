@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "TimeUnit": {
+      "description": "Time units",
+      "enum": [
+        "seconds",
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "months",
+        "years"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Time gap between entities",
+  "properties": {
+    "approximate": {
+      "description": "Is this approximate?",
+      "type": "boolean"
+    },
+    "unit": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TimeUnit"
+        }
+      ],
+      "description": "Duration unit"
+    },
+    "value": {
+      "description": "Duration value",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "approximate",
+    "unit",
+    "value"
+  ],
+  "title": "TimeGap",
+  "type": "object"
+}

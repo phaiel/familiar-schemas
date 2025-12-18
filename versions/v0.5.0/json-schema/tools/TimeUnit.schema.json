@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TimeUnit",
+  "description": "Time units",
+  "type": "string",
+  "enum": [
+    "seconds",
+    "minutes",
+    "hours",
+    "days",
+    "weeks",
+    "months",
+    "years"
+  ]
+}

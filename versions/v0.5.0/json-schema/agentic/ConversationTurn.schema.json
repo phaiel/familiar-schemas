@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConversationTurn",
+  "description": "A single turn in a conversation (for context tracking)",
+  "type": "object",
+  "required": [
+    "content",
+    "role"
+  ],
+  "properties": {
+    "content": {
+      "description": "Content of the message",
+      "type": "string"
+    },
+    "role": {
+      "description": "Role of the speaker (user, assistant, system)",
+      "type": "string"
+    },
+    "speaker": {
+      "description": "Optional speaker identifier (for multi-agent)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "timestamp": {
+      "description": "Timestamp of the turn",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

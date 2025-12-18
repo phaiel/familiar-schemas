@@ -1,0 +1,443 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HeddleResponse",
+  "description": "The full response from the Heddle LLM",
+  "type": "object",
+  "properties": {
+    "message_intent": {
+      "description": "Message intent classification (WHAT is user trying to do?)",
+      "default": {
+        "confidence": 1.0,
+        "intent": "LOG"
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/RawMessageIntent"
+        }
+      ]
+    },
+    "weave_units": {
+      "description": "Array of weave units extracted from the input (for LOG intent) May be empty for QUERY/REFERENCE intents",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RawWeaveUnit"
+      }
+    }
+  },
+  "definitions": {
+    "HeddleEntityType": {
+      "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+      "oneOf": [
+        {
+          "description": "A specific event that happened in the past (Narrative/External Particle)",
+          "type": "string",
+          "enum": [
+            "MOMENT"
+          ]
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "type": "string",
+          "enum": [
+            "INTENT"
+          ]
+        },
+        {
+          "description": "A definition of a person, place, or concept (Definitional/Object)",
+          "type": "string",
+          "enum": [
+            "THREAD"
+          ]
+        },
+        {
+          "description": "A statement about the quality of a relationship (Relational/Connection)",
+          "type": "string",
+          "enum": [
+            "BOND"
+          ]
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "type": "string",
+          "enum": [
+            "MOTIF"
+          ]
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "type": "string",
+          "enum": [
+            "FILAMENT"
+          ]
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "type": "string",
+          "enum": [
+            "FOCUS"
+          ]
+        },
+        {
+          "description": "An internal state snapshot (Internal Particle)",
+          "type": "string",
+          "enum": [
+            "PULSE"
+          ]
+        }
+      ]
+    },
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        }
+      ]
+    },
+    "QueryTarget": {
+      "description": "Query target - what data is the query looking for?",
+      "type": "object",
+      "properties": {
+        "entity_types": {
+          "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keywords": {
+          "description": "Keywords extracted from the query",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporal_scope": {
+          "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_hints": {
+          "description": "Specific thread hints (names, concepts) to search for",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "QueryType": {
+      "description": "The type of query (when MessageIntent is QUERY)",
+      "oneOf": [
+        {
+          "description": "When did X happen? Time-based lookup",
+          "type": "string",
+          "enum": [
+            "TEMPORAL"
+          ]
+        },
+        {
+          "description": "Who/what questions - entity lookup",
+          "type": "string",
+          "enum": [
+            "ENTITY"
+          ]
+        },
+        {
+          "description": "How often? Pattern/frequency questions",
+          "type": "string",
+          "enum": [
+            "PATTERN"
+          ]
+        },
+        {
+          "description": "Compare X and Y",
+          "type": "string",
+          "enum": [
+            "COMPARISON"
+          ]
+        },
+        {
+          "description": "Give me a summary/overview",
+          "type": "string",
+          "enum": [
+            "SUMMARY"
+          ]
+        },
+        {
+          "description": "Count/quantity questions (how many?)",
+          "type": "string",
+          "enum": [
+            "QUANTITATIVE"
+          ]
+        },
+        {
+          "description": "Yes/no questions (did X happen?)",
+          "type": "string",
+          "enum": [
+            "BOOLEAN"
+          ]
+        },
+        {
+          "description": "Why questions - causation",
+          "type": "string",
+          "enum": [
+            "CAUSAL"
+          ]
+        },
+        {
+          "description": "Location-based questions",
+          "type": "string",
+          "enum": [
+            "SPATIAL"
+          ]
+        },
+        {
+          "description": "Open-ended/exploratory",
+          "type": "string",
+          "enum": [
+            "EXPLORATORY"
+          ]
+        }
+      ]
+    },
+    "RawClassification": {
+      "description": "Raw classification from LLM output",
+      "type": "object",
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "properties": {
+        "entity_type": {
+          "$ref": "#/definitions/HeddleEntityType"
+        },
+        "weight": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "RawMessageIntent": {
+      "description": "Raw message intent classification from LLM",
+      "type": "object",
+      "required": [
+        "intent"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence in classification (0.0 to 1.0)",
+          "default": 1.0,
+          "type": "number",
+          "format": "double"
+        },
+        "intent": {
+          "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ]
+        },
+        "query_target": {
+          "description": "If QUERY: what entities/threads are being queried",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/QueryTarget"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "query_type": {
+          "description": "If QUERY: what type of query",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/QueryType"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "type": "object",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "clarity": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "intrusiveness": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "significance": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "valence": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "volatility": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "RawWeaveUnit": {
+      "description": "Raw weave unit from LLM output (before validation)",
+      "type": "object",
+      "required": [
+        "classifications",
+        "content"
+      ],
+      "properties": {
+        "classifications": {
+          "description": "Classifications in superposition",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RawClassification"
+          }
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this weave unit",
+          "type": "string"
+        },
+        "physics_hint": {
+          "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RawPhysicsHint"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "primary_thread": {
+          "description": "Primary thread: the main subject/actor of this unit",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities",
+          "default": "LOG",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ]
+        },
+        "secondary_threads": {
+          "description": "Secondary threads: other people/places/things mentioned",
+          "default": null,
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporal_marker": {
+          "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GraphUpdateType",
+  "description": "Types of graph updates",
+  "oneOf": [
+    {
+      "description": "Add new binding",
+      "type": "string",
+      "enum": [
+        "add_binding"
+      ]
+    },
+    {
+      "description": "Strengthen existing binding",
+      "type": "string",
+      "enum": [
+        "strengthen_binding"
+      ]
+    },
+    {
+      "description": "Weaken existing binding",
+      "type": "string",
+      "enum": [
+        "weaken_binding"
+      ]
+    },
+    {
+      "description": "Remove binding",
+      "type": "string",
+      "enum": [
+        "remove_binding"
+      ]
+    },
+    {
+      "description": "Merge duplicate bindings",
+      "type": "string",
+      "enum": [
+        "merge_bindings"
+      ]
+    }
+  ]
+}

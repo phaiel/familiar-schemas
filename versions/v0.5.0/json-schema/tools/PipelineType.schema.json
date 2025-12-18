@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PipelineType",
+  "description": "Types of standard pipelines",
+  "oneOf": [
+    {
+      "description": "Memory recording: Segment → Classify → Spawn → Hints → Store",
+      "type": "string",
+      "enum": [
+        "memory_recording"
+      ]
+    },
+    {
+      "description": "Query: Parse → Search → Format → Return",
+      "type": "string",
+      "enum": [
+        "query"
+      ]
+    },
+    {
+      "description": "Analysis: Parse → Search → Analyze → Synthesize",
+      "type": "string",
+      "enum": [
+        "analysis"
+      ]
+    },
+    {
+      "description": "Command: Parse → Validate → Execute → Confirm",
+      "type": "string",
+      "enum": [
+        "command"
+      ]
+    },
+    {
+      "description": "Conversation: Understand → Respond",
+      "type": "string",
+      "enum": [
+        "conversation"
+      ]
+    },
+    {
+      "description": "Multi-modal: Route → Process per modality → Merge",
+      "type": "string",
+      "enum": [
+        "multi_modal"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,731 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ObservationResponse",
+  "description": "A complete observation response with 3-phase pipeline support",
+  "type": "object",
+  "required": [
+    "message_intent",
+    "metadata"
+  ],
+  "properties": {
+    "classifications": {
+      "description": "Classifications for each segment (only populated if LOG intent)",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SegmentClassification"
+      }
+    },
+    "llm_request": {
+      "description": "Debug: what was sent to the LLM",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/LlmRequestDebug"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "message_intent": {
+      "description": "Classified intent of the message (LOG, QUERY, INFER, etc.)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RawMessageIntent"
+        }
+      ]
+    },
+    "metadata": {
+      "$ref": "#/definitions/ResponseMetadata"
+    },
+    "physics_hints": {
+      "description": "Physics hints for spawned entities",
+      "default": [],
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/RawPhysicsHint"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "raw_llm_response": {
+      "description": "Raw JSON response from LLM (exactly what came back)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "segments": {
+      "description": "Raw segments from Phase 1 (no classification)",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RawSegment"
+      }
+    },
+    "weave_units": {
+      "description": "Hydrated weave units (segments + classifications combined)",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WeaveUnit"
+      }
+    }
+  },
+  "definitions": {
+    "AIProvider": {
+      "description": "AI Provider enumeration",
+      "type": "string",
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "mock"
+      ]
+    },
+    "ClassificationPhysics": {
+      "description": "Physics hints extracted during classification",
+      "type": "object",
+      "properties": {
+        "arousal": {
+          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "clarity": {
+          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "significance": {
+          "description": "How significant/important: 0.0 to 1.0",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "valence": {
+          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "HeddleEntityType": {
+      "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+      "oneOf": [
+        {
+          "description": "A specific event that happened in the past (Narrative/External Particle)",
+          "type": "string",
+          "enum": [
+            "MOMENT"
+          ]
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "type": "string",
+          "enum": [
+            "INTENT"
+          ]
+        },
+        {
+          "description": "A definition of a person, place, or concept (Definitional/Object)",
+          "type": "string",
+          "enum": [
+            "THREAD"
+          ]
+        },
+        {
+          "description": "A statement about the quality of a relationship (Relational/Connection)",
+          "type": "string",
+          "enum": [
+            "BOND"
+          ]
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "type": "string",
+          "enum": [
+            "MOTIF"
+          ]
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "type": "string",
+          "enum": [
+            "FILAMENT"
+          ]
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "type": "string",
+          "enum": [
+            "FOCUS"
+          ]
+        },
+        {
+          "description": "An internal state snapshot (Internal Particle)",
+          "type": "string",
+          "enum": [
+            "PULSE"
+          ]
+        }
+      ]
+    },
+    "LlmRequestDebug": {
+      "description": "Debug info about the LLM request",
+      "type": "object",
+      "required": [
+        "system_prompt",
+        "user_prompt"
+      ],
+      "properties": {
+        "system_prompt": {
+          "type": "string"
+        },
+        "user_prompt": {
+          "type": "string"
+        }
+      }
+    },
+    "MessageIntent": {
+      "description": "The primary intent of the user's message",
+      "oneOf": [
+        {
+          "description": "Recording something - events, states, observations (current default)",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information back",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Requesting system to make connections or derive insights",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities, threads, or past entries",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis, patterns, or reflection on data",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "Giving a command/instruction to the system",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Conversational/social - greetings, acknowledgments",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        }
+      ]
+    },
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "type": "number",
+      "format": "double"
+    },
+    "QueryTarget": {
+      "description": "Query target - what data is the query looking for?",
+      "type": "object",
+      "properties": {
+        "entity_types": {
+          "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keywords": {
+          "description": "Keywords extracted from the query",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporal_scope": {
+          "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_hints": {
+          "description": "Specific thread hints (names, concepts) to search for",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "QueryType": {
+      "description": "The type of query (when MessageIntent is QUERY)",
+      "oneOf": [
+        {
+          "description": "When did X happen? Time-based lookup",
+          "type": "string",
+          "enum": [
+            "TEMPORAL"
+          ]
+        },
+        {
+          "description": "Who/what questions - entity lookup",
+          "type": "string",
+          "enum": [
+            "ENTITY"
+          ]
+        },
+        {
+          "description": "How often? Pattern/frequency questions",
+          "type": "string",
+          "enum": [
+            "PATTERN"
+          ]
+        },
+        {
+          "description": "Compare X and Y",
+          "type": "string",
+          "enum": [
+            "COMPARISON"
+          ]
+        },
+        {
+          "description": "Give me a summary/overview",
+          "type": "string",
+          "enum": [
+            "SUMMARY"
+          ]
+        },
+        {
+          "description": "Count/quantity questions (how many?)",
+          "type": "string",
+          "enum": [
+            "QUANTITATIVE"
+          ]
+        },
+        {
+          "description": "Yes/no questions (did X happen?)",
+          "type": "string",
+          "enum": [
+            "BOOLEAN"
+          ]
+        },
+        {
+          "description": "Why questions - causation",
+          "type": "string",
+          "enum": [
+            "CAUSAL"
+          ]
+        },
+        {
+          "description": "Location-based questions",
+          "type": "string",
+          "enum": [
+            "SPATIAL"
+          ]
+        },
+        {
+          "description": "Open-ended/exploratory",
+          "type": "string",
+          "enum": [
+            "EXPLORATORY"
+          ]
+        }
+      ]
+    },
+    "RawMessageIntent": {
+      "description": "Raw message intent classification from LLM",
+      "type": "object",
+      "required": [
+        "intent"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence in classification (0.0 to 1.0)",
+          "default": 1.0,
+          "type": "number",
+          "format": "double"
+        },
+        "intent": {
+          "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ]
+        },
+        "query_target": {
+          "description": "If QUERY: what entities/threads are being queried",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/QueryTarget"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "query_type": {
+          "description": "If QUERY: what type of query",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/QueryType"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "type": "object",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "clarity": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "intrusiveness": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "significance": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "valence": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "volatility": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "RawSegment": {
+      "description": "A raw segment from Phase 1 - NO classification, just text",
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "content": {
+          "description": "The extracted semantic content",
+          "type": "string"
+        },
+        "mentions": {
+          "description": "Other entities/things mentioned",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subject": {
+          "description": "Who/what is the primary subject? (for context, not classification)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal": {
+          "description": "Any temporal reference found",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ResponseMetadata": {
+      "description": "Metadata about an AI completion response",
+      "type": "object",
+      "required": [
+        "latency_ms",
+        "model_id",
+        "model_name",
+        "provider"
+      ],
+      "properties": {
+        "latency_ms": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "model_id": {
+          "type": "string"
+        },
+        "model_name": {
+          "type": "string"
+        },
+        "provider": {
+          "$ref": "#/definitions/AIProvider"
+        },
+        "request_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "usage": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TokenUsage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "SegmentClassification": {
+      "description": "Classification for a single segment",
+      "type": "object",
+      "required": [
+        "entity_type",
+        "segment_index"
+      ],
+      "properties": {
+        "entity_type": {
+          "description": "The entity type (MOMENT, PULSE, INTENT) - relevant for LOG purpose",
+          "allOf": [
+            {
+              "$ref": "#/definitions/HeddleEntityType"
+            }
+          ]
+        },
+        "physics": {
+          "description": "Physics hints for entity spawning (only for LOG purpose)",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ClassificationPhysics"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purpose": {
+          "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities",
+          "default": "LOG",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ]
+        },
+        "segment_index": {
+          "description": "Index of the segment being classified",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "weight": {
+          "description": "Confidence weight (0.0 to 1.0)",
+          "default": 1.0,
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "TokenUsage": {
+      "description": "Token usage statistics from a completion",
+      "type": "object",
+      "required": [
+        "completion_tokens",
+        "prompt_tokens",
+        "total_tokens"
+      ],
+      "properties": {
+        "completion_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "prompt_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "WeaveUnit": {
+      "description": "A WeaveUnit is a single segment extracted from a Weave. It's a transient container used for classification routing. Physics are extracted by the LLM but passed directly to spawned entities, not stored on the WeaveUnit itself.",
+      "type": "object",
+      "required": [
+        "content",
+        "index"
+      ],
+      "properties": {
+        "classifications": {
+          "description": "Classifications in superposition (determines which entity types to spawn)",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WeaveUnitClassification"
+          }
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this segment",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index of this unit within the shuttle (0-based)",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "primary_thread": {
+          "description": "Primary thread: the main subject/actor of this unit Used for entity resolution (Stitch) downstream",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, INFER, REFERENCE) Determines how this unit is processed - only LOG units spawn entities",
+          "default": "LOG",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageIntent"
+            }
+          ]
+        },
+        "secondary_threads": {
+          "description": "Secondary threads: other people/places/things mentioned Allows capturing companions, locations, etc.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "spawned_entity_ids": {
+          "description": "IDs of entities spawned from this unit (the actual simulation objects)",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "temporal_marker": {
+          "description": "Temporal marker: when this event/state occurred Can be absolute (\"6pm\"), relative (\"today\"), or frequency (\"once per hour\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "WeaveUnitClassification": {
+      "description": "Classification result for a weave unit (determines which entity type to spawn)",
+      "type": "object",
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "properties": {
+        "entity_type": {
+          "description": "The entity type this unit may become",
+          "allOf": [
+            {
+              "$ref": "#/definitions/HeddleEntityType"
+            }
+          ]
+        },
+        "weight": {
+          "description": "Confidence weight (0.0 to 1.0)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/NormalizedFloat"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

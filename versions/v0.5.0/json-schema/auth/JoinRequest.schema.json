@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JoinRequest",
+  "description": "A request to join a family",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "status",
+    "tenant_id",
+    "user_id"
+  ],
+  "properties": {
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_note": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "reviewed_by": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "status": {
+      "$ref": "#/definitions/JoinRequestStatus"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "definitions": {
+    "JoinRequestStatus": {
+      "description": "Status of a join request",
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ClassifiedPurpose",
+  "description": "A classified purpose with confidence",
+  "type": "object",
+  "required": [
+    "confidence",
+    "purpose"
+  ],
+  "properties": {
+    "confidence": {
+      "description": "Confidence score (0.0 to 1.0)",
+      "type": "number",
+      "format": "double"
+    },
+    "evidence": {
+      "description": "Evidence/reasoning for classification",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "purpose": {
+      "description": "The purpose of the message",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ToolPurpose"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "ToolPurpose": {
+      "description": "Primary purpose of user's message",
+      "oneOf": [
+        {
+          "description": "Recording memories, events, observations - wants to store",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information returned",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Making connections, deriving insights - wants system to infer",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities - wants existing data",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis or reflection - wants patterns identified",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "System command/instruction - wants action taken",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Social/conversational - greeting, acknowledgment",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        },
+        {
+          "description": "Clarifying or continuing previous message",
+          "type": "string",
+          "enum": [
+            "CONTINUATION"
+          ]
+        },
+        {
+          "description": "Editing or correcting previous input",
+          "type": "string",
+          "enum": [
+            "CORRECTION"
+          ]
+        }
+      ]
+    }
+  }
+}

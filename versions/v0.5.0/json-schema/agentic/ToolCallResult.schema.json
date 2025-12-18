@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolCallResult",
+  "description": "Result from a tool invocation",
+  "type": "object",
+  "required": [
+    "call_id",
+    "success"
+  ],
+  "properties": {
+    "call_id": {
+      "description": "ID of the original call",
+      "type": "string"
+    },
+    "error": {
+      "description": "Error message (if failed)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result": {
+      "description": "Result data (if successful)",
+      "default": null
+    },
+    "success": {
+      "description": "Whether the call succeeded",
+      "type": "boolean"
+    }
+  }
+}

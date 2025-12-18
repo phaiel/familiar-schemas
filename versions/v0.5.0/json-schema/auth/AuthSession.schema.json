@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AuthSession",
+  "description": "An authenticated session",
+  "type": "object",
+  "required": [
+    "created_at",
+    "expires_at",
+    "id",
+    "token_hash",
+    "user_id"
+  ],
+  "properties": {
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ip_address": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "token_hash": {
+      "description": "Token hash (the actual token is only returned once on creation)",
+      "type": "string"
+    },
+    "user_agent": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DeletionStatus",
+  "description": "Status of a deletion request",
+  "type": "string",
+  "enum": [
+    "pending",
+    "cancelled",
+    "processing",
+    "completed"
+  ]
+}

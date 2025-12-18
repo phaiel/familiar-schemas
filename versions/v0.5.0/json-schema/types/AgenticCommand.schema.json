@@ -1,0 +1,324 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgenticCommand",
+  "description": "Commands that can be sent to the agentic system\n\nThese commands are the primary interface for interacting with the multi-agent orchestration system. They can be sent directly via HTTP or published to a message broker.",
+  "oneOf": [
+    {
+      "description": "Send a new message to the agentic system",
+      "type": "object",
+      "required": [
+        "command_type",
+        "content",
+        "request_id",
+        "tenant_id"
+      ],
+      "properties": {
+        "blocks": {
+          "description": "Optional multimodal blocks (images, audio, etc.)",
+          "default": null,
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/WeaveBlock"
+          }
+        },
+        "command_type": {
+          "type": "string",
+          "enum": [
+            "send_message"
+          ]
+        },
+        "content": {
+          "description": "Text content of the message",
+          "type": "string"
+        },
+        "conversation_history": {
+          "description": "Conversation history for context",
+          "default": null,
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/ConversationHistoryItem"
+          }
+        },
+        "flow_path": {
+          "description": "Override the default flow path (e.g., \"u/phaiel/loom\")",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "request_id": {
+          "description": "Request ID for tracing",
+          "type": "string"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Thread ID (None = start new thread)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Continue processing in an existing thread",
+      "type": "object",
+      "required": [
+        "command_type",
+        "request_id",
+        "thread_id"
+      ],
+      "properties": {
+        "command_type": {
+          "type": "string",
+          "enum": [
+            "continue_thread"
+          ]
+        },
+        "request_id": {
+          "description": "Request ID for tracing",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "ID of the thread to continue",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Cancel a running task",
+      "type": "object",
+      "required": [
+        "command_type",
+        "task_id"
+      ],
+      "properties": {
+        "command_type": {
+          "type": "string",
+          "enum": [
+            "cancel_task"
+          ]
+        },
+        "reason": {
+          "description": "Reason for cancellation",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "task_id": {
+          "description": "ID of the task to cancel",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Request thread history",
+      "type": "object",
+      "required": [
+        "command_type",
+        "thread_id"
+      ],
+      "properties": {
+        "command_type": {
+          "type": "string",
+          "enum": [
+            "get_thread_history"
+          ]
+        },
+        "limit": {
+          "description": "Maximum number of messages to return",
+          "default": null,
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "thread_id": {
+          "description": "ID of the thread",
+          "type": "string"
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "ConversationHistoryItem": {
+      "description": "A single item in conversation history",
+      "type": "object",
+      "required": [
+        "content",
+        "role"
+      ],
+      "properties": {
+        "content": {
+          "description": "Content of the message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role: \"user\" or \"assistant\"",
+          "type": "string"
+        }
+      }
+    },
+    "WeaveBlock": {
+      "description": "Input block types for multimodal weave requests",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "content",
+            "type"
+          ],
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "text"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "source",
+            "type"
+          ],
+          "properties": {
+            "alt_text": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "analyze": {
+              "description": "Request vision analysis",
+              "default": true,
+              "type": "boolean"
+            },
+            "source": {
+              "description": "base64 data URI or URL",
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "source",
+            "type"
+          ],
+          "properties": {
+            "duration_secs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            },
+            "source": {
+              "type": "string"
+            },
+            "transcript": {
+              "description": "Pre-transcribed (skip Whisper)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "audio"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "source",
+            "type"
+          ],
+          "properties": {
+            "filename": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "mime_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "document"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "url"
+          ],
+          "properties": {
+            "extract_images": {
+              "description": "Whether to extract images from the page",
+              "default": false,
+              "type": "boolean"
+            },
+            "selector": {
+              "description": "Optional CSS selector to extract specific content",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "webpage"
+              ]
+            },
+            "url": {
+              "description": "URL to scrape",
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

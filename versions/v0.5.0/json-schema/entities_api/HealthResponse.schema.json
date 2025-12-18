@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HealthResponse",
+  "description": "Response payload for GET /health",
+  "type": "object",
+  "required": [
+    "service",
+    "status",
+    "version"
+  ],
+  "properties": {
+    "service": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    }
+  }
+}

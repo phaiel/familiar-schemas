@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BondPhysics",
+  "description": "Models the classical physics of a relationship Bond. Based on Spring-Damper mechanics (Hooke's Law).",
+  "type": "object",
+  "required": [
+    "bond_strength",
+    "damping_coefficient",
+    "spring_constant"
+  ],
+  "properties": {
+    "bond_strength": {
+      "description": "The overall strength or health of the bond. 0.0 = Broken/Weak, 1.0 = Strong/Healthy",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "damping_coefficient": {
+      "description": "The 'inertia' of the bond, representing how quickly it returns to equilibrium. Higher values = slower return to rest (lingering effects). Lower values = quick recovery (resilient).",
+      "type": "number",
+      "format": "double"
+    },
+    "spring_constant": {
+      "description": "The 'stiffness' of the bond, representing its resistance to change. Higher values = more rigid relationship (breaks under stress). Lower values = more flexible relationship (stretches without breaking).",
+      "type": "number",
+      "format": "double"
+    }
+  },
+  "definitions": {
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SystemManifest",
+  "type": "object",
+  "required": [
+    "description",
+    "domain",
+    "id",
+    "reads",
+    "trigger",
+    "writes"
+  ],
+  "properties": {
+    "description": {
+      "type": "string"
+    },
+    "domain": {
+      "$ref": "#/definitions/SystemDomain"
+    },
+    "id": {
+      "type": "string"
+    },
+    "reads": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "trigger": {
+      "$ref": "#/definitions/SystemTrigger"
+    },
+    "writes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "SystemDomain": {
+      "type": "string",
+      "enum": [
+        "ingestion",
+        "physics",
+        "analysis",
+        "maintenance"
+      ]
+    },
+    "SystemTrigger": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "on_demand"
+          ]
+        },
+        {
+          "type": "object",
+          "required": [
+            "event"
+          ],
+          "properties": {
+            "event": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "schedule"
+          ],
+          "properties": {
+            "schedule": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

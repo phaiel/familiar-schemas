@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ModelConfig",
+  "description": "Model definition with all configuration",
+  "type": "object",
+  "required": [
+    "api_model_id",
+    "context_window",
+    "id",
+    "name",
+    "provider",
+    "supports_json_mode"
+  ],
+  "properties": {
+    "api_model_id": {
+      "description": "The actual API model ID to send to the provider",
+      "type": "string"
+    },
+    "context_window": {
+      "description": "Context window size (tokens)",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0.0
+    },
+    "deprecated": {
+      "description": "Whether this model is deprecated",
+      "default": false,
+      "type": "boolean"
+    },
+    "id": {
+      "description": "Unique identifier (e.g., \"gpt-4o\", \"claude-sonnet-4\")",
+      "type": "string"
+    },
+    "name": {
+      "description": "Human-readable name",
+      "type": "string"
+    },
+    "notes": {
+      "description": "Notes about the model",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "description": "The provider",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AIProvider"
+        }
+      ]
+    },
+    "supports_json_mode": {
+      "description": "Whether the model supports JSON mode",
+      "type": "boolean"
+    }
+  },
+  "definitions": {
+    "AIProvider": {
+      "description": "AI Provider enumeration",
+      "type": "string",
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "mock"
+      ]
+    }
+  }
+}

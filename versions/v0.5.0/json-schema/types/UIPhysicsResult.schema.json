@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UIPhysicsResult",
+  "description": "Physics simulation result",
+  "type": "object",
+  "required": [
+    "energy",
+    "position",
+    "temperature"
+  ],
+  "properties": {
+    "energy": {
+      "type": "number",
+      "format": "double"
+    },
+    "position": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "format": "double"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "temperature": {
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

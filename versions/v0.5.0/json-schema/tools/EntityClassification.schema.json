@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EntityClassification",
+  "description": "A single entity classification with probability",
+  "type": "object",
+  "required": [
+    "entity_type",
+    "probability"
+  ],
+  "properties": {
+    "entity_type": {
+      "description": "Entity type",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityType"
+        }
+      ]
+    },
+    "evidence": {
+      "description": "Evidence supporting this classification",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ClassificationEvidence"
+      }
+    },
+    "probability": {
+      "description": "Probability (0.0 to 1.0)",
+      "type": "number",
+      "format": "double"
+    }
+  },
+  "definitions": {
+    "ClassificationEvidence": {
+      "description": "Evidence for a classification",
+      "type": "object",
+      "required": [
+        "description",
+        "evidence_type",
+        "weight"
+      ],
+      "properties": {
+        "description": {
+          "description": "Description of evidence",
+          "type": "string"
+        },
+        "evidence_type": {
+          "description": "Type of evidence",
+          "allOf": [
+            {
+              "$ref": "#/definitions/EvidenceType"
+            }
+          ]
+        },
+        "weight": {
+          "description": "How much this evidence contributes",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "EntityType": {
+      "description": "Entity types from the Symmetric Seven ontology",
+      "oneOf": [
+        {
+          "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+          "type": "string",
+          "enum": [
+            "MOMENT"
+          ]
+        },
+        {
+          "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+          "type": "string",
+          "enum": [
+            "PULSE"
+          ]
+        },
+        {
+          "description": "Definition of person, place, or concept (Definitional/Object)",
+          "type": "string",
+          "enum": [
+            "THREAD"
+          ]
+        },
+        {
+          "description": "Relationship between entities (Relational/Connection)",
+          "type": "string",
+          "enum": [
+            "BOND"
+          ]
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "type": "string",
+          "enum": [
+            "MOTIF"
+          ]
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "type": "string",
+          "enum": [
+            "FILAMENT"
+          ]
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "type": "string",
+          "enum": [
+            "FOCUS"
+          ]
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "type": "string",
+          "enum": [
+            "INTENT"
+          ]
+        }
+      ]
+    },
+    "EvidenceType": {
+      "description": "Types of evidence for classification",
+      "oneOf": [
+        {
+          "description": "Verb type (action vs state)",
+          "type": "string",
+          "enum": [
+            "verb_type"
+          ]
+        },
+        {
+          "description": "Keywords detected",
+          "type": "string",
+          "enum": [
+            "keywords"
+          ]
+        },
+        {
+          "description": "Temporal indicators",
+          "type": "string",
+          "enum": [
+            "temporal"
+          ]
+        },
+        {
+          "description": "Emotional indicators",
+          "type": "string",
+          "enum": [
+            "emotional"
+          ]
+        },
+        {
+          "description": "Entity mentions",
+          "type": "string",
+          "enum": [
+            "entity_mention"
+          ]
+        },
+        {
+          "description": "Relational language",
+          "type": "string",
+          "enum": [
+            "relational"
+          ]
+        },
+        {
+          "description": "Pattern indicators",
+          "type": "string",
+          "enum": [
+            "pattern"
+          ]
+        },
+        {
+          "description": "Context from surrounding content",
+          "type": "string",
+          "enum": [
+            "context"
+          ]
+        }
+      ]
+    }
+  }
+}

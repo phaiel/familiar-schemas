@@ -1,0 +1,742 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WsMessage",
+  "description": "A message sent from the server to the client via WebSocket",
+  "oneOf": [
+    {
+      "description": "Connection status / Handshake",
+      "type": "object",
+      "required": [
+        "job_id",
+        "status",
+        "type"
+      ],
+      "properties": {
+        "job_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "status"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Typing indicator (agent is processing)",
+      "type": "object",
+      "required": [
+        "job_id",
+        "type"
+      ],
+      "properties": {
+        "job_id": {
+          "type": "string"
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "typing"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Job progress update (with optional Block Kit content)",
+      "type": "object",
+      "required": [
+        "status",
+        "type"
+      ],
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BlockMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "details": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "progress"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Job completed successfully (with Block Kit content)",
+      "type": "object",
+      "required": [
+        "job_id",
+        "type"
+      ],
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BlockMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "job_id": {
+          "type": "string"
+        },
+        "result": true,
+        "type": {
+          "type": "string",
+          "enum": [
+            "complete"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Error occurred (with Block Kit content)",
+      "type": "object",
+      "required": [
+        "message",
+        "type"
+      ],
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BlockMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "job_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "error"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Message status update (sent, delivered, read)",
+      "type": "object",
+      "required": [
+        "message_id",
+        "status",
+        "type"
+      ],
+      "properties": {
+        "message_id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/MessageStatusType"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "message_status"
+          ]
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "AccordionState": {
+      "type": "string",
+      "enum": [
+        "collapsed",
+        "expanded"
+      ]
+    },
+    "Block": {
+      "description": "A single visual block in a message",
+      "oneOf": [
+        {
+          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "accessory": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/BlockElement"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fields": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "$ref": "#/definitions/TextObject"
+              }
+            },
+            "text": {
+              "$ref": "#/definitions/TextObject"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "section"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A visual separator",
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "divider"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Displays an image with optional title",
+          "type": "object",
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/PlainTextObject"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A container for interactive elements (buttons, selects, etc.)",
+          "type": "object",
+          "required": [
+            "elements",
+            "type"
+          ],
+          "properties": {
+            "elements": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlockElement"
+              }
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "actions"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Displays contextual info (small grey text, images)",
+          "type": "object",
+          "required": [
+            "elements",
+            "type"
+          ],
+          "properties": {
+            "elements": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ContextElement"
+              }
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "context"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A header with large, bold text",
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "text": {
+              "$ref": "#/definitions/PlainTextObject"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "header"
+              ]
+            }
+          }
+        },
+        {
+          "description": "An input field",
+          "type": "object",
+          "required": [
+            "element",
+            "label",
+            "type"
+          ],
+          "properties": {
+            "element": {
+              "$ref": "#/definitions/BlockElement"
+            },
+            "hint": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/PlainTextObject"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "label": {
+              "$ref": "#/definitions/PlainTextObject"
+            },
+            "optional": {
+              "default": false,
+              "type": "boolean"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "input"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A collapsible container",
+          "type": "object",
+          "required": [
+            "blocks",
+            "summary",
+            "type"
+          ],
+          "properties": {
+            "blocks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Block"
+              }
+            },
+            "initial_state": {
+              "default": "collapsed",
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AccordionState"
+                }
+              ]
+            },
+            "summary": {
+              "$ref": "#/definitions/PlainTextObject"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "accordion"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "BlockElement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "action_id",
+            "text",
+            "type"
+          ],
+          "properties": {
+            "action_id": {
+              "type": "string"
+            },
+            "style": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/ButtonStyle"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "text": {
+              "$ref": "#/definitions/PlainTextObject"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "button"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "action_id",
+            "options",
+            "type"
+          ],
+          "properties": {
+            "action_id": {
+              "type": "string"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OptionObject"
+              }
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "overflow"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "action_id",
+            "type"
+          ],
+          "properties": {
+            "action_id": {
+              "type": "string"
+            },
+            "initial_value": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "multiline": {
+              "default": false,
+              "type": "boolean"
+            },
+            "placeholder": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/PlainTextObject"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "plain_text_input"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "BlockMessage": {
+      "description": "The root container for a Block Kit message",
+      "type": "object",
+      "required": [
+        "blocks"
+      ],
+      "properties": {
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Block"
+          }
+        }
+      }
+    },
+    "ButtonStyle": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "danger"
+      ]
+    },
+    "ContextElement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "mrkdwn"
+              ]
+            },
+            "verbatim": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "emoji": {
+              "default": false,
+              "type": "boolean"
+            },
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "plain_text"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "MessageStatusType": {
+      "description": "Message delivery status",
+      "type": "string",
+      "enum": [
+        "sending",
+        "sent",
+        "delivered",
+        "read",
+        "failed"
+      ]
+    },
+    "OptionObject": {
+      "type": "object",
+      "required": [
+        "text",
+        "value"
+      ],
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PlainTextObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "$ref": "#/definitions/PlainTextObject"
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "PlainTextObject": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "TextObject": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "emoji": {
+              "default": false,
+              "type": "boolean"
+            },
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "plain_text"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "mrkdwn"
+              ]
+            },
+            "verbatim": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

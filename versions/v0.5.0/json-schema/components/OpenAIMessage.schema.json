@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenAIMessage",
+  "description": "OpenAI message format",
+  "type": "object",
+  "required": [
+    "content",
+    "role"
+  ],
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    }
+  }
+}

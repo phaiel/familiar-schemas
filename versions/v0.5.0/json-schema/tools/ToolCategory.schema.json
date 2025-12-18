@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolCategory",
+  "description": "Categories of tools",
+  "oneOf": [
+    {
+      "description": "Segmentation tools (break input into units)",
+      "type": "string",
+      "enum": [
+        "segmentation"
+      ]
+    },
+    {
+      "description": "Classification tools (label content)",
+      "type": "string",
+      "enum": [
+        "classification"
+      ]
+    },
+    {
+      "description": "Spawn tools (create entities)",
+      "type": "string",
+      "enum": [
+        "spawn"
+      ]
+    },
+    {
+      "description": "Hint generation tools",
+      "type": "string",
+      "enum": [
+        "hints"
+      ]
+    },
+    {
+      "description": "Search and retrieval tools",
+      "type": "string",
+      "enum": [
+        "retrieval"
+      ]
+    },
+    {
+      "description": "Orchestration tools",
+      "type": "string",
+      "enum": [
+        "orchestration"
+      ]
+    }
+  ]
+}

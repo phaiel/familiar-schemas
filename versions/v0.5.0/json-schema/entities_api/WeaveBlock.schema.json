@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WeaveBlock",
+  "description": "Input block types for multimodal weave requests",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "content",
+        "type"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "source",
+        "type"
+      ],
+      "properties": {
+        "alt_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "analyze": {
+          "description": "Request vision analysis",
+          "default": true,
+          "type": "boolean"
+        },
+        "source": {
+          "description": "base64 data URI or URL",
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "image"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "source",
+        "type"
+      ],
+      "properties": {
+        "duration_secs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "source": {
+          "type": "string"
+        },
+        "transcript": {
+          "description": "Pre-transcribed (skip Whisper)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "audio"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "source",
+        "type"
+      ],
+      "properties": {
+        "filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mime_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "document"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "type",
+        "url"
+      ],
+      "properties": {
+        "extract_images": {
+          "description": "Whether to extract images from the page",
+          "default": false,
+          "type": "boolean"
+        },
+        "selector": {
+          "description": "Optional CSS selector to extract specific content",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "webpage"
+          ]
+        },
+        "url": {
+          "description": "URL to scrape",
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

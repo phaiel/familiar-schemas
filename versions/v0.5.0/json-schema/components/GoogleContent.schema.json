@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GoogleContent",
+  "description": "Google content (message)",
+  "type": "object",
+  "required": [
+    "parts"
+  ],
+  "properties": {
+    "parts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GooglePart"
+      }
+    },
+    "role": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "GooglePart": {
+      "description": "Google content part",
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

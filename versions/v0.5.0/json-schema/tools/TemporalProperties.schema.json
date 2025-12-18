@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TemporalProperties",
+  "description": "Temporal properties of binding",
+  "type": "object",
+  "required": [
+    "relation"
+  ],
+  "properties": {
+    "gap": {
+      "description": "Time gap between entities",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TimeGap"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "recurring": {
+      "description": "Is this a recurring pattern?",
+      "default": false,
+      "type": "boolean"
+    },
+    "relation": {
+      "description": "Time relation",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TemporalRelation"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "TemporalRelation": {
+      "description": "Temporal relationships",
+      "type": "string",
+      "enum": [
+        "before",
+        "after",
+        "during",
+        "simultaneous",
+        "overlapping"
+      ]
+    },
+    "TimeGap": {
+      "description": "Time gap between entities",
+      "type": "object",
+      "required": [
+        "approximate",
+        "unit",
+        "value"
+      ],
+      "properties": {
+        "approximate": {
+          "description": "Is this approximate?",
+          "type": "boolean"
+        },
+        "unit": {
+          "description": "Duration unit",
+          "allOf": [
+            {
+              "$ref": "#/definitions/TimeUnit"
+            }
+          ]
+        },
+        "value": {
+          "description": "Duration value",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "TimeUnit": {
+      "description": "Time units",
+      "type": "string",
+      "enum": [
+        "seconds",
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "months",
+        "years"
+      ]
+    }
+  }
+}

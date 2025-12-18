@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Finding",
+  "description": "A finding from an analysis agent",
+  "type": "object",
+  "required": [
+    "description",
+    "title"
+  ],
+  "properties": {
+    "confidence": {
+      "description": "Confidence score (0.0 to 1.0)",
+      "default": null,
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "description": {
+      "description": "Detailed description",
+      "type": "string"
+    },
+    "related_entities": {
+      "description": "Related entity IDs",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "title": {
+      "description": "Title or label of the finding",
+      "type": "string"
+    }
+  }
+}

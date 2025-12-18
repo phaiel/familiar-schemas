@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhysicsInput",
+  "description": "Input to the physics agent",
+  "type": "object",
+  "required": [
+    "operation",
+    "request_id",
+    "state"
+  ],
+  "properties": {
+    "current_position": {
+      "description": "Current position (for calculations)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/VAEPosition"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "entity_type": {
+      "description": "Entity type (for spawn_position)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "operation": {
+      "description": "Operation to perform",
+      "type": "string"
+    },
+    "physics_hint": {
+      "description": "Physics hints",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PhysicsHint"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "request_id": {
+      "description": "Request ID for tracing",
+      "type": "string"
+    },
+    "state": {
+      "description": "Current agent state"
+    }
+  },
+  "definitions": {
+    "PhysicsHint": {
+      "description": "Sparse container for physics hints extracted from text by the LLM. All fields are Option<f64>. If None, the system applies Vacuum State defaults. This is the \"raw\" output from classification before collapse.",
+      "type": "object",
+      "properties": {
+        "arousal": {
+          "description": "Energy/Activation: 0.0 (Calm) to 1.0 (Excited) Maps to: VAE Arousal axis",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "clarity": {
+          "description": "Specificity/Coherence: 0.0 (Vague) to 1.0 (Factual) Maps to: QuantumState.coherence and VAE Epistemic axis",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "intrusiveness": {
+          "description": "Intrusiveness: 0.0 (Passive) to 1.0 (Demanding attention) Maps to: CognitiveOptics.emissivity",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "significance": {
+          "description": "Importance/Mass: 0.0 (Mundane) to 1.0 (Critical) Maps to: FieldExcitation.amplitude",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "valence": {
+          "description": "Emotional polarity: -1.0 (Negative) to 1.0 (Positive) Maps to: VAE Valence axis",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "volatility": {
+          "description": "Volatility: 0.0 (Stable) to 1.0 (Fluctuating) Maps to: FieldExcitation.temperature",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "VAEPosition": {
+      "description": "VAE space position (quantized for physics)",
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "description": "X: Valence (emotional polarity)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "y": {
+          "description": "Y: Arousal (energy/activation)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "z": {
+          "description": "Z: Epistemic (certainty)",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

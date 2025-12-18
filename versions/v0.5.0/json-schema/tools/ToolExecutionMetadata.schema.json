@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolExecutionMetadata",
+  "description": "Tool execution metadata",
+  "type": "object",
+  "required": [
+    "duration_ms",
+    "started_at",
+    "tool_name"
+  ],
+  "properties": {
+    "duration_ms": {
+      "description": "Execution duration in milliseconds",
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "model": {
+      "description": "Model used (if LLM-based)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "started_at": {
+      "description": "Timestamp when execution started",
+      "type": "string"
+    },
+    "token_usage": {
+      "description": "Token usage (if LLM-based)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TokenUsage"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "tool_name": {
+      "description": "Tool name that was executed",
+      "type": "string"
+    },
+    "trace_id": {
+      "description": "Request/trace ID for debugging",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "TokenUsage": {
+      "description": "Token usage statistics from a completion",
+      "type": "object",
+      "required": [
+        "completion_tokens",
+        "prompt_tokens",
+        "total_tokens"
+      ],
+      "properties": {
+        "completion_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "prompt_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    }
+  }
+}

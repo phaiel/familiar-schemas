@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "TemporalRelation": {
+      "description": "Temporal relationships",
+      "enum": [
+        "before",
+        "after",
+        "during",
+        "simultaneous",
+        "overlapping"
+      ],
+      "type": "string"
+    },
+    "TimeGap": {
+      "description": "Time gap between entities",
+      "properties": {
+        "approximate": {
+          "description": "Is this approximate?",
+          "type": "boolean"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TimeUnit"
+            }
+          ],
+          "description": "Duration unit"
+        },
+        "value": {
+          "description": "Duration value",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "approximate",
+        "unit",
+        "value"
+      ],
+      "type": "object"
+    },
+    "TimeUnit": {
+      "description": "Time units",
+      "enum": [
+        "seconds",
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "months",
+        "years"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Temporal properties of binding",
+  "properties": {
+    "gap": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TimeGap"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Time gap between entities"
+    },
+    "recurring": {
+      "default": false,
+      "description": "Is this a recurring pattern?",
+      "type": "boolean"
+    },
+    "relation": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TemporalRelation"
+        }
+      ],
+      "description": "Time relation"
+    }
+  },
+  "required": [
+    "relation"
+  ],
+  "title": "TemporalProperties",
+  "type": "object"
+}

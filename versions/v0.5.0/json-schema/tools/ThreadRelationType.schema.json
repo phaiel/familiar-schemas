@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ThreadRelationType",
+  "description": "Types of thread relations",
+  "oneOf": [
+    {
+      "description": "Part of (belongs to)",
+      "type": "string",
+      "enum": [
+        "part_of"
+      ]
+    },
+    {
+      "description": "Contains (has parts)",
+      "type": "string",
+      "enum": [
+        "contains"
+      ]
+    },
+    {
+      "description": "Related to (general association)",
+      "type": "string",
+      "enum": [
+        "related_to"
+      ]
+    },
+    {
+      "description": "Causes / leads to",
+      "type": "string",
+      "enum": [
+        "causes_of"
+      ]
+    },
+    {
+      "description": "Opposite of",
+      "type": "string",
+      "enum": [
+        "opposite_of"
+      ]
+    },
+    {
+      "description": "Same as (alias)",
+      "type": "string",
+      "enum": [
+        "same_as"
+      ]
+    }
+  ]
+}

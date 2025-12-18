@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Motif",
+  "description": "A recurring pattern of subjective experiences (External Wave). Formed by the constructive interference of many Moments.",
+  "type": "object",
+  "required": [
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "source_moments",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "properties": {
+    "amplitude": {
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": [
+          {
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2
+      }
+    },
+    "coherence": {
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "created_at": {
+      "description": "When this entity was created",
+      "type": "string",
+      "format": "date-time"
+    },
+    "energy": {
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "type": "string",
+      "format": "uuid"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QuantizedCoord"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "source_moments": {
+      "description": "The source moments that collapsed into this pattern.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "temperature": {
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "tenant_id": {
+      "description": "Tenant (family/user) this entity belongs to",
+      "type": "string",
+      "format": "uuid"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QuantizedCoord"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    }
+  },
+  "definitions": {
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "type": "number",
+      "format": "double"
+    },
+    "QuantizedCoord": {
+      "description": "A quantized coordinate in the 3D VAE Manifold Uses i64 for precision in physics calculations",
+      "type": "integer",
+      "format": "int64"
+    }
+  }
+}

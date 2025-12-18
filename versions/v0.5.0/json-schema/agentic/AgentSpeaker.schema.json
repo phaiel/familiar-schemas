@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgentSpeaker",
+  "description": "Speaker/agent identifiers for the orchestration system\n\nEach speaker is a specialized agent that handles specific types of tasks. The orchestrator routes to the appropriate speaker based on user intent.",
+  "oneOf": [
+    {
+      "description": "Main user-facing agent - greets users, explains capabilities",
+      "type": "string",
+      "enum": [
+        "concierge"
+      ]
+    },
+    {
+      "description": "Classification agent - determines entity types, message intent",
+      "type": "string",
+      "enum": [
+        "classifier"
+      ]
+    },
+    {
+      "description": "Physics simulation agent - handles VAE space calculations",
+      "type": "string",
+      "enum": [
+        "physics"
+      ]
+    },
+    {
+      "description": "Retrieval-augmented generation agent (future)",
+      "type": "string",
+      "enum": [
+        "rag"
+      ]
+    },
+    {
+      "description": "Memory/context management agent",
+      "type": "string",
+      "enum": [
+        "memory"
+      ]
+    },
+    {
+      "description": "Task execution agent",
+      "type": "string",
+      "enum": [
+        "task_executor"
+      ]
+    }
+  ]
+}

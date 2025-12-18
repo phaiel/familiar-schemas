@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UIClassification",
+  "description": "A classification result",
+  "type": "object",
+  "required": [
+    "confidence",
+    "entity_type"
+  ],
+  "properties": {
+    "confidence": {
+      "type": "number",
+      "format": "double"
+    },
+    "entity_type": {
+      "type": "string"
+    }
+  }
+}

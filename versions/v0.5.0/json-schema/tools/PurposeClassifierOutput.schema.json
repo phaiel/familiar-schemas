@@ -1,0 +1,507 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PurposeClassifierOutput",
+  "description": "Output from purpose classification",
+  "type": "object",
+  "required": [
+    "pipeline",
+    "primary"
+  ],
+  "properties": {
+    "command_analysis": {
+      "description": "Command analysis (if purpose is Command)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CommandAnalysis"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pipeline": {
+      "description": "Recommended processing pipeline",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PurposePipeline"
+        }
+      ]
+    },
+    "primary": {
+      "description": "Primary classified purpose",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ClassifiedPurpose"
+        }
+      ]
+    },
+    "query_analysis": {
+      "description": "Query analysis (if purpose is Query-related)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/QueryAnalysis"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "secondary": {
+      "description": "Secondary purposes (if multi-purpose detected)",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ClassifiedPurpose"
+      }
+    }
+  },
+  "definitions": {
+    "ClassifiedPurpose": {
+      "description": "A classified purpose with confidence",
+      "type": "object",
+      "required": [
+        "confidence",
+        "purpose"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence score (0.0 to 1.0)",
+          "type": "number",
+          "format": "double"
+        },
+        "evidence": {
+          "description": "Evidence/reasoning for classification",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "purpose": {
+          "description": "The purpose of the message",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ToolPurpose"
+            }
+          ]
+        }
+      }
+    },
+    "CommandAnalysis": {
+      "description": "Analysis of a command purpose",
+      "type": "object",
+      "required": [
+        "command_type",
+        "is_destructive",
+        "needs_confirmation"
+      ],
+      "properties": {
+        "command_type": {
+          "description": "Command type",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CommandType"
+            }
+          ]
+        },
+        "is_destructive": {
+          "description": "Is this command destructive?",
+          "type": "boolean"
+        },
+        "needs_confirmation": {
+          "description": "Does this command need confirmation?",
+          "type": "boolean"
+        },
+        "parameters": {
+          "description": "Command parameters",
+          "default": {},
+          "type": "object",
+          "additionalProperties": true
+        },
+        "target": {
+          "description": "Target of the command",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "CommandType": {
+      "description": "Types of commands",
+      "oneOf": [
+        {
+          "description": "Create something",
+          "type": "string",
+          "enum": [
+            "CREATE"
+          ]
+        },
+        {
+          "description": "Update/modify",
+          "type": "string",
+          "enum": [
+            "UPDATE"
+          ]
+        },
+        {
+          "description": "Delete/remove",
+          "type": "string",
+          "enum": [
+            "DELETE"
+          ]
+        },
+        {
+          "description": "Link/connect entities",
+          "type": "string",
+          "enum": [
+            "LINK"
+          ]
+        },
+        {
+          "description": "Unlink/disconnect entities",
+          "type": "string",
+          "enum": [
+            "UNLINK"
+          ]
+        },
+        {
+          "description": "Export data",
+          "type": "string",
+          "enum": [
+            "EXPORT"
+          ]
+        },
+        {
+          "description": "Import data",
+          "type": "string",
+          "enum": [
+            "IMPORT"
+          ]
+        },
+        {
+          "description": "Configure settings",
+          "type": "string",
+          "enum": [
+            "CONFIGURE"
+          ]
+        },
+        {
+          "description": "Unknown/custom command",
+          "type": "string",
+          "enum": [
+            "CUSTOM"
+          ]
+        }
+      ]
+    },
+    "FilterOperator": {
+      "description": "Filter operators",
+      "type": "string",
+      "enum": [
+        "equals",
+        "not_equals",
+        "contains",
+        "starts_with",
+        "ends_with",
+        "greater_than",
+        "less_than",
+        "between",
+        "in",
+        "not_in"
+      ]
+    },
+    "PurposePipeline": {
+      "description": "Processing pipeline category",
+      "oneOf": [
+        {
+          "description": "Memory recording: Segment → Classify → Spawn → Store",
+          "type": "string",
+          "enum": [
+            "recording"
+          ]
+        },
+        {
+          "description": "Data retrieval: Parse → Search → Format → Return",
+          "type": "string",
+          "enum": [
+            "retrieval"
+          ]
+        },
+        {
+          "description": "Analysis: Parse → Search → Analyze → Synthesize",
+          "type": "string",
+          "enum": [
+            "analysis"
+          ]
+        },
+        {
+          "description": "System action: Parse → Validate → Execute → Confirm",
+          "type": "string",
+          "enum": [
+            "action"
+          ]
+        },
+        {
+          "description": "Conversation: Respond appropriately",
+          "type": "string",
+          "enum": [
+            "conversational"
+          ]
+        }
+      ]
+    },
+    "QueryAnalysis": {
+      "description": "Analysis of a query purpose",
+      "type": "object",
+      "required": [
+        "query_type",
+        "search_terms",
+        "target"
+      ],
+      "properties": {
+        "filters": {
+          "description": "Filters to apply",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QueryFilter"
+          }
+        },
+        "query_type": {
+          "description": "Type of query",
+          "allOf": [
+            {
+              "$ref": "#/definitions/QueryType"
+            }
+          ]
+        },
+        "search_terms": {
+          "description": "Extracted search terms",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "target": {
+          "description": "What the query is targeting",
+          "allOf": [
+            {
+              "$ref": "#/definitions/QueryTarget"
+            }
+          ]
+        }
+      }
+    },
+    "QueryFilter": {
+      "description": "A filter for queries",
+      "type": "object",
+      "required": [
+        "field",
+        "operator",
+        "value"
+      ],
+      "properties": {
+        "field": {
+          "description": "Field to filter on",
+          "type": "string"
+        },
+        "operator": {
+          "description": "Filter operator",
+          "allOf": [
+            {
+              "$ref": "#/definitions/FilterOperator"
+            }
+          ]
+        },
+        "value": {
+          "description": "Filter value"
+        }
+      }
+    },
+    "QueryTarget": {
+      "description": "Query target - what data is the query looking for?",
+      "type": "object",
+      "properties": {
+        "entity_types": {
+          "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keywords": {
+          "description": "Keywords extracted from the query",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporal_scope": {
+          "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_hints": {
+          "description": "Specific thread hints (names, concepts) to search for",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "QueryType": {
+      "description": "The type of query (when MessageIntent is QUERY)",
+      "oneOf": [
+        {
+          "description": "When did X happen? Time-based lookup",
+          "type": "string",
+          "enum": [
+            "TEMPORAL"
+          ]
+        },
+        {
+          "description": "Who/what questions - entity lookup",
+          "type": "string",
+          "enum": [
+            "ENTITY"
+          ]
+        },
+        {
+          "description": "How often? Pattern/frequency questions",
+          "type": "string",
+          "enum": [
+            "PATTERN"
+          ]
+        },
+        {
+          "description": "Compare X and Y",
+          "type": "string",
+          "enum": [
+            "COMPARISON"
+          ]
+        },
+        {
+          "description": "Give me a summary/overview",
+          "type": "string",
+          "enum": [
+            "SUMMARY"
+          ]
+        },
+        {
+          "description": "Count/quantity questions (how many?)",
+          "type": "string",
+          "enum": [
+            "QUANTITATIVE"
+          ]
+        },
+        {
+          "description": "Yes/no questions (did X happen?)",
+          "type": "string",
+          "enum": [
+            "BOOLEAN"
+          ]
+        },
+        {
+          "description": "Why questions - causation",
+          "type": "string",
+          "enum": [
+            "CAUSAL"
+          ]
+        },
+        {
+          "description": "Location-based questions",
+          "type": "string",
+          "enum": [
+            "SPATIAL"
+          ]
+        },
+        {
+          "description": "Open-ended/exploratory",
+          "type": "string",
+          "enum": [
+            "EXPLORATORY"
+          ]
+        }
+      ]
+    },
+    "ToolPurpose": {
+      "description": "Primary purpose of user's message",
+      "oneOf": [
+        {
+          "description": "Recording memories, events, observations - wants to store",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information returned",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Making connections, deriving insights - wants system to infer",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities - wants existing data",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis or reflection - wants patterns identified",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "System command/instruction - wants action taken",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Social/conversational - greeting, acknowledgment",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        },
+        {
+          "description": "Clarifying or continuing previous message",
+          "type": "string",
+          "enum": [
+            "CONTINUATION"
+          ]
+        },
+        {
+          "description": "Editing or correcting previous input",
+          "type": "string",
+          "enum": [
+            "CORRECTION"
+          ]
+        }
+      ]
+    }
+  }
+}

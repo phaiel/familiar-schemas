@@ -1,0 +1,288 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BindingType": {
+      "description": "Types of cognitive binding",
+      "oneOf": [
+        {
+          "description": "Cause leads to effect",
+          "enum": [
+            "causal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal sequence (before/after)",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Associated by proximity/context",
+          "enum": [
+            "associative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Part-whole relationship",
+          "enum": [
+            "compositional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Contrast/opposition",
+          "enum": [
+            "contrastive"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Similarity/analogy",
+          "enum": [
+            "analogical"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Enables/prerequisite",
+          "enum": [
+            "enabling"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Thematic connection",
+          "enum": [
+            "thematic"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "Directionality": {
+      "description": "Directionality of binding",
+      "oneOf": [
+        {
+          "description": "Only source → target",
+          "enum": [
+            "unidirectional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Both directions",
+          "enum": [
+            "bidirectional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "No inherent direction",
+          "enum": [
+            "undirected"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "EntityReference": {
+      "description": "Reference to an entity for binding",
+      "properties": {
+        "description": {
+          "description": "Description for matching",
+          "type": "string"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityType"
+            }
+          ],
+          "description": "Entity type"
+        },
+        "id": {
+          "default": null,
+          "description": "Entity ID (if existing)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "description",
+        "entity_type"
+      ],
+      "type": "object"
+    },
+    "EntityType": {
+      "description": "Entity types from the Symmetric Seven ontology",
+      "oneOf": [
+        {
+          "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Definition of person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relationship between entities (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "TemporalBinding": {
+      "description": "Temporal aspect of binding",
+      "properties": {
+        "gap": {
+          "default": null,
+          "description": "Time gap (if known)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relation": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalRelation"
+            }
+          ],
+          "description": "Time relationship"
+        }
+      },
+      "required": [
+        "relation"
+      ],
+      "type": "object"
+    },
+    "TemporalRelation": {
+      "description": "Temporal relationships",
+      "enum": [
+        "before",
+        "after",
+        "during",
+        "simultaneous",
+        "overlapping"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Hints for cognitive binding between entities",
+  "properties": {
+    "binding_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BindingType"
+        }
+      ],
+      "description": "Type of cognitive binding"
+    },
+    "context": {
+      "default": null,
+      "description": "Context explaining the binding",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "directionality": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Directionality"
+        }
+      ],
+      "description": "Directionality of binding"
+    },
+    "source": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityReference"
+        }
+      ],
+      "description": "Source entity"
+    },
+    "strength": {
+      "description": "Strength of binding (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "target": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityReference"
+        }
+      ],
+      "description": "Target entity"
+    },
+    "temporal": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TemporalBinding"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Temporal aspect of binding"
+    }
+  },
+  "required": [
+    "binding_type",
+    "directionality",
+    "source",
+    "strength",
+    "target"
+  ],
+  "title": "BindingHints",
+  "type": "object"
+}

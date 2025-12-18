@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "DurationCategory": {
+      "description": "Duration categories",
+      "enum": [
+        "new",
+        "recent",
+        "established",
+        "long_term",
+        "lifelong"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Relationship duration",
+  "properties": {
+    "category": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DurationCategory"
+        }
+      ],
+      "description": "Duration category"
+    },
+    "since": {
+      "default": null,
+      "description": "Start date if known",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "years": {
+      "default": null,
+      "description": "How long the relationship has existed",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "category"
+  ],
+  "title": "RelationshipDuration",
+  "type": "object"
+}

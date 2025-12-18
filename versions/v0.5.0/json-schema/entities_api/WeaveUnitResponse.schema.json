@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WeaveUnitResponse",
+  "description": "A weave unit in the response",
+  "type": "object",
+  "required": [
+    "classifications",
+    "content",
+    "index"
+  ],
+  "properties": {
+    "classifications": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ClassificationResponse"
+      }
+    },
+    "content": {
+      "type": "string"
+    },
+    "index": {
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "physics_hint": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PhysicsHintResponse"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "primary_thread": {
+      "description": "Primary thread (main subject/actor)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "purpose": {
+      "description": "Purpose of this specific weave unit (LOG, QUERY, COMMAND, INFER, REFERENCE)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "secondary_threads": {
+      "description": "Secondary threads (other people/places/things)",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "spawned_ids": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "temporal_marker": {
+      "description": "Temporal marker (when: absolute, relative, frequency, duration) Always included in output for debugging (even if null)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "ClassificationResponse": {
+      "description": "Classification with weight",
+      "type": "object",
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "properties": {
+        "entity_type": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "PhysicsHintResponse": {
+      "description": "Physics hints from LLM",
+      "type": "object",
+      "properties": {
+        "arousal": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "clarity": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "intrusiveness": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "significance": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "valence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "volatility": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TraceEnvelope",
+  "description": "Trace envelope for UI streaming\n\nNote: This is a legacy type. Prefer using EnvelopeV1 with Trace payload for new code. EnvelopeV1 uses native Protobuf serialization for better performance.",
+  "type": "object",
+  "required": [
+    "course_id",
+    "kind",
+    "occurred_at",
+    "payload",
+    "seq",
+    "span_id",
+    "status"
+  ],
+  "properties": {
+    "course_id": {
+      "description": "Course (interaction) this trace belongs to",
+      "type": "string",
+      "format": "uuid"
+    },
+    "kind": {
+      "description": "Type of trace",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TraceKind"
+        }
+      ]
+    },
+    "occurred_at": {
+      "description": "When this trace was emitted",
+      "type": "string",
+      "format": "date-time"
+    },
+    "parent_span_id": {
+      "description": "Parent span (for hierarchy)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "description": "The actual payload (sanitized for UI)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TracePayload"
+        }
+      ]
+    },
+    "seq": {
+      "description": "Monotonic sequence number per-course (for ordering and backfill)",
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "span_id": {
+      "description": "Span identifier for this trace unit",
+      "type": "string"
+    },
+    "status": {
+      "description": "Status of this trace unit",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TraceStatus"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "TraceKind": {
+      "description": "Types of trace events",
+      "oneOf": [
+        {
+          "description": "Agent thinking/reasoning step",
+          "type": "string",
+          "enum": [
+            "step"
+          ]
+        },
+        {
+          "description": "Tool invocation",
+          "type": "string",
+          "enum": [
+            "tool"
+          ]
+        },
+        {
+          "description": "Routing decision between agents",
+          "type": "string",
+          "enum": [
+            "route"
+          ]
+        },
+        {
+          "description": "Safe log message",
+          "type": "string",
+          "enum": [
+            "log"
+          ]
+        },
+        {
+          "description": "Response token stream (for streaming responses)",
+          "type": "string",
+          "enum": [
+            "token"
+          ]
+        },
+        {
+          "description": "Final result",
+          "type": "string",
+          "enum": [
+            "result"
+          ]
+        }
+      ]
+    },
+    "TracePayload": {
+      "description": "Trace payload - sanitized for UI consumption",
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "agent": {
+          "description": "Agent that produced this trace (concierge, classifier, etc.)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "duration_ms": {
+          "description": "Duration in milliseconds (if status == Succeeded or Failed)",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "message": {
+          "description": "Human-readable message",
+          "type": "string"
+        },
+        "tokens": {
+          "description": "Response tokens (if kind == Token)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool_args": {
+          "description": "Tool arguments (redacted/summarized)"
+        },
+        "tool_name": {
+          "description": "Tool name (if kind == Tool)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tool_result": {
+          "description": "Tool result (summary only, not full output)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "TraceStatus": {
+      "description": "Status of a trace span",
+      "oneOf": [
+        {
+          "description": "Span has started",
+          "type": "string",
+          "enum": [
+            "started"
+          ]
+        },
+        {
+          "description": "Span completed successfully",
+          "type": "string",
+          "enum": [
+            "succeeded"
+          ]
+        },
+        {
+          "description": "Span failed",
+          "type": "string",
+          "enum": [
+            "failed"
+          ]
+        },
+        {
+          "description": "Span was skipped",
+          "type": "string",
+          "enum": [
+            "skipped"
+          ]
+        }
+      ]
+    }
+  }
+}

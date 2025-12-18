@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Message",
+  "description": "A message in a channel",
+  "type": "object",
+  "required": [
+    "channel_id",
+    "content",
+    "created_at",
+    "id",
+    "role"
+  ],
+  "properties": {
+    "agent_speaker": {
+      "description": "Which agent generated this (for assistant messages)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "channel_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "metadata": {
+      "default": null
+    },
+    "parent_id": {
+      "description": "Parent message for threading",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "role": {
+      "$ref": "#/definitions/MessageRole"
+    },
+    "sender_id": {
+      "description": "Sender (None for AI/system messages)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "thinking_steps": {
+      "description": "Chain of thought steps",
+      "default": null
+    },
+    "tool_calls": {
+      "description": "Tool calls made",
+      "default": null
+    },
+    "weave_result": {
+      "description": "Full weave_result from Fates pipeline",
+      "default": null
+    }
+  },
+  "definitions": {
+    "MessageRole": {
+      "description": "Role in a chat conversation",
+      "oneOf": [
+        {
+          "description": "System instructions",
+          "type": "string",
+          "enum": [
+            "system"
+          ]
+        },
+        {
+          "description": "User input",
+          "type": "string",
+          "enum": [
+            "user"
+          ]
+        },
+        {
+          "description": "Assistant response",
+          "type": "string",
+          "enum": [
+            "assistant"
+          ]
+        }
+      ]
+    }
+  }
+}

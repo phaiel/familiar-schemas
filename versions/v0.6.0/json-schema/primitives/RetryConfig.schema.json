@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Configuration for retry behavior on transient failures",
+  "properties": {
+    "backoff_factor": {
+      "format": "double",
+      "type": "number"
+    },
+    "initial_delay_ms": {
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "max_delay_ms": {
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "max_retries": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "backoff_factor",
+    "initial_delay_ms",
+    "max_delay_ms",
+    "max_retries"
+  ],
+  "title": "RetryConfig",
+  "type": "object"
+}

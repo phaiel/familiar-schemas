@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Channel",
+  "description": "A channel (conversation space)",
+  "type": "object",
+  "required": [
+    "channel_type",
+    "created_at",
+    "id",
+    "name",
+    "tenant_id",
+    "updated_at"
+  ],
+  "properties": {
+    "channel_type": {
+      "$ref": "#/definitions/ChannelType"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "description": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "owner_id": {
+      "description": "Owner of the channel (None for family channels)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "settings": {
+      "default": null
+    },
+    "tenant_id": {
+      "description": "Tenant (family) this entity belongs to",
+      "type": "string",
+      "format": "uuid"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "ChannelType": {
+      "description": "Type of channel",
+      "oneOf": [
+        {
+          "description": "Personal channel for a single user",
+          "type": "string",
+          "enum": [
+            "personal"
+          ]
+        },
+        {
+          "description": "Family channel shared by all tenant members",
+          "type": "string",
+          "enum": [
+            "family"
+          ]
+        },
+        {
+          "description": "Shared channel for specific members",
+          "type": "string",
+          "enum": [
+            "shared"
+          ]
+        }
+      ]
+    }
+  }
+}

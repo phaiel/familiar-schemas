@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EntityMentionType",
+  "description": "Types of entity mentions",
+  "type": "string",
+  "enum": [
+    "PERSON",
+    "PLACE",
+    "ORGANIZATION",
+    "DATE_TIME",
+    "EVENT",
+    "CONCEPT",
+    "OBJECT",
+    "ACTIVITY"
+  ]
+}

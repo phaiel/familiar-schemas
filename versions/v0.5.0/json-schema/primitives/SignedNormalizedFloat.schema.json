@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SignedNormalizedFloat",
+  "description": "A floating-point value normalized between -1.0 and 1.0. Used for polarity (Valence), alignment (Phase), and gradients.",
+  "type": "number",
+  "format": "double"
+}

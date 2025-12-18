@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DetectedAction",
+  "description": "A detected action in vision",
+  "type": "object",
+  "required": [
+    "action",
+    "confidence"
+  ],
+  "properties": {
+    "action": {
+      "type": "string"
+    },
+    "actor": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

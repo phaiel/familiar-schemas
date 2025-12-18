@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgenticFlowResponse",
+  "description": "Full response from the agentic Windmill flow This is what the API returns to the UI",
+  "type": "object",
+  "required": [
+    "agent",
+    "request_id",
+    "response",
+    "thread_id"
+  ],
+  "properties": {
+    "agent": {
+      "description": "Which agent responded",
+      "type": "string"
+    },
+    "has_more_tasks": {
+      "description": "Whether there are more tasks",
+      "default": false,
+      "type": "boolean"
+    },
+    "heddle_result": {
+      "description": "Heddle classification result (if applicable)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/UIHeddleResult"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "next_request": {
+      "description": "Next request (if continuation needed)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "request_id": {
+      "description": "Request ID for tracing",
+      "type": "string"
+    },
+    "response": {
+      "description": "The conversational response text",
+      "type": "string"
+    },
+    "state": {
+      "description": "Updated agent state",
+      "default": null
+    },
+    "thinking_steps": {
+      "description": "Thinking steps (for chain-of-thought visibility)",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UIThinkingStep"
+      }
+    },
+    "thread_id": {
+      "description": "Thread ID",
+      "type": "string"
+    },
+    "tool_calls": {
+      "description": "Tool calls made",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UIToolCall"
+      }
+    }
+  },
+  "definitions": {
+    "ToolCallStatus": {
+      "description": "Status of a tool call during execution",
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "complete",
+        "error"
+      ]
+    },
+    "UIClassification": {
+      "description": "A classification result",
+      "type": "object",
+      "required": [
+        "confidence",
+        "entity_type"
+      ],
+      "properties": {
+        "confidence": {
+          "type": "number",
+          "format": "double"
+        },
+        "entity_type": {
+          "type": "string"
+        }
+      }
+    },
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "type": "object",
+      "properties": {
+        "classifications": {
+          "description": "Classification results",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UIClassification"
+          }
+        },
+        "physics": {
+          "description": "Physics hints",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UIPhysicsResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purpose": {
+          "description": "Detected purpose/intent",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "description": "Segmented content",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UIHeddleSegment"
+          }
+        }
+      }
+    },
+    "UIHeddleSegment": {
+      "description": "A segment from Heddle",
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "subject": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "UIPhysicsResult": {
+      "description": "Physics simulation result",
+      "type": "object",
+      "required": [
+        "energy",
+        "position",
+        "temperature"
+      ],
+      "properties": {
+        "energy": {
+          "type": "number",
+          "format": "double"
+        },
+        "position": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxItems": 3,
+          "minItems": 3
+        },
+        "temperature": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "UIThinkingStep": {
+      "description": "A thinking/reasoning step for chain-of-thought visibility",
+      "type": "object",
+      "required": [
+        "agent",
+        "id",
+        "thought"
+      ],
+      "properties": {
+        "agent": {
+          "description": "Which agent produced this thought",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "thought": {
+          "description": "The thought/reasoning content",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "type": "object",
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "properties": {
+        "arguments": {
+          "description": "Arguments passed to the tool",
+          "default": null
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "description": "Result from the tool",
+          "default": null
+        },
+        "status": {
+          "description": "Current status",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ToolCallStatus"
+            }
+          ]
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

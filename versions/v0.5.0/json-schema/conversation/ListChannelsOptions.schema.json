@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ListChannelsOptions",
+  "description": "Options for listing channels",
+  "type": "object",
+  "properties": {
+    "channel_type": {
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ChannelType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "owner_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    }
+  },
+  "definitions": {
+    "ChannelType": {
+      "description": "Type of channel",
+      "oneOf": [
+        {
+          "description": "Personal channel for a single user",
+          "type": "string",
+          "enum": [
+            "personal"
+          ]
+        },
+        {
+          "description": "Family channel shared by all tenant members",
+          "type": "string",
+          "enum": [
+            "family"
+          ]
+        },
+        {
+          "description": "Shared channel for specific members",
+          "type": "string",
+          "enum": [
+            "shared"
+          ]
+        }
+      ]
+    }
+  }
+}

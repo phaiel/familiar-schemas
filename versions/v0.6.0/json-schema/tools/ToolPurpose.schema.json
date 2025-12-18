@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Primary purpose of user's message",
+  "oneOf": [
+    {
+      "description": "Recording memories, events, observations - wants to store",
+      "enum": [
+        "LOG"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Asking a question - wants information returned",
+      "enum": [
+        "QUERY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Making connections, deriving insights - wants system to infer",
+      "enum": [
+        "INFER"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Looking up specific entities - wants existing data",
+      "enum": [
+        "REFERENCE"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Requesting analysis or reflection - wants patterns identified",
+      "enum": [
+        "REFLECT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "System command/instruction - wants action taken",
+      "enum": [
+        "COMMAND"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Social/conversational - greeting, acknowledgment",
+      "enum": [
+        "SOCIAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Clarifying or continuing previous message",
+      "enum": [
+        "CONTINUATION"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Editing or correcting previous input",
+      "enum": [
+        "CORRECTION"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ToolPurpose"
+}

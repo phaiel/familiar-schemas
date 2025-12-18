@@ -1,0 +1,458 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Command",
+  "description": "All commands in the system - unified enum across domains\n\nFollowing the single-envelope pattern, all command types are variants of this single enum. The worker routes based on variant type.",
+  "oneOf": [
+    {
+      "description": "Start a new course from a weave",
+      "type": "object",
+      "required": [
+        "content",
+        "type",
+        "weave_id"
+      ],
+      "properties": {
+        "blocks": {
+          "description": "Multimodal blocks (images, audio, etc.)",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/WeaveBlock"
+          }
+        },
+        "content": {
+          "description": "Raw text content",
+          "type": "string"
+        },
+        "context": {
+          "description": "Optional context",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "conversation_history": {
+          "description": "Prior conversation for context",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConversationTurn"
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "course_start"
+          ]
+        },
+        "weave_id": {
+          "description": "The weave (user input) ID",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    {
+      "description": "Continue an existing course with additional user input",
+      "type": "object",
+      "required": [
+        "type",
+        "user_message"
+      ],
+      "properties": {
+        "blocks": {
+          "description": "Optional multimodal blocks",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/WeaveBlock"
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "course_continue"
+          ]
+        },
+        "user_message": {
+          "description": "The new user message",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Cancel a running course",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "reason": {
+          "description": "Reason for cancellation",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "course_cancel"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Retry a failed course",
+      "type": "object",
+      "required": [
+        "original_command_id",
+        "type"
+      ],
+      "properties": {
+        "original_command_id": {
+          "description": "Original command to retry",
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "course_retry"
+          ]
+        }
+      }
+    },
+    {
+      "description": "User signup request",
+      "type": "object",
+      "required": [
+        "consents",
+        "email",
+        "name",
+        "password",
+        "type"
+      ],
+      "properties": {
+        "consents": {
+          "description": "User consent flags",
+          "allOf": [
+            {
+              "$ref": "#/definitions/SignupConsents"
+            }
+          ]
+        },
+        "email": {
+          "description": "User's email address",
+          "type": "string"
+        },
+        "invite_code": {
+          "description": "Invite code if signing up via invitation",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "description": "User's display name",
+          "type": "string"
+        },
+        "password": {
+          "description": "User's password (will be hashed by worker)",
+          "type": "string"
+        },
+        "request_context": {
+          "description": "Request context for audit",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RequestContext"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "signup"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Create a new family/tenant",
+      "type": "object",
+      "required": [
+        "family_name",
+        "type"
+      ],
+      "properties": {
+        "family_name": {
+          "description": "Name for the new family",
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "create_family"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Accept an invitation to join a family",
+      "type": "object",
+      "required": [
+        "invitation_code",
+        "type"
+      ],
+      "properties": {
+        "invitation_code": {
+          "description": "The invitation code to accept",
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "accept_invitation"
+          ]
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "ConversationTurn": {
+      "description": "A single turn in a conversation (for context tracking)",
+      "type": "object",
+      "required": [
+        "content",
+        "role"
+      ],
+      "properties": {
+        "content": {
+          "description": "Content of the message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role of the speaker (user, assistant, system)",
+          "type": "string"
+        },
+        "speaker": {
+          "description": "Optional speaker identifier (for multi-agent)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp": {
+          "description": "Timestamp of the turn",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "RequestContext": {
+      "description": "HTTP request context for audit/logging\n\nCaptures metadata about the HTTP request that triggered an action. Used for security auditing, rate limiting, and debugging.\n\n## Usage\n\nEmbed in types that need request tracking: ```rust,ignore pub struct AuditLogEntry { // ... other fields #[serde(flatten)] pub request_context: RequestContext, } ```\n\n## Fields Replaced\n\nThis component replaces the common pattern of: - `pub ip_address: Option<String>` - `pub user_agent: Option<String>`",
+      "type": "object",
+      "properties": {
+        "ip_address": {
+          "description": "Client IP address (may be from X-Forwarded-For in proxied environments)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "user_agent": {
+          "description": "Client User-Agent header",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "SignupConsents": {
+      "description": "Consent flags for signup",
+      "type": "object",
+      "required": [
+        "privacy",
+        "terms"
+      ],
+      "properties": {
+        "ai_processing": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "marketing": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "privacy": {
+          "type": "boolean"
+        },
+        "terms": {
+          "type": "boolean"
+        }
+      }
+    },
+    "WeaveBlock": {
+      "description": "Input block types for multimodal weave requests",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "content",
+            "type"
+          ],
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "text"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "source",
+            "type"
+          ],
+          "properties": {
+            "alt_text": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "analyze": {
+              "description": "Request vision analysis",
+              "default": true,
+              "type": "boolean"
+            },
+            "source": {
+              "description": "base64 data URI or URL",
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "source",
+            "type"
+          ],
+          "properties": {
+            "duration_secs": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            },
+            "source": {
+              "type": "string"
+            },
+            "transcript": {
+              "description": "Pre-transcribed (skip Whisper)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "audio"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "source",
+            "type"
+          ],
+          "properties": {
+            "filename": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "mime_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "document"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "url"
+          ],
+          "properties": {
+            "extract_images": {
+              "description": "Whether to extract images from the page",
+              "default": false,
+              "type": "boolean"
+            },
+            "selector": {
+              "description": "Optional CSS selector to extract specific content",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "webpage"
+              ]
+            },
+            "url": {
+              "description": "URL to scrape",
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

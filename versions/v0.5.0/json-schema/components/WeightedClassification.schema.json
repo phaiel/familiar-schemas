@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WeightedClassification",
+  "description": "A weighted classification representing the probability/confidence that a segment belongs to a specific entity type. Part of the Superposition model - a single thought can be multiple things.",
+  "type": "object",
+  "required": [
+    "entity_type",
+    "weight"
+  ],
+  "properties": {
+    "entity_type": {
+      "description": "The entity type this classification refers to",
+      "allOf": [
+        {
+          "$ref": "#/definitions/HeddleEntityType"
+        }
+      ]
+    },
+    "weight": {
+      "description": "Confidence/Weight (0.0 to 1.0) If > Threshold during collapse, we instantiate this entity.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "HeddleEntityType": {
+      "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+      "oneOf": [
+        {
+          "description": "A specific event that happened in the past (Narrative/External Particle)",
+          "type": "string",
+          "enum": [
+            "MOMENT"
+          ]
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "type": "string",
+          "enum": [
+            "INTENT"
+          ]
+        },
+        {
+          "description": "A definition of a person, place, or concept (Definitional/Object)",
+          "type": "string",
+          "enum": [
+            "THREAD"
+          ]
+        },
+        {
+          "description": "A statement about the quality of a relationship (Relational/Connection)",
+          "type": "string",
+          "enum": [
+            "BOND"
+          ]
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "type": "string",
+          "enum": [
+            "MOTIF"
+          ]
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "type": "string",
+          "enum": [
+            "FILAMENT"
+          ]
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "type": "string",
+          "enum": [
+            "FOCUS"
+          ]
+        },
+        {
+          "description": "An internal state snapshot (Internal Particle)",
+          "type": "string",
+          "enum": [
+            "PULSE"
+          ]
+        }
+      ]
+    },
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ThreadSummary",
+  "description": "Summary of a thread for list views",
+  "type": "object",
+  "required": [
+    "id",
+    "is_open",
+    "message_count",
+    "preview",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "description": "Thread ID",
+      "type": "string",
+      "format": "uuid"
+    },
+    "is_open": {
+      "description": "Whether thread is open",
+      "type": "boolean"
+    },
+    "message_count": {
+      "description": "Number of messages",
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "preview": {
+      "description": "Preview text (truncated first message)",
+      "type": "string"
+    },
+    "updated_at": {
+      "description": "Last updated timestamp",
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

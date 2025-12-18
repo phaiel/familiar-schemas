@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ClassifierOutput",
+  "description": "Output from the classifier agent",
+  "type": "object",
+  "required": [
+    "classifications",
+    "response_message",
+    "state",
+    "text"
+  ],
+  "properties": {
+    "classifications": {
+      "description": "Classification results",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ClassificationResult"
+      }
+    },
+    "done": {
+      "description": "Whether the task is done",
+      "default": true,
+      "type": "boolean"
+    },
+    "physics_hint": {
+      "description": "Physics hints",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PhysicsHint"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "primary_thread": {
+      "description": "Primary thread reference",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "response_message": {
+      "description": "Response message",
+      "type": "string"
+    },
+    "secondary_threads": {
+      "description": "Secondary thread references",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "state": {
+      "description": "Updated state"
+    },
+    "temporal_marker": {
+      "description": "Temporal marker (today, yesterday, etc.)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "text": {
+      "description": "Original text",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "ClassificationResult": {
+      "description": "Result of classification",
+      "type": "object",
+      "required": [
+        "entity_type",
+        "probability"
+      ],
+      "properties": {
+        "entity_type": {
+          "description": "Entity type",
+          "type": "string"
+        },
+        "probability": {
+          "description": "Probability score",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "PhysicsHint": {
+      "description": "Sparse container for physics hints extracted from text by the LLM. All fields are Option<f64>. If None, the system applies Vacuum State defaults. This is the \"raw\" output from classification before collapse.",
+      "type": "object",
+      "properties": {
+        "arousal": {
+          "description": "Energy/Activation: 0.0 (Calm) to 1.0 (Excited) Maps to: VAE Arousal axis",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "clarity": {
+          "description": "Specificity/Coherence: 0.0 (Vague) to 1.0 (Factual) Maps to: QuantumState.coherence and VAE Epistemic axis",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "intrusiveness": {
+          "description": "Intrusiveness: 0.0 (Passive) to 1.0 (Demanding attention) Maps to: CognitiveOptics.emissivity",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "significance": {
+          "description": "Importance/Mass: 0.0 (Mundane) to 1.0 (Critical) Maps to: FieldExcitation.amplitude",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "valence": {
+          "description": "Emotional polarity: -1.0 (Negative) to 1.0 (Positive) Maps to: VAE Valence axis",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "volatility": {
+          "description": "Volatility: 0.0 (Stable) to 1.0 (Fluctuating) Maps to: FieldExcitation.temperature",
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RecentThread",
+  "description": "A recently referenced thread",
+  "type": "object",
+  "required": [
+    "mention_count",
+    "recency",
+    "thread"
+  ],
+  "properties": {
+    "mention_count": {
+      "description": "Mention count in recent context",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0.0
+    },
+    "recency": {
+      "description": "How recently mentioned (in messages)",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0.0
+    },
+    "thread": {
+      "description": "Thread reference",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadReference"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "properties": {
+        "aliases": {
+          "description": "Aliases for matching",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

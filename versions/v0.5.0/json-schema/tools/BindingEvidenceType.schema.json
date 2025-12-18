@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BindingEvidenceType",
+  "description": "Types of binding evidence",
+  "oneOf": [
+    {
+      "description": "Explicit linguistic marker",
+      "type": "string",
+      "enum": [
+        "linguistic_marker"
+      ]
+    },
+    {
+      "description": "Temporal proximity",
+      "type": "string",
+      "enum": [
+        "temporal_proximity"
+      ]
+    },
+    {
+      "description": "Semantic similarity",
+      "type": "string",
+      "enum": [
+        "semantic_similarity"
+      ]
+    },
+    {
+      "description": "Entity co-reference",
+      "type": "string",
+      "enum": [
+        "co_reference"
+      ]
+    },
+    {
+      "description": "Emotional similarity",
+      "type": "string",
+      "enum": [
+        "emotional_similarity"
+      ]
+    },
+    {
+      "description": "Narrative continuity",
+      "type": "string",
+      "enum": [
+        "narrative_continuity"
+      ]
+    },
+    {
+      "description": "User explicit statement",
+      "type": "string",
+      "enum": [
+        "explicit_statement"
+      ]
+    },
+    {
+      "description": "Inferred from context",
+      "type": "string",
+      "enum": [
+        "contextual_inference"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ObserverError",
+  "description": "Errors that can occur during AI observation",
+  "oneOf": [
+    {
+      "description": "Configuration error (missing API key, invalid model, etc.)",
+      "type": "object",
+      "required": [
+        "details",
+        "type"
+      ],
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Configuration"
+          ]
+        }
+      }
+    },
+    {
+      "description": "The AI provider returned an invalid response",
+      "type": "object",
+      "required": [
+        "details",
+        "type"
+      ],
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": [
+            "message",
+            "provider"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "#/definitions/AIProvider"
+            },
+            "raw_response": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "InvalidResponse"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Network or API error",
+      "type": "object",
+      "required": [
+        "details",
+        "type"
+      ],
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": [
+            "message",
+            "provider"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "#/definitions/AIProvider"
+            },
+            "status_code": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "format": "uint16",
+              "minimum": 0.0
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Network"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Rate limit exceeded",
+      "type": "object",
+      "required": [
+        "details",
+        "type"
+      ],
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": [
+            "provider"
+          ],
+          "properties": {
+            "provider": {
+              "$ref": "#/definitions/AIProvider"
+            },
+            "retry_after_ms": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "format": "uint64",
+              "minimum": 0.0
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "RateLimited"
+          ]
+        }
+      }
+    },
+    {
+      "description": "The AI refused to process (content policy)",
+      "type": "object",
+      "required": [
+        "details",
+        "type"
+      ],
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": [
+            "message",
+            "provider"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "#/definitions/AIProvider"
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "ContentFiltered"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Deserialization failed",
+      "type": "object",
+      "required": [
+        "details",
+        "type"
+      ],
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "raw_content": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "ParseError"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Timeout",
+      "type": "object",
+      "required": [
+        "details",
+        "type"
+      ],
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": [
+            "provider",
+            "timeout_ms"
+          ],
+          "properties": {
+            "provider": {
+              "$ref": "#/definitions/AIProvider"
+            },
+            "timeout_ms": {
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0.0
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Timeout"
+          ]
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "AIProvider": {
+      "description": "AI Provider enumeration",
+      "type": "string",
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "mock"
+      ]
+    }
+  }
+}

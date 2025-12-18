@@ -1,0 +1,351 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolChainStep",
+  "description": "A step in a tool chain",
+  "type": "object",
+  "required": [
+    "execution_order",
+    "id",
+    "tool"
+  ],
+  "properties": {
+    "condition": {
+      "description": "Condition for execution (if conditional)",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/StepCondition"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "execution_order": {
+      "description": "Execution order",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExecutionOrder"
+        }
+      ]
+    },
+    "id": {
+      "description": "Step identifier",
+      "type": "string"
+    },
+    "input_mapping": {
+      "description": "Input mapping from previous steps",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/InputMapping"
+      }
+    },
+    "parallel_with": {
+      "description": "Steps to run in parallel with this one",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required": {
+      "description": "Whether step is required or optional",
+      "default": true,
+      "type": "boolean"
+    },
+    "timeout_ms": {
+      "description": "Timeout in milliseconds",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "tool": {
+      "description": "Tool to execute",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "ConditionOperator": {
+      "description": "Condition operators",
+      "type": "string",
+      "enum": [
+        "equals",
+        "not_equals",
+        "greater_than",
+        "less_than",
+        "contains",
+        "not_contains",
+        "is_null",
+        "is_not_null",
+        "in"
+      ]
+    },
+    "ConditionType": {
+      "description": "Types of conditions",
+      "oneOf": [
+        {
+          "description": "Check output value",
+          "type": "string",
+          "enum": [
+            "output_value"
+          ]
+        },
+        {
+          "description": "Check if step succeeded",
+          "type": "string",
+          "enum": [
+            "step_success"
+          ]
+        },
+        {
+          "description": "Check if step failed",
+          "type": "string",
+          "enum": [
+            "step_failed"
+          ]
+        },
+        {
+          "description": "Check output exists",
+          "type": "string",
+          "enum": [
+            "output_exists"
+          ]
+        }
+      ]
+    },
+    "ExecutionOrder": {
+      "description": "Execution order types",
+      "oneOf": [
+        {
+          "description": "Execute in sequence",
+          "type": "string",
+          "enum": [
+            "sequential"
+          ]
+        },
+        {
+          "description": "Execute in parallel with other parallel steps",
+          "type": "string",
+          "enum": [
+            "parallel"
+          ]
+        },
+        {
+          "description": "Execute only if condition is met",
+          "type": "string",
+          "enum": [
+            "conditional"
+          ]
+        },
+        {
+          "description": "Execute as fallback if previous failed",
+          "type": "string",
+          "enum": [
+            "fallback"
+          ]
+        }
+      ]
+    },
+    "InputMapping": {
+      "description": "Input mapping from previous step output",
+      "type": "object",
+      "required": [
+        "from_path",
+        "from_step",
+        "to_path"
+      ],
+      "properties": {
+        "from_path": {
+          "description": "Path in source output",
+          "type": "string"
+        },
+        "from_step": {
+          "description": "Source step ID",
+          "type": "string"
+        },
+        "to_path": {
+          "description": "Path in this step's input",
+          "type": "string"
+        },
+        "transform": {
+          "description": "Transform to apply",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/InputTransform"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "InputTransform": {
+      "description": "Transforms for input mapping",
+      "oneOf": [
+        {
+          "description": "Direct pass-through",
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "identity"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Extract array item",
+          "type": "object",
+          "required": [
+            "index",
+            "type"
+          ],
+          "properties": {
+            "index": {
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0.0
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "array_item"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Filter array by condition",
+          "type": "object",
+          "required": [
+            "path",
+            "type",
+            "value"
+          ],
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "array_filter"
+              ]
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "description": "Map array items",
+          "type": "object",
+          "required": [
+            "template",
+            "type"
+          ],
+          "properties": {
+            "template": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "array_map"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Concatenate strings",
+          "type": "object",
+          "required": [
+            "separator",
+            "type"
+          ],
+          "properties": {
+            "separator": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "concat"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Custom transform function",
+          "type": "object",
+          "required": [
+            "function",
+            "type"
+          ],
+          "properties": {
+            "function": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "custom"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "StepCondition": {
+      "description": "Condition for conditional execution",
+      "type": "object",
+      "required": [
+        "condition_type",
+        "operator",
+        "path",
+        "source_step",
+        "value"
+      ],
+      "properties": {
+        "condition_type": {
+          "description": "Type of condition",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ConditionType"
+            }
+          ]
+        },
+        "operator": {
+          "description": "Operator",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ConditionOperator"
+            }
+          ]
+        },
+        "path": {
+          "description": "Path to check",
+          "type": "string"
+        },
+        "source_step": {
+          "description": "Source step to check",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value to compare"
+        }
+      }
+    }
+  }
+}

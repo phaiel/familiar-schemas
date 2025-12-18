@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SessionCreated",
+  "description": "Result of creating a session (includes the raw token)",
+  "type": "object",
+  "required": [
+    "expires_at",
+    "session_id",
+    "token"
+  ],
+  "properties": {
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "session_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "token": {
+      "type": "string"
+    }
+  }
+}

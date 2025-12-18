@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LogLevel",
+  "description": "Log level for agent log messages",
+  "type": "string",
+  "enum": [
+    "debug",
+    "info",
+    "warning",
+    "error"
+  ]
+}

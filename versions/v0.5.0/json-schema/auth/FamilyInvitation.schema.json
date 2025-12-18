@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FamilyInvitation",
+  "description": "A family invitation",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "invite_type",
+    "max_uses",
+    "role",
+    "tenant_id",
+    "use_count"
+  ],
+  "properties": {
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expires_at": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "invite_code": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "invite_type": {
+      "$ref": "#/definitions/InviteType"
+    },
+    "invited_by": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "max_uses": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "role": {
+      "$ref": "#/definitions/InviteRole"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "use_count": {
+      "type": "integer",
+      "format": "int32"
+    }
+  },
+  "definitions": {
+    "InviteRole": {
+      "description": "Role to assign when invitation is accepted",
+      "type": "string",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ]
+    },
+    "InviteType": {
+      "description": "Type of family invitation",
+      "oneOf": [
+        {
+          "description": "Sent to a specific email address",
+          "type": "string",
+          "enum": [
+            "email"
+          ]
+        },
+        {
+          "description": "Shareable code (like Discord)",
+          "type": "string",
+          "enum": [
+            "code"
+          ]
+        }
+      ]
+    }
+  }
+}

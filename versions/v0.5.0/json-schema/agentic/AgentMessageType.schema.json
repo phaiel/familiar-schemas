@@ -1,0 +1,230 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgentMessageType",
+  "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+  "oneOf": [
+    {
+      "description": "A log message from the agent (debugging, status updates)",
+      "type": "object",
+      "required": [
+        "content",
+        "level",
+        "message_type"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "level": {
+          "$ref": "#/definitions/LogLevel"
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "log"
+          ]
+        }
+      }
+    },
+    {
+      "description": "A question the agent is asking the user",
+      "type": "object",
+      "required": [
+        "message_type",
+        "prompt"
+      ],
+      "properties": {
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "question"
+          ]
+        },
+        "options": {
+          "default": null,
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "prompt": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "An insight derived by the agent",
+      "type": "object",
+      "required": [
+        "confidence",
+        "message_type",
+        "summary"
+      ],
+      "properties": {
+        "confidence": {
+          "type": "number",
+          "format": "double"
+        },
+        "domain": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "insight"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "A detailed analysis result",
+      "type": "object",
+      "required": [
+        "domain",
+        "findings",
+        "message_type"
+      ],
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Finding"
+          }
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "analysis"
+          ]
+        }
+      }
+    },
+    {
+      "description": "A command/action the agent wants to execute",
+      "type": "object",
+      "required": [
+        "action",
+        "message_type",
+        "parameters"
+      ],
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "command"
+          ]
+        },
+        "parameters": true
+      }
+    },
+    {
+      "description": "A simple text response",
+      "type": "object",
+      "required": [
+        "content",
+        "message_type"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "text"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Progress update during long-running tasks",
+      "type": "object",
+      "required": [
+        "message",
+        "message_type"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "message_type": {
+          "type": "string",
+          "enum": [
+            "progress"
+          ]
+        },
+        "percent_complete": {
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "Finding": {
+      "description": "A finding from an analysis agent",
+      "type": "object",
+      "required": [
+        "description",
+        "title"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence score (0.0 to 1.0)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "description": {
+          "description": "Detailed description",
+          "type": "string"
+        },
+        "related_entities": {
+          "description": "Related entity IDs",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "description": "Title or label of the finding",
+          "type": "string"
+        }
+      }
+    },
+    "LogLevel": {
+      "description": "Log level for agent log messages",
+      "type": "string",
+      "enum": [
+        "debug",
+        "info",
+        "warning",
+        "error"
+      ]
+    }
+  }
+}

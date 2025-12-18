@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DetectionMethod",
+  "description": "How a thread was detected",
+  "oneOf": [
+    {
+      "description": "Exact name match",
+      "type": "string",
+      "enum": [
+        "exact_match"
+      ]
+    },
+    {
+      "description": "Alias match",
+      "type": "string",
+      "enum": [
+        "alias_match"
+      ]
+    },
+    {
+      "description": "Fuzzy/similar match",
+      "type": "string",
+      "enum": [
+        "fuzzy_match"
+      ]
+    },
+    {
+      "description": "Pronoun resolution from context",
+      "type": "string",
+      "enum": [
+        "pronoun_resolution"
+      ]
+    },
+    {
+      "description": "Keyword match",
+      "type": "string",
+      "enum": [
+        "keyword_match"
+      ]
+    },
+    {
+      "description": "Semantic similarity",
+      "type": "string",
+      "enum": [
+        "semantic_match"
+      ]
+    }
+  ]
+}

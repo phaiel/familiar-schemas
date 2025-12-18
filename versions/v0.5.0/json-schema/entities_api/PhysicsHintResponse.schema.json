@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhysicsHintResponse",
+  "description": "Physics hints from LLM",
+  "type": "object",
+  "properties": {
+    "arousal": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "clarity": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "intrusiveness": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "significance": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "valence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    },
+    "volatility": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "format": "double"
+    }
+  }
+}

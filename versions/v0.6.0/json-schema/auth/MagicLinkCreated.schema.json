@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Result of creating a magic link (includes raw token)",
+  "properties": {
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "link_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "token": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "expires_at",
+    "link_id",
+    "token"
+  ],
+  "title": "MagicLinkCreated",
+  "type": "object"
+}

@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FamiliarEntity",
+  "description": "A familiar entity spawned from conversation",
+  "type": "object",
+  "required": [
+    "content",
+    "created_at",
+    "entity_type",
+    "id",
+    "status",
+    "tenant_id",
+    "updated_at"
+  ],
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "entity_type": {
+      "$ref": "#/definitions/FamiliarEntityType"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "metadata": {
+      "default": null
+    },
+    "physics": {
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EntityPhysics"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "qdrant_collection": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "qdrant_point_id": {
+      "description": "Reference to Qdrant vector",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "reviewed_at": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "reviewed_by": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "source_channel_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "source_message_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "status": {
+      "$ref": "#/definitions/EntityStatus"
+    },
+    "subject": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "EntityPhysics": {
+      "description": "Physics state for an entity",
+      "type": "object",
+      "required": [
+        "arousal",
+        "epistemic",
+        "significance",
+        "valence"
+      ],
+      "properties": {
+        "arousal": {
+          "type": "number",
+          "format": "double"
+        },
+        "epistemic": {
+          "type": "number",
+          "format": "double"
+        },
+        "significance": {
+          "type": "number",
+          "format": "double"
+        },
+        "valence": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "EntityStatus": {
+      "description": "HILT (Human in the Loop) status for entity approval",
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "auto_spawned"
+      ]
+    },
+    "FamiliarEntityType": {
+      "description": "Type of familiar entity",
+      "type": "string",
+      "enum": [
+        "MOMENT",
+        "PULSE",
+        "INTENT",
+        "THREAD",
+        "BOND",
+        "MOTIF",
+        "FILAMENT",
+        "FOCUS"
+      ]
+    }
+  }
+}

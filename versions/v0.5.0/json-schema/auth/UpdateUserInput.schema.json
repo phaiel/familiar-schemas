@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UpdateUserInput",
+  "description": "Input for updating user profile",
+  "type": "object",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "primary_tenant_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "settings": {
+      "default": null
+    }
+  }
+}

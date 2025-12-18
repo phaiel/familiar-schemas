@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConsentRecord",
+  "description": "A consent record",
+  "type": "object",
+  "required": [
+    "consent_type",
+    "created_at",
+    "granted",
+    "id",
+    "user_id"
+  ],
+  "properties": {
+    "consent_type": {
+      "$ref": "#/definitions/ConsentType"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "granted": {
+      "type": "boolean"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ip_address": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_agent": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "ConsentType": {
+      "description": "Type of consent",
+      "type": "string",
+      "enum": [
+        "terms_of_service",
+        "privacy_policy",
+        "marketing_emails",
+        "ai_processing",
+        "data_sharing",
+        "analytics"
+      ]
+    }
+  }
+}

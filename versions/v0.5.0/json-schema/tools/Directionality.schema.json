@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Directionality",
+  "description": "Directionality of binding",
+  "oneOf": [
+    {
+      "description": "Only source → target",
+      "type": "string",
+      "enum": [
+        "unidirectional"
+      ]
+    },
+    {
+      "description": "Both directions",
+      "type": "string",
+      "enum": [
+        "bidirectional"
+      ]
+    },
+    {
+      "description": "No inherent direction",
+      "type": "string",
+      "enum": [
+        "undirected"
+      ]
+    }
+  ]
+}

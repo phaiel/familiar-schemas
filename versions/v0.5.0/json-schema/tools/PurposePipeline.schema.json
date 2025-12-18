@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PurposePipeline",
+  "description": "Processing pipeline category",
+  "oneOf": [
+    {
+      "description": "Memory recording: Segment → Classify → Spawn → Store",
+      "type": "string",
+      "enum": [
+        "recording"
+      ]
+    },
+    {
+      "description": "Data retrieval: Parse → Search → Format → Return",
+      "type": "string",
+      "enum": [
+        "retrieval"
+      ]
+    },
+    {
+      "description": "Analysis: Parse → Search → Analyze → Synthesize",
+      "type": "string",
+      "enum": [
+        "analysis"
+      ]
+    },
+    {
+      "description": "System action: Parse → Validate → Execute → Confirm",
+      "type": "string",
+      "enum": [
+        "action"
+      ]
+    },
+    {
+      "description": "Conversation: Respond appropriately",
+      "type": "string",
+      "enum": [
+        "conversational"
+      ]
+    }
+  ]
+}

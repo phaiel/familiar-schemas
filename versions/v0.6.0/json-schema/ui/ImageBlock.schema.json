@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "PlainTextObject": {
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Displays an image with optional title",
+  "properties": {
+    "alt_text": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "title": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PlainTextObject"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "alt_text",
+    "image_url"
+  ],
+  "title": "ImageBlock",
+  "type": "object"
+}

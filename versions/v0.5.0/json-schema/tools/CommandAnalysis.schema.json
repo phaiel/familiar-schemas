@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CommandAnalysis",
+  "description": "Analysis of a command purpose",
+  "type": "object",
+  "required": [
+    "command_type",
+    "is_destructive",
+    "needs_confirmation"
+  ],
+  "properties": {
+    "command_type": {
+      "description": "Command type",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommandType"
+        }
+      ]
+    },
+    "is_destructive": {
+      "description": "Is this command destructive?",
+      "type": "boolean"
+    },
+    "needs_confirmation": {
+      "description": "Does this command need confirmation?",
+      "type": "boolean"
+    },
+    "parameters": {
+      "description": "Command parameters",
+      "default": {},
+      "type": "object",
+      "additionalProperties": true
+    },
+    "target": {
+      "description": "Target of the command",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "CommandType": {
+      "description": "Types of commands",
+      "oneOf": [
+        {
+          "description": "Create something",
+          "type": "string",
+          "enum": [
+            "CREATE"
+          ]
+        },
+        {
+          "description": "Update/modify",
+          "type": "string",
+          "enum": [
+            "UPDATE"
+          ]
+        },
+        {
+          "description": "Delete/remove",
+          "type": "string",
+          "enum": [
+            "DELETE"
+          ]
+        },
+        {
+          "description": "Link/connect entities",
+          "type": "string",
+          "enum": [
+            "LINK"
+          ]
+        },
+        {
+          "description": "Unlink/disconnect entities",
+          "type": "string",
+          "enum": [
+            "UNLINK"
+          ]
+        },
+        {
+          "description": "Export data",
+          "type": "string",
+          "enum": [
+            "EXPORT"
+          ]
+        },
+        {
+          "description": "Import data",
+          "type": "string",
+          "enum": [
+            "IMPORT"
+          ]
+        },
+        {
+          "description": "Configure settings",
+          "type": "string",
+          "enum": [
+            "CONFIGURE"
+          ]
+        },
+        {
+          "description": "Unknown/custom command",
+          "type": "string",
+          "enum": [
+            "CUSTOM"
+          ]
+        }
+      ]
+    }
+  }
+}

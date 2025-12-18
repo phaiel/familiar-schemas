@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "properties": {
+    "albedo": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Albedo (Reflectivity):** How well the object reflects the User's Attention. 1.0 = Mirror (Perfect Recall). 0.0 = Vantablack (Repressed/Forgotten)."
+    },
+    "emissivity": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Emissivity (Luminance):** The object's internal energy source. High: \"Stars\" (Trauma, Obsessions, Core Values). They glow in the dark. Low: \"Planets\" (Facts). They need external attention to be seen."
+    },
+    "occlusion": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Occlusion (Density):** How much this object blocks rays behind it. High: A massive trauma that hides childhood memories behind it."
+    },
+    "roughness": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ],
+      "description": "**Roughness (Scattering):** 0.0 = Smooth/Polished. Rays bounce predictably (Logical/Linear thought). 1.0 = Rough/Matte. Rays scatter randomly (Creative/Associative thought)."
+    }
+  },
+  "required": [
+    "albedo",
+    "emissivity",
+    "occlusion",
+    "roughness"
+  ],
+  "title": "CognitiveOptics",
+  "type": "object"
+}

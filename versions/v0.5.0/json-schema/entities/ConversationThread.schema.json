@@ -1,0 +1,386 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConversationThread",
+  "description": "A conversation thread (Slack-like linear threading)\n\nEach thread starts with a user message and contains all responses and follow-up messages in a linear sequence.",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "is_open",
+    "messages",
+    "parent_message_id",
+    "tenant_id",
+    "updated_at"
+  ],
+  "properties": {
+    "created_at": {
+      "description": "When the thread was created",
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "description": "Unique thread ID",
+      "type": "string",
+      "format": "uuid"
+    },
+    "is_open": {
+      "description": "Whether the thread is still active/open",
+      "type": "boolean"
+    },
+    "messages": {
+      "description": "All messages in the thread (in chronological order)",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThreadMessage"
+      }
+    },
+    "metadata": {
+      "description": "Optional metadata",
+      "default": null
+    },
+    "parent_message_id": {
+      "description": "ID of the original user message that started the thread",
+      "type": "string",
+      "format": "uuid"
+    },
+    "summary": {
+      "description": "Summary of the thread (for display in lists)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "description": "Tenant ID for multi-tenancy",
+      "type": "string",
+      "format": "uuid"
+    },
+    "updated_at": {
+      "description": "When the thread was last updated",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "AgentMessageType": {
+      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+      "oneOf": [
+        {
+          "description": "A log message from the agent (debugging, status updates)",
+          "type": "object",
+          "required": [
+            "content",
+            "level",
+            "message_type"
+          ],
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/definitions/LogLevel"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "log"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A question the agent is asking the user",
+          "type": "object",
+          "required": [
+            "message_type",
+            "prompt"
+          ],
+          "properties": {
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "question"
+              ]
+            },
+            "options": {
+              "default": null,
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "prompt": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "description": "An insight derived by the agent",
+          "type": "object",
+          "required": [
+            "confidence",
+            "message_type",
+            "summary"
+          ],
+          "properties": {
+            "confidence": {
+              "type": "number",
+              "format": "double"
+            },
+            "domain": {
+              "default": null,
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "insight"
+              ]
+            },
+            "summary": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "description": "A detailed analysis result",
+          "type": "object",
+          "required": [
+            "domain",
+            "findings",
+            "message_type"
+          ],
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "findings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Finding"
+              }
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "analysis"
+              ]
+            }
+          }
+        },
+        {
+          "description": "A command/action the agent wants to execute",
+          "type": "object",
+          "required": [
+            "action",
+            "message_type",
+            "parameters"
+          ],
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "command"
+              ]
+            },
+            "parameters": true
+          }
+        },
+        {
+          "description": "A simple text response",
+          "type": "object",
+          "required": [
+            "content",
+            "message_type"
+          ],
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "text"
+              ]
+            }
+          }
+        },
+        {
+          "description": "Progress update during long-running tasks",
+          "type": "object",
+          "required": [
+            "message",
+            "message_type"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "message_type": {
+              "type": "string",
+              "enum": [
+                "progress"
+              ]
+            },
+            "percent_complete": {
+              "default": null,
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            }
+          }
+        }
+      ]
+    },
+    "Finding": {
+      "description": "A finding from an analysis agent",
+      "type": "object",
+      "required": [
+        "description",
+        "title"
+      ],
+      "properties": {
+        "confidence": {
+          "description": "Confidence score (0.0 to 1.0)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "description": {
+          "description": "Detailed description",
+          "type": "string"
+        },
+        "related_entities": {
+          "description": "Related entity IDs",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "description": "Title or label of the finding",
+          "type": "string"
+        }
+      }
+    },
+    "LogLevel": {
+      "description": "Log level for agent log messages",
+      "type": "string",
+      "enum": [
+        "debug",
+        "info",
+        "warning",
+        "error"
+      ]
+    },
+    "MessageRole": {
+      "description": "Role in a chat conversation",
+      "oneOf": [
+        {
+          "description": "System instructions",
+          "type": "string",
+          "enum": [
+            "system"
+          ]
+        },
+        {
+          "description": "User input",
+          "type": "string",
+          "enum": [
+            "user"
+          ]
+        },
+        {
+          "description": "Assistant response",
+          "type": "string",
+          "enum": [
+            "assistant"
+          ]
+        }
+      ]
+    },
+    "ThreadMessage": {
+      "description": "A single message within a conversation thread",
+      "type": "object",
+      "required": [
+        "id",
+        "role",
+        "thread_id",
+        "timestamp"
+      ],
+      "properties": {
+        "agent_speaker": {
+          "description": "Which agent sent this message (if role is Assistant)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "description": "Text content of the message",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "description": "Unique message ID",
+          "type": "string",
+          "format": "uuid"
+        },
+        "message_type": {
+          "description": "Structured message type (for agent messages)",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AgentMessageType"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metadata": {
+          "description": "Optional metadata",
+          "default": null
+        },
+        "role": {
+          "description": "Role of the message sender",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageRole"
+            }
+          ]
+        },
+        "thread_id": {
+          "description": "ID of the thread this message belongs to",
+          "type": "string",
+          "format": "uuid"
+        },
+        "timestamp": {
+          "description": "When the message was created",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

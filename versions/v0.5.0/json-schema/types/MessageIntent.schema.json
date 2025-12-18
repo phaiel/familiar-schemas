@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MessageIntent",
+  "description": "The primary intent of the user's message",
+  "oneOf": [
+    {
+      "description": "Recording something - events, states, observations (current default)",
+      "type": "string",
+      "enum": [
+        "LOG"
+      ]
+    },
+    {
+      "description": "Asking a question - wants information back",
+      "type": "string",
+      "enum": [
+        "QUERY"
+      ]
+    },
+    {
+      "description": "Requesting system to make connections or derive insights",
+      "type": "string",
+      "enum": [
+        "INFER"
+      ]
+    },
+    {
+      "description": "Looking up specific entities, threads, or past entries",
+      "type": "string",
+      "enum": [
+        "REFERENCE"
+      ]
+    },
+    {
+      "description": "Requesting analysis, patterns, or reflection on data",
+      "type": "string",
+      "enum": [
+        "REFLECT"
+      ]
+    },
+    {
+      "description": "Giving a command/instruction to the system",
+      "type": "string",
+      "enum": [
+        "COMMAND"
+      ]
+    },
+    {
+      "description": "Conversational/social - greetings, acknowledgments",
+      "type": "string",
+      "enum": [
+        "SOCIAL"
+      ]
+    }
+  ]
+}

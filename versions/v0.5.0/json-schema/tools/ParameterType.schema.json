@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ParameterType",
+  "description": "Supported parameter types",
+  "oneOf": [
+    {
+      "type": "string",
+      "enum": [
+        "string",
+        "integer",
+        "float",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    {
+      "description": "Reference to another entity",
+      "type": "string",
+      "enum": [
+        "entity_ref"
+      ]
+    },
+    {
+      "description": "Base64 encoded binary data",
+      "type": "string",
+      "enum": [
+        "binary"
+      ]
+    }
+  ]
+}

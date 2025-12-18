@@ -1,0 +1,201 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QueryAnalysis",
+  "description": "Analysis of a query purpose",
+  "type": "object",
+  "required": [
+    "query_type",
+    "search_terms",
+    "target"
+  ],
+  "properties": {
+    "filters": {
+      "description": "Filters to apply",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QueryFilter"
+      }
+    },
+    "query_type": {
+      "description": "Type of query",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QueryType"
+        }
+      ]
+    },
+    "search_terms": {
+      "description": "Extracted search terms",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target": {
+      "description": "What the query is targeting",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QueryTarget"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "FilterOperator": {
+      "description": "Filter operators",
+      "type": "string",
+      "enum": [
+        "equals",
+        "not_equals",
+        "contains",
+        "starts_with",
+        "ends_with",
+        "greater_than",
+        "less_than",
+        "between",
+        "in",
+        "not_in"
+      ]
+    },
+    "QueryFilter": {
+      "description": "A filter for queries",
+      "type": "object",
+      "required": [
+        "field",
+        "operator",
+        "value"
+      ],
+      "properties": {
+        "field": {
+          "description": "Field to filter on",
+          "type": "string"
+        },
+        "operator": {
+          "description": "Filter operator",
+          "allOf": [
+            {
+              "$ref": "#/definitions/FilterOperator"
+            }
+          ]
+        },
+        "value": {
+          "description": "Filter value"
+        }
+      }
+    },
+    "QueryTarget": {
+      "description": "Query target - what data is the query looking for?",
+      "type": "object",
+      "properties": {
+        "entity_types": {
+          "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keywords": {
+          "description": "Keywords extracted from the query",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporal_scope": {
+          "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_hints": {
+          "description": "Specific thread hints (names, concepts) to search for",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "QueryType": {
+      "description": "The type of query (when MessageIntent is QUERY)",
+      "oneOf": [
+        {
+          "description": "When did X happen? Time-based lookup",
+          "type": "string",
+          "enum": [
+            "TEMPORAL"
+          ]
+        },
+        {
+          "description": "Who/what questions - entity lookup",
+          "type": "string",
+          "enum": [
+            "ENTITY"
+          ]
+        },
+        {
+          "description": "How often? Pattern/frequency questions",
+          "type": "string",
+          "enum": [
+            "PATTERN"
+          ]
+        },
+        {
+          "description": "Compare X and Y",
+          "type": "string",
+          "enum": [
+            "COMPARISON"
+          ]
+        },
+        {
+          "description": "Give me a summary/overview",
+          "type": "string",
+          "enum": [
+            "SUMMARY"
+          ]
+        },
+        {
+          "description": "Count/quantity questions (how many?)",
+          "type": "string",
+          "enum": [
+            "QUANTITATIVE"
+          ]
+        },
+        {
+          "description": "Yes/no questions (did X happen?)",
+          "type": "string",
+          "enum": [
+            "BOOLEAN"
+          ]
+        },
+        {
+          "description": "Why questions - causation",
+          "type": "string",
+          "enum": [
+            "CAUSAL"
+          ]
+        },
+        {
+          "description": "Location-based questions",
+          "type": "string",
+          "enum": [
+            "SPATIAL"
+          ]
+        },
+        {
+          "description": "Open-ended/exploratory",
+          "type": "string",
+          "enum": [
+            "EXPLORATORY"
+          ]
+        }
+      ]
+    }
+  }
+}

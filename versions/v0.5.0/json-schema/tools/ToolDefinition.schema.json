@@ -1,0 +1,227 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolDefinition",
+  "description": "Base schema for all tools",
+  "type": "object",
+  "required": [
+    "category",
+    "description",
+    "name",
+    "parallelizable",
+    "parameters",
+    "version"
+  ],
+  "properties": {
+    "category": {
+      "description": "Category for organization",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ToolCategory"
+        }
+      ]
+    },
+    "description": {
+      "description": "Human-readable description",
+      "type": "string"
+    },
+    "estimated_latency_ms": {
+      "description": "Estimated latency in milliseconds",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint32",
+      "minimum": 0.0
+    },
+    "name": {
+      "description": "Unique identifier for the tool",
+      "type": "string"
+    },
+    "parallelizable": {
+      "description": "Whether this tool can run in parallel with others",
+      "type": "boolean"
+    },
+    "parameters": {
+      "description": "Input parameters schema",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolParameter"
+      }
+    },
+    "version": {
+      "description": "Version string (semver)",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "ParameterConstraints": {
+      "description": "Validation constraints for parameters",
+      "type": "object",
+      "properties": {
+        "allowed_values": {
+          "description": "Allowed values (enum constraint)",
+          "default": null,
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "max": {
+          "description": "Maximum value (for numbers) or length (for strings/arrays)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "min": {
+          "description": "Minimum value (for numbers) or length (for strings/arrays)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "pattern": {
+          "description": "Regex pattern for string validation",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ParameterType": {
+      "description": "Supported parameter types",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "string",
+            "integer",
+            "float",
+            "boolean",
+            "array",
+            "object"
+          ]
+        },
+        {
+          "description": "Reference to another entity",
+          "type": "string",
+          "enum": [
+            "entity_ref"
+          ]
+        },
+        {
+          "description": "Base64 encoded binary data",
+          "type": "string",
+          "enum": [
+            "binary"
+          ]
+        }
+      ]
+    },
+    "ToolCategory": {
+      "description": "Categories of tools",
+      "oneOf": [
+        {
+          "description": "Segmentation tools (break input into units)",
+          "type": "string",
+          "enum": [
+            "segmentation"
+          ]
+        },
+        {
+          "description": "Classification tools (label content)",
+          "type": "string",
+          "enum": [
+            "classification"
+          ]
+        },
+        {
+          "description": "Spawn tools (create entities)",
+          "type": "string",
+          "enum": [
+            "spawn"
+          ]
+        },
+        {
+          "description": "Hint generation tools",
+          "type": "string",
+          "enum": [
+            "hints"
+          ]
+        },
+        {
+          "description": "Search and retrieval tools",
+          "type": "string",
+          "enum": [
+            "retrieval"
+          ]
+        },
+        {
+          "description": "Orchestration tools",
+          "type": "string",
+          "enum": [
+            "orchestration"
+          ]
+        }
+      ]
+    },
+    "ToolParameter": {
+      "description": "Parameter definition with type and validation",
+      "type": "object",
+      "required": [
+        "description",
+        "name",
+        "param_type",
+        "required"
+      ],
+      "properties": {
+        "constraints": {
+          "description": "Validation constraints",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ParameterConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "default_value": {
+          "description": "Default value if not provided",
+          "default": null
+        },
+        "description": {
+          "description": "Description of what this parameter does",
+          "type": "string"
+        },
+        "name": {
+          "description": "Parameter name",
+          "type": "string"
+        },
+        "param_type": {
+          "description": "Data type",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ParameterType"
+            }
+          ]
+        },
+        "required": {
+          "description": "Whether this parameter is required",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

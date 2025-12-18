@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhysicsState",
+  "description": "Full physics state for an entity",
+  "type": "object",
+  "required": [
+    "position"
+  ],
+  "properties": {
+    "energy": {
+      "description": "Energy (0.0 to 1.0)",
+      "default": 0.5,
+      "type": "number",
+      "format": "double"
+    },
+    "mass": {
+      "description": "Mass (0.0 to 1.0)",
+      "default": 0.5,
+      "type": "number",
+      "format": "double"
+    },
+    "position": {
+      "description": "Position in VAE space",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VAEPosition"
+        }
+      ]
+    },
+    "temperature": {
+      "description": "Temperature (0.0 to 1.0)",
+      "default": 0.5,
+      "type": "number",
+      "format": "double"
+    },
+    "velocity": {
+      "description": "Velocity vector",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/VAEPosition"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "VAEPosition": {
+      "description": "VAE space position (quantized for physics)",
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "description": "X: Valence (emotional polarity)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "y": {
+          "description": "Y: Arousal (energy/activation)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "z": {
+          "description": "Z: Epistemic (certainty)",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AudioSegmentFeatures",
+  "description": "Audio-specific segment features",
+  "type": "object",
+  "required": [
+    "audio_features",
+    "transcript"
+  ],
+  "properties": {
+    "audio_features": {
+      "description": "Audio characteristics",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AudioFeatures"
+        }
+      ]
+    },
+    "speaker_id": {
+      "description": "Speaker ID",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "transcript": {
+      "description": "Transcribed text",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "AudioFeatures": {
+      "description": "Audio characteristics",
+      "type": "object",
+      "required": [
+        "volume"
+      ],
+      "properties": {
+        "pitch_variance": {
+          "description": "Pitch variation",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "speaking_rate": {
+          "description": "Speaking rate (words per minute)",
+          "default": null,
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "voice_emotion": {
+          "description": "Detected emotion from voice",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "volume": {
+          "description": "Average volume (0.0 to 1.0)",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StepCondition",
+  "description": "Condition for conditional execution",
+  "type": "object",
+  "required": [
+    "condition_type",
+    "operator",
+    "path",
+    "source_step",
+    "value"
+  ],
+  "properties": {
+    "condition_type": {
+      "description": "Type of condition",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConditionType"
+        }
+      ]
+    },
+    "operator": {
+      "description": "Operator",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConditionOperator"
+        }
+      ]
+    },
+    "path": {
+      "description": "Path to check",
+      "type": "string"
+    },
+    "source_step": {
+      "description": "Source step to check",
+      "type": "string"
+    },
+    "value": {
+      "description": "Value to compare"
+    }
+  },
+  "definitions": {
+    "ConditionOperator": {
+      "description": "Condition operators",
+      "type": "string",
+      "enum": [
+        "equals",
+        "not_equals",
+        "greater_than",
+        "less_than",
+        "contains",
+        "not_contains",
+        "is_null",
+        "is_not_null",
+        "in"
+      ]
+    },
+    "ConditionType": {
+      "description": "Types of conditions",
+      "oneOf": [
+        {
+          "description": "Check output value",
+          "type": "string",
+          "enum": [
+            "output_value"
+          ]
+        },
+        {
+          "description": "Check if step succeeded",
+          "type": "string",
+          "enum": [
+            "step_success"
+          ]
+        },
+        {
+          "description": "Check if step failed",
+          "type": "string",
+          "enum": [
+            "step_failed"
+          ]
+        },
+        {
+          "description": "Check output exists",
+          "type": "string",
+          "enum": [
+            "output_exists"
+          ]
+        }
+      ]
+    }
+  }
+}

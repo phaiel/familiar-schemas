@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConversationHistoryItem",
+  "description": "A single item in conversation history",
+  "type": "object",
+  "required": [
+    "content",
+    "role"
+  ],
+  "properties": {
+    "content": {
+      "description": "Content of the message",
+      "type": "string"
+    },
+    "role": {
+      "description": "Role: \"user\" or \"assistant\"",
+      "type": "string"
+    }
+  }
+}

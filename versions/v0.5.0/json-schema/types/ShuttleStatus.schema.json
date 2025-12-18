@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ShuttleStatus",
+  "description": "Processing status for a Shuttle",
+  "oneOf": [
+    {
+      "description": "Segment received, not yet processed",
+      "type": "string",
+      "enum": [
+        "pending"
+      ]
+    },
+    {
+      "description": "Currently being classified by LLM",
+      "type": "string",
+      "enum": [
+        "classifying"
+      ]
+    },
+    {
+      "description": "Classification complete, spawning entities",
+      "type": "string",
+      "enum": [
+        "spawning"
+      ]
+    },
+    {
+      "description": "All processing complete",
+      "type": "string",
+      "enum": [
+        "complete"
+      ]
+    },
+    {
+      "description": "Processing failed",
+      "type": "string",
+      "enum": [
+        "failed"
+      ]
+    }
+  ]
+}

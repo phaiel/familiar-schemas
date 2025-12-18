@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CreateMessageInput",
+  "description": "Input for creating a new message",
+  "type": "object",
+  "required": [
+    "channel_id",
+    "content",
+    "role"
+  ],
+  "properties": {
+    "agent_speaker": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "channel_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "content": {
+      "type": "string"
+    },
+    "metadata": {
+      "default": null
+    },
+    "parent_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "role": {
+      "$ref": "#/definitions/MessageRole"
+    },
+    "sender_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "thinking_steps": {
+      "default": null
+    },
+    "tool_calls": {
+      "default": null
+    },
+    "weave_result": {
+      "default": null
+    }
+  },
+  "definitions": {
+    "MessageRole": {
+      "description": "Role in a chat conversation",
+      "oneOf": [
+        {
+          "description": "System instructions",
+          "type": "string",
+          "enum": [
+            "system"
+          ]
+        },
+        {
+          "description": "User input",
+          "type": "string",
+          "enum": [
+            "user"
+          ]
+        },
+        {
+          "description": "Assistant response",
+          "type": "string",
+          "enum": [
+            "assistant"
+          ]
+        }
+      ]
+    }
+  }
+}

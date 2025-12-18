@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RAGInput",
+  "description": "Input to the RAG agent",
+  "type": "object",
+  "required": [
+    "query",
+    "request_id",
+    "state"
+  ],
+  "properties": {
+    "filters": {
+      "description": "Optional filters",
+      "default": null
+    },
+    "limit": {
+      "description": "Maximum results to return",
+      "default": 10,
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "query": {
+      "description": "Search query",
+      "type": "string"
+    },
+    "request_id": {
+      "description": "Request ID for tracing",
+      "type": "string"
+    },
+    "state": {
+      "description": "Current agent state"
+    }
+  }
+}

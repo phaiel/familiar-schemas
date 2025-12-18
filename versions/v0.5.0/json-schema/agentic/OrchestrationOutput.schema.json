@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OrchestrationOutput",
+  "description": "Output from the orchestration agent",
+  "type": "object",
+  "required": [
+    "next_speaker",
+    "should_continue",
+    "state"
+  ],
+  "properties": {
+    "forwarded_message": {
+      "description": "Optional message to pass to next agent",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "next_speaker": {
+      "description": "Which agent should speak next",
+      "type": "string"
+    },
+    "should_continue": {
+      "description": "Whether the orchestration loop should continue",
+      "type": "boolean"
+    },
+    "state": {
+      "description": "Updated state",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AgentState"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "AgentState": {
+      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+      "type": "object",
+      "required": [
+        "tenant_id"
+      ],
+      "properties": {
+        "conversation_context": {
+          "description": "Conversation history for context",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConversationTurn"
+          }
+        },
+        "current_speaker": {
+          "description": "Currently active speaker (None means orchestrator decides)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_authenticated": {
+          "description": "Whether the user is authenticated",
+          "default": false,
+          "type": "boolean"
+        },
+        "just_finished": {
+          "description": "Whether the current agent just finished its task",
+          "default": false,
+          "type": "boolean"
+        },
+        "metadata": {
+          "description": "Custom metadata for extensibility",
+          "default": null
+        },
+        "tenant_id": {
+          "description": "Tenant ID for multi-tenancy",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Current thread ID (if in a thread)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "ConversationTurn": {
+      "description": "A single turn in a conversation (for context tracking)",
+      "type": "object",
+      "required": [
+        "content",
+        "role"
+      ],
+      "properties": {
+        "content": {
+          "description": "Content of the message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role of the speaker (user, assistant, system)",
+          "type": "string"
+        },
+        "speaker": {
+          "description": "Optional speaker identifier (for multi-agent)",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp": {
+          "description": "Timestamp of the turn",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

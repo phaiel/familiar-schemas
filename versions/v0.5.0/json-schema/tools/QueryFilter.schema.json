@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QueryFilter",
+  "description": "A filter for queries",
+  "type": "object",
+  "required": [
+    "field",
+    "operator",
+    "value"
+  ],
+  "properties": {
+    "field": {
+      "description": "Field to filter on",
+      "type": "string"
+    },
+    "operator": {
+      "description": "Filter operator",
+      "allOf": [
+        {
+          "$ref": "#/definitions/FilterOperator"
+        }
+      ]
+    },
+    "value": {
+      "description": "Filter value"
+    }
+  },
+  "definitions": {
+    "FilterOperator": {
+      "description": "Filter operators",
+      "type": "string",
+      "enum": [
+        "equals",
+        "not_equals",
+        "contains",
+        "starts_with",
+        "ends_with",
+        "greater_than",
+        "less_than",
+        "between",
+        "in",
+        "not_in"
+      ]
+    }
+  }
+}

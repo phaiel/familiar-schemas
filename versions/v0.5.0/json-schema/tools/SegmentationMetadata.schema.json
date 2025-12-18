@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SegmentationMetadata",
+  "description": "Metadata about the segmentation",
+  "type": "object",
+  "required": [
+    "entity_count",
+    "modality",
+    "segment_count",
+    "temporal_count"
+  ],
+  "properties": {
+    "entity_count": {
+      "description": "Total entities mentioned",
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "language": {
+      "description": "Primary language detected",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "modality": {
+      "description": "Input modality",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Modality"
+        }
+      ]
+    },
+    "segment_count": {
+      "description": "Total segments produced",
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "speaker_count": {
+      "description": "Number of unique speakers (for audio/video)",
+      "default": null,
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint",
+      "minimum": 0.0
+    },
+    "temporal_count": {
+      "description": "Total temporal markers found",
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0.0
+    }
+  },
+  "definitions": {
+    "Modality": {
+      "description": "Supported input modalities",
+      "type": "string",
+      "enum": [
+        "text",
+        "audio",
+        "vision",
+        "video"
+      ]
+    }
+  }
+}

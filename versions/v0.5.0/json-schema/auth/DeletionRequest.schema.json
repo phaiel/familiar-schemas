@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DeletionRequest",
+  "description": "A deletion request",
+  "type": "object",
+  "required": [
+    "created_at",
+    "email",
+    "id",
+    "status"
+  ],
+  "properties": {
+    "completed_at": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "email": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "reason": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scheduled_for": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "status": {
+      "$ref": "#/definitions/DeletionStatus"
+    },
+    "user_id": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    }
+  },
+  "definitions": {
+    "DeletionStatus": {
+      "description": "Status of a deletion request",
+      "type": "string",
+      "enum": [
+        "pending",
+        "cancelled",
+        "processing",
+        "completed"
+      ]
+    }
+  }
+}

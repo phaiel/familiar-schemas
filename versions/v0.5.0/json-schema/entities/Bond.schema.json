@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bond",
+  "description": "Core identity component that all entities possess",
+  "type": "object",
+  "required": [
+    "amplitude",
+    "bond_strength",
+    "created_at",
+    "damping_coefficient",
+    "energy",
+    "formalism",
+    "head_thread_id",
+    "id",
+    "intimacy",
+    "metadata",
+    "position",
+    "power_dynamic",
+    "spring_constant",
+    "tail_thread_id",
+    "temperature",
+    "tenant_id",
+    "text",
+    "transparency",
+    "velocity"
+  ],
+  "properties": {
+    "amplitude": {
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "bond_strength": {
+      "description": "The overall strength or health of the bond. 0.0 = Broken/Weak, 1.0 = Strong/Healthy",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "created_at": {
+      "description": "When this entity was created",
+      "type": "string",
+      "format": "date-time"
+    },
+    "damping_coefficient": {
+      "description": "The 'inertia' of the bond, representing how quickly it returns to equilibrium. Higher values = slower return to rest (lingering effects). Lower values = quick recovery (resilient).",
+      "type": "number",
+      "format": "double"
+    },
+    "energy": {
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "formalism": {
+      "description": "**Formalism (Transactionalism / Spring Stiffness):** 1.0 = Rigid/Brittle (High k). Hard to move, snaps if stretched. 0.0 = Fluid/Elastic (Low k). Easy to stretch, adapts to change.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "head_thread_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "type": "string",
+      "format": "uuid"
+    },
+    "intimacy": {
+      "description": "**Intimacy (Communal Strength / Rest Length):** 1.0 = Fusion (Rest Length 0). The entities want to occupy the same space. 0.0 = Estrangement (Max Rest Length).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QuantizedCoord"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "power_dynamic": {
+      "description": "**Power Dynamic (Authority Gradient / Mass Bias):** -1.0 = Target is the Anchor (Infinite Mass relative to Source). 0.0 = Equal Mass (Both move equally). +1.0 = Source is the Anchor.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SignedNormalizedFloat"
+        }
+      ]
+    },
+    "primary_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spectral_signature": {
+      "description": "**Color Filter (Spectral Gating):** If set, this bond only \"lights up\" under specific emotional light. e.g., A \"Work Friend\" bond might only reflect \"Professional\" (Blue) light. Stored as a hex code or vector for the shader.",
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "number",
+        "format": "float"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "spring_constant": {
+      "description": "The 'stiffness' of the bond, representing its resistance to change. Higher values = more rigid relationship (breaks under stress). Lower values = more flexible relationship (stretches without breaking).",
+      "type": "number",
+      "format": "double"
+    },
+    "tail_thread_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "temperature": {
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "tenant_id": {
+      "description": "Tenant (family/user) this entity belongs to",
+      "type": "string",
+      "format": "uuid"
+    },
+    "text": {
+      "type": "string"
+    },
+    "transparency": {
+      "description": "**Transparency (Refractive Index):** 1.0 = Clear. Looking at the Source reveals the Target (e.g., \"Honest\"). 0.0 = Opaque. The relationship hides the Target (e.g., \"Secretive\").",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QuantizedCoord"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    }
+  },
+  "definitions": {
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "type": "number",
+      "format": "double"
+    },
+    "QuantizedCoord": {
+      "description": "A quantized coordinate in the 3D VAE Manifold Uses i64 for precision in physics calculations",
+      "type": "integer",
+      "format": "int64"
+    },
+    "SignedNormalizedFloat": {
+      "description": "A floating-point value normalized between -1.0 and 1.0. Used for polarity (Valence), alignment (Phase), and gradients.",
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PhysicsAnalysis",
+  "description": "Analysis that led to physics values",
+  "type": "object",
+  "required": [
+    "reasoning"
+  ],
+  "properties": {
+    "certainty_indicators": {
+      "description": "Certainty indicators",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "emotions": {
+      "description": "Detected emotions",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DetectedEmotion"
+      }
+    },
+    "reasoning": {
+      "description": "Overall reasoning",
+      "type": "string"
+    },
+    "significance_indicators": {
+      "description": "Significance indicators",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "DetectedEmotion": {
+      "description": "A detected emotion in the content",
+      "type": "object",
+      "required": [
+        "emotion",
+        "evidence",
+        "intensity"
+      ],
+      "properties": {
+        "emotion": {
+          "description": "Emotion name",
+          "type": "string"
+        },
+        "evidence": {
+          "description": "Evidence for detection",
+          "type": "string"
+        },
+        "intensity": {
+          "description": "Intensity (0.0 to 1.0)",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    }
+  }
+}

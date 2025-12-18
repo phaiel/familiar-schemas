@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CommandResult",
+  "description": "Result of processing a command",
+  "type": "object",
+  "required": [
+    "accepted"
+  ],
+  "properties": {
+    "accepted": {
+      "description": "Whether the command was accepted",
+      "type": "boolean"
+    },
+    "error": {
+      "description": "Error message if not accepted",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "job_id": {
+      "description": "Job ID for async tracking",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thread_id": {
+      "description": "Thread ID (for SendMessage commands)",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ws_url": {
+      "description": "WebSocket URL for streaming events",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

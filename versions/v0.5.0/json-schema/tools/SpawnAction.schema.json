@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SpawnAction",
+  "description": "Action to take for spawn",
+  "oneOf": [
+    {
+      "description": "Auto-spawn without user confirmation",
+      "type": "string",
+      "enum": [
+        "auto_spawn"
+      ]
+    },
+    {
+      "description": "Suggest to user for review",
+      "type": "string",
+      "enum": [
+        "suggest"
+      ]
+    },
+    {
+      "description": "Skip but log for analysis",
+      "type": "string",
+      "enum": [
+        "skip"
+      ]
+    },
+    {
+      "description": "Request clarification from user",
+      "type": "string",
+      "enum": [
+        "clarify"
+      ]
+    }
+  ]
+}

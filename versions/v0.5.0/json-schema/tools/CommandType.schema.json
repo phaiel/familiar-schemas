@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CommandType",
+  "description": "Types of commands",
+  "oneOf": [
+    {
+      "description": "Create something",
+      "type": "string",
+      "enum": [
+        "CREATE"
+      ]
+    },
+    {
+      "description": "Update/modify",
+      "type": "string",
+      "enum": [
+        "UPDATE"
+      ]
+    },
+    {
+      "description": "Delete/remove",
+      "type": "string",
+      "enum": [
+        "DELETE"
+      ]
+    },
+    {
+      "description": "Link/connect entities",
+      "type": "string",
+      "enum": [
+        "LINK"
+      ]
+    },
+    {
+      "description": "Unlink/disconnect entities",
+      "type": "string",
+      "enum": [
+        "UNLINK"
+      ]
+    },
+    {
+      "description": "Export data",
+      "type": "string",
+      "enum": [
+        "EXPORT"
+      ]
+    },
+    {
+      "description": "Import data",
+      "type": "string",
+      "enum": [
+        "IMPORT"
+      ]
+    },
+    {
+      "description": "Configure settings",
+      "type": "string",
+      "enum": [
+        "CONFIGURE"
+      ]
+    },
+    {
+      "description": "Unknown/custom command",
+      "type": "string",
+      "enum": [
+        "CUSTOM"
+      ]
+    }
+  ]
+}

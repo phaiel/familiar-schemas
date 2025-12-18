@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Conversation",
+  "description": "A conversation (sequence of messages)",
+  "type": "object",
+  "required": [
+    "messages"
+  ],
+  "properties": {
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatMessage"
+      }
+    }
+  },
+  "definitions": {
+    "ChatMessage": {
+      "description": "A single message in a chat conversation",
+      "type": "object",
+      "required": [
+        "content",
+        "role"
+      ],
+      "properties": {
+        "content": {
+          "description": "The message content",
+          "type": "string"
+        },
+        "role": {
+          "description": "The role of the message sender",
+          "allOf": [
+            {
+              "$ref": "#/definitions/MessageRole"
+            }
+          ]
+        }
+      }
+    },
+    "MessageRole": {
+      "description": "Role in a chat conversation",
+      "oneOf": [
+        {
+          "description": "System instructions",
+          "type": "string",
+          "enum": [
+            "system"
+          ]
+        },
+        {
+          "description": "User input",
+          "type": "string",
+          "enum": [
+            "user"
+          ]
+        },
+        {
+          "description": "Assistant response",
+          "type": "string",
+          "enum": [
+            "assistant"
+          ]
+        }
+      ]
+    }
+  }
+}

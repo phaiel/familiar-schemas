@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InternalStateType",
+  "type": "string",
+  "enum": [
+    "emotional_shift",
+    "realization",
+    "reflection",
+    "observation",
+    "reaction"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EmotionalState",
+  "description": "Represents an emotional state using the PAD (Pleasure-Arousal-Dominance) Model. Scientific Basis: Mehrabian & Russell (1974).",
+  "type": "object",
+  "required": [
+    "arousal",
+    "dominance",
+    "valence"
+  ],
+  "properties": {
+    "arousal": {
+      "description": "**Arousal (Activation)** -1.0: Sleep/Coma (Low Energy) 0.0: Alert +1.0: Panic/Frenzy (High Energy)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SignedNormalizedFloat"
+        }
+      ]
+    },
+    "dominance": {
+      "description": "**Dominance (Control)** -1.0: Submissive/Overwhelmed 0.0: Balanced +1.0: Dominant/In-Control",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SignedNormalizedFloat"
+        }
+      ]
+    },
+    "valence": {
+      "description": "**Pleasure (Valence)** -1.0: Agony/Despair (Negative) 0.0: Neutral +1.0: Ecstasy/Joy (Positive)",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SignedNormalizedFloat"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "SignedNormalizedFloat": {
+      "description": "A floating-point value normalized between -1.0 and 1.0. Used for polarity (Valence), alignment (Phase), and gradients.",
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

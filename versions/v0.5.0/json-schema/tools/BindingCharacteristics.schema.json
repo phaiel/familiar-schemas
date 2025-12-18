@@ -1,0 +1,269 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BindingCharacteristics",
+  "description": "Binding characteristics",
+  "type": "object",
+  "required": [
+    "binding_type",
+    "directionality",
+    "salience",
+    "strength"
+  ],
+  "properties": {
+    "binding_type": {
+      "description": "Type of cognitive binding",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BindingType"
+        }
+      ]
+    },
+    "directionality": {
+      "description": "Directionality",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Directionality"
+        }
+      ]
+    },
+    "salience": {
+      "description": "Salience (how notable/memorable)",
+      "type": "number",
+      "format": "double"
+    },
+    "semantic": {
+      "description": "Semantic properties",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SemanticProperties"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "strength": {
+      "description": "Strength of binding (0.0 to 1.0)",
+      "type": "number",
+      "format": "double"
+    },
+    "temporal": {
+      "description": "Temporal properties",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TemporalProperties"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "BindingType": {
+      "description": "Types of cognitive binding",
+      "oneOf": [
+        {
+          "description": "Cause leads to effect",
+          "type": "string",
+          "enum": [
+            "causal"
+          ]
+        },
+        {
+          "description": "Temporal sequence (before/after)",
+          "type": "string",
+          "enum": [
+            "temporal"
+          ]
+        },
+        {
+          "description": "Associated by proximity/context",
+          "type": "string",
+          "enum": [
+            "associative"
+          ]
+        },
+        {
+          "description": "Part-whole relationship",
+          "type": "string",
+          "enum": [
+            "compositional"
+          ]
+        },
+        {
+          "description": "Contrast/opposition",
+          "type": "string",
+          "enum": [
+            "contrastive"
+          ]
+        },
+        {
+          "description": "Similarity/analogy",
+          "type": "string",
+          "enum": [
+            "analogical"
+          ]
+        },
+        {
+          "description": "Enables/prerequisite",
+          "type": "string",
+          "enum": [
+            "enabling"
+          ]
+        },
+        {
+          "description": "Thematic connection",
+          "type": "string",
+          "enum": [
+            "thematic"
+          ]
+        }
+      ]
+    },
+    "Directionality": {
+      "description": "Directionality of binding",
+      "oneOf": [
+        {
+          "description": "Only source → target",
+          "type": "string",
+          "enum": [
+            "unidirectional"
+          ]
+        },
+        {
+          "description": "Both directions",
+          "type": "string",
+          "enum": [
+            "bidirectional"
+          ]
+        },
+        {
+          "description": "No inherent direction",
+          "type": "string",
+          "enum": [
+            "undirected"
+          ]
+        }
+      ]
+    },
+    "SemanticProperties": {
+      "description": "Semantic properties of binding",
+      "type": "object",
+      "required": [
+        "similarity"
+      ],
+      "properties": {
+        "relationship_description": {
+          "description": "Relationship description",
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shared_concepts": {
+          "description": "Shared concepts/topics",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "similarity": {
+          "description": "Semantic similarity score",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "TemporalProperties": {
+      "description": "Temporal properties of binding",
+      "type": "object",
+      "required": [
+        "relation"
+      ],
+      "properties": {
+        "gap": {
+          "description": "Time gap between entities",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TimeGap"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recurring": {
+          "description": "Is this a recurring pattern?",
+          "default": false,
+          "type": "boolean"
+        },
+        "relation": {
+          "description": "Time relation",
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalRelation"
+            }
+          ]
+        }
+      }
+    },
+    "TemporalRelation": {
+      "description": "Temporal relationships",
+      "type": "string",
+      "enum": [
+        "before",
+        "after",
+        "during",
+        "simultaneous",
+        "overlapping"
+      ]
+    },
+    "TimeGap": {
+      "description": "Time gap between entities",
+      "type": "object",
+      "required": [
+        "approximate",
+        "unit",
+        "value"
+      ],
+      "properties": {
+        "approximate": {
+          "description": "Is this approximate?",
+          "type": "boolean"
+        },
+        "unit": {
+          "description": "Duration unit",
+          "allOf": [
+            {
+              "$ref": "#/definitions/TimeUnit"
+            }
+          ]
+        },
+        "value": {
+          "description": "Duration value",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "TimeUnit": {
+      "description": "Time units",
+      "type": "string",
+      "enum": [
+        "seconds",
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "months",
+        "years"
+      ]
+    }
+  }
+}

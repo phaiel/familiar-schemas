@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UserPurposePatterns",
+  "description": "User's historical purpose patterns",
+  "type": "object",
+  "required": [
+    "primary_purpose"
+  ],
+  "properties": {
+    "primary_purpose": {
+      "description": "Most common purpose",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ToolPurpose"
+        }
+      ]
+    },
+    "purpose_distribution": {
+      "description": "Distribution of purposes (purpose -> frequency)",
+      "default": {},
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "format": "double"
+      }
+    }
+  },
+  "definitions": {
+    "ToolPurpose": {
+      "description": "Primary purpose of user's message",
+      "oneOf": [
+        {
+          "description": "Recording memories, events, observations - wants to store",
+          "type": "string",
+          "enum": [
+            "LOG"
+          ]
+        },
+        {
+          "description": "Asking a question - wants information returned",
+          "type": "string",
+          "enum": [
+            "QUERY"
+          ]
+        },
+        {
+          "description": "Making connections, deriving insights - wants system to infer",
+          "type": "string",
+          "enum": [
+            "INFER"
+          ]
+        },
+        {
+          "description": "Looking up specific entities - wants existing data",
+          "type": "string",
+          "enum": [
+            "REFERENCE"
+          ]
+        },
+        {
+          "description": "Requesting analysis or reflection - wants patterns identified",
+          "type": "string",
+          "enum": [
+            "REFLECT"
+          ]
+        },
+        {
+          "description": "System command/instruction - wants action taken",
+          "type": "string",
+          "enum": [
+            "COMMAND"
+          ]
+        },
+        {
+          "description": "Social/conversational - greeting, acknowledgment",
+          "type": "string",
+          "enum": [
+            "SOCIAL"
+          ]
+        },
+        {
+          "description": "Clarifying or continuing previous message",
+          "type": "string",
+          "enum": [
+            "CONTINUATION"
+          ]
+        },
+        {
+          "description": "Editing or correcting previous input",
+          "type": "string",
+          "enum": [
+            "CORRECTION"
+          ]
+        }
+      ]
+    }
+  }
+}

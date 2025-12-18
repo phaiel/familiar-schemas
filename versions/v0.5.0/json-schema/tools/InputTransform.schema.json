@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InputTransform",
+  "description": "Transforms for input mapping",
+  "oneOf": [
+    {
+      "description": "Direct pass-through",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "identity"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Extract array item",
+      "type": "object",
+      "required": [
+        "index",
+        "type"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "array_item"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Filter array by condition",
+      "type": "object",
+      "required": [
+        "path",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "array_filter"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "description": "Map array items",
+      "type": "object",
+      "required": [
+        "template",
+        "type"
+      ],
+      "properties": {
+        "template": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "array_map"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Concatenate strings",
+      "type": "object",
+      "required": [
+        "separator",
+        "type"
+      ],
+      "properties": {
+        "separator": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "concat"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Custom transform function",
+      "type": "object",
+      "required": [
+        "function",
+        "type"
+      ],
+      "properties": {
+        "function": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "custom"
+          ]
+        }
+      }
+    }
+  ]
+}

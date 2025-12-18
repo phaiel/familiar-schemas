@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EmotionalTone",
+  "description": "Emotional tone detected in segment",
+  "type": "object",
+  "required": [
+    "arousal",
+    "confidence",
+    "primary",
+    "valence"
+  ],
+  "properties": {
+    "arousal": {
+      "description": "Arousal (0.0 calm to 1.0 excited)",
+      "type": "number",
+      "format": "double"
+    },
+    "confidence": {
+      "description": "Confidence in detection",
+      "type": "number",
+      "format": "double"
+    },
+    "primary": {
+      "description": "Primary emotion",
+      "type": "string"
+    },
+    "valence": {
+      "description": "Valence (-1.0 negative to 1.0 positive)",
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

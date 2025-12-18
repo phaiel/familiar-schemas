@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IdentifiedVerb",
+  "description": "An identified verb with analysis",
+  "type": "object",
+  "required": [
+    "category",
+    "is_main",
+    "text"
+  ],
+  "properties": {
+    "category": {
+      "description": "Verb category",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VerbCategory"
+        }
+      ]
+    },
+    "is_main": {
+      "description": "Is this the main verb?",
+      "type": "boolean"
+    },
+    "tense": {
+      "description": "Tense",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/VerbTense"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "text": {
+      "description": "The verb text",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "VerbCategory": {
+      "description": "Categories of verbs for classification",
+      "oneOf": [
+        {
+          "description": "Action verbs (went, did, called) → MOMENT",
+          "type": "string",
+          "enum": [
+            "action"
+          ]
+        },
+        {
+          "description": "State verbs (was, felt, is) → often PULSE",
+          "type": "string",
+          "enum": [
+            "state"
+          ]
+        },
+        {
+          "description": "Stative + evaluative (was nice, felt good) → PULSE",
+          "type": "string",
+          "enum": [
+            "evaluative"
+          ]
+        },
+        {
+          "description": "Relational verbs (met, talked with) → may indicate BOND",
+          "type": "string",
+          "enum": [
+            "relational"
+          ]
+        },
+        {
+          "description": "Habitual (always, usually does) → may indicate MOTIF/FILAMENT",
+          "type": "string",
+          "enum": [
+            "habitual"
+          ]
+        },
+        {
+          "description": "Intentional (want to, plan to) → INTENT",
+          "type": "string",
+          "enum": [
+            "intentional"
+          ]
+        }
+      ]
+    },
+    "VerbTense": {
+      "description": "Verb tenses",
+      "type": "string",
+      "enum": [
+        "past",
+        "present",
+        "future",
+        "habitual"
+      ]
+    }
+  }
+}

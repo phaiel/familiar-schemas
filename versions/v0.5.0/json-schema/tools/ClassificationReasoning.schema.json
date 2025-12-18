@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ClassificationReasoning",
+  "description": "Reasoning behind classification",
+  "type": "object",
+  "properties": {
+    "explanations": {
+      "description": "Why certain types were included/excluded",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "key_phrases": {
+      "description": "Key phrases that influenced classification",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "main_verb": {
+      "description": "Main verb identified",
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "verb_category": {
+      "description": "Verb category",
+      "default": null,
+      "anyOf": [
+        {
+          "$ref": "#/definitions/VerbCategory"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "VerbCategory": {
+      "description": "Categories of verbs for classification",
+      "oneOf": [
+        {
+          "description": "Action verbs (went, did, called) → MOMENT",
+          "type": "string",
+          "enum": [
+            "action"
+          ]
+        },
+        {
+          "description": "State verbs (was, felt, is) → often PULSE",
+          "type": "string",
+          "enum": [
+            "state"
+          ]
+        },
+        {
+          "description": "Stative + evaluative (was nice, felt good) → PULSE",
+          "type": "string",
+          "enum": [
+            "evaluative"
+          ]
+        },
+        {
+          "description": "Relational verbs (met, talked with) → may indicate BOND",
+          "type": "string",
+          "enum": [
+            "relational"
+          ]
+        },
+        {
+          "description": "Habitual (always, usually does) → may indicate MOTIF/FILAMENT",
+          "type": "string",
+          "enum": [
+            "habitual"
+          ]
+        },
+        {
+          "description": "Intentional (want to, plan to) → INTENT",
+          "type": "string",
+          "enum": [
+            "intentional"
+          ]
+        }
+      ]
+    }
+  }
+}

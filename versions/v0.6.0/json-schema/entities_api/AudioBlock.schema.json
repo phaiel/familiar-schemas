@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "duration_secs": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "source": {
+      "type": "string"
+    },
+    "transcript": {
+      "description": "Pre-transcribed (skip Whisper)",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "source"
+  ],
+  "title": "AudioBlock",
+  "type": "object"
+}

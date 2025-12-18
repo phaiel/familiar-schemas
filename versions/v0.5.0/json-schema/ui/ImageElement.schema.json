@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ImageElement",
+  "type": "object",
+  "required": [
+    "alt_text",
+    "image_url"
+  ],
+  "properties": {
+    "alt_text": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    }
+  }
+}
