@@ -26,7 +26,7 @@ fn test_string_enum_detection() {
     let shape = detect_shape(&schema);
     
     match shape {
-        SchemaShape::StringEnum { values } => {
+        SchemaShape::StringEnum { values, .. } => {
             assert_eq!(values, vec!["admin", "member", "guest"]);
         }
         other => panic!("Expected StringEnum, got {:?}", other),
@@ -39,7 +39,7 @@ fn test_oneof_enum_detection() {
     let shape = detect_shape(&schema);
     
     match shape {
-        SchemaShape::OneOfStringEnum { variants } => {
+        SchemaShape::OneOfStringEnum { variants, .. } => {
             assert_eq!(variants, vec!["pending", "active", "completed"]);
         }
         other => panic!("Expected OneOfStringEnum, got {:?}", other),

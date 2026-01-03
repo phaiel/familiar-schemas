@@ -89,6 +89,21 @@ pub struct ObjectVariant {
 // Schema Shape
 // =============================================================================
 
+/// Codegen extension metadata extracted from x-familiar-* properties
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct CodegenExtensions {
+    /// Variant name mapping from x-familiar-variants (JSON value -> Rust name)
+    pub variants: Option<std::collections::HashMap<String, String>>,
+    /// Casing convention from x-familiar-casing
+    pub casing: Option<String>,
+    /// Whether to generate Default impl from x-familiar-default
+    pub generate_default: bool,
+    /// Impl block IDs from x-familiar-rust-impl-ids
+    pub rust_impl_ids: Vec<String>,
+    /// Field alias from x-familiar-field-alias (for composition)
+    pub field_alias: Option<String>,
+}
+
 /// Raw schema shape detected from JSON structure.
 /// 
 /// This is pure pattern detection - no codegen decisions.
@@ -98,11 +113,15 @@ pub enum SchemaShape {
     /// `{"type": "string", "enum": [...]}` - top-level string enum
     StringEnum {
         values: Vec<String>,
+        /// Codegen extensions from schema
+        extensions: CodegenExtensions,
     },
     
     /// `{"oneOf": [...]}` with all const/enum string variants
     OneOfStringEnum {
         variants: Vec<String>,
+        /// Codegen extensions from schema
+        extensions: CodegenExtensions,
     },
     
     /// `{"oneOf": [...]}` with object variants (tagged union)
@@ -178,6 +197,51 @@ pub enum SchemaShape {
 }
 
 // =============================================================================
+// Extension Extraction
+// =============================================================================
+
+/// Extract codegen extensions from x-familiar-* properties
+fn extract_extensions(schema: &serde_json::Value) -> CodegenExtensions {
+    let mut ext = CodegenExtensions::default();
+    
+    // x-familiar-variants: { "MOMENT": "Moment", ... }
+    if let Some(variants) = schema.get("x-familiar-variants").and_then(|v| v.as_object()) {
+        let map: std::collections::HashMap<String, String> = variants
+            .iter()
+            .filter_map(|(k, v)| v.as_str().map(|s| (k.clone(), s.to_string())))
+            .collect();
+        if !map.is_empty() {
+            ext.variants = Some(map);
+        }
+    }
+    
+    // x-familiar-casing: "SCREAMING_SNAKE_CASE"
+    if let Some(casing) = schema.get("x-familiar-casing").and_then(|v| v.as_str()) {
+        ext.casing = Some(casing.to_string());
+    }
+    
+    // x-familiar-default: true
+    if let Some(default) = schema.get("x-familiar-default").and_then(|v| v.as_bool()) {
+        ext.generate_default = default;
+    }
+    
+    // x-familiar-rust-impl-ids: ["FieldExcitation"]
+    if let Some(impl_ids) = schema.get("x-familiar-rust-impl-ids").and_then(|v| v.as_array()) {
+        ext.rust_impl_ids = impl_ids
+            .iter()
+            .filter_map(|v| v.as_str().map(String::from))
+            .collect();
+    }
+    
+    // x-familiar-field-alias: "physics"
+    if let Some(alias) = schema.get("x-familiar-field-alias").and_then(|v| v.as_str()) {
+        ext.field_alias = Some(alias.to_string());
+    }
+    
+    ext
+}
+
+// =============================================================================
 // Shape Detection
 // =============================================================================
 
@@ -226,7 +290,10 @@ pub fn detect_shape(schema: &serde_json::Value) -> SchemaShape {
                     .collect();
                 
                 if string_values.len() == values.len() {
-                    return SchemaShape::StringEnum { values: string_values };
+                    return SchemaShape::StringEnum { 
+                        values: string_values,
+                        extensions: extract_extensions(schema),
+                    };
                 }
             }
             
@@ -325,7 +392,10 @@ pub fn detect_shape(schema: &serde_json::Value) -> SchemaShape {
                         .collect();
                     
                     if string_values.len() == values.len() {
-                        return SchemaShape::StringEnum { values: string_values };
+                        return SchemaShape::StringEnum { 
+                            values: string_values,
+                            extensions: extract_extensions(schema),
+                        };
                     }
                 }
                 SchemaShape::Unknown {
@@ -375,7 +445,10 @@ fn detect_one_of_shape(schema: &serde_json::Value, one_of: &[serde_json::Value])
             })
             .collect();
         
-        return SchemaShape::OneOfStringEnum { variants };
+        return SchemaShape::OneOfStringEnum { 
+            variants,
+            extensions: extract_extensions(schema),
+        };
     }
     
     // Check if all variants are objects or refs
@@ -578,7 +651,7 @@ mod tests {
         });
         
         match detect_shape(&schema) {
-            SchemaShape::StringEnum { values } => {
+            SchemaShape::StringEnum { values, .. } => {
                 assert_eq!(values, vec!["pending", "active", "completed"]);
             }
             other => panic!("Expected StringEnum, got {:?}", other),
@@ -596,7 +669,7 @@ mod tests {
         });
         
         match detect_shape(&schema) {
-            SchemaShape::OneOfStringEnum { variants } => {
+            SchemaShape::OneOfStringEnum { variants, .. } => {
                 assert_eq!(variants, vec!["admin", "member", "guest"]);
             }
             other => panic!("Expected OneOfStringEnum, got {:?}", other),

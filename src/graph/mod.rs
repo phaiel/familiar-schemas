@@ -22,7 +22,7 @@ pub use analysis::{
 };
 pub use patterns::{
     JsonScalarKind, PropertyShape, PropertyTypeShape, SchemaShape, ObjectVariant,
-    detect_shape, detect_all_shapes,
+    CodegenExtensions, detect_shape, detect_all_shapes,
 };
 pub use classify::{
     Classification, Classifier, EmitStrategy, EnumVariant, FieldDef, FieldType,

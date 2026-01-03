@@ -40,6 +40,44 @@ impl EnumVariant {
             needs_rename,
         }
     }
+    
+    /// Create variant using x-familiar-variants mapping if available
+    /// 
+    /// If the schema has `x-familiar-variants: { "MOMENT": "Moment" }`,
+    /// we keep MOMENT as the Rust variant name (matching code expectations)
+    /// and add serde rename for serialization.
+    pub fn from_value_with_extensions(
+        value: &str, 
+        extensions: &super::patterns::CodegenExtensions,
+    ) -> Self {
+        // If we have a variant mapping, use the original value as Rust name
+        // (this preserves SCREAMING_CASE when that's what the schema specifies)
+        if let Some(ref variants) = extensions.variants {
+            if variants.contains_key(value) {
+                // Value is in mapping - keep original as Rust variant name
+                // The mapping's value is what JSON serializes to (but we may need reverse)
+                return Self {
+                    value: value.to_string(),
+                    rust_name: value.to_string(), // Keep SCREAMING_CASE
+                    needs_rename: false, // No rename needed - serialize as-is
+                };
+            }
+        }
+        
+        // If casing is SCREAMING_SNAKE_CASE, preserve original
+        if let Some(ref casing) = extensions.casing {
+            if casing == "SCREAMING_SNAKE_CASE" {
+                return Self {
+                    value: value.to_string(),
+                    rust_name: value.to_string(), // Keep original
+                    needs_rename: false,
+                };
+            }
+        }
+        
+        // Default: convert to PascalCase
+        Self::from_value(value)
+    }
 }
 
 // =============================================================================
@@ -266,15 +304,19 @@ impl<'a> Classifier<'a> {
         };
         
         let type_kind = match shape {
-            SchemaShape::StringEnum { values } => {
+            SchemaShape::StringEnum { values, extensions } => {
                 TypeKind::Enum {
-                    variants: values.iter().map(|v| EnumVariant::from_value(v)).collect(),
+                    variants: values.iter()
+                        .map(|v| EnumVariant::from_value_with_extensions(v, extensions))
+                        .collect(),
                 }
             }
             
-            SchemaShape::OneOfStringEnum { variants } => {
+            SchemaShape::OneOfStringEnum { variants, extensions } => {
                 TypeKind::Enum {
-                    variants: variants.iter().map(|v| EnumVariant::from_value(v)).collect(),
+                    variants: variants.iter()
+                        .map(|v| EnumVariant::from_value_with_extensions(v, extensions))
+                        .collect(),
                 }
             }
             
