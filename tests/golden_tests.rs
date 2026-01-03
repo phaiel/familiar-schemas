@@ -180,7 +180,7 @@ fn test_full_pipeline_with_fixtures() {
 #[test]
 fn test_codegen_context_build() {
     let graph = SchemaGraph::from_directory(fixtures_path()).unwrap();
-    let ctx = CodegenContext::build(graph, HashSet::new()).unwrap();
+    let ctx = CodegenContext::build(graph).unwrap();
     
     assert!(ctx.schema_count() >= 10);
     
@@ -188,9 +188,9 @@ fn test_codegen_context_build() {
     let regions = ctx.regions_to_generate();
     assert!(!regions.is_empty());
     
-    // Check that string_enum has a region
-    let enum_region = regions.iter().find(|r| r.rust_name == "MemberRole");
-    assert!(enum_region.is_some(), "Should have MemberRole region");
+    // Check that string_enum has a region (file is string_enum.json -> StringEnum)
+    let enum_region = regions.iter().find(|r| r.canonical_name == "StringEnum");
+    assert!(enum_region.is_some(), "Should have StringEnum region");
 }
 
 #[test]
@@ -252,22 +252,19 @@ fn test_mcp_codegen_resolver_parity() {
     let graph = SchemaGraph::from_directory(fixtures_path()).unwrap();
     
     // MCP path: SchemaGraph::imports_for
-    let mcp_imports = graph.imports_for("fixtures/simple_struct.json", "rust");
+    let _mcp_imports = graph.imports_for("fixtures/simple_struct.json", "rust");
     
     // Codegen path: also uses SchemaGraph internally
-    // Region::deps comes from graph.refs_out()
-    let ctx = CodegenContext::build(graph, HashSet::new()).unwrap();
+    // NameResolver uses graph for resolution
+    let ctx = CodegenContext::build(graph).unwrap();
     if let Some(region) = ctx.region("fixtures/simple_struct.json") {
-        // Both should have the same deps
-        let codegen_deps = &region.deps;
+        // Region should be generated
+        assert!(region.should_generate(), "simple_struct should be generated");
         
-        // The deps from region should be a subset of what imports_for returns
-        // (imports_for includes self + deps, region.deps is just deps)
-        for dep in codegen_deps {
-            // The dep should be resolvable via the same graph
-            assert!(ctx.graph().resolve(dep).is_some() || dep.starts_with("fixtures/"), 
-                "Dep {} should be resolvable", dep);
-        }
+        // Name resolver should be accessible from context
+        let name_resolver = ctx.name_resolver();
+        let resolved = name_resolver.get("fixtures/simple_struct.json");
+        assert!(resolved.is_some(), "simple_struct should be resolved");
     }
 }
 

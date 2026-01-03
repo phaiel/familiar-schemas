@@ -84,6 +84,9 @@ pub struct NameResolver {
     /// Stdlib types that should never be generated
     stdlib_names: HashSet<String>,
     
+    /// Actual primitive type names (implemented in familiar-primitives)
+    primitive_names: HashSet<String>,
+    
     /// Naming configuration
     naming_config: NamingConfig,
 }
@@ -99,29 +102,47 @@ impl NameResolver {
             "u8", "u16", "u32", "u64", "u128", "usize", "f32", "f64",
         ].iter().map(|s| s.to_string()).collect();
         
+        // Types that actually exist in familiar-primitives crate
+        // These are the ONLY types that should be treated as primitives
+        let primitive_names = [
+            // ID types
+            "TenantId", "UserId", "SessionId", "ThreadId", "MessageId", "ChannelId",
+            "CourseId", "ShuttleId", "EntityId", "InvitationId", "JoinRequestId",
+            "MagicLinkId", "AuditLogId", "ConsentRecordId", "TaskId",
+            "ExportRequestId", "DeletionRequestId",
+            // Validated string types
+            "Email", "InviteCode", "PasswordHash", "SessionToken", "ApiKey",
+            // Numeric types
+            "NormalizedFloat", "SignedNormalizedFloat", "Temperature", "MaxTokens",
+            "QuantizedCoord", "DbPoolSize",
+            // Other types
+            "TokenUsage", "DbConnectionString", "Timestamp", "UUID", "InviteRole",
+        ].iter().map(|s| s.to_string()).collect();
+        
         Self {
             resolved: HashMap::new(),
             name_to_schema: HashMap::new(),
             stdlib_names,
+            primitive_names,
             naming_config,
         }
     }
     
     /// Build the resolution map from a schema graph.
     /// 
-    /// This identifies primitives by directory, detects collisions,
-    /// and assigns unique canonical names to all schemas.
+    /// This identifies primitives by type name (must exist in familiar-primitives),
+    /// detects collisions, and assigns unique canonical names to all schemas.
     pub fn build(graph: &SchemaGraph, naming_config: NamingConfig) -> Self {
         let mut resolver = Self::new(naming_config);
         
-        // First pass: identify all primitives and their names
-        // Primitives are ANY schema in a "primitives" directory
+        // First pass: identify primitives by name (not just directory)
+        // A schema is only a primitive if its name is in the primitive_names set
         for schema_id in graph.all_ids() {
-            let is_primitive = resolver.is_primitive_path(schema_id);
             let base_name = resolver.extract_base_name(schema_id);
             let directory = resolver.extract_directory(schema_id);
+            let is_actual_primitive = resolver.primitive_names.contains(&base_name);
             
-            if is_primitive {
+            if is_actual_primitive {
                 resolver.resolved.insert(schema_id.clone(), ResolvedName {
                     canonical_name: base_name.clone(),
                     origin: TypeOrigin::Primitive,
@@ -180,12 +201,6 @@ impl NameResolver {
         }
         
         resolver
-    }
-    
-    /// Check if a schema path is in a primitives directory
-    fn is_primitive_path(&self, schema_id: &str) -> bool {
-        // Match any path that contains "/primitives/" or starts with "primitives/"
-        schema_id.contains("/primitives/") || schema_id.starts_with("primitives/")
     }
     
     /// Extract the directory a schema is in
@@ -407,14 +422,18 @@ mod tests {
     }
     
     #[test]
-    fn test_is_primitive_path() {
+    fn test_primitive_names() {
         let resolver = NameResolver::new(test_config());
         
-        assert!(resolver.is_primitive_path("primitives/TenantId.schema.json"));
-        assert!(resolver.is_primitive_path("../primitives/NormalizedFloat.schema.json"));
-        assert!(resolver.is_primitive_path("foo/primitives/Bar.json"));
-        assert!(!resolver.is_primitive_path("entities/Thread.schema.json"));
-        assert!(!resolver.is_primitive_path("database/Model.schema.json"));
+        // Types in the primitive_names set should be recognized
+        assert!(resolver.primitive_names.contains("TenantId"));
+        assert!(resolver.primitive_names.contains("NormalizedFloat"));
+        assert!(resolver.primitive_names.contains("Email"));
+        
+        // Types not in the set should not be primitives
+        assert!(!resolver.primitive_names.contains("Thread"));
+        assert!(!resolver.primitive_names.contains("Model"));
+        assert!(!resolver.primitive_names.contains("AIProvider")); // In primitives/ dir but not implemented
     }
     
     #[test]

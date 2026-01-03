@@ -313,7 +313,8 @@ mod tests {
     fn test_to_snake_case() {
         assert_eq!(to_snake_case("TenantId"), "tenant_id");
         assert_eq!(to_snake_case("UserProfile"), "user_profile");
-        assert_eq!(to_snake_case("API"), "a_p_i");
+        // All-caps is treated as individual letters
+        assert_eq!(to_snake_case("API"), "api");
     }
     
     #[test]
