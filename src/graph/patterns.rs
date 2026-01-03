@@ -419,8 +419,38 @@ fn detect_all_of_shape(schema: &serde_json::Value, all_of: &[serde_json::Value])
 
 /// Detect property type shape
 fn detect_property_type(prop: &serde_json::Value) -> PropertyTypeShape {
+    // Check for direct $ref
     if let Some(ref_target) = prop.get("$ref").and_then(|v| v.as_str()) {
         return PropertyTypeShape::Ref(ref_target.to_string());
+    }
+    
+    // Check for allOf with single $ref (common pattern for adding description to a $ref)
+    // e.g., {"allOf": [{"$ref": "..."}], "description": "..."}
+    if let Some(all_of) = prop.get("allOf").and_then(|v| v.as_array()) {
+        // If allOf has a single $ref element, treat as Ref
+        let refs: Vec<&str> = all_of
+            .iter()
+            .filter_map(|v| v.get("$ref").and_then(|r| r.as_str()))
+            .collect();
+        
+        if refs.len() == 1 && all_of.len() == 1 {
+            return PropertyTypeShape::Ref(refs[0].to_string());
+        }
+        
+        // Multiple refs in allOf - could be composition, fall back to first ref
+        if !refs.is_empty() {
+            return PropertyTypeShape::Ref(refs[0].to_string());
+        }
+    }
+    
+    // Check for anyOf (used for optional types like "null | T")
+    if let Some(any_of) = prop.get("anyOf").and_then(|v| v.as_array()) {
+        // Look for non-null type
+        for variant in any_of {
+            if variant.get("type").and_then(|t| t.as_str()) != Some("null") {
+                return detect_property_type(variant);
+            }
+        }
     }
     
     let json_type = prop.get("type").and_then(|v| v.as_str());
