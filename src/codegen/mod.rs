@@ -198,10 +198,32 @@ impl CodegenContext {
     
     /// Get all regions for schemas that should be generated
     pub fn regions_to_generate(&self) -> Vec<Region> {
+        // Track seen names to avoid duplicates
+        let mut seen_names: HashSet<String> = HashSet::new();
+        
         self.topo_order()
             .into_iter()
             .filter_map(|id| self.region(id))
             .filter(|r| r.should_generate())
+            .filter(|r| {
+                // Skip types that conflict with Rust standard library
+                let conflicts_with_stdlib = matches!(
+                    r.rust_name.as_str(),
+                    "String" | "Vec" | "Option" | "Result" | "Box" | "Rc" | "Arc" |
+                    "HashMap" | "HashSet" | "BTreeMap" | "BTreeSet" | "RefCell" | "Cell" |
+                    "Mutex" | "RwLock" | "Debug" | "Clone" | "Default" | "Copy" | "Send" | "Sync"
+                );
+                if conflicts_with_stdlib {
+                    return false; // Skip stdlib conflicts
+                }
+                
+                // Skip duplicate names (keep first occurrence)
+                if seen_names.contains(&r.rust_name) {
+                    return false;
+                }
+                seen_names.insert(r.rust_name.clone());
+                true
+            })
             .collect()
     }
     
@@ -279,12 +301,17 @@ pub fn generate_rust(schema_dir: &Path, primitives: HashSet<SchemaId>) -> Result
     // Import primitives from familiar_primitives (re-exported via super in lib.rs)
     // These types are used as field types but not generated
     output.push_str("\n// Primitives from familiar_primitives\n");
+    output.push_str("#[allow(unused_imports)]\n");
     output.push_str("use super::{\n");
     output.push_str("    NormalizedFloat, SignedNormalizedFloat, QuantizedCoord,\n");
     output.push_str("    TenantId, UserId, SessionId, ThreadId, MessageId, ChannelId,\n");
     output.push_str("    MomentId, IntentId, PulseId, BondId, CourseId, ShuttleId,\n");
     output.push_str("    Email, Timestamp, Temperature, MaxTokens,\n");
-    output.push_str("};\n\n");
+    output.push_str("    InvitationId, JoinRequestId, MagicLinkId, AuditLogId,\n");
+    output.push_str("    ConsentRecordId, TaskId, EntityId, ExportRequestId, DeletionRequestId,\n");
+    output.push_str("};\n");
+    output.push_str("// UUID alias (familiar_primitives uses Uuid from uuid crate)\n");
+    output.push_str("pub type UUID = super::Uuid;\n\n");
     
     // Generate each type
     for region in regions {
