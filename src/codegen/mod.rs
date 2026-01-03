@@ -299,19 +299,25 @@ pub fn generate_rust(schema_dir: &Path, primitives: HashSet<SchemaId>) -> Result
     output.push_str("use schemars::JsonSchema;\n");
     
     // Import primitives from familiar_primitives (re-exported via super in lib.rs)
-    // These types are used as field types but not generated
+    // Only import types that actually exist in familiar-primitives
     output.push_str("\n// Primitives from familiar_primitives\n");
     output.push_str("#[allow(unused_imports)]\n");
     output.push_str("use super::{\n");
+    output.push_str("    // Validated float types\n");
     output.push_str("    NormalizedFloat, SignedNormalizedFloat, QuantizedCoord,\n");
+    output.push_str("    // ID types\n");
     output.push_str("    TenantId, UserId, SessionId, ThreadId, MessageId, ChannelId,\n");
-    output.push_str("    MomentId, IntentId, PulseId, BondId, CourseId, ShuttleId,\n");
-    output.push_str("    Email, Timestamp, Temperature, MaxTokens,\n");
+    output.push_str("    CourseId, ShuttleId, EntityId,\n");
     output.push_str("    InvitationId, JoinRequestId, MagicLinkId, AuditLogId,\n");
-    output.push_str("    ConsentRecordId, TaskId, EntityId, ExportRequestId, DeletionRequestId,\n");
+    output.push_str("    ConsentRecordId, TaskId, ExportRequestId, DeletionRequestId,\n");
+    output.push_str("    // Other primitives\n");
+    output.push_str("    Email, Temperature, MaxTokens, InviteCode, PasswordHash, SessionToken,\n");
     output.push_str("};\n");
-    output.push_str("// UUID alias (familiar_primitives uses Uuid from uuid crate)\n");
-    output.push_str("pub type UUID = super::Uuid;\n\n");
+    output.push_str("// Re-export types from dependencies\n");
+    output.push_str("pub use super::{DateTime, Utc, Uuid};\n");
+    output.push_str("// Timestamp alias for schema compatibility\n");
+    output.push_str("pub type Timestamp = DateTime<Utc>;\n");
+    output.push_str("pub type UUID = Uuid;\n\n");
     
     // Generate each type
     for region in regions {
