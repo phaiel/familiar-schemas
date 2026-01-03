@@ -461,6 +461,24 @@ impl RenderProfile {
             _ => type_str.to_string(), // Other languages handle recursion automatically
         }
     }
+    
+    /// Wrap a type in a fixed-size array
+    pub fn wrap_fixed_array(&self, type_str: &str, size: usize) -> String {
+        match self.language {
+            Language::Rust => format!("[{}; {}]", type_str, size),
+            Language::TypeScript => format!("[{}]", vec![type_str; size].join(", ")),
+            Language::Python => format!("tuple[{}]", vec![type_str; size].join(", ")),
+        }
+    }
+    
+    /// Wrap types in a tuple
+    pub fn wrap_tuple(&self, types: &[String]) -> String {
+        match self.language {
+            Language::Rust => format!("({})", types.join(", ")),
+            Language::TypeScript => format!("[{}]", types.join(", ")),
+            Language::Python => format!("tuple[{}]", types.join(", ")),
+        }
+    }
 }
 
 // =============================================================================
@@ -542,6 +560,31 @@ mod tests {
         let ts = RenderProfile::typescript_strict();
         assert_eq!(ts.wrap_array("number"), "number[]");
         assert_eq!(ts.wrap_map("string"), "Record<string, string>");
+    }
+    
+    #[test]
+    fn test_wrap_fixed_array() {
+        let rust = RenderProfile::rust();
+        assert_eq!(rust.wrap_fixed_array("f64", 3), "[f64; 3]");
+        assert_eq!(rust.wrap_fixed_array("QuantizedCoord", 3), "[QuantizedCoord; 3]");
+        
+        let ts = RenderProfile::typescript_strict();
+        assert_eq!(ts.wrap_fixed_array("number", 3), "[number, number, number]");
+        
+        let py = RenderProfile::python_strict();
+        assert_eq!(py.wrap_fixed_array("float", 3), "tuple[float, float, float]");
+    }
+    
+    #[test]
+    fn test_wrap_tuple() {
+        let rust = RenderProfile::rust();
+        assert_eq!(rust.wrap_tuple(&["f64".to_string(), "f64".to_string()]), "(f64, f64)");
+        
+        let ts = RenderProfile::typescript_strict();
+        assert_eq!(ts.wrap_tuple(&["number".to_string(), "string".to_string()]), "[number, string]");
+        
+        let py = RenderProfile::python_strict();
+        assert_eq!(py.wrap_tuple(&["float".to_string(), "str".to_string()]), "tuple[float, str]");
     }
 }
 

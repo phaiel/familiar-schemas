@@ -238,6 +238,17 @@ impl CodegenContext {
                 let inner_type = self.resolve_field_type(inner, false, profile);
                 profile.wrap_array(&inner_type)
             }
+            FieldType::FixedArray { items, size } => {
+                let inner_type = self.resolve_field_type(items, false, profile);
+                profile.wrap_fixed_array(&inner_type, *size)
+            }
+            FieldType::Tuple(items) => {
+                let types: Vec<String> = items
+                    .iter()
+                    .map(|t| self.resolve_field_type(t, false, profile))
+                    .collect();
+                profile.wrap_tuple(&types)
+            }
             FieldType::Map(value) => {
                 let value_type = self.resolve_field_type(value, false, profile);
                 profile.wrap_map(&value_type)

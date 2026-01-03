@@ -58,8 +58,12 @@ pub enum PropertyTypeShape {
     Ref(String),
     /// Inline scalar type
     Scalar(JsonScalarKind),
-    /// Inline array with items
+    /// Inline array with items (dynamic size)
     Array { items: Box<PropertyTypeShape> },
+    /// Fixed-size array (minItems == maxItems)
+    FixedArray { items: Box<PropertyTypeShape>, size: usize },
+    /// Tuple array (items is an array, not object - each position has specific type)
+    Tuple { items: Vec<PropertyTypeShape> },
     /// Inline object (anonymous)
     InlineObject,
     /// No type specified
@@ -146,9 +150,20 @@ pub enum SchemaShape {
         inline_properties: Vec<PropertyShape>,
     },
     
-    /// `{"type": "array", "items": ...}`
+    /// `{"type": "array", "items": ...}` (dynamic size)
     Array {
         items: Box<SchemaShape>,
+    },
+    
+    /// `{"type": "array", "items": ..., "minItems": N, "maxItems": N}` (fixed size)
+    FixedArray {
+        items: Box<SchemaShape>,
+        size: usize,
+    },
+    
+    /// `{"type": "array", "items": [...]}` where items is an array (tuple pattern)
+    TupleArray {
+        items: Vec<SchemaShape>,
     },
     
     /// Map type via additionalProperties
@@ -232,7 +247,28 @@ pub fn detect_shape(schema: &serde_json::Value) -> SchemaShape {
         Some("boolean") => SchemaShape::Boolean,
         
         Some("array") => {
-            if let Some(items) = schema.get("items") {
+            let min_items = schema.get("minItems").and_then(|v| v.as_u64());
+            let max_items = schema.get("maxItems").and_then(|v| v.as_u64());
+            
+            // Check if items is an array (tuple pattern per JSON Schema)
+            if let Some(items_array) = schema.get("items").and_then(|v| v.as_array()) {
+                // Tuple: items is an array of types
+                let tuple_items: Vec<SchemaShape> = items_array
+                    .iter()
+                    .map(|item| detect_shape(item))
+                    .collect();
+                SchemaShape::TupleArray { items: tuple_items }
+            } else if let Some(items) = schema.get("items") {
+                // items is an object (single type for all elements)
+                // Check for fixed size: minItems == maxItems
+                if let (Some(min), Some(max)) = (min_items, max_items) {
+                    if min == max {
+                        return SchemaShape::FixedArray {
+                            items: Box::new(detect_shape(items)),
+                            size: min as usize,
+                        };
+                    }
+                }
                 SchemaShape::Array {
                     items: Box::new(detect_shape(items)),
                 }
@@ -467,7 +503,28 @@ fn detect_property_type(prop: &serde_json::Value) -> PropertyTypeShape {
         Some("boolean") => PropertyTypeShape::Scalar(JsonScalarKind::Boolean),
         Some("null") => PropertyTypeShape::Scalar(JsonScalarKind::Null),
         Some("array") => {
-            if let Some(items) = prop.get("items") {
+            let min_items = prop.get("minItems").and_then(|v| v.as_u64());
+            let max_items = prop.get("maxItems").and_then(|v| v.as_u64());
+            
+            // Check if items is an array (tuple pattern per JSON Schema)
+            if let Some(items_array) = prop.get("items").and_then(|v| v.as_array()) {
+                // Tuple: items is an array of types, each position has its own type
+                let tuple_items: Vec<PropertyTypeShape> = items_array
+                    .iter()
+                    .map(|item| detect_property_type(item))
+                    .collect();
+                PropertyTypeShape::Tuple { items: tuple_items }
+            } else if let Some(items) = prop.get("items") {
+                // items is an object (single type for all elements)
+                // Check for fixed size: minItems == maxItems
+                if let (Some(min), Some(max)) = (min_items, max_items) {
+                    if min == max {
+                        return PropertyTypeShape::FixedArray {
+                            items: Box::new(detect_property_type(items)),
+                            size: min as usize,
+                        };
+                    }
+                }
                 PropertyTypeShape::Array {
                     items: Box::new(detect_property_type(items)),
                 }
@@ -578,6 +635,102 @@ mod tests {
                 assert_eq!(target, "primitives/TenantId.schema.json");
             }
             other => panic!("Expected Ref, got {:?}", other),
+        }
+    }
+    
+    #[test]
+    fn test_detect_fixed_array() {
+        // FieldExcitation.position pattern: fixed-size array of 3
+        let schema = json!({
+            "type": "array",
+            "items": { "$ref": "primitives/QuantizedCoord.schema.json" },
+            "minItems": 3,
+            "maxItems": 3
+        });
+        
+        match detect_shape(&schema) {
+            SchemaShape::FixedArray { items, size } => {
+                assert_eq!(size, 3);
+                match *items {
+                    SchemaShape::Ref { target } => {
+                        assert!(target.contains("QuantizedCoord"));
+                    }
+                    other => panic!("Expected Ref items, got {:?}", other),
+                }
+            }
+            other => panic!("Expected FixedArray, got {:?}", other),
+        }
+    }
+    
+    #[test]
+    fn test_detect_tuple_array() {
+        // QuantumState.amplitudes inner pattern: tuple of (number, number)
+        let schema = json!({
+            "type": "array",
+            "items": [
+                { "type": "number" },
+                { "type": "number" }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+        });
+        
+        match detect_shape(&schema) {
+            SchemaShape::TupleArray { items } => {
+                assert_eq!(items.len(), 2);
+                for item in &items {
+                    match item {
+                        SchemaShape::Numeric { json_type, .. } => {
+                            assert_eq!(*json_type, JsonScalarKind::Number);
+                        }
+                        other => panic!("Expected Numeric items, got {:?}", other),
+                    }
+                }
+            }
+            other => panic!("Expected TupleArray, got {:?}", other),
+        }
+    }
+    
+    #[test]
+    fn test_detect_property_fixed_array() {
+        // Property-level fixed array detection
+        let prop = json!({
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 3,
+            "maxItems": 3
+        });
+        
+        match detect_property_type(&prop) {
+            PropertyTypeShape::FixedArray { items, size } => {
+                assert_eq!(size, 3);
+                match *items {
+                    PropertyTypeShape::Scalar(JsonScalarKind::Number) => {}
+                    other => panic!("Expected Scalar Number, got {:?}", other),
+                }
+            }
+            other => panic!("Expected FixedArray, got {:?}", other),
+        }
+    }
+    
+    #[test]
+    fn test_detect_property_tuple() {
+        // Property-level tuple detection
+        let prop = json!({
+            "type": "array",
+            "items": [
+                { "type": "number" },
+                { "type": "string" }
+            ]
+        });
+        
+        match detect_property_type(&prop) {
+            PropertyTypeShape::Tuple { items } => {
+                assert_eq!(items.len(), 2);
+                assert!(matches!(items[0], PropertyTypeShape::Scalar(JsonScalarKind::Number)));
+                assert!(matches!(items[1], PropertyTypeShape::Scalar(JsonScalarKind::String)));
+            }
+            other => panic!("Expected Tuple, got {:?}", other),
         }
     }
 }

@@ -89,8 +89,12 @@ pub enum FieldType {
     SchemaRef(SchemaId),
     /// JSON scalar type
     Scalar(JsonScalarKind),
-    /// Array of another type
+    /// Array of another type (dynamic size)
     Array(Box<FieldType>),
+    /// Fixed-size array (known at compile time)
+    FixedArray { items: Box<FieldType>, size: usize },
+    /// Tuple type (heterogeneous fixed-size array)
+    Tuple(Vec<FieldType>),
     /// Map with string keys
     Map(Box<FieldType>),
     /// Inline anonymous object
@@ -384,6 +388,26 @@ impl<'a> Classifier<'a> {
                 }
             }
             
+            SchemaShape::FixedArray { items, size } => {
+                let inner_type = self.shape_to_field_type(items);
+                TypeKind::Newtype {
+                    inner: FieldType::FixedArray {
+                        items: Box::new(inner_type),
+                        size: *size,
+                    },
+                }
+            }
+            
+            SchemaShape::TupleArray { items } => {
+                let tuple_types: Vec<FieldType> = items
+                    .iter()
+                    .map(|i| self.shape_to_field_type(i))
+                    .collect();
+                TypeKind::Newtype {
+                    inner: FieldType::Tuple(tuple_types),
+                }
+            }
+            
             SchemaShape::Map { value_type } => {
                 let inner_type = self.property_type_to_field_type(value_type);
                 TypeKind::Newtype {
@@ -434,6 +458,19 @@ impl<'a> Classifier<'a> {
             PropertyTypeShape::Array { items } => {
                 FieldType::Array(Box::new(self.property_type_to_field_type(items)))
             }
+            PropertyTypeShape::FixedArray { items, size } => {
+                FieldType::FixedArray {
+                    items: Box::new(self.property_type_to_field_type(items)),
+                    size: *size,
+                }
+            }
+            PropertyTypeShape::Tuple { items } => {
+                FieldType::Tuple(
+                    items.iter()
+                        .map(|i| self.property_type_to_field_type(i))
+                        .collect()
+                )
+            }
             PropertyTypeShape::InlineObject => FieldType::InlineObject,
             PropertyTypeShape::Unknown => FieldType::Unknown,
         }
@@ -447,6 +484,19 @@ impl<'a> Classifier<'a> {
             SchemaShape::Boolean => FieldType::Scalar(JsonScalarKind::Boolean),
             SchemaShape::Array { items } => {
                 FieldType::Array(Box::new(self.shape_to_field_type(items)))
+            }
+            SchemaShape::FixedArray { items, size } => {
+                FieldType::FixedArray {
+                    items: Box::new(self.shape_to_field_type(items)),
+                    size: *size,
+                }
+            }
+            SchemaShape::TupleArray { items } => {
+                FieldType::Tuple(
+                    items.iter()
+                        .map(|i| self.shape_to_field_type(i))
+                        .collect()
+                )
             }
             _ => FieldType::Unknown,
         }
