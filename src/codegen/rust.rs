@@ -1,14 +1,17 @@
 //! Rust Code Emitter
 //!
-//! Generates Rust code from Regions. Pure projection - no raw JSON access.
+//! Generates Rust code from Regions using RenderProfile for configuration.
 //! 
-//! Key constraint: This module ONLY receives Region - no SchemaGraph, no raw JSON.
+//! Key constraints:
+//! - This module ONLY receives Region + RenderProfile - no raw JSON
+//! - Type names come from Region.canonical_name (already resolved)
+//! - Type mappings come from RenderProfile (configurable)
 
 use crate::graph::{
-    EmitStrategy, EnumVariant, FieldDef, FieldType, JsonScalarKind, TypeKind, UnionVariant,
+    EmitStrategy, EnumVariant, FieldDef, TypeKind, UnionVariant,
 };
 
-use super::{CodegenContext, Region};
+use super::{CodegenContext, Region, RenderProfile};
 
 // =============================================================================
 // Public API
@@ -17,15 +20,15 @@ use super::{CodegenContext, Region};
 /// Emit Rust code for a Region
 /// 
 /// Returns None if the region should not generate code (primitive, skip, etc.)
-pub fn emit_region(region: &Region, ctx: &CodegenContext) -> Option<String> {
+pub fn emit_region(region: &Region, ctx: &CodegenContext, profile: &RenderProfile) -> Option<String> {
     match &region.emit_strategy {
         EmitStrategy::Skip => None,
         EmitStrategy::ReExportPrimitive => {
-            // Could emit a type alias to familiar_primitives
-            Some(emit_primitive_alias(region))
+            // Primitives are re-exported from familiar_primitives
+            Some(emit_primitive_comment(region))
         }
         EmitStrategy::Generate | EmitStrategy::GenerateInSccGroup(_) => {
-            Some(emit_type(region, ctx))
+            Some(emit_type(region, ctx, profile))
         }
     }
 }
@@ -34,27 +37,27 @@ pub fn emit_region(region: &Region, ctx: &CodegenContext) -> Option<String> {
 // Type Emission
 // =============================================================================
 
-fn emit_type(region: &Region, ctx: &CodegenContext) -> String {
+fn emit_type(region: &Region, ctx: &CodegenContext, profile: &RenderProfile) -> String {
     let mut output = String::new();
     
-    // Add doc comment if available
-    output.push_str(&format!("/// {}\n", region.rust_name));
+    // Add doc comment
+    output.push_str(&format!("/// {}\n", region.canonical_name));
     
-    // Add derives
+    // Add derives (could be configurable via profile in the future)
     output.push_str("#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]\n");
     
     match &region.type_kind {
         TypeKind::Enum { variants } => {
-            emit_enum(&mut output, region, variants);
+            emit_enum(&mut output, region, variants, profile);
         }
         TypeKind::TaggedUnion { discriminator, tag_field, variants } => {
-            emit_tagged_union(&mut output, region, discriminator, tag_field, variants);
+            emit_tagged_union(&mut output, region, discriminator, tag_field, variants, ctx, profile);
         }
         TypeKind::Struct { fields, flatten_refs } => {
-            emit_struct(&mut output, region, fields, flatten_refs, ctx);
+            emit_struct(&mut output, region, fields, flatten_refs, ctx, profile);
         }
         TypeKind::Newtype { inner } => {
-            emit_newtype(&mut output, region, inner);
+            emit_newtype(&mut output, region, inner, ctx, profile);
         }
         TypeKind::Alias { target } => {
             emit_alias(&mut output, region, target, ctx);
@@ -71,8 +74,13 @@ fn emit_type(region: &Region, ctx: &CodegenContext) -> String {
 // Enum Emission
 // =============================================================================
 
-fn emit_enum(output: &mut String, region: &Region, variants: &[EnumVariant]) {
-    output.push_str(&format!("pub enum {} {{\n", region.rust_name));
+fn emit_enum(output: &mut String, region: &Region, variants: &[EnumVariant], profile: &RenderProfile) {
+    // Add serde rename_all if configured
+    if let Some(ref rename_all) = profile.unions.string_enum.serde_rename_all {
+        output.push_str(&format!("#[serde(rename_all = \"{}\")]\n", rename_all));
+    }
+    
+    output.push_str(&format!("pub enum {} {{\n", region.canonical_name));
     
     for variant in variants {
         if variant.needs_rename {
@@ -94,21 +102,31 @@ fn emit_tagged_union(
     discriminator: &Option<String>,
     tag_field: &Option<String>,
     variants: &[UnionVariant],
+    ctx: &CodegenContext,
+    _profile: &RenderProfile,
 ) {
-    // Add serde tag attribute if discriminator is specified
-    if let Some(tag) = tag_field.as_ref().or(discriminator.as_ref()) {
-        output.push_str(&format!("#[serde(tag = \"{}\")]\n", tag));
-    }
+    // Determine tag attribute based on profile settings
+    let tag = tag_field.as_ref()
+        .or(discriminator.as_ref())
+        .cloned()
+        .unwrap_or_else(|| "type".to_string());
     
-    output.push_str(&format!("pub enum {} {{\n", region.rust_name));
+    output.push_str(&format!("#[serde(tag = \"{}\")]\n", tag));
+    
+    output.push_str(&format!("pub enum {} {{\n", region.canonical_name));
     
     for variant in variants {
         // If variant refs another schema, use that type
         if let Some(ref schema_ref) = variant.schema_ref {
-            let type_name = extract_type_name(schema_ref);
+            // Use name resolver to get canonical name
+            let type_name = if let Some(resolved) = ctx.name_resolver().resolve_ref(schema_ref) {
+                resolved.canonical_name.clone()
+            } else {
+                extract_type_name(schema_ref)
+            };
             output.push_str(&format!("    {}({}),\n", variant.name, type_name));
         } else {
-            // Inline variant (unit for now)
+            // Unit variant
             output.push_str(&format!("    {},\n", variant.name));
         }
     }
@@ -125,13 +143,18 @@ fn emit_struct(
     region: &Region,
     fields: &[FieldDef],
     flatten_refs: &[String],
-    _ctx: &CodegenContext,
+    ctx: &CodegenContext,
+    profile: &RenderProfile,
 ) {
-    output.push_str(&format!("pub struct {} {{\n", region.rust_name));
+    output.push_str(&format!("pub struct {} {{\n", region.canonical_name));
     
     // Emit flattened refs first
     for ref_target in flatten_refs {
-        let type_name = extract_type_name(ref_target);
+        let type_name = if let Some(resolved) = ctx.name_resolver().resolve_ref(ref_target) {
+            resolved.canonical_name.clone()
+        } else {
+            extract_type_name(ref_target)
+        };
         output.push_str("    #[serde(flatten)]\n");
         output.push_str(&format!("    pub {}: {},\n", to_snake_case(&type_name), type_name));
     }
@@ -139,13 +162,19 @@ fn emit_struct(
     // Emit fields
     for field in fields {
         let needs_box = region.needs_boxing(&field.json_name);
-        emit_field(output, field, needs_box);
+        emit_field(output, field, needs_box, ctx, profile);
     }
     
     output.push_str("}\n");
 }
 
-fn emit_field(output: &mut String, field: &FieldDef, needs_box: bool) {
+fn emit_field(
+    output: &mut String, 
+    field: &FieldDef, 
+    needs_box: bool,
+    ctx: &CodegenContext,
+    profile: &RenderProfile,
+) {
     // Add serde rename if needed
     if field.needs_rename {
         output.push_str(&format!("    #[serde(rename = \"{}\")]\n", field.json_name));
@@ -156,90 +185,65 @@ fn emit_field(output: &mut String, field: &FieldDef, needs_box: bool) {
         output.push_str("    #[serde(skip_serializing_if = \"Option::is_none\")]\n");
     }
     
-    // Determine type
-    let rust_type = field_type_to_rust(&field.field_type, needs_box);
+    // Resolve type using context and profile
+    let rust_type = ctx.resolve_field_type(&field.field_type, needs_box, profile);
     
     // Wrap in Option if not required
     let full_type = if field.required {
         rust_type
     } else {
-        format!("Option<{}>", rust_type)
+        profile.wrap_optional(&rust_type)
     };
     
-    output.push_str(&format!("    pub {}: {},\n", field.rust_name, full_type));
+    // Escape field name if it's a keyword
+    let field_name = profile.escape_keyword(&field.rust_name);
+    
+    output.push_str(&format!("    pub {}: {},\n", field_name, full_type));
 }
 
 // =============================================================================
 // Newtype Emission
 // =============================================================================
 
-fn emit_newtype(output: &mut String, region: &Region, inner: &FieldType) {
-    let rust_type = field_type_to_rust(inner, false);
-    output.push_str(&format!("pub struct {}(pub {});\n", region.rust_name, rust_type));
+fn emit_newtype(
+    output: &mut String, 
+    region: &Region, 
+    inner: &crate::graph::FieldType,
+    ctx: &CodegenContext,
+    profile: &RenderProfile,
+) {
+    let rust_type = ctx.resolve_field_type(inner, false, profile);
+    output.push_str(&format!("pub struct {}(pub {});\n", region.canonical_name, rust_type));
 }
 
 // =============================================================================
 // Alias Emission
 // =============================================================================
 
-fn emit_alias(output: &mut String, region: &Region, target: &str, _ctx: &CodegenContext) {
-    let target_name = extract_type_name(target);
+fn emit_alias(output: &mut String, region: &Region, target: &str, ctx: &CodegenContext) {
+    let target_name = if let Some(resolved) = ctx.name_resolver().resolve_ref(target) {
+        resolved.canonical_name.clone()
+    } else {
+        extract_type_name(target)
+    };
     output.push_str(&format!(
         "pub type {} = {};\n",
-        region.rust_name, target_name
+        region.canonical_name, target_name
     ));
 }
 
-fn emit_primitive_alias(region: &Region) -> String {
+fn emit_primitive_comment(region: &Region) -> String {
     format!(
         "// {} is a primitive - re-exported from familiar_primitives\n",
-        region.rust_name
+        region.canonical_name
     )
 }
 
 // =============================================================================
-// Type Conversion Utilities
+// Helper Utilities
 // =============================================================================
 
-/// Convert a FieldType to a Rust type string
-fn field_type_to_rust(field_type: &FieldType, needs_box: bool) -> String {
-    let base_type = match field_type {
-        FieldType::SchemaRef(schema_id) => {
-            let type_name = extract_type_name(schema_id);
-            if needs_box {
-                format!("Box<{}>", type_name)
-            } else {
-                type_name
-            }
-        }
-        FieldType::Scalar(scalar) => scalar_to_rust(scalar),
-        FieldType::Array(inner) => {
-            let inner_type = field_type_to_rust(inner, false);
-            format!("Vec<{}>", inner_type)
-        }
-        FieldType::Map(value) => {
-            let value_type = field_type_to_rust(value, false);
-            format!("std::collections::HashMap<String, {}>", value_type)
-        }
-        FieldType::InlineObject => "serde_json::Value".to_string(),
-        FieldType::Unknown => "serde_json::Value".to_string(),
-    };
-    
-    base_type
-}
-
-/// Convert a JSON scalar kind to a Rust type
-fn scalar_to_rust(scalar: &JsonScalarKind) -> String {
-    match scalar {
-        JsonScalarKind::String => "String".to_string(),
-        JsonScalarKind::Integer => "i64".to_string(),
-        JsonScalarKind::Number => "f64".to_string(),
-        JsonScalarKind::Boolean => "bool".to_string(),
-        JsonScalarKind::Null => "()".to_string(),
-    }
-}
-
-/// Extract type name from a schema path/id
+/// Extract type name from a schema path/id (fallback when not in name resolver)
 fn extract_type_name(schema_ref: &str) -> String {
     let name = schema_ref
         .rsplit('/')
@@ -306,11 +310,15 @@ mod tests {
     }
     
     #[test]
-    fn test_scalar_to_rust() {
-        assert_eq!(scalar_to_rust(&JsonScalarKind::String), "String");
-        assert_eq!(scalar_to_rust(&JsonScalarKind::Integer), "i64");
-        assert_eq!(scalar_to_rust(&JsonScalarKind::Number), "f64");
-        assert_eq!(scalar_to_rust(&JsonScalarKind::Boolean), "bool");
+    fn test_to_snake_case() {
+        assert_eq!(to_snake_case("TenantId"), "tenant_id");
+        assert_eq!(to_snake_case("UserProfile"), "user_profile");
+        assert_eq!(to_snake_case("API"), "a_p_i");
+    }
+    
+    #[test]
+    fn test_to_pascal_case() {
+        assert_eq!(to_pascal_case("tenant_id"), "TenantId");
+        assert_eq!(to_pascal_case("user-profile"), "UserProfile");
     }
 }
-
