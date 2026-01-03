@@ -13,13 +13,23 @@
   },
   "description": "Core identity component that all entities possess",
   "properties": {
-    "amplitude": {
+    "created_at": {
       "allOf": [
         {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
+          "$ref": "../primitives/Timestamp.schema.json"
         }
       ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+      "description": "When this entity was created"
+    },
+    "id": {
+      "$ref": "../primitives/ThreadId.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "physics": {
+      "$ref": "../components/FieldExcitation.schema.json",
+      "description": "Field excitation physics state"
     },
     "amplitudes": {
       "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
@@ -48,22 +58,6 @@
       ],
       "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
     },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
     "frequency": {
       "description": "The dominant frequency of the pattern (for Holonomic resonance).",
       "format": "double",
@@ -72,65 +66,29 @@
         "null"
       ]
     },
-    "id": {
-      "$ref": "../primitives/ThreadId.schema.json"
-    },
     "metadata": {
       "additionalProperties": {
         "type": "string"
       },
       "type": "object"
     },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
     "text": {
       "type": "string"
     },
     "thread_type": {
       "$ref": "../types/ThreadType.schema.json"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
     }
   },
   "required": [
-    "amplitude",
+    "created_at",
+    "id",
+    "tenant_id",
+    "physics",
     "amplitudes",
     "coherence",
-    "created_at",
-    "energy",
-    "id",
     "metadata",
-    "position",
-    "temperature",
-    "tenant_id",
     "text",
-    "thread_type",
-    "velocity"
+    "thread_type"
   ],
   "title": "Thread",
   "type": "object",
@@ -147,5 +105,15 @@
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-composition": {
+    "physics": [
+      "amplitude",
+      "energy",
+      "position",
+      "temperature",
+      "velocity"
+    ],
+    "note": "identity fields kept direct (typed IDs)"
   }
 }

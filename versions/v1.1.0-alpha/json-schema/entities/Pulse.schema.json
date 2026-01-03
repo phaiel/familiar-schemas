@@ -2,14 +2,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Core identity component that all entities possess",
   "properties": {
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
     "created_at": {
       "allOf": [
         {
@@ -17,14 +9,6 @@
         }
       ],
       "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
     },
     "id": {
       "allOf": [
@@ -34,60 +18,34 @@
       ],
       "description": "Unique identifier for this entity"
     },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "physics": {
+      "$ref": "../components/FieldExcitation.schema.json",
+      "description": "Field excitation physics state"
+    },
     "metadata": {
       "additionalProperties": {
         "type": "string"
       },
       "type": "object"
     },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
     "state_type": {
       "$ref": "../types/InternalStateType.schema.json"
     },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
     "text": {
       "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
     }
   },
   "required": [
-    "amplitude",
     "created_at",
-    "energy",
     "id",
-    "metadata",
-    "position",
-    "state_type",
-    "temperature",
     "tenant_id",
-    "text",
-    "velocity"
+    "physics",
+    "metadata",
+    "state_type",
+    "text"
   ],
   "title": "Pulse",
   "type": "object",
@@ -96,9 +54,22 @@
     "profile": "postgres",
     "table": "pulses",
     "primary_key": "id",
-    "indexes": ["moment_id", "created_at"]
+    "indexes": [
+      "moment_id",
+      "created_at"
+    ]
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-composition": {
+    "physics": [
+      "amplitude",
+      "energy",
+      "position",
+      "temperature",
+      "velocity"
+    ],
+    "note": "identity fields kept direct (typed IDs)"
   }
 }

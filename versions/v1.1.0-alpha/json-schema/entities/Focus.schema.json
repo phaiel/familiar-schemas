@@ -2,16 +2,31 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "A user-declared thematic goal or life chapter. Acts as a \"Attractor Basin\" in the VAE manifold.",
   "properties": {
-    "active_since": {
-      "$ref": "../primitives/Timestamp.schema.json"
-    },
-    "amplitude": {
+    "created_at": {
       "allOf": [
         {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
+          "$ref": "../primitives/Timestamp.schema.json"
         }
       ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+      "description": "When this entity was created"
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "physics": {
+      "$ref": "../components/FieldExcitation.schema.json",
+      "description": "Field excitation physics state"
+    },
+    "active_since": {
+      "$ref": "../primitives/Timestamp.schema.json"
     },
     "amplitudes": {
       "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
@@ -40,22 +55,6 @@
       ],
       "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
     },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
     "frequency": {
       "description": "The dominant frequency of the pattern (for Holonomic resonance).",
       "format": "double",
@@ -64,67 +63,26 @@
         "null"
       ]
     },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
     "metadata": {
       "additionalProperties": {
         "type": "string"
       },
       "type": "object"
     },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
     "text": {
       "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
     }
   },
   "required": [
+    "created_at",
+    "id",
+    "tenant_id",
+    "physics",
     "active_since",
-    "amplitude",
     "amplitudes",
     "coherence",
-    "created_at",
-    "energy",
-    "id",
     "metadata",
-    "position",
-    "temperature",
-    "tenant_id",
-    "text",
-    "velocity"
+    "text"
   ],
   "title": "Focus",
   "type": "object",
@@ -133,9 +91,21 @@
     "profile": "postgres",
     "table": "focuses",
     "primary_key": "id",
-    "indexes": ["created_at"]
+    "indexes": [
+      "created_at"
+    ]
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-composition": {
+    "physics": [
+      "amplitude",
+      "energy",
+      "position",
+      "temperature",
+      "velocity"
+    ],
+    "note": "identity fields kept direct (typed IDs)"
   }
 }
