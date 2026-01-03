@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/simple_struct.json",
+  "title": "User",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "age": { "type": "integer" },
+    "active": { "type": "boolean" }
+  },
+  "required": ["id", "name"],
+  "x-familiar-kind": "struct"
+}
+

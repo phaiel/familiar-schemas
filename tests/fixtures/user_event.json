@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/user_event.json",
+  "title": "UserEvent",
+  "type": "object",
+  "properties": {
+    "type": { "const": "user" },
+    "user_id": { "type": "string" }
+  },
+  "required": ["type", "user_id"],
+  "x-familiar-kind": "struct"
+}
+

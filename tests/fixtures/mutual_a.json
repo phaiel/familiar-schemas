@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/mutual_a.json",
+  "title": "MutualA",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "b_ref": { "$ref": "mutual_b.json" }
+  },
+  "required": ["name"],
+  "x-familiar-kind": "struct"
+}
+

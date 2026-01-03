@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/string_enum.json",
+  "title": "MemberRole",
+  "type": "string",
+  "enum": ["admin", "member", "guest"],
+  "x-familiar-kind": "enum"
+}
+

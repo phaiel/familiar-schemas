@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/primitive_match.json",
+  "title": "CustomId",
+  "description": "Same shape as TenantId but different name",
+  "type": "string",
+  "format": "uuid",
+  "x-familiar-kind": "primitive"
+}
+

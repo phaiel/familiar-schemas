@@ -1,0 +1,8 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/alias_of_alias.json",
+  "title": "AliasA",
+  "$ref": "alias_b.json",
+  "x-familiar-kind": "alias"
+}
+

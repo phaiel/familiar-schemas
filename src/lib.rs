@@ -66,6 +66,10 @@ pub mod checksum;
 pub mod error;
 pub mod lint;
 
+// Graph-first infrastructure (shared by MCP and codegen)
+pub mod graph;
+pub mod codegen;
+
 pub use config::SchemaConfig;
 pub use registry::SchemaRegistry;
 pub use schema::{Schema, SchemaType, SchemaEntry};
@@ -73,4 +77,22 @@ pub use version::SchemaVersion;
 pub use compatibility::{CompatibilityChecker, CompatibilityResult};
 pub use checksum::Checksum;
 pub use error::{SchemaError, Result};
+
+// Re-export graph types
+pub use graph::{
+    SchemaGraph, SchemaId, SchemaNode, EdgeKind, NodeId,
+    ClosureNode, SearchResult, LintWarning,
+    GeneratedArtifact, ArtifactId, CodegenMeta, FieldRef,
+    // Analysis types
+    SccAnalysis, SccGroup, CycleHandling, BoxedEdge, FieldPathSegment, FieldPath,
+    // Pattern types
+    SchemaShape, JsonScalarKind, PropertyShape, PropertyTypeShape,
+    // Classification types
+    Classification, TypeKind, EmitStrategy, FieldType, FieldDef, EnumVariant,
+    // Diagnostics
+    Diagnostics, DiagnosticCode, DiagnosticItem, Severity,
+};
+
+// Re-export codegen types
+pub use codegen::{CodegenContext, Region, GeneratedOutput, generate_rust};
 

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/oneof_mixed.json",
+  "title": "MixedValue",
+  "description": "Mixed oneOf - should emit diagnostic",
+  "oneOf": [
+    { "const": "auto" },
+    { "type": "object", "properties": { "value": { "type": "number" } } }
+  ],
+  "x-familiar-kind": "union"
+}
+

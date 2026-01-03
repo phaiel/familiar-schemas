@@ -61,6 +61,17 @@ directories = "5.0"
 # General utilities
 anyhow = "1.0"
 
+# ========== Graph Infrastructure (NEW) ==========
+
+# Graph data structures and algorithms (SCC, toposort, closure)
+petgraph = "0.6"
+
+# Fuzzy search for schema names
+fuzzy-matcher = "0.3"
+
+# Embed schema files at compile time
+include_dir = "0.7"
+
 [dev-dependencies]
 tempfile = "3.8"
 

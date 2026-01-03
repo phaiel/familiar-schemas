@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/message_event.json",
+  "title": "MessageEvent",
+  "type": "object",
+  "properties": {
+    "type": { "const": "message" },
+    "content": { "type": "string" }
+  },
+  "required": ["type", "content"],
+  "x-familiar-kind": "struct"
+}
+

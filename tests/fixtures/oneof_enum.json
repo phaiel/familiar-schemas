@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/oneof_enum.json",
+  "title": "Status",
+  "oneOf": [
+    { "const": "pending" },
+    { "const": "active" },
+    { "const": "completed" }
+  ],
+  "x-familiar-kind": "enum"
+}
+

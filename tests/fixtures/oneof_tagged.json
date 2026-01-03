@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/oneof_tagged.json",
+  "title": "Event",
+  "oneOf": [
+    { "$ref": "message_event.json" },
+    { "$ref": "user_event.json" }
+  ],
+  "x-familiar-discriminator": "type",
+  "x-familiar-kind": "union"
+}
+
