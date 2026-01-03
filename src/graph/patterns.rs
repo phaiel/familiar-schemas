@@ -353,7 +353,7 @@ fn detect_one_of_shape(schema: &serde_json::Value, one_of: &[serde_json::Value])
         let variants: Vec<ObjectVariant> = one_of
             .iter()
             .enumerate()
-            .map(|(_i, v)| {
+            .map(|(i, v)| {
                 let name = v.get("title").and_then(|t| t.as_str()).map(String::from);
                 let ref_target = v.get("$ref").and_then(|r| r.as_str()).map(String::from);
                 let properties = v
@@ -362,8 +362,13 @@ fn detect_one_of_shape(schema: &serde_json::Value, one_of: &[serde_json::Value])
                     .map(|p| p.keys().cloned().collect())
                     .unwrap_or_default();
                 
+                // Use title, then $ref type name, then indexed fallback "Variant0", "Variant1", etc.
+                let derived_name = name
+                    .or_else(|| ref_target.as_ref().map(|r| extract_type_name(r)))
+                    .unwrap_or_else(|| format!("Variant{}", i));
+                
                 ObjectVariant {
-                    name: name.or_else(|| ref_target.as_ref().map(|r| extract_type_name(r))),
+                    name: Some(derived_name),
                     properties,
                     ref_target,
                 }

@@ -277,8 +277,10 @@ impl<'a> Classifier<'a> {
             SchemaShape::OneOfObjects { variants, discriminator } => {
                 let union_variants: Vec<UnionVariant> = variants
                     .iter()
-                    .map(|v| {
-                        let name = v.name.clone().unwrap_or_else(|| "Unknown".to_string());
+                    .enumerate()
+                    .map(|(i, v)| {
+                        // Name should always be present after patterns.rs fix, but provide fallback
+                        let name = v.name.clone().unwrap_or_else(|| format!("Variant{}", i));
                         UnionVariant {
                             name: to_pascal_case(&name),
                             schema_ref: v.ref_target.clone(),
