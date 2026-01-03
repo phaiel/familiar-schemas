@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Execution order types",
+  "oneOf": [
+    {
+      "description": "Execute in sequence",
+      "enum": [
+        "sequential"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Execute in parallel with other parallel steps",
+      "enum": [
+        "parallel"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Execute only if condition is met",
+      "enum": [
+        "conditional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Execute as fallback if previous failed",
+      "enum": [
+        "fallback"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ExecutionOrder"
+}

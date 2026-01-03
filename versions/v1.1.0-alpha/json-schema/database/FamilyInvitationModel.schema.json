@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InviteType": {
+      "enum": [
+        "Email",
+        "Code"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Email.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "expires_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../primitives/InvitationId.schema.json"
+    },
+    "invite_code": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/InviteCode.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "invite_type": {
+      "$ref": "../auth/InviteType.schema.json"
+    },
+    "invited_by": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UserId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "max_uses": {
+      "format": "int32",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "role": {
+      "$ref": "../primitives/InviteRole.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "use_count": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "invite_type",
+    "role",
+    "tenant_id",
+    "use_count"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "family_invitations",
+  "x-familiar-module": "auth",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "belongs_to",
+      "target": "TenantModel",
+      "from": "tenant_id",
+      "to": "id"
+    }
+  ]
+}

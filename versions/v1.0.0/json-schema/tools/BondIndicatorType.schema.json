@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of bond indicators",
+  "oneOf": [
+    {
+      "description": "Explicit label (\"my friend\", \"my boss\")",
+      "enum": [
+        "explicit_label"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Action indicating relationship (\"had dinner with\")",
+      "enum": [
+        "relational_action"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Emotional language about entity",
+      "enum": [
+        "emotional_language"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Possessive language (\"my\", \"our\")",
+      "enum": [
+        "possessive_language"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Frequency indicators (\"always see\", \"often talk\")",
+      "enum": [
+        "frequency_indicator"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Context from previous interactions",
+      "enum": [
+        "contextual_inference"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "BondIndicatorType",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

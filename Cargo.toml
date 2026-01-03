@@ -21,13 +21,16 @@ sha2 = "0.10"
 # Date/time
 chrono = { version = "0.4", features = ["serde"] }
 
-# AVRO support
+# AVRO support (legacy, being phased out)
 apache-avro = "0.16"
 
 # JSON Schema validation
 jsonschema = "0.17"
 
-# Diff algorithms for compatibility checking
+# Multi-format schema diffing (JSON Schema, Protobuf, Avro, OpenAPI)
+rusty-schema-diff = "0.1"
+
+# Text diffing for compatibility checking
 similar = "2.3"
 
 # Error handling
@@ -47,10 +50,16 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 walkdir = "2.4"
 ignore = "0.4"
 
+# Regex
+regex = "1.10"
+
 # Configuration
 config_crate = { package = "config", version = "0.14", features = ["toml"] }
 toml = "0.8"
 directories = "5.0"
+
+# General utilities
+anyhow = "1.0"
 
 [dev-dependencies]
 tempfile = "3.8"
@@ -66,10 +75,6 @@ path = "src/bin/validator.rs"
 [[bin]]
 name = "schema-export"
 path = "src/bin/export.rs"
-
-[[bin]]
-name = "schema-drift"
-path = "src/bin/drift.rs"
 
 [[bin]]
 name = "schema-config"

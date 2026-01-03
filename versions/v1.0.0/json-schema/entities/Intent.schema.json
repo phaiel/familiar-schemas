@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A specific, bounded future action with potential energy.",
+  "properties": {
+    "activation_energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Activation Energy (Invested Work)** Thermodynamics: The cumulative work performed on the system. Used to calculate \"Sunk Cost\" gravity."
+    },
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "completion": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Completion (Inverse Discrepancy)** Cybernetics: 1.0 - Error Signal. How close the system is to the Goal State."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "entropy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Entropy (Disorder)** Information Theory: The uncertainty or \"noise\" in the process. High Entropy: Exploring, Brainstorming, Chaotic. Low Entropy: Executing, Refined, Linear."
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "primary_status_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_date": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "activation_energy",
+    "amplitude",
+    "completion",
+    "created_at",
+    "energy",
+    "entropy",
+    "id",
+    "metadata",
+    "position",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Intent",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

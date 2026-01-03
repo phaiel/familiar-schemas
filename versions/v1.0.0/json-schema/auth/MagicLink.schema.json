@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MagicLinkPurpose": {
+      "description": "Purpose of a magic link",
+      "enum": [
+        "login",
+        "signup",
+        "verify_email",
+        "password_reset"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A magic link for passwordless auth",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "metadata": {
+      "default": null
+    },
+    "purpose": {
+      "$ref": "#/definitions/MagicLinkPurpose"
+    },
+    "used_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "expires_at",
+    "id",
+    "purpose"
+  ],
+  "title": "MagicLink",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

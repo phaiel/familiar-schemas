@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MessageRole": {
+      "enum": [
+        "User",
+        "Assistant",
+        "System"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "agent_speaker": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "channel_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "metadata": true,
+    "parent_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "role": {
+      "$ref": "#/definitions/MessageRole"
+    },
+    "sender_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thinking_steps": true,
+    "tool_calls": true,
+    "weave_result": true
+  },
+  "required": [
+    "channel_id",
+    "content",
+    "created_at",
+    "id",
+    "metadata",
+    "role",
+    "thinking_steps",
+    "tool_calls"
+  ],
+  "title": "Model",
+  "type": "object"
+}

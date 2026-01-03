@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "DetectedEmotion": {
+      "description": "A detected emotion in the content",
+      "properties": {
+        "emotion": {
+          "description": "Emotion name",
+          "type": "string"
+        },
+        "evidence": {
+          "description": "Evidence for detection",
+          "type": "string"
+        },
+        "intensity": {
+          "description": "Intensity (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "emotion",
+        "evidence",
+        "intensity"
+      ],
+      "type": "object"
+    },
+    "PhysicsAnalysis": {
+      "description": "Analysis that led to physics values",
+      "properties": {
+        "certainty_indicators": {
+          "default": [],
+          "description": "Certainty indicators",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "emotions": {
+          "default": [],
+          "description": "Detected emotions",
+          "items": {
+            "$ref": "#/definitions/DetectedEmotion"
+          },
+          "type": "array"
+        },
+        "reasoning": {
+          "description": "Overall reasoning",
+          "type": "string"
+        },
+        "significance_indicators": {
+          "default": [],
+          "description": "Significance indicators",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "reasoning"
+      ],
+      "type": "object"
+    },
+    "PhysicsHintValues": {
+      "description": "Physics hint values",
+      "properties": {
+        "arousal": {
+          "description": "Arousal/activation: 0.0 (calm/low energy) to 1.0 (excited/high energy) Maps to Y-axis in VAE space",
+          "format": "double",
+          "type": "number"
+        },
+        "energy": {
+          "description": "Energy level for simulation",
+          "format": "double",
+          "type": "number"
+        },
+        "epistemic": {
+          "description": "Epistemic certainty: 0.0 (uncertain) to 1.0 (certain) Maps to Z-axis in VAE space",
+          "format": "double",
+          "type": "number"
+        },
+        "significance": {
+          "description": "Significance/mass: 0.0 (trivial) to 1.0 (very important) Affects physics simulation weight",
+          "format": "double",
+          "type": "number"
+        },
+        "temperature": {
+          "description": "Temperature (volatility/changeability)",
+          "format": "double",
+          "type": "number"
+        },
+        "valence": {
+          "description": "Emotional valence: -1.0 (very negative) to 1.0 (very positive) Maps to X-axis in VAE space",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "arousal",
+        "energy",
+        "epistemic",
+        "significance",
+        "temperature",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "VAEPosition": {
+      "description": "VAE space position (quantized for physics)",
+      "properties": {
+        "x": {
+          "description": "X: Valence (emotional polarity)",
+          "format": "int64",
+          "type": "integer"
+        },
+        "y": {
+          "description": "Y: Arousal (energy/activation)",
+          "format": "int64",
+          "type": "integer"
+        },
+        "z": {
+          "description": "Z: Epistemic (certainty)",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Output from physics hint generation",
+  "properties": {
+    "analysis": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PhysicsAnalysis"
+        }
+      ],
+      "description": "Analysis that led to these values"
+    },
+    "hints": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/PhysicsHintValues"
+        }
+      ],
+      "description": "The computed physics hints"
+    },
+    "position": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/VAEPosition"
+        }
+      ],
+      "description": "Computed VAE position"
+    }
+  },
+  "required": [
+    "analysis",
+    "hints",
+    "position"
+  ],
+  "title": "PhysicsHintOutput",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "output",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

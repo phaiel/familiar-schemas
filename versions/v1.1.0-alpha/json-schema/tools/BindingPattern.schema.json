@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Common binding patterns for detection",
+  "properties": {
+    "binding_type": {
+      "allOf": [
+        {
+          "$ref": "../primitives/BindingType.schema.json"
+        }
+      ],
+      "description": "Binding type this pattern indicates"
+    },
+    "confidence_boost": {
+      "description": "Confidence boost when matched",
+      "format": "double",
+      "type": "number"
+    },
+    "name": {
+      "description": "Pattern name",
+      "type": "string"
+    },
+    "pattern": {
+      "description": "Regex or linguistic pattern",
+      "type": "string"
+    }
+  },
+  "required": [
+    "binding_type",
+    "confidence_boost",
+    "name",
+    "pattern"
+  ],
+  "title": "BindingPattern",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-rust-impl-ids": [
+    "BindingPattern"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

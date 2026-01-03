@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AcceptInvitationFlowInput",
+  "description": "Input for the accept invitation Windmill flow",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "$ref": "../primitives/UserId.schema.json"
+    },
+    "invite_code": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": "string"
+    }
+  },
+  "required": ["user_id", "invite_code", "request_id"],
+  "x-familiar-kind": "request"
+}
+

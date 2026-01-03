@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Temporal aspect of binding",
+  "properties": {
+    "gap": {
+      "default": null,
+      "description": "Time gap (if known)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relation": {
+      "allOf": [
+        {
+          "$ref": "../primitives/TemporalRelation.schema.json"
+        }
+      ],
+      "description": "Time relationship"
+    }
+  },
+  "required": [
+    "relation"
+  ],
+  "title": "TemporalBinding",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

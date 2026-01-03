@@ -1,0 +1,14 @@
+{
+  "$id": "primitives/Modality.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Supported input modalities",
+  "enum": [
+    "text",
+    "audio",
+    "vision",
+    "video"
+  ],
+  "title": "Modality",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}

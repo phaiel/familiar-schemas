@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "CommandType": {
+      "description": "Types of commands",
+      "oneOf": [
+        {
+          "description": "Create something",
+          "enum": [
+            "CREATE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Update/modify",
+          "enum": [
+            "UPDATE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Delete/remove",
+          "enum": [
+            "DELETE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Link/connect entities",
+          "enum": [
+            "LINK"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Unlink/disconnect entities",
+          "enum": [
+            "UNLINK"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Export data",
+          "enum": [
+            "EXPORT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Import data",
+          "enum": [
+            "IMPORT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Configure settings",
+          "enum": [
+            "CONFIGURE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Unknown/custom command",
+          "enum": [
+            "CUSTOM"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Analysis of a command purpose",
+  "properties": {
+    "command_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommandType"
+        }
+      ],
+      "description": "Command type"
+    },
+    "is_destructive": {
+      "description": "Is this command destructive?",
+      "type": "boolean"
+    },
+    "needs_confirmation": {
+      "description": "Does this command need confirmation?",
+      "type": "boolean"
+    },
+    "parameters": {
+      "additionalProperties": true,
+      "default": {},
+      "description": "Command parameters",
+      "type": "object"
+    },
+    "target": {
+      "default": null,
+      "description": "Target of the command",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "command_type",
+    "is_destructive",
+    "needs_confirmation"
+  ],
+  "title": "CommandAnalysis",
+  "type": "object"
+}

@@ -165,13 +165,28 @@ impl SchemaRegistry {
             .join("\n");
         fs::write(&checksums_path, &checksums_content)?;
 
-        // Update latest symlink
+        // Update latest symlink (atomic via rename to avoid race conditions)
+        // If a reader accesses "latest" between remove and create, they get "File Not Found"
+        // Using rename() over a temp symlink is atomic on POSIX filesystems
         let latest_link = self.root.join("versions").join("latest");
-        if latest_link.exists() {
-            fs::remove_file(&latest_link)?;
-        }
         #[cfg(unix)]
-        std::os::unix::fs::symlink(version.dir_name(), &latest_link)?;
+        {
+            let temp_link = self.root.join("versions").join(".latest_tmp");
+            // Remove stale temp link if exists (from crashed previous run)
+            let _ = fs::remove_file(&temp_link);
+            // Create new symlink at temp location
+            std::os::unix::fs::symlink(version.dir_name(), &temp_link)?;
+            // Atomic rename over existing "latest" symlink
+            fs::rename(&temp_link, &latest_link)?;
+        }
+        #[cfg(not(unix))]
+        {
+            // Windows: fall back to non-atomic (symlinks require admin on Windows anyway)
+            if latest_link.exists() {
+                fs::remove_file(&latest_link)?;
+            }
+            // Windows symlink would go here if needed
+        }
 
         // Git commit
         self.git_commit(

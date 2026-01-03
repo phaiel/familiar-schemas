@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "alt_text": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "alt_text",
+    "image_url"
+  ],
+  "title": "ImageElement",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

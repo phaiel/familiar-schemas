@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Hints for thread/narrative connections",
+  "properties": {
+    "create_if_missing": {
+      "default": false,
+      "description": "Should create new thread if no match?",
+      "type": "boolean"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords for thread matching",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "primary_subject": {
+      "description": "Primary subject/actor",
+      "type": "string"
+    },
+    "related_threads": {
+      "default": [],
+      "description": "Related threads to link",
+      "items": {
+        "$ref": "../primitives/ThreadReference.schema.json"
+      },
+      "type": "array"
+    },
+    "thread_role": {
+      "allOf": [
+        {
+          "$ref": "../primitives/ThreadRole.schema.json"
+        }
+      ],
+      "description": "Role of entity in narrative"
+    }
+  },
+  "required": [
+    "primary_subject",
+    "thread_role"
+  ],
+  "title": "ThreadHints",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

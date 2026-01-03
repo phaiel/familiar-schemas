@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Boundaries of a segment within the original input",
+  "properties": {
+    "end": {
+      "description": "End position",
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "speaker_id": {
+      "default": null,
+      "description": "For audio/video: speaker ID if detected",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "start": {
+      "description": "Start position (char index for text, milliseconds for audio/video)",
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "end",
+    "start"
+  ],
+  "title": "SegmentBoundaries",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

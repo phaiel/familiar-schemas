@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "SegmentClassification": {
+      "description": "Classification for a single segment",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/HeddleEntityType.schema.json"
+            }
+          ],
+          "description": "The entity type (MOMENT, PULSE, INTENT) - relevant for LOG purpose"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "../types/ClassificationPhysics.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints for entity spawning (only for LOG purpose)"
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
+        },
+        "segment_index": {
+          "description": "Index of the segment being classified",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "weight": {
+          "default": 1.0,
+          "description": "Confidence weight (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "segment_index"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Phase 3 response: Classifications for each segment",
+  "properties": {
+    "classifications": {
+      "description": "Classifications for each segment",
+      "items": {
+        "$ref": "SegmentClassification.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "classifications"
+  ],
+  "title": "ContentClassificationResponse",
+  "type": "object",
+  "x-familiar-kind": "type",
+  "x-familiar-rust-impl-ids": [
+    "ContentClassificationResponse"
+  ]
+}

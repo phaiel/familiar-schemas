@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MessageTokenInfo",
+  "description": "Token information for a single message",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "role": {
+      "$ref": "./MessageRole.schema.json"
+    },
+    "tokens": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0
+    },
+    "included": {
+      "type": "boolean"
+    }
+  },
+  "required": ["id", "role", "tokens", "included"],
+  "x-familiar-kind": "component"
+}
+

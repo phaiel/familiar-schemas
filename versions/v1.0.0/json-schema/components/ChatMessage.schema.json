@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A single message in a chat conversation",
+  "properties": {
+    "content": {
+      "description": "The message content",
+      "type": "string"
+    },
+    "role": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageRole.schema.json"
+        }
+      ],
+      "description": "The role of the message sender"
+    }
+  },
+  "required": [
+    "content",
+    "role"
+  ],
+  "title": "ChatMessage",
+  "type": "object",
+  "x-familiar-kind": "component",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Debug info about the LLM request",
+  "properties": {
+    "system_prompt": {
+      "type": "string"
+    },
+    "user_prompt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "system_prompt",
+    "user_prompt"
+  ],
+  "title": "LlmRequestDebug",
+  "type": "object"
+}

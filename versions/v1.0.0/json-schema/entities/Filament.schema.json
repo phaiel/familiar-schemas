@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A recurring internal pattern (Self/Identity). The continuous phase trajectory of the user through the manifold.",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "source_pulses": {
+      "description": "The source pulses (internal states) that form this strand.",
+      "items": {
+        "$ref": "../primitives/UUID.schema.json"
+      },
+      "type": "array"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "source_pulses",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Filament",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

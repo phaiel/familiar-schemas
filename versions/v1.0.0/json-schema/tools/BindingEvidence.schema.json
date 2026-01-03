@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BindingEvidenceType": {
+      "description": "Types of binding evidence",
+      "oneOf": [
+        {
+          "description": "Explicit linguistic marker",
+          "enum": [
+            "linguistic_marker"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal proximity",
+          "enum": [
+            "temporal_proximity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Semantic similarity",
+          "enum": [
+            "semantic_similarity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity co-reference",
+          "enum": [
+            "co_reference"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional similarity",
+          "enum": [
+            "emotional_similarity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Narrative continuity",
+          "enum": [
+            "narrative_continuity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "User explicit statement",
+          "enum": [
+            "explicit_statement"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Inferred from context",
+          "enum": [
+            "contextual_inference"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Evidence for a detected binding",
+  "properties": {
+    "evidence_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BindingEvidenceType"
+        }
+      ],
+      "description": "Type of evidence"
+    },
+    "explanation": {
+      "description": "Explanation",
+      "type": "string"
+    },
+    "markers": {
+      "default": [],
+      "description": "Specific markers found",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "trigger_text": {
+      "description": "Text that triggered detection",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_type",
+    "explanation",
+    "trigger_text"
+  ],
+  "title": "BindingEvidence",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

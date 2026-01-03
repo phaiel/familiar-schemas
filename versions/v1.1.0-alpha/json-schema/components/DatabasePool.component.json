@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/components/DatabasePool.component.json",
+  "description": "Generic database connection pool component for non-Tiger databases.",
+  "properties": {
+    "max_connections": {
+      "default": 20,
+      "type": "integer"
+    },
+    "min_connections": {
+      "default": 5,
+      "type": "integer"
+    },
+    "pool": {
+      "description": "Connection pool instance",
+      "type": "object"
+    }
+  },
+  "title": "DatabasePool",
+  "type": "object",
+  "x-familiar-config": {
+    "$ref": "DbPoolConfig.schema.json"
+  },
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-resources": [
+    {
+      "$ref": "../resources/postgres-main.resource.json"
+    }
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

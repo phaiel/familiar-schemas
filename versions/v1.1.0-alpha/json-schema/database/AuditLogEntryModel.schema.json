@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "action": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "error_message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../primitives/AuditLogId.schema.json"
+    },
+    "ip_address": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "resource_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resource_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "user_agent": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_email": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Email.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "user_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UserId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "action",
+    "created_at",
+    "id",
+    "metadata",
+    "success"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "audit_log",
+  "x-familiar-module": "auth",
+  "x-familiar-primary-key": "id"
+}

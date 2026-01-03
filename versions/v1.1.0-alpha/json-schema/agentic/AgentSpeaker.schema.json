@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Speaker/agent identifiers for the orchestration system\n\nEach speaker is a specialized agent that handles specific types of tasks. The orchestrator routes to the appropriate speaker based on user intent.",
+  "oneOf": [
+    {
+      "description": "Main user-facing agent - greets users, explains capabilities",
+      "enum": [
+        "concierge"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Classification agent - determines entity types, message intent",
+      "enum": [
+        "classifier"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Physics simulation agent - handles VAE space calculations",
+      "enum": [
+        "physics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Retrieval-augmented generation agent (future)",
+      "enum": [
+        "rag"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Memory/context management agent",
+      "enum": [
+        "memory"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Task execution agent",
+      "enum": [
+        "task_executor"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "AgentSpeaker",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-enum-repr": "simple_enum",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-variants": {
+    "classifier": "Classifier",
+    "concierge": "Concierge",
+    "memory": "Memory",
+    "physics": "Physics",
+    "rag": "Rag",
+    "task_executor": "TaskExecutor"
+  }
+}

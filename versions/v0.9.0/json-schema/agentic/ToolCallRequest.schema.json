@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A request to invoke a tool",
+  "properties": {
+    "arguments": {
+      "description": "Arguments to pass to the tool"
+    },
+    "call_id": {
+      "description": "Unique ID for this tool call",
+      "type": "string"
+    },
+    "tool_name": {
+      "description": "Name of the tool to invoke",
+      "type": "string"
+    }
+  },
+  "required": [
+    "arguments",
+    "call_id",
+    "tool_name"
+  ],
+  "title": "ToolCallRequest",
+  "type": "object"
+}

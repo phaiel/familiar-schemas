@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../primitives/SessionId.schema.json"
+    },
+    "ip_address": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "token_hash": {
+      "type": "string"
+    },
+    "user_agent": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "$ref": "../primitives/UserId.schema.json"
+    },
+    "version": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Optimistic locking version - incremented on each update",
+      "x-familiar-default-value": 0
+    }
+  },
+  "required": [
+    "created_at",
+    "expires_at",
+    "id",
+    "token_hash",
+    "user_id",
+    "version"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "auth_sessions",
+  "x-familiar-module": "auth",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "belongs_to",
+      "target": "UserModel",
+      "from": "user_id",
+      "to": "id"
+    }
+  ]
+}

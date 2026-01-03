@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenAIGPT4",
+  "description": "Virtual resource representing OpenAI's GPT-4 API. Acts as a proxy contract defining expected capabilities.",
+  "x-familiar-kind": "resource",
+  "x-familiar-resource-type": "llm-api",
+  "x-familiar-virtual": true,
+  "x-familiar-endpoint": "https://api.openai.com/v1/chat/completions",
+  "x-familiar-rate-limit": 10000,
+  "x-familiar-models": [
+    "gpt-4",
+    "gpt-4-turbo",
+    "gpt-4-turbo-preview",
+    "gpt-4o",
+    "gpt-4o-mini"
+  ],
+  "x-familiar-health-check": {
+    "endpoint": "https://api.openai.com/v1/models",
+    "interval": "5m"
+  }
+}
+
+
+
+

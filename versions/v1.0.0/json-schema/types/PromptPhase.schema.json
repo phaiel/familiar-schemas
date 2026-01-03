@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Segmentation",
+    "Purpose",
+    "Classification"
+  ],
+  "title": "PromptPhase",
+  "type": "string",
+  "x-familiar-kind": "type"
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/systems/FatesDecima.system.json",
+  "description": "Fate of Measure - handles quantification, measurement, and metric calculation in the Fates pipeline.",
+  "title": "FatesDecima",
+  "x-familiar-depends": [
+    {
+      "$ref": "../components/TigerDataStore.component.json"
+    }
+  ],
+  "x-familiar-kind": "system",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/System.meta.schema.json"
+  },
+  "x-familiar-queue": "daemon-queue",
+  "x-familiar-reads": [
+    {
+      "$ref": "../entities/Shuttle.schema.json"
+    },
+    {
+      "$ref": "../entities/Moment.schema.json"
+    }
+  ],
+  "x-familiar-retries": 3,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-timeout": "45s",
+  "x-familiar-writes": [
+    {
+      "$ref": "../entities/Bond.schema.json"
+    }
+  ]
+}

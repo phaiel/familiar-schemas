@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Result of creating a session (includes the raw token)",
+  "properties": {
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "session_id": {
+      "$ref": "../primitives/SessionId.schema.json"
+    },
+    "token": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "expires_at",
+    "session_id",
+    "token"
+  ],
+  "title": "SessionCreated",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

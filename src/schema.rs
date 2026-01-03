@@ -11,8 +11,12 @@ use crate::version::SchemaVersion;
 pub enum SchemaType {
     /// JSON Schema - the universal validation format
     JsonSchema,
-    /// AVRO schemas for Kafka/Redpanda
+    /// Protocol Buffers for Kafka/Redpanda
+    Protobuf,
+    /// AVRO schemas for Kafka/Redpanda (legacy)
     Avro,
+    /// Database schemas (SeaORM entities / SQL DDL)
+    Database,
     /// TypeScript type definitions (future)
     TypeScript,
     /// Python Pydantic models (future)
@@ -26,7 +30,9 @@ impl SchemaType {
     pub fn dir_name(&self) -> &'static str {
         match self {
             SchemaType::JsonSchema => "json-schema",
+            SchemaType::Protobuf => "protobuf",
             SchemaType::Avro => "avro",
+            SchemaType::Database => "database",
             SchemaType::TypeScript => "typescript",
             SchemaType::Python => "python",
             SchemaType::OpenApi => "openapi",
@@ -37,7 +43,9 @@ impl SchemaType {
     pub fn extension(&self) -> &'static str {
         match self {
             SchemaType::JsonSchema => "schema.json",
+            SchemaType::Protobuf => "proto",
             SchemaType::Avro => "avsc",
+            SchemaType::Database => "sql",
             SchemaType::TypeScript => "d.ts",
             SchemaType::Python => "py",
             SchemaType::OpenApi => "yaml",
@@ -183,9 +191,17 @@ pub struct VersionManifest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ManifestStats {
     pub total_schemas: usize,
+    #[serde(default)]
     pub json_schemas: usize,
+    #[serde(default)]
+    pub protobuf_schemas: usize,
+    #[serde(default)]
     pub avro_schemas: usize,
+    #[serde(default)]
+    pub database_schemas: usize,
+    #[serde(default)]
     pub typescript_schemas: usize,
+    #[serde(default)]
     pub python_schemas: usize,
     /// Categories and their counts
     #[serde(default)]
@@ -200,7 +216,9 @@ impl VersionManifest {
     pub fn new(version: SchemaVersion, schemas: Vec<SchemaEntry>) -> Self {
         // Count by type
         let json_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::JsonSchema).count();
+        let protobuf_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Protobuf).count();
         let avro_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Avro).count();
+        let database_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Database).count();
         let typescript_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::TypeScript).count();
         let python_schemas = schemas.iter().filter(|s| s.schema.schema_type == SchemaType::Python).count();
 
@@ -221,7 +239,9 @@ impl VersionManifest {
         let stats = ManifestStats {
             total_schemas: schemas.len(),
             json_schemas,
+            protobuf_schemas,
             avro_schemas,
+            database_schemas,
             typescript_schemas,
             python_schemas,
             by_category,

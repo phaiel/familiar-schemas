@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role of entity relative to threads",
+  "oneOf": [
+    {
+      "description": "Entity is the actor/doer",
+      "enum": [
+        "actor"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is the subject being discussed",
+      "enum": [
+        "subject"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is observing/witnessing",
+      "enum": [
+        "observer"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is the target of action",
+      "enum": [
+        "target"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is setting/location",
+      "enum": [
+        "setting"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is an instrument/tool",
+      "enum": [
+        "instrument"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ThreadRole",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-enum-repr": "simple_enum",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  },
+  "x-familiar-variants": {
+    "actor": "Actor",
+    "instrument": "Instrument",
+    "observer": "Observer",
+    "setting": "Setting",
+    "subject": "Subject",
+    "target": "Target"
+  }
+}

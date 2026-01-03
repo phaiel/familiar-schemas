@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Simplified message for conversation history (LLM context)",
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "content",
+    "role"
+  ],
+  "title": "ConversationMessage",
+  "type": "object"
+}

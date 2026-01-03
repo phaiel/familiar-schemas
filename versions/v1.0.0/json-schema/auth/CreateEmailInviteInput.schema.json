@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "definitions": {
+    "InviteRole": {
+      "description": "Role to assign when invitation is accepted",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for creating an email invitation",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "expires_in_days": {
+      "default": 7,
+      "description": "Expiry in days (default 7)",
+      "format": "int64",
+      "type": "integer"
+    },
+    "role": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/InviteRole"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "email",
+    "tenant_id"
+  ],
+  "title": "CreateEmailInviteInput",
+  "type": "object"
+}

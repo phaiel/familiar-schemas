@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "WeightedClassification": {
+      "description": "A weighted classification representing the probability/confidence that a segment belongs to a specific entity type. Part of the Superposition model - a single thought can be multiple things.",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/HeddleEntityType.schema.json"
+            }
+          ],
+          "description": "The entity type this classification refers to"
+        },
+        "weight": {
+          "allOf": [
+            {
+              "$ref": "../primitives/NormalizedFloat.schema.json"
+            }
+          ],
+          "description": "Confidence/Weight (0.0 to 1.0) If > Threshold during collapse, we instantiate this entity."
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A collection of weighted classifications representing the superposition of possible entity types for a single segment.",
+  "properties": {
+    "classifications": {
+      "items": {
+        "$ref": "#/definitions/WeightedClassification"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "classifications"
+  ],
+  "title": "ClassificationSuperposition",
+  "type": "object"
+}

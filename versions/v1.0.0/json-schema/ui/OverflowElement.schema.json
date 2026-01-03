@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "action_id": {
+      "type": "string"
+    },
+    "options": {
+      "items": {
+        "$ref": "../primitives/OptionObject.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "action_id",
+    "options"
+  ],
+  "title": "OverflowElement",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

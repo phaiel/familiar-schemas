@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An input field",
+  "properties": {
+    "element": {
+      "$ref": "../primitives/BlockElement.schema.json"
+    },
+    "hint": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/PlainTextObject.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "label": {
+      "$ref": "../primitives/PlainTextObject.schema.json"
+    },
+    "optional": {
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "element",
+    "label"
+  ],
+  "title": "InputBlock",
+  "type": "object"
+}

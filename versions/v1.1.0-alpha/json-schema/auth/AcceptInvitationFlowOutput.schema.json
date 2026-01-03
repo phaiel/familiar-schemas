@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AcceptInvitationFlowOutput",
+  "description": "Output from the accept invitation Windmill flow",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "tenant_name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "personal_channel_id": {
+      "$ref": "../primitives/ChannelId.schema.json"
+    }
+  },
+  "required": ["tenant_id", "tenant_name", "role", "personal_channel_id"],
+  "x-familiar-kind": "response"
+}
+

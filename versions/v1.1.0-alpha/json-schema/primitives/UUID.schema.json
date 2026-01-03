@@ -1,0 +1,9 @@
+{
+  "$id": "primitives/UUID.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A UUID (serialized as string)",
+  "format": "uuid",
+  "title": "UUID",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}

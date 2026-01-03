@@ -1,0 +1,621 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ConditionOperator": {
+      "description": "Condition operators",
+      "enum": [
+        "equals",
+        "not_equals",
+        "greater_than",
+        "less_than",
+        "contains",
+        "not_contains",
+        "is_null",
+        "is_not_null",
+        "in"
+      ],
+      "type": "string"
+    },
+    "ConditionType": {
+      "description": "Types of conditions",
+      "oneOf": [
+        {
+          "description": "Check output value",
+          "enum": [
+            "output_value"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Check if step succeeded",
+          "enum": [
+            "step_success"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Check if step failed",
+          "enum": [
+            "step_failed"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Check output exists",
+          "enum": [
+            "output_exists"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ContextStrategy": {
+      "description": "How context flows between tools",
+      "oneOf": [
+        {
+          "description": "Pass full context to every tool",
+          "enum": [
+            "full_context"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Only pass relevant context (filtered)",
+          "enum": [
+            "filtered_context"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Accumulate results as context grows",
+          "enum": [
+            "accumulating_context"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Each step gets fresh context",
+          "enum": [
+            "isolated_context"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ErrorStrategy": {
+      "description": "Error handling strategy",
+      "oneOf": [
+        {
+          "description": "Fail the entire chain on any error",
+          "enum": [
+            "fail_fast"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Continue with remaining steps",
+          "enum": [
+            "continue_on_error"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Retry failed steps",
+          "enum": [
+            "retry_on_error"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Use fallback tool",
+          "enum": [
+            "use_fallback"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ExecutionOrder": {
+      "description": "Execution order types",
+      "oneOf": [
+        {
+          "description": "Execute in sequence",
+          "enum": [
+            "sequential"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Execute in parallel with other parallel steps",
+          "enum": [
+            "parallel"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Execute only if condition is met",
+          "enum": [
+            "conditional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Execute as fallback if previous failed",
+          "enum": [
+            "fallback"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "InputMapping": {
+      "description": "Input mapping from previous step output",
+      "properties": {
+        "from_path": {
+          "description": "Path in source output",
+          "type": "string"
+        },
+        "from_step": {
+          "description": "Source step ID",
+          "type": "string"
+        },
+        "to_path": {
+          "description": "Path in this step's input",
+          "type": "string"
+        },
+        "transform": {
+          "anyOf": [
+            {
+              "$ref": "InputTransform.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Transform to apply"
+        }
+      },
+      "required": [
+        "from_path",
+        "from_step",
+        "to_path"
+      ],
+      "type": "object"
+    },
+    "InputTransform": {
+      "description": "Transforms for input mapping",
+      "oneOf": [
+        {
+          "description": "Direct pass-through",
+          "properties": {
+            "type": {
+              "enum": [
+                "identity"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Extract array item",
+          "properties": {
+            "index": {
+              "format": "uint",
+              "minimum": 0.0,
+              "type": "integer"
+            },
+            "type": {
+              "enum": [
+                "array_item"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "index",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Filter array by condition",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "array_filter"
+              ],
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "type",
+            "value"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Map array items",
+          "properties": {
+            "template": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "array_map"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "template",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Concatenate strings",
+          "properties": {
+            "separator": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "concat"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "separator",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Custom transform function",
+          "properties": {
+            "function": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "custom"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "function",
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "PipelineTrigger": {
+      "description": "Trigger for pipeline selection",
+      "properties": {
+        "priority": {
+          "default": 0,
+          "description": "Priority (higher = checked first)",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "trigger_type": {
+          "allOf": [
+            {
+              "$ref": "TriggerType.schema.json"
+            }
+          ],
+          "description": "Trigger type"
+        },
+        "value": {
+          "description": "Value to match",
+          "type": "string"
+        }
+      },
+      "required": [
+        "trigger_type",
+        "value"
+      ],
+      "type": "object"
+    },
+    "PipelineType": {
+      "description": "Types of standard pipelines",
+      "oneOf": [
+        {
+          "description": "Memory recording: Segment \u2192 Classify \u2192 Spawn \u2192 Hints \u2192 Store",
+          "enum": [
+            "memory_recording"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Query: Parse \u2192 Search \u2192 Format \u2192 Return",
+          "enum": [
+            "query"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Analysis: Parse \u2192 Search \u2192 Analyze \u2192 Synthesize",
+          "enum": [
+            "analysis"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Command: Parse \u2192 Validate \u2192 Execute \u2192 Confirm",
+          "enum": [
+            "command"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Conversation: Understand \u2192 Respond",
+          "enum": [
+            "conversation"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Multi-modal: Route \u2192 Process per modality \u2192 Merge",
+          "enum": [
+            "multi_modal"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "StepCondition": {
+      "description": "Condition for conditional execution",
+      "properties": {
+        "condition_type": {
+          "allOf": [
+            {
+              "$ref": "ConditionType.schema.json"
+            }
+          ],
+          "description": "Type of condition"
+        },
+        "operator": {
+          "allOf": [
+            {
+              "$ref": "ConditionOperator.schema.json"
+            }
+          ],
+          "description": "Operator"
+        },
+        "path": {
+          "description": "Path to check",
+          "type": "string"
+        },
+        "source_step": {
+          "description": "Source step to check",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value to compare"
+        }
+      },
+      "required": [
+        "condition_type",
+        "operator",
+        "path",
+        "source_step",
+        "value"
+      ],
+      "type": "object"
+    },
+    "ToolChain": {
+      "description": "A chain of tools to execute",
+      "properties": {
+        "context_strategy": {
+          "allOf": [
+            {
+              "$ref": "ContextStrategy.schema.json"
+            }
+          ],
+          "description": "How context flows between steps"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "error_strategy": {
+          "allOf": [
+            {
+              "$ref": "ErrorStrategy.schema.json"
+            }
+          ],
+          "description": "Error handling strategy"
+        },
+        "id": {
+          "description": "Chain identifier",
+          "type": "string"
+        },
+        "name": {
+          "description": "Human-readable name",
+          "type": "string"
+        },
+        "steps": {
+          "description": "Steps in the chain",
+          "items": {
+            "$ref": "ToolChainStep.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "context_strategy",
+        "description",
+        "error_strategy",
+        "id",
+        "name",
+        "steps"
+      ],
+      "type": "object"
+    },
+    "ToolChainStep": {
+      "description": "A step in a tool chain",
+      "properties": {
+        "condition": {
+          "anyOf": [
+            {
+              "$ref": "StepCondition.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Condition for execution (if conditional)"
+        },
+        "execution_order": {
+          "allOf": [
+            {
+              "$ref": "ExecutionOrder.schema.json"
+            }
+          ],
+          "description": "Execution order"
+        },
+        "id": {
+          "description": "Step identifier",
+          "type": "string"
+        },
+        "input_mapping": {
+          "default": [],
+          "description": "Input mapping from previous steps",
+          "items": {
+            "$ref": "InputMapping.schema.json"
+          },
+          "type": "array"
+        },
+        "parallel_with": {
+          "default": [],
+          "description": "Steps to run in parallel with this one",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "required": {
+          "default": true,
+          "description": "Whether step is required or optional",
+          "type": "boolean"
+        },
+        "timeout_ms": {
+          "default": null,
+          "description": "Timeout in milliseconds",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "tool": {
+          "description": "Tool to execute",
+          "type": "string"
+        }
+      },
+      "required": [
+        "execution_order",
+        "id",
+        "tool"
+      ],
+      "type": "object"
+    },
+    "TriggerType": {
+      "description": "Types of triggers",
+      "oneOf": [
+        {
+          "description": "Match on purpose type",
+          "enum": [
+            "purpose"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Match on modality",
+          "enum": [
+            "modality"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Match on entity type",
+          "enum": [
+            "entity_type"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Match on keyword",
+          "enum": [
+            "keyword"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Custom condition",
+          "enum": [
+            "custom"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Standard processing pipeline definitions",
+  "properties": {
+    "chain": {
+      "allOf": [
+        {
+          "$ref": "ToolChain.schema.json"
+        }
+      ],
+      "description": "The tool chain"
+    },
+    "pipeline_type": {
+      "allOf": [
+        {
+          "$ref": "PipelineType.schema.json"
+        }
+      ],
+      "description": "Pipeline type"
+    },
+    "triggers": {
+      "description": "When to use this pipeline",
+      "items": {
+        "$ref": "PipelineTrigger.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "chain",
+    "pipeline_type",
+    "triggers"
+  ],
+  "title": "StandardPipeline",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

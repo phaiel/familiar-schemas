@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Weave",
+  "description": "A Weave is the raw user input - their message to Familiar",
+  "type": "object",
+  "required": [
+    "raw_content"
+  ],
+  "properties": {
+    "context": {
+      "description": "Optional context provided with the message",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "raw_content": {
+      "description": "The raw text content from the user",
+      "type": "string"
+    }
+  }
+}

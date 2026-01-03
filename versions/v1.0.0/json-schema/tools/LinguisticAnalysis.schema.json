@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "IdentifiedVerb": {
+      "description": "An identified verb with analysis",
+      "properties": {
+        "category": {
+          "allOf": [
+            {
+              "$ref": "../primitives/VerbCategory.schema.json"
+            }
+          ],
+          "description": "Verb category"
+        },
+        "is_main": {
+          "description": "Is this the main verb?",
+          "type": "boolean"
+        },
+        "tense": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/VerbTense"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Tense"
+        },
+        "text": {
+          "description": "The verb text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "is_main",
+        "text"
+      ],
+      "type": "object"
+    },
+    "VerbTense": {
+      "description": "Verb tenses",
+      "enum": [
+        "past",
+        "present",
+        "future",
+        "habitual"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Result of linguistic analysis for classification",
+  "properties": {
+    "modifiers": {
+      "default": [],
+      "description": "Adverbs/modifiers that affect classification",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "objects": {
+      "default": [],
+      "description": "Objects identified",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "subjects": {
+      "default": [],
+      "description": "Subjects identified",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "verbs": {
+      "description": "Identified verbs",
+      "items": {
+        "$ref": "#/definitions/IdentifiedVerb"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "verbs"
+  ],
+  "title": "LinguisticAnalysis",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

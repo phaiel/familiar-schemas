@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Error handling strategy",
+  "oneOf": [
+    {
+      "description": "Fail the entire chain on any error",
+      "enum": [
+        "fail_fast"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Continue with remaining steps",
+      "enum": [
+        "continue_on_error"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Retry failed steps",
+      "enum": [
+        "retry_on_error"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Use fallback tool",
+      "enum": [
+        "use_fallback"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ErrorStrategy",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-enum-repr": "simple_enum",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  },
+  "x-familiar-variants": {
+    "continue_on_error": "ContinueOnError",
+    "fail_fast": "FailFast",
+    "retry_on_error": "RetryOnError",
+    "use_fallback": "UseFallback"
+  }
+}

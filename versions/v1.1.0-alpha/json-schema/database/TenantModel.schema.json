@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "settings": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "name",
+    "settings",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "tenants",
+  "x-familiar-module": "conversation",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "has_many",
+      "target": "TenantMemberModel",
+      "field": "members"
+    },
+    {
+      "type": "has_many",
+      "target": "ChannelModel",
+      "field": "channels"
+    }
+  ]
+}

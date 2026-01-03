@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EntityMentionType": {
+      "description": "Types of entity mentions",
+      "enum": [
+        "PERSON",
+        "PLACE",
+        "ORGANIZATION",
+        "DATE_TIME",
+        "EVENT",
+        "CONCEPT",
+        "OBJECT",
+        "ACTIVITY"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "An entity mention within a segment",
+  "properties": {
+    "confidence": {
+      "description": "Confidence in detection",
+      "format": "double",
+      "type": "number"
+    },
+    "end": {
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityMentionType"
+        }
+      ],
+      "description": "Type of entity mentioned"
+    },
+    "resolved_id": {
+      "default": null,
+      "description": "Resolved entity ID (if matched to known entity)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "start": {
+      "description": "Position in segment",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "text": {
+      "description": "The text of the mention",
+      "type": "string"
+    }
+  },
+  "required": [
+    "confidence",
+    "end",
+    "entity_type",
+    "start",
+    "text"
+  ],
+  "title": "EntityMention",
+  "type": "object"
+}

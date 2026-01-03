@@ -1,0 +1,465 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationResponse": {
+      "description": "Classification with weight",
+      "properties": {
+        "entity_type": {
+          "type": "string"
+        },
+        "weight": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "EntityResponse": {
+      "description": "A spawned entity in the response",
+      "properties": {
+        "content_preview": {
+          "type": "string"
+        },
+        "entity_type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "PhysicsResponse.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unit_index": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "content_preview",
+        "entity_type",
+        "id",
+        "unit_index"
+      ],
+      "type": "object"
+    },
+    "LlmRequestDebug": {
+      "description": "Debug info about the LLM request",
+      "properties": {
+        "system_prompt": {
+          "type": "string"
+        },
+        "user_prompt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "system_prompt",
+        "user_prompt"
+      ],
+      "type": "object"
+    },
+    "MediaRef": {
+      "properties": {
+        "bucket_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "media_type": {
+          "$ref": "MediaType.schema.json"
+        },
+        "metadata": true,
+        "normalized_text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "media_type",
+        "metadata",
+        "normalized_text"
+      ],
+      "type": "object"
+    },
+    "MediaType": {
+      "enum": [
+        "Image",
+        "Audio",
+        "Document",
+        "Webpage"
+      ],
+      "type": "string"
+    },
+    "MessageIntentResponse": {
+      "description": "Classified message intent (what the user is trying to do)",
+      "properties": {
+        "confidence": {
+          "description": "Confidence score 0.0-1.0",
+          "format": "double",
+          "type": "number"
+        },
+        "intent": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "description": "Primary intent: LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL"
+        },
+        "query_target": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/QueryTarget.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what is being queried"
+        },
+        "query_type": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/QueryType.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what type of query"
+        }
+      },
+      "required": [
+        "confidence",
+        "intent"
+      ],
+      "type": "object"
+    },
+    "PhysicsHintResponse": {
+      "description": "Physics hints from LLM",
+      "properties": {
+        "arousal": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "PhysicsResponse": {
+      "description": "Physics state on spawned entity",
+      "properties": {
+        "amplitude": {
+          "format": "double",
+          "type": "number"
+        },
+        "energy": {
+          "format": "double",
+          "type": "number"
+        },
+        "position": {
+          "description": "Position in VAE space [Valence, Arousal, Epistemic]",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "temperature": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "amplitude",
+        "energy",
+        "position",
+        "temperature"
+      ],
+      "type": "object"
+    },
+    "SegmentResponse": {
+      "description": "A raw segment from Phase 1 (no classification)",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "mentions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object"
+    },
+    "WeaveUnitResponse": {
+      "description": "A weave unit in the response",
+      "properties": {
+        "classifications": {
+          "items": {
+            "$ref": "ClassificationResponse.schema.json"
+          },
+          "type": "array"
+        },
+        "content": {
+          "type": "string"
+        },
+        "index": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "physics_hint": {
+          "anyOf": [
+            {
+              "$ref": "PhysicsHintResponse.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "primary_thread": {
+          "description": "Primary thread (main subject/actor)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "description": "Purpose of this specific weave unit (LOG, QUERY, COMMAND, INFER, REFERENCE)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "secondary_threads": {
+          "default": [],
+          "description": "Secondary threads (other people/places/things)",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "spawned_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "temporal_marker": {
+          "default": null,
+          "description": "Temporal marker (when: absolute, relative, frequency, duration) Always included in output for debugging (even if null)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "classifications",
+        "content",
+        "index"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Response payload for POST /weave",
+  "properties": {
+    "course_id": {
+      "description": "Course ID (the workflow container)",
+      "type": "string"
+    },
+    "debug_llm_request": {
+      "anyOf": [
+        {
+          "$ref": "../components/LlmRequestDebug.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Raw prompt sent to LLM (system + user message)"
+    },
+    "debug_llm_response": {
+      "description": "Raw JSON response from LLM (before processing)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "entities": {
+      "description": "Entities spawned from weave units (by Spawner, not LLM)",
+      "items": {
+        "$ref": "EntityResponse.schema.json"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "error": {
+      "description": "Error message if failed",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "media_refs": {
+      "description": "Media references from multimodal input",
+      "items": {
+        "$ref": "MediaRef.schema.json"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "message_intent": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "description": "What is the user trying to do with this message?"
+    },
+    "metadata": {
+      "anyOf": [
+        {
+          "description": "Processing metadata"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "original_weave": {
+      "description": "The original user input (preserved for context)",
+      "type": "string"
+    },
+    "provider": {
+      "description": "Provider used",
+      "type": "string"
+    },
+    "segments": {
+      "default": [],
+      "description": "Raw segments before classification (Phase 1 output)",
+      "items": {
+        "$ref": "SegmentResponse.schema.json"
+      },
+      "type": "array"
+    },
+    "shuttle_id": {
+      "description": "Shuttle ID (carries the weave units)",
+      "type": "string"
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "unit_count": {
+      "description": "Number of weave units extracted (0 for queries)",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "weave_units": {
+      "description": "The classified weave units (for LOG intent)",
+      "items": {
+        "$ref": "WeaveUnitResponse.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "course_id",
+    "message_intent",
+    "original_weave",
+    "provider",
+    "shuttle_id",
+    "success",
+    "unit_count",
+    "weave_units"
+  ],
+  "title": "CourseResponse",
+  "type": "object",
+  "x-familiar-kind": "entities_api",
+  "x-familiar-rust-impl-ids": [
+    "CourseResponse"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

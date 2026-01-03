@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "extract_images": {
+      "default": false,
+      "description": "Whether to extract images from the page",
+      "type": "boolean"
+    },
+    "selector": {
+      "description": "Optional CSS selector to extract specific content",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "url": {
+      "description": "URL to scrape",
+      "type": "string"
+    }
+  },
+  "required": [
+    "url"
+  ],
+  "title": "WebpageBlock",
+  "type": "object",
+  "x-familiar-kind": "entities_api",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

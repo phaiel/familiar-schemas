@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "PromptPhase": {
+      "enum": [
+        "Segmentation",
+        "Purpose",
+        "Classification"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Schema for TypeScript prompt configuration Runtime prompts are in services/windmill/scripts/*.ts",
+  "properties": {
+    "max_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "model": {
+      "type": "string"
+    },
+    "phase": {
+      "$ref": "#/definitions/PromptPhase"
+    },
+    "temperature": {
+      "format": "float",
+      "type": "number"
+    }
+  },
+  "required": [
+    "max_tokens",
+    "model",
+    "phase",
+    "temperature"
+  ],
+  "title": "PromptConfig",
+  "type": "object",
+  "x-familiar-kind": "type"
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "User's historical entity patterns",
+  "properties": {
+    "distribution": {
+      "additionalProperties": {
+        "format": "double",
+        "type": "number"
+      },
+      "default": {},
+      "description": "Distribution (entity_type -> frequency)",
+      "type": "object"
+    },
+    "primary_type": {
+      "allOf": [
+        {
+          "$ref": "../primitives/EntityType.schema.json"
+        }
+      ],
+      "description": "Most common entity type"
+    }
+  },
+  "required": [
+    "primary_type"
+  ],
+  "title": "EntityPatterns",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DatabasePool",
+  "description": "Generic database connection pool component for non-Tiger databases.",
+  "x-familiar-kind": "component",
+  "x-familiar-resources": [
+    { "$ref": "../resources/postgres-main.resource.json" }
+  ],
+  "x-familiar-config": { "$ref": "DbPoolConfig.schema.json" },
+  "type": "object",
+  "properties": {
+    "pool": {
+      "description": "Connection pool instance",
+      "type": "object"
+    },
+    "min_connections": {
+      "type": "integer",
+      "default": 5
+    },
+    "max_connections": {
+      "type": "integer",
+      "default": 20
+    }
+  }
+}
+
+
+
+

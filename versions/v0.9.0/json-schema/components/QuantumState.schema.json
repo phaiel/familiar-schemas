@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Represents the wave-nature of an entity. Instead of a full qubit simulation (O(2^N)), we use Complex Vectors (O(N)). This supports Interference, Phase, and Resonance natively in Vector DBs.",
+  "properties": {
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "amplitudes",
+    "coherence"
+  ],
+  "title": "QuantumState",
+  "type": "object"
+}

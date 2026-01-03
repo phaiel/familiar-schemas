@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "TriggerType": {
+      "description": "Types of triggers",
+      "oneOf": [
+        {
+          "description": "Match on purpose type",
+          "enum": [
+            "purpose"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Match on modality",
+          "enum": [
+            "modality"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Match on entity type",
+          "enum": [
+            "entity_type"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Match on keyword",
+          "enum": [
+            "keyword"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Custom condition",
+          "enum": [
+            "custom"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Trigger for pipeline selection",
+  "properties": {
+    "priority": {
+      "default": 0,
+      "description": "Priority (higher = checked first)",
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "trigger_type": {
+      "allOf": [
+        {
+          "$ref": "TriggerType.schema.json"
+        }
+      ],
+      "description": "Trigger type"
+    },
+    "value": {
+      "description": "Value to match",
+      "type": "string"
+    }
+  },
+  "required": [
+    "trigger_type",
+    "value"
+  ],
+  "title": "PipelineTrigger",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

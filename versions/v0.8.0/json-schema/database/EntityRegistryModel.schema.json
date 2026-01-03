@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "entity_type": {
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "entity_type",
+    "id",
+    "tenant_id"
+  ],
+  "title": "Model",
+  "type": "object"
+}

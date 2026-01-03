@@ -1,0 +1,807 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationEvidence": {
+      "description": "Evidence for a classification",
+      "properties": {
+        "description": {
+          "description": "Description of evidence",
+          "type": "string"
+        },
+        "evidence_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EvidenceType"
+            }
+          ],
+          "description": "Type of evidence"
+        },
+        "weight": {
+          "description": "How much this evidence contributes",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "description",
+        "evidence_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "ClassificationReasoning": {
+      "description": "Reasoning behind classification",
+      "properties": {
+        "explanations": {
+          "default": [],
+          "description": "Why certain types were included/excluded",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "key_phrases": {
+          "default": [],
+          "description": "Key phrases that influenced classification",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "main_verb": {
+          "default": null,
+          "description": "Main verb identified",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "verb_category": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/VerbCategory"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Verb category"
+        }
+      },
+      "type": "object"
+    },
+    "EmotionalTone": {
+      "description": "Emotional tone detected in segment",
+      "properties": {
+        "arousal": {
+          "description": "Arousal (0.0 calm to 1.0 excited)",
+          "format": "double",
+          "type": "number"
+        },
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "primary": {
+          "description": "Primary emotion",
+          "type": "string"
+        },
+        "valence": {
+          "description": "Valence (-1.0 negative to 1.0 positive)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "arousal",
+        "confidence",
+        "primary",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "EntityClassification": {
+      "description": "A single entity classification with probability",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityType"
+            }
+          ],
+          "description": "Entity type"
+        },
+        "evidence": {
+          "default": [],
+          "description": "Evidence supporting this classification",
+          "items": {
+            "$ref": "#/definitions/ClassificationEvidence"
+          },
+          "type": "array"
+        },
+        "probability": {
+          "description": "Probability (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "probability"
+      ],
+      "type": "object"
+    },
+    "EntityClassifierOutput": {
+      "description": "Output from entity classification",
+      "properties": {
+        "classifications": {
+          "description": "All classifications with probabilities (sorted by probability)",
+          "items": {
+            "$ref": "#/definitions/EntityClassification"
+          },
+          "type": "array"
+        },
+        "enriched_content": {
+          "default": null,
+          "description": "Enriched content (e.g., Pulse with context added)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "primary_thread": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ThreadReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Primary thread reference (main subject/actor)"
+        },
+        "reasoning": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ClassificationReasoning"
+            }
+          ],
+          "description": "Classification reasoning"
+        },
+        "secondary_threads": {
+          "default": [],
+          "description": "Secondary thread references",
+          "items": {
+            "$ref": "#/definitions/ThreadReference"
+          },
+          "type": "array"
+        },
+        "temporal_marker": {
+          "default": null,
+          "description": "Temporal marker extracted",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "classifications",
+        "reasoning"
+      ],
+      "type": "object"
+    },
+    "EntityMention": {
+      "description": "An entity mention within a segment",
+      "properties": {
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "end": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityMentionType"
+            }
+          ],
+          "description": "Type of entity mentioned"
+        },
+        "resolved_id": {
+          "default": null,
+          "description": "Resolved entity ID (if matched to known entity)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start": {
+          "description": "Position in segment",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "text": {
+          "description": "The text of the mention",
+          "type": "string"
+        }
+      },
+      "required": [
+        "confidence",
+        "end",
+        "entity_type",
+        "start",
+        "text"
+      ],
+      "type": "object"
+    },
+    "EntityMentionType": {
+      "description": "Types of entity mentions",
+      "enum": [
+        "PERSON",
+        "PLACE",
+        "ORGANIZATION",
+        "DATE_TIME",
+        "EVENT",
+        "CONCEPT",
+        "OBJECT",
+        "ACTIVITY"
+      ],
+      "type": "string"
+    },
+    "EntityType": {
+      "description": "Entity types from the Symmetric Seven ontology",
+      "oneOf": [
+        {
+          "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+          "enum": [
+            "MOMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+          "enum": [
+            "PULSE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Definition of person, place, or concept (Definitional/Object)",
+          "enum": [
+            "THREAD"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relationship between entities (Relational/Connection)",
+          "enum": [
+            "BOND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring external pattern (External Wave)",
+          "enum": [
+            "MOTIF"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A recurring internal pattern (Internal Wave)",
+          "enum": [
+            "FILAMENT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An active thematic goal (Intentional Wave)",
+          "enum": [
+            "FOCUS"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A task or goal for the future (Operational/Intentional Particle)",
+          "enum": [
+            "INTENT"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "EvidenceType": {
+      "description": "Types of evidence for classification",
+      "oneOf": [
+        {
+          "description": "Verb type (action vs state)",
+          "enum": [
+            "verb_type"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Keywords detected",
+          "enum": [
+            "keywords"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal indicators",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional indicators",
+          "enum": [
+            "emotional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity mentions",
+          "enum": [
+            "entity_mention"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relational language",
+          "enum": [
+            "relational"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Pattern indicators",
+          "enum": [
+            "pattern"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Context from surrounding content",
+          "enum": [
+            "context"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "Modality": {
+      "description": "Supported input modalities",
+      "enum": [
+        "text",
+        "audio",
+        "vision",
+        "video"
+      ],
+      "type": "string"
+    },
+    "ParsedTemporal": {
+      "description": "Parsed temporal information",
+      "properties": {
+        "date": {
+          "default": null,
+          "description": "ISO 8601 date if specific",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relative_days": {
+          "default": null,
+          "description": "Relative offset (e.g., -1 for \"yesterday\")",
+          "format": "int32",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "time_of_day": {
+          "default": null,
+          "description": "Time of day if mentioned",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "Segment": {
+      "description": "A segmented unit of content",
+      "properties": {
+        "boundaries": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SegmentBoundaries"
+            }
+          ],
+          "description": "Segment boundaries"
+        },
+        "confidence": {
+          "description": "Confidence in segmentation decision",
+          "format": "double",
+          "type": "number"
+        },
+        "content": {
+          "description": "The segmented content",
+          "type": "string"
+        },
+        "features": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SegmentFeatures"
+            }
+          ],
+          "description": "Extracted features"
+        },
+        "id": {
+          "description": "Unique segment ID",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index in the sequence",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "modality": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Modality"
+            }
+          ],
+          "description": "Original modality"
+        }
+      },
+      "required": [
+        "boundaries",
+        "confidence",
+        "content",
+        "features",
+        "id",
+        "index",
+        "modality"
+      ],
+      "type": "object"
+    },
+    "SegmentBoundaries": {
+      "description": "Boundaries of a segment within the original input",
+      "properties": {
+        "end": {
+          "description": "End position",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "speaker_id": {
+          "default": null,
+          "description": "For audio/video: speaker ID if detected",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start": {
+          "description": "Start position (char index for text, milliseconds for audio/video)",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "end",
+        "start"
+      ],
+      "type": "object"
+    },
+    "SegmentFeatures": {
+      "description": "Extracted features from a segment",
+      "properties": {
+        "emotional_tone": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/EmotionalTone"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Emotional tone (if detectable)"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords extracted",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "language": {
+          "default": null,
+          "description": "Language detected",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mentions": {
+          "default": [],
+          "description": "Entity mentions found",
+          "items": {
+            "$ref": "#/definitions/EntityMention"
+          },
+          "type": "array"
+        },
+        "subject": {
+          "default": null,
+          "description": "Primary subject/actor mentioned",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal_markers": {
+          "default": [],
+          "description": "Temporal markers detected",
+          "items": {
+            "$ref": "#/definitions/TemporalMarker"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "SpawnConfig": {
+      "description": "Configuration for spawn decisions",
+      "properties": {
+        "auto_spawn_enabled": {
+          "default": true,
+          "description": "Whether to auto-spawn high confidence entities",
+          "type": "boolean"
+        },
+        "high_confidence_threshold": {
+          "default": 0.8,
+          "description": "High confidence threshold (auto-spawn above this)",
+          "format": "double",
+          "type": "number"
+        },
+        "low_confidence_threshold": {
+          "default": 0.3,
+          "description": "Low confidence threshold (skip below this)",
+          "format": "double",
+          "type": "number"
+        },
+        "manual_only_types": {
+          "default": [],
+          "description": "Entity types that should never auto-spawn",
+          "items": {
+            "$ref": "#/definitions/EntityType"
+          },
+          "type": "array"
+        },
+        "max_entities_per_segment": {
+          "default": 3,
+          "description": "Maximum entities to spawn from one segment",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "medium_confidence_threshold": {
+          "default": 0.5,
+          "description": "Medium confidence threshold (suggest above this)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "TemporalMarker": {
+      "description": "A temporal marker in the segment",
+      "properties": {
+        "marker_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalMarkerType"
+            }
+          ],
+          "description": "Type of temporal reference"
+        },
+        "parsed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ParsedTemporal"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parsed temporal value (if parseable)"
+        },
+        "text": {
+          "description": "The text of the marker",
+          "type": "string"
+        }
+      },
+      "required": [
+        "marker_type",
+        "text"
+      ],
+      "type": "object"
+    },
+    "TemporalMarkerType": {
+      "description": "Types of temporal markers",
+      "oneOf": [
+        {
+          "description": "Specific date (January 5th)",
+          "enum": [
+            "absolute"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relative reference (yesterday, last week)",
+          "enum": [
+            "relative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Duration (for 2 hours)",
+          "enum": [
+            "duration"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Frequency (every day, weekly)",
+          "enum": [
+            "frequency"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Time of day (in the morning)",
+          "enum": [
+            "time_of_day"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ThreadReference": {
+      "description": "Reference to an existing thread",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "description": "Aliases for matching",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Thread name/label",
+          "type": "string"
+        },
+        "thread_type": {
+          "description": "Thread type (person, place, concept, etc.)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "thread_type"
+      ],
+      "type": "object"
+    },
+    "VerbCategory": {
+      "description": "Categories of verbs for classification",
+      "oneOf": [
+        {
+          "description": "Action verbs (went, did, called) → MOMENT",
+          "enum": [
+            "action"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "State verbs (was, felt, is) → often PULSE",
+          "enum": [
+            "state"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Stative + evaluative (was nice, felt good) → PULSE",
+          "enum": [
+            "evaluative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relational verbs (met, talked with) → may indicate BOND",
+          "enum": [
+            "relational"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Habitual (always, usually does) → may indicate MOTIF/FILAMENT",
+          "enum": [
+            "habitual"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Intentional (want to, plan to) → INTENT",
+          "enum": [
+            "intentional"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Input for spawn suggestion tool",
+  "properties": {
+    "classification": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityClassifierOutput"
+        }
+      ],
+      "description": "Entity classification result"
+    },
+    "config": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SpawnConfig"
+        }
+      ],
+      "default": {
+        "auto_spawn_enabled": true,
+        "high_confidence_threshold": 0.8,
+        "low_confidence_threshold": 0.3,
+        "manual_only_types": [],
+        "max_entities_per_segment": 3,
+        "medium_confidence_threshold": 0.5
+      },
+      "description": "Spawn configuration"
+    },
+    "segment": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Segment"
+        }
+      ],
+      "description": "Original segment"
+    }
+  },
+  "required": [
+    "classification",
+    "segment"
+  ],
+  "title": "SpawnSuggesterInput",
+  "type": "object"
+}

@@ -1,0 +1,9 @@
+{
+  "$id": "primitives/QuantizedCoord.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A quantized coordinate in the 3D VAE Manifold Uses i64 for precision in physics calculations",
+  "format": "int64",
+  "title": "QuantizedCoord",
+  "type": "integer",
+  "x-familiar-kind": "primitive"
+}

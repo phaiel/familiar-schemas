@@ -1,0 +1,317 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "WeaveBlock": {
+      "description": "Input block types for multimodal weave requests",
+      "oneOf": [
+        {
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "text"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "alt_text": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "analyze": {
+              "default": true,
+              "description": "Request vision analysis",
+              "type": "boolean"
+            },
+            "source": {
+              "description": "base64 data URI or URL",
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "image"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "duration_secs": {
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "transcript": {
+              "description": "Pre-transcribed (skip Whisper)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "enum": [
+                "audio"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "filename": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "mime_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "document"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "extract_images": {
+              "default": false,
+              "description": "Whether to extract images from the page",
+              "type": "boolean"
+            },
+            "selector": {
+              "description": "Optional CSS selector to extract specific content",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "enum": [
+                "webpage"
+              ],
+              "type": "string"
+            },
+            "url": {
+              "description": "URL to scrape",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "url"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "description": "Commands that can be sent to the agentic system\n\nThese commands are the primary interface for interacting with the multi-agent orchestration system. They can be sent directly via HTTP or published to a message broker.",
+  "oneOf": [
+    {
+      "description": "Send a new message to the agentic system",
+      "properties": {
+        "blocks": {
+          "default": null,
+          "description": "Optional multimodal blocks (images, audio, etc.)",
+          "items": {
+            "$ref": "../entities_api/WeaveBlock.schema.json"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "command_type": {
+          "enum": [
+            "send_message"
+          ],
+          "type": "string"
+        },
+        "content": {
+          "description": "Text content of the message",
+          "type": "string"
+        },
+        "conversation_history": {
+          "default": null,
+          "description": "Conversation history for context",
+          "items": {
+            "$ref": "ConversationHistoryItem.schema.json"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "flow_path": {
+          "default": null,
+          "description": "Override the default flow path (e.g., \"u/phaiel/loom\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "request_id": {
+          "description": "Request ID for tracing",
+          "type": "string"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string"
+        },
+        "thread_id": {
+          "default": null,
+          "description": "Thread ID (None = start new thread)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "command_type",
+        "content",
+        "request_id",
+        "tenant_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Continue processing in an existing thread",
+      "properties": {
+        "command_type": {
+          "enum": [
+            "continue_thread"
+          ],
+          "type": "string"
+        },
+        "request_id": {
+          "description": "Request ID for tracing",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "ID of the thread to continue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_type",
+        "request_id",
+        "thread_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Cancel a running task",
+      "properties": {
+        "command_type": {
+          "enum": [
+            "cancel_task"
+          ],
+          "type": "string"
+        },
+        "reason": {
+          "default": null,
+          "description": "Reason for cancellation",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "task_id": {
+          "$ref": "../primitives/TaskId.schema.json",
+          "description": "ID of the task to cancel"
+        }
+      },
+      "required": [
+        "command_type",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Request thread history",
+      "properties": {
+        "command_type": {
+          "enum": [
+            "get_thread_history"
+          ],
+          "type": "string"
+        },
+        "limit": {
+          "default": null,
+          "description": "Maximum number of messages to return",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "thread_id": {
+          "description": "ID of the thread",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_type",
+        "thread_id"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "AgenticCommand",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-discriminator": "command_type",
+  "x-familiar-enum-repr": "internally_tagged",
+  "x-familiar-kind": "input",
+  "x-familiar-service": "familiar-daemon",
+  "x-familiar-variants": {
+    "cancel_task": "CancelTask",
+    "continue_course": "ContinueCourse",
+    "get_course_history": "GetCourseHistory",
+    "send_message": "SendMessage"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WebpageBlock",
+  "description": "Webpage block for multimodal weave requests",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "URL to scrape"
+    },
+    "selector": {
+      "type": ["string", "null"],
+      "description": "Optional CSS selector to extract specific content"
+    },
+    "extract_images": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to extract images from the page"
+    }
+  },
+  "required": ["url"],
+  "x-familiar-kind": "component"
+}
+

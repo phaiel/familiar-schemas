@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContractEnforcer",
+  "description": "High-performance JSON Schema validation component using SIMD-JSON and compiled schemas.",
+  "x-familiar-kind": "component",
+  "type": "object",
+  "properties": {
+    "compiled_schemas": {
+      "description": "Pre-compiled JSON schemas for fast validation",
+      "type": "object"
+    },
+    "version": {
+      "description": "Schema version this enforcer is configured for",
+      "type": "string"
+    }
+  }
+}
+
+
+
+

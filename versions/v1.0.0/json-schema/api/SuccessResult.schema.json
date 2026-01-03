@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Simple success response (no data)\n\nUsed for operations that succeed but don't return data: - DELETE operations - Fire-and-forget operations",
+  "properties": {
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "success"
+  ],
+  "title": "SuccessResult",
+  "type": "object",
+  "x-familiar-kind": "api",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

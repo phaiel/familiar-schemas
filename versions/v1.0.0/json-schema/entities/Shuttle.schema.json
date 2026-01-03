@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ShuttleDetails": {
+      "description": "Processing metadata for a Shuttle\n\nThese are transient concerns - each Shuttle may use different providers, models, or have different latencies. This info belongs on the Shuttle, not the Course.",
+      "properties": {
+        "latency_ms": {
+          "description": "Latency in milliseconds",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "model": {
+          "description": "Model used (e.g., \"claude-sonnet-4\", \"gpt-4o\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider": {
+          "description": "LLM provider (e.g., \"anthropic\", \"openai\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "spawn_count": {
+          "default": 0,
+          "description": "Number of entities spawned",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "tokens_used": {
+          "description": "Token usage",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "unit_count": {
+          "default": 0,
+          "description": "Number of weave units processed",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ShuttleStatus": {
+      "description": "Processing status for a Shuttle",
+      "oneOf": [
+        {
+          "description": "Segment received, not yet processed",
+          "enum": [
+            "pending"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Currently being classified by LLM",
+          "enum": [
+            "classifying"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Classification complete, spawning entities",
+          "enum": [
+            "spawning"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "All processing complete",
+          "enum": [
+            "complete"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Processing failed",
+          "enum": [
+            "failed"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "Weave": {
+      "description": "A Weave is the raw user input - their message to Familiar",
+      "properties": {
+        "context": {
+          "description": "Optional context provided with the message",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw_content": {
+          "description": "The raw text content from the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "raw_content"
+      ],
+      "type": "object"
+    },
+    "WeaveUnit": {
+      "description": "A WeaveUnit is a single segment extracted from a Weave. It's a transient container used for classification routing. Physics are extracted by the LLM but passed directly to spawned entities, not stored on the WeaveUnit itself.",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classifications in superposition (determines which entity types to spawn)",
+          "items": {
+            "$ref": "#/definitions/WeaveUnitClassification"
+          },
+          "type": "array"
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this segment",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index of this unit within the shuttle (0-based)",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "primary_thread": {
+          "description": "Primary thread: the main subject/actor of this unit Used for entity resolution (Stitch) downstream",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, INFER, REFERENCE) Determines how this unit is processed - only LOG units spawn entities"
+        },
+        "secondary_threads": {
+          "description": "Secondary threads: other people/places/things mentioned Allows capturing companions, locations, etc.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "spawned_entity_ids": {
+          "default": [],
+          "description": "IDs of entities spawned from this unit (the actual simulation objects)",
+          "items": {
+            "$ref": "../primitives/UUID.schema.json"
+          },
+          "type": "array"
+        },
+        "temporal_marker": {
+          "description": "Temporal marker: when this event/state occurred Can be absolute (\"6pm\"), relative (\"today\"), or frequency (\"once per hour\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content",
+        "index"
+      ],
+      "type": "object"
+    },
+    "WeaveUnitClassification": {
+      "description": "Classification result for a weave unit (determines which entity type to spawn)",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/HeddleEntityType.schema.json"
+            }
+          ],
+          "description": "The entity type this unit may become"
+        },
+        "weight": {
+          "allOf": [
+            {
+              "$ref": "../primitives/NormalizedFloat.schema.json"
+            }
+          ],
+          "description": "Confidence weight (0.0 to 1.0)"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A Shuttle is the transient unit of work in the Loom Pattern\n\nEach user message creates a new Shuttle: 1. Shuttle receives the Weave (user input) 2. Shuttle segments the Weave into WeaveUnits 3. Shuttle processes through the Fates pipeline 4. Shuttle commits results to Course history 5. Shuttle is marked complete (persisted only for debugging)\n\nThe Course (history) is immutable during processing. Only the Shuttle state changes as work progresses.",
+  "properties": {
+    "completed_at": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "When processing completed (or failed)"
+    },
+    "course_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Reference to the parent Course (the tether to history)"
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this shuttle was created"
+    },
+    "details": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShuttleDetails"
+        }
+      ],
+      "description": "Processing metadata (provider, model, latency)"
+    },
+    "error": {
+      "description": "Error message if shuttle failed",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this shuttle"
+    },
+    "response": {
+      "description": "The final response (before committing to Course)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "started_at": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "When this shuttle started processing"
+    },
+    "status": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShuttleStatus"
+        }
+      ],
+      "description": "Processing status"
+    },
+    "units": {
+      "default": [],
+      "description": "The weave units (segments) being carried",
+      "items": {
+        "$ref": "#/definitions/WeaveUnit"
+      },
+      "type": "array"
+    },
+    "weave": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Weave"
+        }
+      ],
+      "description": "The specific message being processed (the \"cargo\")"
+    }
+  },
+  "required": [
+    "course_id",
+    "created_at",
+    "details",
+    "id",
+    "status",
+    "weave"
+  ],
+  "title": "Shuttle",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

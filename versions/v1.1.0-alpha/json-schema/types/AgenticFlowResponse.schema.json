@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classification results",
+          "items": {
+            "$ref": "../primitives/UIClassification.schema.json"
+          },
+          "type": "array"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UIPhysicsResult.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints"
+        },
+        "purpose": {
+          "default": null,
+          "description": "Detected purpose/intent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "default": [],
+          "description": "Segmented content",
+          "items": {
+            "$ref": "../primitives/UIHeddleSegment.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "properties": {
+        "arguments": {
+          "default": null,
+          "description": "Arguments passed to the tool"
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "default": null,
+          "description": "Result from the tool"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolCallStatus.schema.json"
+            }
+          ],
+          "description": "Current status"
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Full response from the agentic Windmill flow This is what the API returns to the UI",
+  "properties": {
+    "agent": {
+      "description": "Which agent responded",
+      "type": "string"
+    },
+    "has_more_tasks": {
+      "default": false,
+      "description": "Whether there are more tasks",
+      "type": "boolean"
+    },
+    "heddle_result": {
+      "anyOf": [
+        {
+          "$ref": "UIHeddleResult.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Heddle classification result (if applicable)"
+    },
+    "next_request": {
+      "default": null,
+      "description": "Next request (if continuation needed)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "request_id": {
+      "description": "Request ID for tracing",
+      "type": "string"
+    },
+    "response": {
+      "description": "The conversational response text",
+      "type": "string"
+    },
+    "state": {
+      "anyOf": [
+        {
+          "default": null,
+          "description": "Updated agent state"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "thinking_steps": {
+      "default": [],
+      "description": "Thinking steps (for chain-of-thought visibility)",
+      "items": {
+        "$ref": "../types/UIThinkingStep.schema.json"
+      },
+      "type": "array"
+    },
+    "thread_id": {
+      "description": "Thread ID",
+      "type": "string"
+    },
+    "tool_calls": {
+      "default": [],
+      "description": "Tool calls made",
+      "items": {
+        "$ref": "UIToolCall.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "agent",
+    "request_id",
+    "response",
+    "thread_id"
+  ],
+  "title": "AgenticFlowResponse",
+  "type": "object",
+  "x-familiar-kind": "type"
+}

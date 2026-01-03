@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Structured result from the Heddle classification pipeline",
+  "properties": {
+    "classifications": {
+      "default": [],
+      "description": "Classification results",
+      "items": {
+        "$ref": "../primitives/UIClassification.schema.json"
+      },
+      "type": "array"
+    },
+    "physics": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UIPhysicsResult.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints"
+    },
+    "purpose": {
+      "default": null,
+      "description": "Detected purpose/intent",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "segments": {
+      "default": [],
+      "description": "Segmented content",
+      "items": {
+        "$ref": "../primitives/UIHeddleSegment.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "title": "UIHeddleResult",
+  "type": "object"
+}

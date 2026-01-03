@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MediaType": {
+      "enum": [
+        "Image",
+        "Audio",
+        "Document",
+        "Webpage"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "bucket_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "type": "string"
+    },
+    "media_type": {
+      "$ref": "MediaType.schema.json"
+    },
+    "metadata": true,
+    "normalized_text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "media_type",
+    "metadata",
+    "normalized_text"
+  ],
+  "title": "MediaRef",
+  "type": "object",
+  "x-familiar-kind": "entities_api",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

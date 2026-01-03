@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Quantum state with vector embedding (pgvector) Note: The `amplitudes` field uses pgvector VECTOR(3072) type SeaORM doesn't have native pgvector support, so raw SQL is used in store.rs",
+  "properties": {
+    "coherence": {
+      "format": "double",
+      "type": "number"
+    },
+    "entity_id": {
+      "$ref": "../primitives/EntityId.schema.json"
+    },
+    "frequency": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "coherence",
+    "entity_id"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "comp_quantum_states",
+  "x-familiar-module": "physics",
+  "x-familiar-primary-key": "entity_id",
+  "x-familiar-relations": [
+    {
+      "type": "belongs_to",
+      "target": "EntityRegistryModel",
+      "from": "entity_id",
+      "to": "id"
+    }
+  ]
+}

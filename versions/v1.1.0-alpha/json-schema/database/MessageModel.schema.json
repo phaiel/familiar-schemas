@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "agent_speaker": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "channel_id": {
+      "$ref": "../primitives/ChannelId.schema.json"
+    },
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../primitives/MessageId.schema.json"
+    },
+    "metadata": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "parent_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/MessageId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "role": {
+      "$ref": "../primitives/MessageRole.schema.json"
+    },
+    "sender_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UserId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "thinking_steps": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "tool_calls": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "weave_result": {
+      "x-familiar-column-type": "JsonBinary"
+    }
+  },
+  "required": [
+    "channel_id",
+    "content",
+    "created_at",
+    "id",
+    "metadata",
+    "role",
+    "thinking_steps",
+    "tool_calls"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "messages",
+  "x-familiar-module": "conversation",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "belongs_to",
+      "target": "ChannelModel",
+      "from": "channel_id",
+      "to": "id"
+    }
+  ]
+}

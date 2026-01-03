@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "VerbCategory": {
+      "description": "Categories of verbs for classification",
+      "oneOf": [
+        {
+          "description": "Action verbs (went, did, called) → MOMENT",
+          "enum": [
+            "action"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "State verbs (was, felt, is) → often PULSE",
+          "enum": [
+            "state"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Stative + evaluative (was nice, felt good) → PULSE",
+          "enum": [
+            "evaluative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relational verbs (met, talked with) → may indicate BOND",
+          "enum": [
+            "relational"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Habitual (always, usually does) → may indicate MOTIF/FILAMENT",
+          "enum": [
+            "habitual"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Intentional (want to, plan to) → INTENT",
+          "enum": [
+            "intentional"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Reasoning behind classification",
+  "properties": {
+    "explanations": {
+      "default": [],
+      "description": "Why certain types were included/excluded",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "key_phrases": {
+      "default": [],
+      "description": "Key phrases that influenced classification",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "main_verb": {
+      "default": null,
+      "description": "Main verb identified",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "verb_category": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/VerbCategory"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Verb category"
+    }
+  },
+  "title": "ClassificationReasoning",
+  "type": "object"
+}

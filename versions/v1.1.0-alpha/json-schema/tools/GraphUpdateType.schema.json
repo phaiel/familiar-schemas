@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of graph updates",
+  "oneOf": [
+    {
+      "description": "Add new binding",
+      "enum": [
+        "add_binding"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Strengthen existing binding",
+      "enum": [
+        "strengthen_binding"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Weaken existing binding",
+      "enum": [
+        "weaken_binding"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Remove binding",
+      "enum": [
+        "remove_binding"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Merge duplicate bindings",
+      "enum": [
+        "merge_bindings"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "GraphUpdateType",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-enum-repr": "simple_enum",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  },
+  "x-familiar-variants": {
+    "add_binding": "AddBinding",
+    "merge_bindings": "MergeBindings",
+    "remove_binding": "RemoveBinding",
+    "strengthen_binding": "StrengthenBinding",
+    "weaken_binding": "WeakenBinding"
+  }
+}

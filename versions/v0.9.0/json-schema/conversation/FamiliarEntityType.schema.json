@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Type of familiar entity",
+  "enum": [
+    "MOMENT",
+    "PULSE",
+    "INTENT",
+    "THREAD",
+    "BOND",
+    "MOTIF",
+    "FILAMENT",
+    "FOCUS"
+  ],
+  "title": "FamiliarEntityType",
+  "type": "string"
+}

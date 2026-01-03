@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Personal",
+    "Family",
+    "Shared"
+  ],
+  "title": "ChannelType",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": {
+    "profile": "postgres",
+    "table": "channel_types"
+  },
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-sea-orm": {
+    "rs_type": "String",
+    "db_type": "String(StringLen::None)",
+    "values": {
+      "Personal": "personal",
+      "Family": "family",
+      "Shared": "shared"
+    }
+  }
+}

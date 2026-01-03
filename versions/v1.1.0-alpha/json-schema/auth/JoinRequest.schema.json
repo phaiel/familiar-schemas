@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "JoinRequestStatus": {
+      "description": "Status of a join request",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A request to join a family",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../primitives/JoinRequestId.schema.json"
+    },
+    "message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_note": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_by": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "../entities/JoinRequestStatus.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "user_id": {
+      "$ref": "../primitives/UserId.schema.json"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "status",
+    "tenant_id",
+    "user_id"
+  ],
+  "title": "JoinRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A single message within a Course's history\n\nThis is an immutable record of what was said. The Course history is append-only - messages are never modified or deleted.",
+  "properties": {
+    "agent_speaker": {
+      "default": null,
+      "description": "Which agent sent this message (if role is Assistant)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content": {
+      "default": null,
+      "description": "Text content of the message",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "course_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "ID of the course this message belongs to"
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique message ID"
+    },
+    "metadata": {
+      "default": null,
+      "description": "Optional metadata"
+    },
+    "role": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageRole.schema.json"
+        }
+      ],
+      "description": "Role of the message sender"
+    },
+    "shuttle_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ID of the Shuttle that processed this message (for tracing)"
+    },
+    "timestamp": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When the message was created"
+    }
+  },
+  "required": [
+    "course_id",
+    "id",
+    "role",
+    "timestamp"
+  ],
+  "type": "object",
+  "title": "CourseMessage",
+  "x-familiar-kind": "entity"
+}

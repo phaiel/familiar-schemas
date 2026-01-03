@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Reference to an existing thread",
+  "properties": {
+    "aliases": {
+      "default": [],
+      "description": "Aliases for matching",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "id": {
+      "description": "Thread ID",
+      "type": "string"
+    },
+    "name": {
+      "description": "Thread name/label",
+      "type": "string"
+    },
+    "thread_type": {
+      "$ref": "../types/ThreadType.schema.json"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "thread_type"
+  ],
+  "title": "ThreadReference",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

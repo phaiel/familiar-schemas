@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "How context flows between tools",
+  "oneOf": [
+    {
+      "description": "Pass full context to every tool",
+      "enum": [
+        "full_context"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Only pass relevant context (filtered)",
+      "enum": [
+        "filtered_context"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Accumulate results as context grows",
+      "enum": [
+        "accumulating_context"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Each step gets fresh context",
+      "enum": [
+        "isolated_context"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ContextStrategy",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

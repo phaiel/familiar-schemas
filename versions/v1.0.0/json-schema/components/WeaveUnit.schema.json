@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "WeaveUnitClassification": {
+      "description": "Classification result for a weave unit (determines which entity type to spawn)",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/HeddleEntityType.schema.json"
+            }
+          ],
+          "description": "The entity type this unit may become"
+        },
+        "weight": {
+          "allOf": [
+            {
+              "$ref": "../primitives/NormalizedFloat.schema.json"
+            }
+          ],
+          "description": "Confidence weight (0.0 to 1.0)"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A WeaveUnit is a single segment extracted from a Weave. It's a transient container used for classification routing. Physics are extracted by the LLM but passed directly to spawned entities, not stored on the WeaveUnit itself.",
+  "properties": {
+    "classifications": {
+      "default": [],
+      "description": "Classifications in superposition (determines which entity types to spawn)",
+      "items": {
+        "$ref": "#/definitions/WeaveUnitClassification"
+      },
+      "type": "array"
+    },
+    "content": {
+      "description": "The extracted/cleaned text content for this segment",
+      "type": "string"
+    },
+    "index": {
+      "description": "Index of this unit within the shuttle (0-based)",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "primary_thread": {
+      "description": "Primary thread: the main subject/actor of this unit Used for entity resolution (Stitch) downstream",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "purpose": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "default": "LOG",
+      "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, INFER, REFERENCE) Determines how this unit is processed - only LOG units spawn entities"
+    },
+    "secondary_threads": {
+      "description": "Secondary threads: other people/places/things mentioned Allows capturing companions, locations, etc.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "spawned_entity_ids": {
+      "default": [],
+      "description": "IDs of entities spawned from this unit (the actual simulation objects)",
+      "items": {
+        "$ref": "../primitives/UUID.schema.json"
+      },
+      "type": "array"
+    },
+    "temporal_marker": {
+      "description": "Temporal marker: when this event/state occurred Can be absolute (\"6pm\"), relative (\"today\"), or frequency (\"once per hour\")",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content",
+    "index"
+  ],
+  "title": "WeaveUnit",
+  "type": "object",
+  "x-familiar-kind": "component",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

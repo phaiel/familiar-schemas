@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CreateFamilyFlowInput",
+  "description": "Input for the create family Windmill flow",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "$ref": "../primitives/UserId.schema.json"
+    },
+    "family_name": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": "string"
+    }
+  },
+  "required": ["user_id", "family_name", "request_id"],
+  "x-familiar-kind": "request"
+}
+

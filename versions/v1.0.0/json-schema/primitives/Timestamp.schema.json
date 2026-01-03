@@ -1,0 +1,9 @@
+{
+  "$id": "primitives/Timestamp.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An ISO 8601 timestamp (serialized as string)",
+  "format": "date-time",
+  "title": "Timestamp",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}

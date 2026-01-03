@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ToolErrorCode": {
+      "description": "Error codes for tool failures",
+      "oneOf": [
+        {
+          "description": "Invalid input parameters",
+          "enum": [
+            "INVALID_INPUT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Missing required parameter",
+          "enum": [
+            "MISSING_PARAMETER"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Parameter validation failed",
+          "enum": [
+            "VALIDATION_FAILED"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Tool execution timed out",
+          "enum": [
+            "TIMEOUT"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Rate limit exceeded",
+          "enum": [
+            "RATE_LIMITED"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "External service unavailable",
+          "enum": [
+            "SERVICE_UNAVAILABLE"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "LLM API error",
+          "enum": [
+            "LLM_ERROR"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Internal tool error",
+          "enum": [
+            "INTERNAL_ERROR"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Resource not found",
+          "enum": [
+            "NOT_FOUND"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Permission denied",
+          "enum": [
+            "PERMISSION_DENIED"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Error types for tool failures",
+  "properties": {
+    "code": {
+      "allOf": [
+        {
+          "$ref": "ToolErrorCode.schema.json"
+        }
+      ],
+      "description": "Error code for programmatic handling"
+    },
+    "details": {
+      "anyOf": [
+        {
+          "default": null,
+          "description": "Additional error details"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "message": {
+      "description": "Human-readable error message",
+      "type": "string"
+    },
+    "retryable": {
+      "description": "Whether this error is retryable",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "code",
+    "message",
+    "retryable"
+  ],
+  "title": "ToolError",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-rust-impl-ids": [
+    "ToolError"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

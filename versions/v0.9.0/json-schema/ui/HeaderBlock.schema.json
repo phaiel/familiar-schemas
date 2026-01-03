@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A header with large, bold text",
+  "properties": {
+    "text": {
+      "$ref": "../primitives/PlainTextObject.schema.json"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "HeaderBlock",
+  "type": "object"
+}

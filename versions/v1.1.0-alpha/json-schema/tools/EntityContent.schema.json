@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Content for the spawned entity",
+  "properties": {
+    "enriched_text": {
+      "default": null,
+      "description": "Enriched/contextualized content",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tags": {
+      "default": [],
+      "description": "Tags extracted",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "text": {
+      "description": "Primary content text",
+      "type": "string"
+    },
+    "title": {
+      "default": null,
+      "description": "Title/summary",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "EntityContent",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

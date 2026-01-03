@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Entity types stored in the database",
+  "enum": [
+    "Pulse",
+    "Thread",
+    "Bond",
+    "Moment",
+    "Intent",
+    "Focus",
+    "Motif",
+    "Filament"
+  ],
+  "title": "DbEntityTable",
+  "type": "string",
+  "x-familiar-kind": "type"
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Execution order types",
+  "oneOf": [
+    {
+      "description": "Execute in sequence",
+      "enum": [
+        "sequential"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Execute in parallel with other parallel steps",
+      "enum": [
+        "parallel"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Execute only if condition is met",
+      "enum": [
+        "conditional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Execute as fallback if previous failed",
+      "enum": [
+        "fallback"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ExecutionOrder",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-enum-repr": "simple_enum",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  },
+  "x-familiar-variants": {
+    "conditional": "Conditional",
+    "fallback": "Fallback",
+    "parallel": "Parallel",
+    "sequential": "Sequential"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FatesNona",
+  "description": "Fate of Spinning - handles weaving, connection, and relationship building in the Fates pipeline.",
+  "x-familiar-kind": "system",
+  "x-familiar-service": { "$ref": "../nodes/familiar-daemon.node.json" },
+  "x-familiar-queue": "daemon-queue",
+  "x-familiar-timeout": "60s",
+  "x-familiar-retries": 3,
+  "x-familiar-reads": [
+    { "$ref": "../entities/Shuttle.schema.json" },
+    { "$ref": "../entities/Bond.schema.json" }
+  ],
+  "x-familiar-writes": [
+    { "$ref": "../entities/Filament.schema.json" }
+  ],
+  "x-familiar-depends": [
+    { "$ref": "../components/TigerDataStore.component.json" }
+  ]
+}
+
+
+
+

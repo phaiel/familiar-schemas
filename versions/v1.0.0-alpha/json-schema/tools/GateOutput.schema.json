@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GateOutput",
+  "description": "Output schema for the FatesGate system - classification and routing result.",
+  "x-familiar-kind": "tool-payload",
+  "x-familiar-system": { "$ref": "../systems/FatesGate.system.json" },
+  "type": "object",
+  "required": ["classification", "shuttle_id"],
+  "properties": {
+    "classification": {
+      "description": "Classification result from the Gate",
+      "type": "string",
+      "enum": ["MOMENT", "THREAD", "BOND", "PULSE", "UNKNOWN"]
+    },
+    "shuttle_id": {
+      "description": "ID of the created Shuttle for pipeline routing",
+      "$ref": "../primitives/UUID.schema.json"
+    },
+    "confidence": {
+      "description": "Classification confidence score",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "next_fate": {
+      "description": "Which Fate to route to next",
+      "type": "string",
+      "enum": ["MORTA", "DECIMA", "NONA", "COMPLETE"]
+    }
+  }
+}
+
+
+
+

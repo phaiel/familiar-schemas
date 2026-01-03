@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Physics hints extracted during classification",
+  "properties": {
+    "arousal": {
+      "default": null,
+      "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "clarity": {
+      "default": null,
+      "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "significance": {
+      "default": null,
+      "description": "How significant/important: 0.0 to 1.0",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "valence": {
+      "default": null,
+      "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "title": "ClassificationPhysics",
+  "type": "object",
+  "x-familiar-kind": "type"
+}

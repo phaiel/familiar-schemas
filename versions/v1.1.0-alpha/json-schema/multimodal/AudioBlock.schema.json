@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AudioBlock",
+  "description": "Audio block for multimodal weave requests",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string"
+    },
+    "duration_secs": {
+      "type": ["number", "null"]
+    },
+    "transcript": {
+      "type": ["string", "null"],
+      "description": "Pre-transcribed (skip Whisper)"
+    }
+  },
+  "required": ["source"],
+  "x-familiar-kind": "component"
+}
+

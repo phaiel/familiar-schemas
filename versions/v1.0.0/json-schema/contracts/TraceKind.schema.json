@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Type of trace event",
+  "oneOf": [
+    {
+      "description": "Overall workflow step",
+      "enum": [
+        "step"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Agent thinking/reasoning",
+      "enum": [
+        "thought"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Tool invocation",
+      "enum": [
+        "tool"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Response token stream",
+      "enum": [
+        "token"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Error occurred",
+      "enum": [
+        "error"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Metric/timing data",
+      "enum": [
+        "metric"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "TraceKind",
+  "x-familiar-kind": "contract",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

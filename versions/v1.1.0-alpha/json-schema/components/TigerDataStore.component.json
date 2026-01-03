@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/components/TigerDataStore.component.json",
+  "description": "Tiger physics engine data store component. Provides access to moments, pulses, bonds, and filaments.",
+  "properties": {
+    "pool": {
+      "description": "Database connection pool",
+      "type": "object"
+    },
+    "schema_enforcer": {
+      "description": "Contract enforcer for validating data against schemas",
+      "type": "object"
+    }
+  },
+  "title": "TigerDataStore",
+  "type": "object",
+  "x-familiar-config": {
+    "$ref": "DbPoolConfig.schema.json"
+  },
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-resources": [
+    {
+      "$ref": "../resources/postgres-tiger.resource.json"
+    }
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

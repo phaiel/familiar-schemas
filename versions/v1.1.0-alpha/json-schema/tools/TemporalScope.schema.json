@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Temporal scope for queries",
+  "properties": {
+    "end": {
+      "default": null,
+      "description": "End of range",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relative": {
+      "default": null,
+      "description": "Relative scope (today, this_week, all_time)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "start": {
+      "default": null,
+      "description": "Start of range (ISO 8601 or relative)",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "TemporalScope",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

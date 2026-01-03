@@ -1,6 +1,6 @@
 //! Familiar Schema Registry
 //!
-//! A versioned, append-only schema registry for managing Rust, AVRO, TypeScript,
+//! A versioned, append-only schema registry for managing Rust, Protobuf, AVRO, TypeScript,
 //! and Python schemas across the Familiar platform.
 //!
 //! ## Features
@@ -21,10 +21,9 @@
 //! │   │   ├── entities/
 //! │   │   ├── primitives/
 //! │   │   └── components/
-//! │   ├── avro/
-//! │   │   ├── CommandEnvelope.avsc
-//! │   │   ├── EventEnvelope.avsc
-//! │   │   └── TraceEnvelope.avsc
+//! │   ├── protobuf/
+//! │   │   ├── envelope_v1.proto
+//! │   │   └── payload.proto
 //! │   ├── json-schema/
 //! │   │   ├── auth/
 //! │   │   ├── tools/
@@ -65,6 +64,7 @@ pub mod version;
 pub mod compatibility;
 pub mod checksum;
 pub mod error;
+pub mod lint;
 
 pub use config::SchemaConfig;
 pub use registry::SchemaRegistry;
@@ -73,3 +73,4 @@ pub use version::SchemaVersion;
 pub use compatibility::{CompatibilityChecker, CompatibilityResult};
 pub use checksum::Checksum;
 pub use error::{SchemaError, Result};
+

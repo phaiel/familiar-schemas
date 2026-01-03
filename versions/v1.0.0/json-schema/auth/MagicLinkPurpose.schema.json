@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Purpose of a magic link",
+  "enum": [
+    "login",
+    "signup",
+    "verify_email",
+    "password_reset"
+  ],
+  "title": "MagicLinkPurpose",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

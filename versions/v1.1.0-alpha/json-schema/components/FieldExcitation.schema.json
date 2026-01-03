@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Represents an excitation (ripple) in the Cognitive Field. In QFT, entities are not particles moving through space; they are temporary excitations of the field itself. A memory is a \"Symmetry Breaking\" event that freezes a ripple.\n\n## Simulation Workspace Pattern\n\nTo avoid numerical drift from repeated i64<->f64 conversions during simulation: 1. Call `hydrate()` after loading from DB - populates f64 workspace fields 2. Run simulation math using `position_f64()` and `velocity_f64()` 3. Call `dehydrate()` before persisting - flushes f64 back to quantized\n\n```rust,ignore let mut excitation = load_from_db()?; excitation.hydrate();\n\n// Simulation loop - use f64 workspace for _ in 0..1000 { let pos = excitation.position_f64().unwrap(); let vel = excitation.velocity_f64().unwrap(); // ... physics math in f64 ... excitation.set_position_f64([new_x, new_y, new_z]); }\n\nexcitation.dehydrate(); save_to_db(&excitation)?; ```",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "position_workspace": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "velocity_workspace": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "amplitude",
+    "energy",
+    "position",
+    "temperature",
+    "velocity"
+  ],
+  "title": "FieldExcitation",
+  "type": "object",
+  "x-familiar-field-alias": "physics",
+  "x-familiar-field-order": 20,
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-rust-impl-ids": [
+    "FieldExcitation"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

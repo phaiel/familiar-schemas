@@ -1,0 +1,264 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BondCharacteristics": {
+      "description": "Bond characteristics",
+      "properties": {
+        "duration": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RelationshipDuration"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Duration of relationship"
+        },
+        "interaction_frequency": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/InteractionFrequency"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Frequency of interaction"
+        },
+        "intimacy": {
+          "description": "Intimacy level (0.0 distant to 1.0 close)",
+          "format": "double",
+          "type": "number"
+        },
+        "reciprocity": {
+          "description": "Reciprocity (0.0 one-sided to 1.0 mutual)",
+          "format": "double",
+          "type": "number"
+        },
+        "relationship_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/RelationshipType.schema.json"
+            }
+          ],
+          "description": "Type of relationship"
+        },
+        "strength": {
+          "description": "Strength of relationship (0.0 weak to 1.0 strong)",
+          "format": "double",
+          "type": "number"
+        },
+        "trust": {
+          "description": "Trust level (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "valence": {
+          "description": "Valence (-1.0 negative to 1.0 positive)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "intimacy",
+        "reciprocity",
+        "relationship_type",
+        "strength",
+        "trust",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "BondEvidence": {
+      "description": "Evidence for bond detection",
+      "properties": {
+        "indicator_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/BondIndicatorType"
+            }
+          ],
+          "description": "Type of indicator"
+        },
+        "indicators": {
+          "default": [],
+          "description": "Specific indicators found",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "trigger_text": {
+          "description": "Text that indicates the relationship",
+          "type": "string"
+        }
+      },
+      "required": [
+        "indicator_type",
+        "trigger_text"
+      ],
+      "type": "object"
+    },
+    "BondIndicatorType": {
+      "description": "Types of bond indicators",
+      "oneOf": [
+        {
+          "description": "Explicit label (\"my friend\", \"my boss\")",
+          "enum": [
+            "explicit_label"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Action indicating relationship (\"had dinner with\")",
+          "enum": [
+            "relational_action"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional language about entity",
+          "enum": [
+            "emotional_language"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Possessive language (\"my\", \"our\")",
+          "enum": [
+            "possessive_language"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Frequency indicators (\"always see\", \"often talk\")",
+          "enum": [
+            "frequency_indicator"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Context from previous interactions",
+          "enum": [
+            "contextual_inference"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "DurationCategory": {
+      "description": "Duration categories",
+      "enum": [
+        "new",
+        "recent",
+        "established",
+        "long_term",
+        "lifelong"
+      ],
+      "type": "string"
+    },
+    "InteractionFrequency": {
+      "description": "Interaction frequency",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "yearly",
+        "rarely"
+      ],
+      "type": "string"
+    },
+    "RelationshipDuration": {
+      "description": "Relationship duration",
+      "properties": {
+        "category": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/DurationCategory"
+            }
+          ],
+          "description": "Duration category"
+        },
+        "since": {
+          "default": null,
+          "description": "Start date if known",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "years": {
+          "default": null,
+          "description": "How long the relationship has existed",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "category"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A detected bond between entities",
+  "properties": {
+    "characteristics": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BondCharacteristics"
+        }
+      ],
+      "description": "Bond characteristics"
+    },
+    "confidence": {
+      "description": "Confidence in detection",
+      "format": "double",
+      "type": "number"
+    },
+    "evidence": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BondEvidence"
+        }
+      ],
+      "description": "Evidence for this bond"
+    },
+    "head": {
+      "allOf": [
+        {
+          "$ref": "../primitives/ThreadReference.schema.json"
+        }
+      ],
+      "description": "Source entity (head)"
+    },
+    "tail": {
+      "allOf": [
+        {
+          "$ref": "../primitives/ThreadReference.schema.json"
+        }
+      ],
+      "description": "Target entity (tail)"
+    }
+  },
+  "required": [
+    "characteristics",
+    "confidence",
+    "evidence",
+    "head",
+    "tail"
+  ],
+  "title": "DetectedBond",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$id": "primitives/AIProvider.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "AI Provider enumeration",
+  "enum": [
+    "openai",
+    "anthropic",
+    "google",
+    "mock"
+  ],
+  "title": "AIProvider",
+  "type": "string"
+}

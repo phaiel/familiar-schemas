@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CourseSummary",
+  "description": "Summary of a course for list views",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "preview": {
+      "type": "string",
+      "description": "Preview text (truncated first message)"
+    },
+    "message_count": {
+      "type": "integer",
+      "format": "uint64",
+      "minimum": 0
+    },
+    "status": {
+      "$ref": "../primitives/CourseStatus.schema.json"
+    },
+    "title": {
+      "type": ["string", "null"]
+    },
+    "updated_at": {
+      "$ref": "../primitives/Timestamp.schema.json"
+    }
+  },
+  "required": ["id", "preview", "message_count", "status", "updated_at"],
+  "x-familiar-kind": "entity"
+}
+

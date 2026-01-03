@@ -1,0 +1,215 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "RawClassification": {
+      "description": "Raw classification from LLM output",
+      "properties": {
+        "entity_type": {
+          "$ref": "../primitives/HeddleEntityType.schema.json"
+        },
+        "weight": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "RawMessageIntent": {
+      "description": "Raw message intent classification from LLM",
+      "properties": {
+        "confidence": {
+          "default": 1.0,
+          "description": "Confidence in classification (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "intent": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)"
+        },
+        "query_target": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/QueryTarget.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what entities/threads are being queried"
+        },
+        "query_type": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/QueryType.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what type of query"
+        }
+      },
+      "required": [
+        "intent"
+      ],
+      "type": "object"
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "RawWeaveUnit": {
+      "description": "Raw weave unit from LLM output (before validation)",
+      "properties": {
+        "classifications": {
+          "description": "Classifications in superposition",
+          "items": {
+            "$ref": "#/definitions/RawClassification"
+          },
+          "type": "array"
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this weave unit",
+          "type": "string"
+        },
+        "physics_hint": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RawPhysicsHint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
+        },
+        "primary_thread": {
+          "default": null,
+          "description": "Primary thread: the main subject/actor of this unit",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
+        },
+        "secondary_threads": {
+          "default": null,
+          "description": "Secondary threads: other people/places/things mentioned",
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "temporal_marker": {
+          "default": null,
+          "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "classifications",
+        "content"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "The full response from the Heddle LLM",
+  "properties": {
+    "message_intent": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RawMessageIntent"
+        }
+      ],
+      "default": {
+        "confidence": 1.0,
+        "intent": "LOG"
+      },
+      "description": "Message intent classification (WHAT is user trying to do?)"
+    },
+    "weave_units": {
+      "default": [],
+      "description": "Array of weave units extracted from the input (for LOG intent) May be empty for QUERY/REFERENCE intents",
+      "items": {
+        "$ref": "#/definitions/RawWeaveUnit"
+      },
+      "type": "array"
+    }
+  },
+  "title": "HeddleResponse",
+  "type": "object"
+}

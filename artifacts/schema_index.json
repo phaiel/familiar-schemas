@@ -1,0 +1,3375 @@
+{
+  "bundle_hash": "a4a385675d2e8ac75dcdba9d36eb7b7d6f468775eb751aee6e2d558a573e6e13",
+  "edge_count": 1574,
+  "scc_count": 1,
+  "schema_count": 481,
+  "schemas": [
+    {
+      "id": "tools/ToolError.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolError.schema.json",
+      "service": null,
+      "title": "ToolError"
+    },
+    {
+      "id": "types/RawPhysicsHint.schema.json",
+      "kind": "type",
+      "path": "types/RawPhysicsHint.schema.json",
+      "service": null,
+      "title": "RawPhysicsHint"
+    },
+    {
+      "id": "tools/ThreadRelation.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadRelation.schema.json",
+      "service": null,
+      "title": "ThreadRelation"
+    },
+    {
+      "id": "types/DbEntityTable.schema.json",
+      "kind": "meta",
+      "path": "types/DbEntityTable.schema.json",
+      "service": "familiar-core",
+      "title": "DbEntityTable"
+    },
+    {
+      "id": "tools/SpawnSuggestion.schema.json",
+      "kind": "tool",
+      "path": "tools/SpawnSuggestion.schema.json",
+      "service": null,
+      "title": "SpawnSuggestion"
+    },
+    {
+      "id": "tools/ThreadHintInput.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadHintInput.schema.json",
+      "service": null,
+      "title": "ThreadHintInput"
+    },
+    {
+      "id": "tools/SpawnSuggesterOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/SpawnSuggesterOutput.schema.json",
+      "service": null,
+      "title": "SpawnSuggesterOutput"
+    },
+    {
+      "id": "types/WsMessage.schema.json",
+      "kind": "type",
+      "path": "types/WsMessage.schema.json",
+      "service": null,
+      "title": "WsMessage"
+    },
+    {
+      "id": "primitives/TaskId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TaskId.schema.json",
+      "service": null,
+      "title": "TaskId"
+    },
+    {
+      "id": "entities_api/PhysicsResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/PhysicsResponse.schema.json",
+      "service": null,
+      "title": "PhysicsResponse"
+    },
+    {
+      "id": "tools/BindingHintOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingHintOutput.schema.json",
+      "service": null,
+      "title": "BindingHintOutput"
+    },
+    {
+      "id": "tools/ExistingBond.schema.json",
+      "kind": "tool",
+      "path": "tools/ExistingBond.schema.json",
+      "service": null,
+      "title": "ExistingBond"
+    },
+    {
+      "id": "tools/ThreadHintOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadHintOutput.schema.json",
+      "service": null,
+      "title": "ThreadHintOutput"
+    },
+    {
+      "id": "types/HeddleResponse.schema.json",
+      "kind": "type",
+      "path": "types/HeddleResponse.schema.json",
+      "service": null,
+      "title": "HeddleResponse"
+    },
+    {
+      "id": "auth/AuthSession.schema.json",
+      "kind": "auth",
+      "path": "auth/AuthSession.schema.json",
+      "service": null,
+      "title": "AuthSession"
+    },
+    {
+      "id": "tools/SegmentFeatures.schema.json",
+      "kind": "tool",
+      "path": "tools/SegmentFeatures.schema.json",
+      "service": null,
+      "title": "SegmentFeatures"
+    },
+    {
+      "id": "tools/SemanticProperties.schema.json",
+      "kind": "tool",
+      "path": "tools/SemanticProperties.schema.json",
+      "service": null,
+      "title": "SemanticProperties"
+    },
+    {
+      "id": "entities_api/TextBlock.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/TextBlock.schema.json",
+      "service": null,
+      "title": "TextBlock"
+    },
+    {
+      "id": "windmill/RAGOutput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/RAGOutput.schema.json",
+      "service": null,
+      "title": "RAGOutput"
+    },
+    {
+      "id": "components/GooglePart.schema.json",
+      "kind": "component",
+      "path": "components/GooglePart.schema.json",
+      "service": null,
+      "title": "GooglePart"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/EnumRepr.schema.json",
+      "kind": "codegen",
+      "path": "ecs/EnumRepr.schema.json",
+      "service": null,
+      "title": "Enum Representation"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/Resource.meta.schema.json",
+      "kind": null,
+      "path": "ecs/Resource.meta.schema.json",
+      "service": null,
+      "title": "ECS Resource Meta-Schema"
+    },
+    {
+      "id": "queues/worker-queue.queue.json",
+      "kind": "queue",
+      "path": "queues/worker-queue.queue.json",
+      "service": null,
+      "title": "WorkerQueue"
+    },
+    {
+      "id": "conversation/CreateMessageInput.schema.json",
+      "kind": "conversation",
+      "path": "conversation/CreateMessageInput.schema.json",
+      "service": null,
+      "title": "CreateMessageInput"
+    },
+    {
+      "id": "types/CommandResult.schema.json",
+      "kind": "input",
+      "path": "types/CommandResult.schema.json",
+      "service": "familiar-daemon",
+      "title": "CommandResult"
+    },
+    {
+      "id": "tools/ThreadRole.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadRole.schema.json",
+      "service": null,
+      "title": "ThreadRole"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/Component.meta.schema.json",
+      "kind": null,
+      "path": "ecs/Component.meta.schema.json",
+      "service": null,
+      "title": "ECS Component Meta-Schema"
+    },
+    {
+      "id": "tools/TimeUnit.schema.json",
+      "kind": "tool",
+      "path": "tools/TimeUnit.schema.json",
+      "service": null,
+      "title": "TimeUnit"
+    },
+    {
+      "id": "tools/PurposeClassifierInput.schema.json",
+      "kind": "tool",
+      "path": "tools/PurposeClassifierInput.schema.json",
+      "service": null,
+      "title": "PurposeClassifierInput"
+    },
+    {
+      "id": "types/SegmentationResponse.schema.json",
+      "kind": "output",
+      "path": "types/SegmentationResponse.schema.json",
+      "service": "familiar-daemon",
+      "title": "SegmentationResponse"
+    },
+    {
+      "id": "primitives/ThreadId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ThreadId.schema.json",
+      "service": null,
+      "title": "ThreadId"
+    },
+    {
+      "id": "api/ApiError.schema.json",
+      "kind": "api",
+      "path": "api/ApiError.schema.json",
+      "service": null,
+      "title": "ApiError"
+    },
+    {
+      "id": "tools/BindingHints.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingHints.schema.json",
+      "service": null,
+      "title": "BindingHints"
+    },
+    {
+      "id": "primitives/OptionObject.schema.json",
+      "kind": "primitive",
+      "path": "primitives/OptionObject.schema.json",
+      "service": null,
+      "title": "OptionObject"
+    },
+    {
+      "id": "primitives/EntityType.schema.json",
+      "kind": "primitive",
+      "path": "primitives/EntityType.schema.json",
+      "service": null,
+      "title": "EntityType"
+    },
+    {
+      "id": "conversation/ListChannelsOptions.schema.json",
+      "kind": "conversation",
+      "path": "conversation/ListChannelsOptions.schema.json",
+      "service": null,
+      "title": "ListChannelsOptions"
+    },
+    {
+      "id": "types/ConversationHistoryItem.schema.json",
+      "kind": "type",
+      "path": "types/ConversationHistoryItem.schema.json",
+      "service": null,
+      "title": "ConversationHistoryItem"
+    },
+    {
+      "id": "conversation/CreateChannelInput.schema.json",
+      "kind": "conversation",
+      "path": "conversation/CreateChannelInput.schema.json",
+      "service": null,
+      "title": "CreateChannelInput"
+    },
+    {
+      "id": "tools/SpawnHints.schema.json",
+      "kind": "tool",
+      "path": "tools/SpawnHints.schema.json",
+      "service": null,
+      "title": "SpawnHints"
+    },
+    {
+      "id": "entities_api/ImageBlock.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/ImageBlock.schema.json",
+      "service": null,
+      "title": "ImageBlock"
+    },
+    {
+      "id": "primitives/ToolCallStatus.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ToolCallStatus.schema.json",
+      "service": null,
+      "title": "ToolCallStatus"
+    },
+    {
+      "id": "tools/TemporalRelation.schema.json",
+      "kind": "tool",
+      "path": "tools/TemporalRelation.schema.json",
+      "service": null,
+      "title": "TemporalRelation"
+    },
+    {
+      "id": "entities/FamiliarEntityType.schema.json",
+      "kind": "entity",
+      "path": "entities/FamiliarEntityType.schema.json",
+      "service": null,
+      "title": "FamiliarEntityType"
+    },
+    {
+      "id": "primitives/PasswordHash.schema.json",
+      "kind": "primitive",
+      "path": "primitives/PasswordHash.schema.json",
+      "service": null,
+      "title": "String"
+    },
+    {
+      "id": "conversation/EntityStatus.schema.json",
+      "kind": "conversation",
+      "path": "conversation/EntityStatus.schema.json",
+      "service": null,
+      "title": "EntityStatus"
+    },
+    {
+      "id": "tools/DetectedEmotion.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectedEmotion.schema.json",
+      "service": null,
+      "title": "DetectedEmotion"
+    },
+    {
+      "id": "tools/ClassifiedPurpose.schema.json",
+      "kind": "tool",
+      "path": "tools/ClassifiedPurpose.schema.json",
+      "service": null,
+      "title": "ClassifiedPurpose"
+    },
+    {
+      "id": "windmill/ClassifierOutput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/ClassifierOutput.schema.json",
+      "service": null,
+      "title": "ClassifierOutput"
+    },
+    {
+      "id": "components/RequestContext.schema.json",
+      "kind": "component",
+      "path": "components/RequestContext.schema.json",
+      "service": null,
+      "title": "RequestContext"
+    },
+    {
+      "id": "entities/MagicLinkPurpose.schema.json",
+      "kind": "entity",
+      "path": "entities/MagicLinkPurpose.schema.json",
+      "service": null,
+      "title": "MagicLinkPurpose"
+    },
+    {
+      "id": "tools/ThreadHintValues.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadHintValues.schema.json",
+      "service": null,
+      "title": "ThreadHintValues"
+    },
+    {
+      "id": "auth/ConsentStatus.schema.json",
+      "kind": "auth",
+      "path": "auth/ConsentStatus.schema.json",
+      "service": null,
+      "title": "ConsentStatus"
+    },
+    {
+      "id": "auth/LoginRequest.schema.json",
+      "kind": "auth",
+      "path": "auth/LoginRequest.schema.json",
+      "service": null,
+      "title": "LoginRequest"
+    },
+    {
+      "id": "agentic/OrchestrationOutput.schema.json",
+      "kind": "agentic",
+      "path": "agentic/OrchestrationOutput.schema.json",
+      "service": null,
+      "title": "OrchestrationOutput"
+    },
+    {
+      "id": "ui/PlainTextObject.schema.json",
+      "kind": "ui",
+      "path": "ui/PlainTextObject.schema.json",
+      "service": null,
+      "title": "PlainTextObject"
+    },
+    {
+      "id": "contracts/ProducerInfo.schema.json",
+      "kind": "contract",
+      "path": "contracts/ProducerInfo.schema.json",
+      "service": null,
+      "title": "ProducerInfo"
+    },
+    {
+      "id": "tools/InputTransform.schema.json",
+      "kind": "tool",
+      "path": "tools/InputTransform.schema.json",
+      "service": null,
+      "title": "InputTransform"
+    },
+    {
+      "id": "entities_api/DocumentBlock.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/DocumentBlock.schema.json",
+      "service": null,
+      "title": "DocumentBlock"
+    },
+    {
+      "id": "database/FamiliarEntityModel.schema.json",
+      "kind": "database",
+      "path": "database/FamiliarEntityModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "entities/ConsentType.schema.json",
+      "kind": "entity",
+      "path": "entities/ConsentType.schema.json",
+      "service": null,
+      "title": "ConsentType"
+    },
+    {
+      "id": "components/Identity.schema.json",
+      "kind": "component",
+      "path": "components/Identity.schema.json",
+      "service": null,
+      "title": "Identity"
+    },
+    {
+      "id": "ui/OptionObject.schema.json",
+      "kind": "ui",
+      "path": "ui/OptionObject.schema.json",
+      "service": null,
+      "title": "OptionObject"
+    },
+    {
+      "id": "tools/KnownEntity.schema.json",
+      "kind": "tool",
+      "path": "tools/KnownEntity.schema.json",
+      "service": null,
+      "title": "KnownEntity"
+    },
+    {
+      "id": "tools/PhysicsHintInput.schema.json",
+      "kind": "tool",
+      "path": "tools/PhysicsHintInput.schema.json",
+      "service": null,
+      "title": "PhysicsHintInput"
+    },
+    {
+      "id": "components/RequestConfig.schema.json",
+      "kind": "component",
+      "path": "components/RequestConfig.schema.json",
+      "service": null,
+      "title": "RequestConfig"
+    },
+    {
+      "id": "tools/AudioSegmentFeatures.schema.json",
+      "kind": "tool",
+      "path": "tools/AudioSegmentFeatures.schema.json",
+      "service": null,
+      "title": "AudioSegmentFeatures"
+    },
+    {
+      "id": "contracts/RequestContext.schema.json",
+      "kind": "contract",
+      "path": "contracts/RequestContext.schema.json",
+      "service": null,
+      "title": "RequestContext"
+    },
+    {
+      "id": "primitives/TemporalRelation.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TemporalRelation.schema.json",
+      "service": null,
+      "title": "TemporalRelation"
+    },
+    {
+      "id": "conversation/ListEntitiesOptions.schema.json",
+      "kind": "conversation",
+      "path": "conversation/ListEntitiesOptions.schema.json",
+      "service": null,
+      "title": "ListEntitiesOptions"
+    },
+    {
+      "id": "tools/ExecutionOrder.schema.json",
+      "kind": "tool",
+      "path": "tools/ExecutionOrder.schema.json",
+      "service": null,
+      "title": "ExecutionOrder"
+    },
+    {
+      "id": "primitives/Temperature.schema.json",
+      "kind": "primitive",
+      "path": "primitives/Temperature.schema.json",
+      "service": null,
+      "title": "Temperature"
+    },
+    {
+      "id": "components/Metadata.schema.json",
+      "kind": "component",
+      "path": "components/Metadata.schema.json",
+      "service": null,
+      "title": "AnyValue"
+    },
+    {
+      "id": "tools/EntityContent.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityContent.schema.json",
+      "service": null,
+      "title": "EntityContent"
+    },
+    {
+      "id": "windmill/AgentResponse.schema.json",
+      "kind": "windmill",
+      "path": "windmill/AgentResponse.schema.json",
+      "service": null,
+      "title": "AgentResponse"
+    },
+    {
+      "id": "tools/DetectedObject.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectedObject.schema.json",
+      "service": null,
+      "title": "DetectedObject"
+    },
+    {
+      "id": "auth/CreateEmailInviteInput.schema.json",
+      "kind": "auth",
+      "path": "auth/CreateEmailInviteInput.schema.json",
+      "service": null,
+      "title": "CreateEmailInviteInput"
+    },
+    {
+      "id": "auth/InvitationInfo.schema.json",
+      "kind": "auth",
+      "path": "auth/InvitationInfo.schema.json",
+      "service": null,
+      "title": "InvitationInfo"
+    },
+    {
+      "id": "tools/CommandAnalysis.schema.json",
+      "kind": "tool",
+      "path": "tools/CommandAnalysis.schema.json",
+      "service": null,
+      "title": "CommandAnalysis"
+    },
+    {
+      "id": "ui/HeaderBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/HeaderBlock.schema.json",
+      "service": null,
+      "title": "HeaderBlock"
+    },
+    {
+      "id": "tools/PhysicsHintValues.schema.json",
+      "kind": "tool",
+      "path": "tools/PhysicsHintValues.schema.json",
+      "service": null,
+      "title": "PhysicsHintValues"
+    },
+    {
+      "id": "primitives/MessageRole.schema.json",
+      "kind": "primitive",
+      "path": "primitives/MessageRole.schema.json",
+      "service": null,
+      "title": "MessageRole"
+    },
+    {
+      "id": "tools/TriggerType.schema.json",
+      "kind": "tool",
+      "path": "tools/TriggerType.schema.json",
+      "service": null,
+      "title": "TriggerType"
+    },
+    {
+      "id": "ui/OverflowElement.schema.json",
+      "kind": "ui",
+      "path": "ui/OverflowElement.schema.json",
+      "service": null,
+      "title": "OverflowElement"
+    },
+    {
+      "id": "auth/UpdateUserInput.schema.json",
+      "kind": "auth",
+      "path": "auth/UpdateUserInput.schema.json",
+      "service": null,
+      "title": "UpdateUserInput"
+    },
+    {
+      "id": "primitives/MagicLinkId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/MagicLinkId.schema.json",
+      "service": null,
+      "title": "MagicLinkId"
+    },
+    {
+      "id": "tools/ConditionOperator.schema.json",
+      "kind": "tool",
+      "path": "tools/ConditionOperator.schema.json",
+      "service": null,
+      "title": "ConditionOperator"
+    },
+    {
+      "id": "components/CognitiveOptics.schema.json",
+      "kind": "component",
+      "path": "components/CognitiveOptics.schema.json",
+      "service": null,
+      "title": "CognitiveOptics"
+    },
+    {
+      "id": "tools/GateInput.schema.json",
+      "kind": "tool-payload",
+      "path": "tools/GateInput.schema.json",
+      "service": null,
+      "title": "GateInput"
+    },
+    {
+      "id": "auth/AuditLogEntry.schema.json",
+      "kind": "auth",
+      "path": "auth/AuditLogEntry.schema.json",
+      "service": null,
+      "title": "AuditLogEntry"
+    },
+    {
+      "id": "auth/InviteType.schema.json",
+      "kind": "auth",
+      "path": "auth/InviteType.schema.json",
+      "service": null,
+      "title": "InviteType"
+    },
+    {
+      "id": "primitives/UUID.schema.json",
+      "kind": "primitive",
+      "path": "primitives/UUID.schema.json",
+      "service": null,
+      "title": "UUID"
+    },
+    {
+      "id": "database/AuthSessionModel.schema.json",
+      "kind": "database",
+      "path": "database/AuthSessionModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "primitives/EntityMention.schema.json",
+      "kind": "primitive",
+      "path": "primitives/EntityMention.schema.json",
+      "service": null,
+      "title": "EntityMention"
+    },
+    {
+      "id": "ui/ButtonStyle.schema.json",
+      "kind": "ui",
+      "path": "ui/ButtonStyle.schema.json",
+      "service": null,
+      "title": "ButtonStyle"
+    },
+    {
+      "id": "primitives/TextObject.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TextObject.schema.json",
+      "service": null,
+      "title": "TextObject"
+    },
+    {
+      "id": "agentic/OrchestrationInput.schema.json",
+      "kind": "agentic",
+      "path": "agentic/OrchestrationInput.schema.json",
+      "service": null,
+      "title": "OrchestrationInput"
+    },
+    {
+      "id": "auth/CreateMagicLinkInput.schema.json",
+      "kind": "auth",
+      "path": "auth/CreateMagicLinkInput.schema.json",
+      "service": null,
+      "title": "CreateMagicLinkInput"
+    },
+    {
+      "id": "agentic/AgentState.schema.json",
+      "kind": "agentic",
+      "path": "agentic/AgentState.schema.json",
+      "service": null,
+      "title": "AgentState"
+    },
+    {
+      "id": "windmill/RAGResult.schema.json",
+      "kind": "windmill",
+      "path": "windmill/RAGResult.schema.json",
+      "service": null,
+      "title": "RAGResult"
+    },
+    {
+      "id": "agentic/LogLevel.schema.json",
+      "kind": "agentic",
+      "path": "agentic/LogLevel.schema.json",
+      "service": null,
+      "title": "LogLevel"
+    },
+    {
+      "id": "primitives/SignedNormalizedFloat.schema.json",
+      "kind": "primitive",
+      "path": "primitives/SignedNormalizedFloat.schema.json",
+      "service": null,
+      "title": "SignedNormalizedFloat"
+    },
+    {
+      "id": "entities/MemberRole.schema.json",
+      "kind": "entity",
+      "path": "entities/MemberRole.schema.json",
+      "service": null,
+      "title": "MemberRole"
+    },
+    {
+      "id": "tools/DetectedPerson.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectedPerson.schema.json",
+      "service": null,
+      "title": "DetectedPerson"
+    },
+    {
+      "id": "primitives/QueryType.schema.json",
+      "kind": "primitive",
+      "path": "primitives/QueryType.schema.json",
+      "service": null,
+      "title": "QueryType"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/Codegen.meta.schema.json",
+      "kind": "codegen",
+      "path": "ecs/Codegen.meta.schema.json",
+      "service": null,
+      "title": "Codegen Meta-Schema"
+    },
+    {
+      "id": "types/CreateMemberInput.schema.json",
+      "kind": "type",
+      "path": "types/CreateMemberInput.schema.json",
+      "service": null,
+      "title": "CreateMemberInput"
+    },
+    {
+      "id": "auth/MagicLinkRequest.schema.json",
+      "kind": "auth",
+      "path": "auth/MagicLinkRequest.schema.json",
+      "service": null,
+      "title": "MagicLinkRequest"
+    },
+    {
+      "id": "tools/EntityClassifierOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityClassifierOutput.schema.json",
+      "service": null,
+      "title": "EntityClassifierOutput"
+    },
+    {
+      "id": "primitives/AIProvider.schema.json",
+      "kind": "primitive",
+      "path": "primitives/AIProvider.schema.json",
+      "service": null,
+      "title": "AIProvider"
+    },
+    {
+      "id": "tools/SegmentationConfig.schema.json",
+      "kind": "tool",
+      "path": "tools/SegmentationConfig.schema.json",
+      "service": null,
+      "title": "SegmentationConfig"
+    },
+    {
+      "id": "types/UIChannelMessage.schema.json",
+      "kind": "type",
+      "path": "types/UIChannelMessage.schema.json",
+      "service": null,
+      "title": "UIChannelMessage"
+    },
+    {
+      "id": "database/ConsentRecordModel.schema.json",
+      "kind": "database",
+      "path": "database/ConsentRecordModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "primitives/UIClassification.schema.json",
+      "kind": "primitive",
+      "path": "primitives/UIClassification.schema.json",
+      "service": null,
+      "title": "UIClassification"
+    },
+    {
+      "id": "types/PromptConfig.schema.json",
+      "kind": "type",
+      "path": "types/PromptConfig.schema.json",
+      "service": null,
+      "title": "PromptConfig"
+    },
+    {
+      "id": "components/OpenAIMessage.schema.json",
+      "kind": "component",
+      "path": "components/OpenAIMessage.schema.json",
+      "service": null,
+      "title": "OpenAIMessage"
+    },
+    {
+      "id": "tools/Modality.schema.json",
+      "kind": "tool",
+      "path": "tools/Modality.schema.json",
+      "service": null,
+      "title": "Modality"
+    },
+    {
+      "id": "tools/EntityMentionType.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityMentionType.schema.json",
+      "service": null,
+      "title": "EntityMentionType"
+    },
+    {
+      "id": "primitives/CourseId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/CourseId.schema.json",
+      "service": null,
+      "title": "CourseId"
+    },
+    {
+      "id": "auth/MagicLinkPurpose.schema.json",
+      "kind": "auth",
+      "path": "auth/MagicLinkPurpose.schema.json",
+      "service": null,
+      "title": "MagicLinkPurpose"
+    },
+    {
+      "id": "primitives/ShuttleId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ShuttleId.schema.json",
+      "service": null,
+      "title": "ShuttleId"
+    },
+    {
+      "id": "primitives/TenantId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TenantId.schema.json",
+      "service": null,
+      "title": "TenantId"
+    },
+    {
+      "id": "primitives/DbPoolSize.schema.json",
+      "kind": "primitive",
+      "path": "primitives/DbPoolSize.schema.json",
+      "service": null,
+      "title": "DbPoolSize"
+    },
+    {
+      "id": "tools/ThreadHints.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadHints.schema.json",
+      "service": null,
+      "title": "ThreadHints"
+    },
+    {
+      "id": "entities/Motif.schema.json",
+      "kind": "entity",
+      "path": "entities/Motif.schema.json",
+      "service": null,
+      "title": "Motif"
+    },
+    {
+      "id": "tools/BondHintInput.schema.json",
+      "kind": "tool",
+      "path": "tools/BondHintInput.schema.json",
+      "service": null,
+      "title": "BondHintInput"
+    },
+    {
+      "id": "resources/postgres-main.resource.json",
+      "kind": "resource",
+      "path": "resources/postgres-main.resource.json",
+      "service": null,
+      "title": "PostgresMain"
+    },
+    {
+      "id": "tools/Directionality.schema.json",
+      "kind": "tool",
+      "path": "tools/Directionality.schema.json",
+      "service": null,
+      "title": "Directionality"
+    },
+    {
+      "id": "conversation/EntityPhysics.schema.json",
+      "kind": "conversation",
+      "path": "conversation/EntityPhysics.schema.json",
+      "service": null,
+      "title": "EntityPhysics"
+    },
+    {
+      "id": "database/MagicLinkModel.schema.json",
+      "kind": "database",
+      "path": "database/MagicLinkModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "types/ThreadType.schema.json",
+      "kind": "type",
+      "path": "types/ThreadType.schema.json",
+      "service": null,
+      "title": "ThreadType"
+    },
+    {
+      "id": "tools/BondIndicatorType.schema.json",
+      "kind": "tool",
+      "path": "tools/BondIndicatorType.schema.json",
+      "service": null,
+      "title": "BondIndicatorType"
+    },
+    {
+      "id": "entities/Pulse.schema.json",
+      "kind": "entity",
+      "path": "entities/Pulse.schema.json",
+      "service": null,
+      "title": "Pulse"
+    },
+    {
+      "id": "tools/ToolChainStep.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolChainStep.schema.json",
+      "service": null,
+      "title": "ToolChainStep"
+    },
+    {
+      "id": "database/ContentPayloadModel.schema.json",
+      "kind": "database",
+      "path": "database/ContentPayloadModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "primitives/MessageIntent.schema.json",
+      "kind": "primitive",
+      "path": "primitives/MessageIntent.schema.json",
+      "service": null,
+      "title": "MessageIntent"
+    },
+    {
+      "id": "primitives/ChannelId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ChannelId.schema.json",
+      "service": null,
+      "title": "ChannelId"
+    },
+    {
+      "id": "types/UIThreadItem.schema.json",
+      "kind": "type",
+      "path": "types/UIThreadItem.schema.json",
+      "service": null,
+      "title": "UIThreadItem"
+    },
+    {
+      "id": "auth/DataExportRequest.schema.json",
+      "kind": "auth",
+      "path": "auth/DataExportRequest.schema.json",
+      "service": null,
+      "title": "DataExportRequest"
+    },
+    {
+      "id": "auth/MagicLink.schema.json",
+      "kind": "auth",
+      "path": "auth/MagicLink.schema.json",
+      "service": null,
+      "title": "MagicLink"
+    },
+    {
+      "id": "components/ContentPayload.schema.json",
+      "kind": "component",
+      "path": "components/ContentPayload.schema.json",
+      "service": null,
+      "title": "ContentPayload"
+    },
+    {
+      "id": "primitives/PlainTextObject.schema.json",
+      "kind": "primitive",
+      "path": "primitives/PlainTextObject.schema.json",
+      "service": null,
+      "title": "PlainTextObject"
+    },
+    {
+      "id": "ui/AccordionState.schema.json",
+      "kind": "ui",
+      "path": "ui/AccordionState.schema.json",
+      "service": null,
+      "title": "AccordionState"
+    },
+    {
+      "id": "tools/PurposeContext.schema.json",
+      "kind": "tool",
+      "path": "tools/PurposeContext.schema.json",
+      "service": null,
+      "title": "PurposeContext"
+    },
+    {
+      "id": "tools/PhysicsAnalysis.schema.json",
+      "kind": "tool",
+      "path": "tools/PhysicsAnalysis.schema.json",
+      "service": null,
+      "title": "PhysicsAnalysis"
+    },
+    {
+      "id": "primitives/ApiKey.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ApiKey.schema.json",
+      "service": null,
+      "title": "ApiKey"
+    },
+    {
+      "id": "primitives/ConversationTurn.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ConversationTurn.schema.json",
+      "service": null,
+      "title": "ConversationTurn"
+    },
+    {
+      "id": "tools/SubjectReference.schema.json",
+      "kind": "tool",
+      "path": "tools/SubjectReference.schema.json",
+      "service": null,
+      "title": "SubjectReference"
+    },
+    {
+      "id": "entities_api/WeaveRequest.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/WeaveRequest.schema.json",
+      "service": null,
+      "title": "WeaveRequest"
+    },
+    {
+      "id": "api/SuccessResult.schema.json",
+      "kind": "api",
+      "path": "api/SuccessResult.schema.json",
+      "service": null,
+      "title": "SuccessResult"
+    },
+    {
+      "id": "primitives/HeddleEntityType.schema.json",
+      "kind": "primitive",
+      "path": "primitives/HeddleEntityType.schema.json",
+      "service": null,
+      "title": "HeddleEntityType"
+    },
+    {
+      "id": "primitives/AuditLogId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/AuditLogId.schema.json",
+      "service": null,
+      "title": "AuditLogId"
+    },
+    {
+      "id": "database/FamilyInvitationModel.schema.json",
+      "kind": "database",
+      "path": "database/FamilyInvitationModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "contracts/Payload.schema.json",
+      "kind": "contract",
+      "path": "contracts/Payload.schema.json",
+      "service": null,
+      "title": "Payload"
+    },
+    {
+      "id": "tools/QueryFilter.schema.json",
+      "kind": "tool",
+      "path": "tools/QueryFilter.schema.json",
+      "service": null,
+      "title": "QueryFilter"
+    },
+    {
+      "id": "tools/BondCharacteristics.schema.json",
+      "kind": "tool",
+      "path": "tools/BondCharacteristics.schema.json",
+      "service": null,
+      "title": "BondCharacteristics"
+    },
+    {
+      "id": "primitives/SessionId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/SessionId.schema.json",
+      "service": null,
+      "title": "SessionId"
+    },
+    {
+      "id": "components/GoogleContent.schema.json",
+      "kind": "component",
+      "path": "components/GoogleContent.schema.json",
+      "service": null,
+      "title": "GoogleContent"
+    },
+    {
+      "id": "entities/MessageRole.schema.json",
+      "kind": "entity",
+      "path": "entities/MessageRole.schema.json",
+      "service": null,
+      "title": "MessageRole"
+    },
+    {
+      "id": "conversation/CreateEntityInput.schema.json",
+      "kind": "conversation",
+      "path": "conversation/CreateEntityInput.schema.json",
+      "service": null,
+      "title": "CreateEntityInput"
+    },
+    {
+      "id": "ui/ContextBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/ContextBlock.schema.json",
+      "service": null,
+      "title": "ContextBlock"
+    },
+    {
+      "id": "config/SystemDomain.schema.json",
+      "kind": "config",
+      "path": "config/SystemDomain.schema.json",
+      "service": null,
+      "title": "SystemDomain"
+    },
+    {
+      "id": "tools/GateOutput.schema.json",
+      "kind": "tool-payload",
+      "path": "tools/GateOutput.schema.json",
+      "service": null,
+      "title": "GateOutput"
+    },
+    {
+      "id": "windmill/ClassificationResult.schema.json",
+      "kind": "windmill",
+      "path": "windmill/ClassificationResult.schema.json",
+      "service": null,
+      "title": "ClassificationResult"
+    },
+    {
+      "id": "entities/ChannelType.schema.json",
+      "kind": "entity",
+      "path": "entities/ChannelType.schema.json",
+      "service": null,
+      "title": "ChannelType"
+    },
+    {
+      "id": "tools/RelationshipDuration.schema.json",
+      "kind": "tool",
+      "path": "tools/RelationshipDuration.schema.json",
+      "service": null,
+      "title": "RelationshipDuration"
+    },
+    {
+      "id": "tools/DetectedThread.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectedThread.schema.json",
+      "service": null,
+      "title": "DetectedThread"
+    },
+    {
+      "id": "tools/FilterOperator.schema.json",
+      "kind": "tool",
+      "path": "tools/FilterOperator.schema.json",
+      "service": null,
+      "title": "FilterOperator"
+    },
+    {
+      "id": "entities/Thread.schema.json",
+      "kind": "entity",
+      "path": "entities/Thread.schema.json",
+      "service": null,
+      "title": "Thread"
+    },
+    {
+      "id": "primitives/InviteRole.schema.json",
+      "kind": "primitive",
+      "path": "primitives/InviteRole.schema.json",
+      "service": null,
+      "title": "InviteRole"
+    },
+    {
+      "id": "primitives/ThreadReference.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ThreadReference.schema.json",
+      "service": null,
+      "title": "ThreadReference"
+    },
+    {
+      "id": "auth/CreateCodeInviteInput.schema.json",
+      "kind": "auth",
+      "path": "auth/CreateCodeInviteInput.schema.json",
+      "service": null,
+      "title": "CreateCodeInviteInput"
+    },
+    {
+      "id": "tools/BindingType.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingType.schema.json",
+      "service": null,
+      "title": "BindingType"
+    },
+    {
+      "id": "ui/ButtonElement.schema.json",
+      "kind": "ui",
+      "path": "ui/ButtonElement.schema.json",
+      "service": null,
+      "title": "ButtonElement"
+    },
+    {
+      "id": "tools/AudioFeatures.schema.json",
+      "kind": "tool",
+      "path": "tools/AudioFeatures.schema.json",
+      "service": null,
+      "title": "AudioFeatures"
+    },
+    {
+      "id": "tools/EntityReference.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityReference.schema.json",
+      "service": null,
+      "title": "EntityReference"
+    },
+    {
+      "id": "tools/EvidenceType.schema.json",
+      "kind": "tool",
+      "path": "tools/EvidenceType.schema.json",
+      "service": null,
+      "title": "EvidenceType"
+    },
+    {
+      "id": "auth/ConsentRecord.schema.json",
+      "kind": "auth",
+      "path": "auth/ConsentRecord.schema.json",
+      "service": null,
+      "title": "ConsentRecord"
+    },
+    {
+      "id": "conversation/ChannelType.schema.json",
+      "kind": "conversation",
+      "path": "conversation/ChannelType.schema.json",
+      "service": null,
+      "title": "ChannelType"
+    },
+    {
+      "id": "tools/SegmentationContext.schema.json",
+      "kind": "tool",
+      "path": "tools/SegmentationContext.schema.json",
+      "service": null,
+      "title": "SegmentationContext"
+    },
+    {
+      "id": "components/WeightedClassification.schema.json",
+      "kind": "component",
+      "path": "components/WeightedClassification.schema.json",
+      "service": null,
+      "title": "WeightedClassification"
+    },
+    {
+      "id": "tools/SpawnSuggesterInput.schema.json",
+      "kind": "tool",
+      "path": "tools/SpawnSuggesterInput.schema.json",
+      "service": null,
+      "title": "SpawnSuggesterInput"
+    },
+    {
+      "id": "tools/DetectedBinding.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectedBinding.schema.json",
+      "service": null,
+      "title": "DetectedBinding"
+    },
+    {
+      "id": "tools/PhysicsHints.schema.json",
+      "kind": "tool",
+      "path": "tools/PhysicsHints.schema.json",
+      "service": null,
+      "title": "PhysicsHints"
+    },
+    {
+      "id": "tools/ModalityInput.schema.json",
+      "kind": "tool",
+      "path": "tools/ModalityInput.schema.json",
+      "service": null,
+      "title": "ModalityInput"
+    },
+    {
+      "id": "components/EmotionalState.schema.json",
+      "kind": "component",
+      "path": "components/EmotionalState.schema.json",
+      "service": null,
+      "title": "EmotionalState"
+    },
+    {
+      "id": "primitives/ToolPurpose.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ToolPurpose.schema.json",
+      "service": null,
+      "title": "ToolPurpose"
+    },
+    {
+      "id": "primitives/TokenUsage.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TokenUsage.schema.json",
+      "service": null,
+      "title": "TokenUsage"
+    },
+    {
+      "id": "tools/BondHints.schema.json",
+      "kind": "tool",
+      "path": "tools/BondHints.schema.json",
+      "service": null,
+      "title": "BondHints"
+    },
+    {
+      "id": "conversation/FamiliarEntity.schema.json",
+      "kind": "conversation",
+      "path": "conversation/FamiliarEntity.schema.json",
+      "service": null,
+      "title": "FamiliarEntity"
+    },
+    {
+      "id": "primitives/SegmentBoundaries.schema.json",
+      "kind": "primitive",
+      "path": "primitives/SegmentBoundaries.schema.json",
+      "service": null,
+      "title": "SegmentBoundaries"
+    },
+    {
+      "id": "auth/CreateUserInput.schema.json",
+      "kind": "auth",
+      "path": "auth/CreateUserInput.schema.json",
+      "service": null,
+      "title": "CreateUserInput"
+    },
+    {
+      "id": "types/DbComponentTable.schema.json",
+      "kind": "meta",
+      "path": "types/DbComponentTable.schema.json",
+      "service": "familiar-core",
+      "title": "DbComponentTable"
+    },
+    {
+      "id": "database/JoinRequestModel.schema.json",
+      "kind": "database",
+      "path": "database/JoinRequestModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "tools/ClassificationEvidence.schema.json",
+      "kind": "tool",
+      "path": "tools/ClassificationEvidence.schema.json",
+      "service": null,
+      "title": "ClassificationEvidence"
+    },
+    {
+      "id": "tools/SpawnConfig.schema.json",
+      "kind": "tool",
+      "path": "tools/SpawnConfig.schema.json",
+      "service": null,
+      "title": "SpawnConfig"
+    },
+    {
+      "id": "tools/BindingPattern.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingPattern.schema.json",
+      "service": null,
+      "title": "BindingPattern"
+    },
+    {
+      "id": "tools/ToolParameter.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolParameter.schema.json",
+      "service": null,
+      "title": "ToolParameter"
+    },
+    {
+      "id": "tools/ParameterType.schema.json",
+      "kind": "tool",
+      "path": "tools/ParameterType.schema.json",
+      "service": null,
+      "title": "ParameterType"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/Casing.schema.json",
+      "kind": "codegen",
+      "path": "ecs/Casing.schema.json",
+      "service": null,
+      "title": "Casing Convention"
+    },
+    {
+      "id": "components/AnthropicMessage.schema.json",
+      "kind": "component",
+      "path": "components/AnthropicMessage.schema.json",
+      "service": null,
+      "title": "AnthropicMessage"
+    },
+    {
+      "id": "primitives/BindingType.schema.json",
+      "kind": "primitive",
+      "path": "primitives/BindingType.schema.json",
+      "service": null,
+      "title": "BindingType"
+    },
+    {
+      "id": "tools/EntityRef.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityRef.schema.json",
+      "service": null,
+      "title": "EntityRef"
+    },
+    {
+      "id": "components/BondPhysics.schema.json",
+      "kind": "component",
+      "path": "components/BondPhysics.schema.json",
+      "service": null,
+      "title": "BondPhysics"
+    },
+    {
+      "id": "tools/VAEPosition.schema.json",
+      "kind": "tool",
+      "path": "tools/VAEPosition.schema.json",
+      "service": null,
+      "title": "VAEPosition"
+    },
+    {
+      "id": "entities_api/WeaveBlock.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/WeaveBlock.schema.json",
+      "service": null,
+      "title": "WeaveBlock"
+    },
+    {
+      "id": "primitives/ParsedTemporal.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ParsedTemporal.schema.json",
+      "service": null,
+      "title": "ParsedTemporal"
+    },
+    {
+      "id": "ui/InputBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/InputBlock.schema.json",
+      "service": null,
+      "title": "InputBlock"
+    },
+    {
+      "id": "tools/VerbCategory.schema.json",
+      "kind": "tool",
+      "path": "tools/VerbCategory.schema.json",
+      "service": null,
+      "title": "VerbCategory"
+    },
+    {
+      "id": "primitives/Email.schema.json",
+      "kind": "primitive",
+      "path": "primitives/Email.schema.json",
+      "service": null,
+      "title": "String"
+    },
+    {
+      "id": "auth/ReviewJoinRequestInput.schema.json",
+      "kind": "auth",
+      "path": "auth/ReviewJoinRequestInput.schema.json",
+      "service": null,
+      "title": "ReviewJoinRequestInput"
+    },
+    {
+      "id": "ui/ActionsBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/ActionsBlock.schema.json",
+      "service": null,
+      "title": "ActionsBlock"
+    },
+    {
+      "id": "entities_api/EntityResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/EntityResponse.schema.json",
+      "service": null,
+      "title": "EntityResponse"
+    },
+    {
+      "id": "primitives/SessionToken.schema.json",
+      "kind": "primitive",
+      "path": "primitives/SessionToken.schema.json",
+      "service": null,
+      "title": "String"
+    },
+    {
+      "id": "components/ContractEnforcer.component.json",
+      "kind": "component",
+      "path": "components/ContractEnforcer.component.json",
+      "service": null,
+      "title": "ContractEnforcer"
+    },
+    {
+      "id": "ui/BlockElement.schema.json",
+      "kind": "ui",
+      "path": "ui/BlockElement.schema.json",
+      "service": null,
+      "title": "BlockElement"
+    },
+    {
+      "id": "auth/RequestDeletionInput.schema.json",
+      "kind": "auth",
+      "path": "auth/RequestDeletionInput.schema.json",
+      "service": null,
+      "title": "RequestDeletionInput"
+    },
+    {
+      "id": "primitives/EntityMentionType.schema.json",
+      "kind": "primitive",
+      "path": "primitives/EntityMentionType.schema.json",
+      "service": null,
+      "title": "EntityMentionType"
+    },
+    {
+      "id": "tools/SegmentBoundaries.schema.json",
+      "kind": "tool",
+      "path": "tools/SegmentBoundaries.schema.json",
+      "service": null,
+      "title": "SegmentBoundaries"
+    },
+    {
+      "id": "types/SegmentClassification.schema.json",
+      "kind": "type",
+      "path": "types/SegmentClassification.schema.json",
+      "service": null,
+      "title": "SegmentClassification"
+    },
+    {
+      "id": "components/DbPoolConfig.schema.json",
+      "kind": "component",
+      "path": "components/DbPoolConfig.schema.json",
+      "service": null,
+      "title": "DbPoolConfig"
+    },
+    {
+      "id": "auth/User.schema.json",
+      "kind": "auth",
+      "path": "auth/User.schema.json",
+      "service": null,
+      "title": "User"
+    },
+    {
+      "id": "ui/BlockMessage.schema.json",
+      "kind": "ui",
+      "path": "ui/BlockMessage.schema.json",
+      "service": null,
+      "title": "BlockMessage"
+    },
+    {
+      "id": "entities_api/ClassificationResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/ClassificationResponse.schema.json",
+      "service": null,
+      "title": "ClassificationResponse"
+    },
+    {
+      "id": "windmill/ContinuationInput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/ContinuationInput.schema.json",
+      "service": null,
+      "title": "ContinuationInput"
+    },
+    {
+      "id": "primitives/TimeUnit.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TimeUnit.schema.json",
+      "service": null,
+      "title": "TimeUnit"
+    },
+    {
+      "id": "tools/BindingEvidenceType.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingEvidenceType.schema.json",
+      "service": null,
+      "title": "BindingEvidenceType"
+    },
+    {
+      "id": "tools/StandardPipeline.schema.json",
+      "kind": "tool",
+      "path": "tools/StandardPipeline.schema.json",
+      "service": null,
+      "title": "StandardPipeline"
+    },
+    {
+      "id": "types/InternalStateType.schema.json",
+      "kind": "type",
+      "path": "types/InternalStateType.schema.json",
+      "service": null,
+      "title": "InternalStateType"
+    },
+    {
+      "id": "database/TenantMemberModel.schema.json",
+      "kind": "database",
+      "path": "database/TenantMemberModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "tools/GraphUpdateType.schema.json",
+      "kind": "tool",
+      "path": "tools/GraphUpdateType.schema.json",
+      "service": null,
+      "title": "GraphUpdateType"
+    },
+    {
+      "id": "tools/RecentThread.schema.json",
+      "kind": "tool",
+      "path": "tools/RecentThread.schema.json",
+      "service": null,
+      "title": "RecentThread"
+    },
+    {
+      "id": "entities/Shuttle.schema.json",
+      "kind": "entity",
+      "path": "entities/Shuttle.schema.json",
+      "service": null,
+      "title": "Shuttle"
+    },
+    {
+      "id": "types/ObserverError.schema.json",
+      "kind": "type",
+      "path": "types/ObserverError.schema.json",
+      "service": null,
+      "title": "ObserverError"
+    },
+    {
+      "id": "components/ObservationResponse.schema.json",
+      "kind": "component",
+      "path": "components/ObservationResponse.schema.json",
+      "service": null,
+      "title": "ObservationResponse"
+    },
+    {
+      "id": "resources/anthropic-claude.resource.json",
+      "kind": "resource",
+      "path": "resources/anthropic-claude.resource.json",
+      "service": null,
+      "title": "AnthropicClaude"
+    },
+    {
+      "id": "entities_api/PhysicsHintResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/PhysicsHintResponse.schema.json",
+      "service": null,
+      "title": "PhysicsHintResponse"
+    },
+    {
+      "id": "tools/ToolExecutionMetadata.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolExecutionMetadata.schema.json",
+      "service": null,
+      "title": "ToolExecutionMetadata"
+    },
+    {
+      "id": "ui/Block.schema.json",
+      "kind": "ui",
+      "path": "ui/Block.schema.json",
+      "service": null,
+      "title": "Block"
+    },
+    {
+      "id": "types/RawSegment.schema.json",
+      "kind": "type",
+      "path": "types/RawSegment.schema.json",
+      "service": null,
+      "title": "RawSegment"
+    },
+    {
+      "id": "tools/SegmentationMetadata.schema.json",
+      "kind": "tool",
+      "path": "tools/SegmentationMetadata.schema.json",
+      "service": null,
+      "title": "SegmentationMetadata"
+    },
+    {
+      "id": "types/AgenticFlowResponse.schema.json",
+      "kind": "type",
+      "path": "types/AgenticFlowResponse.schema.json",
+      "service": null,
+      "title": "AgenticFlowResponse"
+    },
+    {
+      "id": "agentic/Finding.schema.json",
+      "kind": "agentic",
+      "path": "agentic/Finding.schema.json",
+      "service": null,
+      "title": "Finding"
+    },
+    {
+      "id": "ui/ContextElement.schema.json",
+      "kind": "ui",
+      "path": "ui/ContextElement.schema.json",
+      "service": null,
+      "title": "ContextElement"
+    },
+    {
+      "id": "nodes/familiar-worker.node.json",
+      "kind": "node",
+      "path": "nodes/familiar-worker.node.json",
+      "service": null,
+      "title": "FamiliarWorker"
+    },
+    {
+      "id": "primitives/ExportRequestId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ExportRequestId.schema.json",
+      "service": null,
+      "title": "ExportRequestId"
+    },
+    {
+      "id": "tools/TemporalMarkerType.schema.json",
+      "kind": "tool",
+      "path": "tools/TemporalMarkerType.schema.json",
+      "service": null,
+      "title": "TemporalMarkerType"
+    },
+    {
+      "id": "primitives/BlockElement.schema.json",
+      "kind": "primitive",
+      "path": "primitives/BlockElement.schema.json",
+      "service": null,
+      "title": "BlockElement"
+    },
+    {
+      "id": "components/DatabasePool.component.json",
+      "kind": "component",
+      "path": "components/DatabasePool.component.json",
+      "service": null,
+      "title": "DatabasePool"
+    },
+    {
+      "id": "database/FieldExcitationModel.schema.json",
+      "kind": "database",
+      "path": "database/FieldExcitationModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "database/UserModel.schema.json",
+      "kind": "database",
+      "path": "database/UserModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "contracts/TraceKind.schema.json",
+      "kind": "contract",
+      "path": "contracts/TraceKind.schema.json",
+      "service": null,
+      "title": "TraceKind"
+    },
+    {
+      "id": "types/ClassificationPhysics.schema.json",
+      "kind": "type",
+      "path": "types/ClassificationPhysics.schema.json",
+      "service": null,
+      "title": "ClassificationPhysics"
+    },
+    {
+      "id": "primitives/VerbCategory.schema.json",
+      "kind": "primitive",
+      "path": "primitives/VerbCategory.schema.json",
+      "service": null,
+      "title": "VerbCategory"
+    },
+    {
+      "id": "entities/JoinRequestStatus.schema.json",
+      "kind": "entity",
+      "path": "entities/JoinRequestStatus.schema.json",
+      "service": null,
+      "title": "JoinRequestStatus"
+    },
+    {
+      "id": "tools/ToolChain.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolChain.schema.json",
+      "service": null,
+      "title": "ToolChain"
+    },
+    {
+      "id": "entities_api/HealthResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/HealthResponse.schema.json",
+      "service": null,
+      "title": "HealthResponse"
+    },
+    {
+      "id": "tenant/CreateTenantInput.schema.json",
+      "kind": "tenant",
+      "path": "tenant/CreateTenantInput.schema.json",
+      "service": null,
+      "title": "CreateTenantInput"
+    },
+    {
+      "id": "config/ModelConfig.schema.json",
+      "kind": "config",
+      "path": "config/ModelConfig.schema.json",
+      "service": null,
+      "title": "ModelConfig"
+    },
+    {
+      "id": "tools/SegmentationInput.schema.json",
+      "kind": "tool",
+      "path": "tools/SegmentationInput.schema.json",
+      "service": null,
+      "title": "SegmentationInput"
+    },
+    {
+      "id": "entities/Model.schema.json",
+      "kind": "entity",
+      "path": "entities/Model.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "entities/ConversationThread.schema.json",
+      "kind": "entity",
+      "path": "entities/ConversationThread.schema.json",
+      "service": null,
+      "title": "ConversationThread"
+    },
+    {
+      "id": "components/RelationalDynamics.schema.json",
+      "kind": "component",
+      "path": "components/RelationalDynamics.schema.json",
+      "service": null,
+      "title": "RelationalDynamics"
+    },
+    {
+      "id": "tools/SuggestedThread.schema.json",
+      "kind": "tool",
+      "path": "tools/SuggestedThread.schema.json",
+      "service": null,
+      "title": "SuggestedThread"
+    },
+    {
+      "id": "tools/EntityMention.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityMention.schema.json",
+      "service": null,
+      "title": "EntityMention"
+    },
+    {
+      "id": "config/SystemTrigger.schema.json",
+      "kind": "config",
+      "path": "config/SystemTrigger.schema.json",
+      "service": null,
+      "title": "SystemTrigger"
+    },
+    {
+      "id": "tools/SpawnSummary.schema.json",
+      "kind": "tool",
+      "path": "tools/SpawnSummary.schema.json",
+      "service": null,
+      "title": "SpawnSummary"
+    },
+    {
+      "id": "tools/BindingEvidence.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingEvidence.schema.json",
+      "service": null,
+      "title": "BindingEvidence"
+    },
+    {
+      "id": "auth/InviteRole.schema.json",
+      "kind": "auth",
+      "path": "auth/InviteRole.schema.json",
+      "service": null,
+      "title": "InviteRole"
+    },
+    {
+      "id": "tools/DetectionMethod.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectionMethod.schema.json",
+      "service": null,
+      "title": "DetectionMethod"
+    },
+    {
+      "id": "tools/ThreadCategory.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadCategory.schema.json",
+      "service": null,
+      "title": "ThreadCategory"
+    },
+    {
+      "id": "tools/BondHintOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/BondHintOutput.schema.json",
+      "service": null,
+      "title": "BondHintOutput"
+    },
+    {
+      "id": "auth/AuthResponse.schema.json",
+      "kind": "auth",
+      "path": "auth/AuthResponse.schema.json",
+      "service": null,
+      "title": "AuthResponse"
+    },
+    {
+      "id": "contracts/SignupConsents.schema.json",
+      "kind": "contract",
+      "path": "contracts/SignupConsents.schema.json",
+      "service": null,
+      "title": "SignupConsents"
+    },
+    {
+      "id": "primitives/ConsentRecordId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ConsentRecordId.schema.json",
+      "service": null,
+      "title": "ConsentRecordId"
+    },
+    {
+      "id": "tools/ToolCategory.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolCategory.schema.json",
+      "service": null,
+      "title": "ToolCategory"
+    },
+    {
+      "id": "tools/RelationshipType.schema.json",
+      "kind": "tool",
+      "path": "tools/RelationshipType.schema.json",
+      "service": null,
+      "title": "RelationshipType"
+    },
+    {
+      "id": "tools/BindingCharacteristics.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingCharacteristics.schema.json",
+      "service": null,
+      "title": "BindingCharacteristics"
+    },
+    {
+      "id": "primitives/ContextElement.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ContextElement.schema.json",
+      "service": null,
+      "title": "ContextElement"
+    },
+    {
+      "id": "tools/EntityClassification.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityClassification.schema.json",
+      "service": null,
+      "title": "EntityClassification"
+    },
+    {
+      "id": "auth/UserMembership.schema.json",
+      "kind": "auth",
+      "path": "auth/UserMembership.schema.json",
+      "service": null,
+      "title": "UserMembership"
+    },
+    {
+      "id": "windmill/PhysicsOutput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/PhysicsOutput.schema.json",
+      "service": null,
+      "title": "PhysicsOutput"
+    },
+    {
+      "id": "components/Conversation.schema.json",
+      "kind": "component",
+      "path": "components/Conversation.schema.json",
+      "service": null,
+      "title": "Conversation"
+    },
+    {
+      "id": "entities/Filament.schema.json",
+      "kind": "entity",
+      "path": "entities/Filament.schema.json",
+      "service": null,
+      "title": "Filament"
+    },
+    {
+      "id": "components/WeaveUnit.schema.json",
+      "kind": "component",
+      "path": "components/WeaveUnit.schema.json",
+      "service": null,
+      "title": "WeaveUnit"
+    },
+    {
+      "id": "primitives/Segment.schema.json",
+      "kind": "primitive",
+      "path": "primitives/Segment.schema.json",
+      "service": null,
+      "title": "Segment"
+    },
+    {
+      "id": "types/MessageClassification.schema.json",
+      "kind": "type",
+      "path": "types/MessageClassification.schema.json",
+      "service": null,
+      "title": "MessageClassification"
+    },
+    {
+      "id": "primitives/Timestamp.schema.json",
+      "kind": "primitive",
+      "path": "primitives/Timestamp.schema.json",
+      "service": null,
+      "title": "Timestamp"
+    },
+    {
+      "id": "primitives/Modality.schema.json",
+      "kind": "primitive",
+      "path": "primitives/Modality.schema.json",
+      "service": null,
+      "title": "Modality"
+    },
+    {
+      "id": "primitives/TimeGap.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TimeGap.schema.json",
+      "service": null,
+      "title": "TimeGap"
+    },
+    {
+      "id": "entities/Intent.schema.json",
+      "kind": "entity",
+      "path": "entities/Intent.schema.json",
+      "service": null,
+      "title": "Intent"
+    },
+    {
+      "id": "entities_api/MessageIntentResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/MessageIntentResponse.schema.json",
+      "service": null,
+      "title": "MessageIntentResponse"
+    },
+    {
+      "id": "entities/InviteType.schema.json",
+      "kind": "entity",
+      "path": "entities/InviteType.schema.json",
+      "service": null,
+      "title": "InviteType"
+    },
+    {
+      "id": "entities_api/ModelInfo.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/ModelInfo.schema.json",
+      "service": null,
+      "title": "ModelInfo"
+    },
+    {
+      "id": "tools/ConditionType.schema.json",
+      "kind": "tool",
+      "path": "tools/ConditionType.schema.json",
+      "service": null,
+      "title": "ConditionType"
+    },
+    {
+      "id": "components/PhysicsHint.schema.json",
+      "kind": "component",
+      "path": "components/PhysicsHint.schema.json",
+      "service": null,
+      "title": "PhysicsHint"
+    },
+    {
+      "id": "components/Weave.schema.json",
+      "kind": "component",
+      "path": "components/Weave.schema.json",
+      "service": null,
+      "title": "Weave"
+    },
+    {
+      "id": "ui/DividerBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/DividerBlock.schema.json",
+      "service": null,
+      "title": "DividerBlock"
+    },
+    {
+      "id": "primitives/SegmentFeatures.schema.json",
+      "kind": "primitive",
+      "path": "primitives/SegmentFeatures.schema.json",
+      "service": null,
+      "title": "SegmentFeatures"
+    },
+    {
+      "id": "entities/EntityStatus.schema.json",
+      "kind": "entity",
+      "path": "entities/EntityStatus.schema.json",
+      "service": null,
+      "title": "EntityStatus"
+    },
+    {
+      "id": "tools/DetectedAction.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectedAction.schema.json",
+      "service": null,
+      "title": "DetectedAction"
+    },
+    {
+      "id": "tools/ToolPurpose.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolPurpose.schema.json",
+      "service": null,
+      "title": "ToolPurpose"
+    },
+    {
+      "id": "auth/SignupRequest.schema.json",
+      "kind": "auth",
+      "path": "auth/SignupRequest.schema.json",
+      "service": null,
+      "title": "SignupRequest"
+    },
+    {
+      "id": "entities_api/SegmentResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/SegmentResponse.schema.json",
+      "service": null,
+      "title": "SegmentResponse"
+    },
+    {
+      "id": "tools/ParameterConstraints.schema.json",
+      "kind": "tool",
+      "path": "tools/ParameterConstraints.schema.json",
+      "service": null,
+      "title": "ParameterConstraints"
+    },
+    {
+      "id": "primitives/UserId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/UserId.schema.json",
+      "service": null,
+      "title": "UserId"
+    },
+    {
+      "id": "types/CourseStatus.schema.json",
+      "kind": "type",
+      "path": "types/CourseStatus.schema.json",
+      "service": null,
+      "title": "CourseStatus"
+    },
+    {
+      "id": "resources/postgres-tiger.resource.json",
+      "kind": "resource",
+      "path": "resources/postgres-tiger.resource.json",
+      "service": null,
+      "title": "PostgresTiger"
+    },
+    {
+      "id": "conversation/Message.schema.json",
+      "kind": "conversation",
+      "path": "conversation/Message.schema.json",
+      "service": null,
+      "title": "Message"
+    },
+    {
+      "id": "tools/StepCondition.schema.json",
+      "kind": "tool",
+      "path": "tools/StepCondition.schema.json",
+      "service": null,
+      "title": "StepCondition"
+    },
+    {
+      "id": "tools/ToolDefinition.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolDefinition.schema.json",
+      "service": null,
+      "title": "ToolDefinition"
+    },
+    {
+      "id": "entities/Focus.schema.json",
+      "kind": "entity",
+      "path": "entities/Focus.schema.json",
+      "service": null,
+      "title": "Focus"
+    },
+    {
+      "id": "primitives/Directionality.schema.json",
+      "kind": "primitive",
+      "path": "primitives/Directionality.schema.json",
+      "service": null,
+      "title": "Directionality"
+    },
+    {
+      "id": "types/RawClassification.schema.json",
+      "kind": "type",
+      "path": "types/RawClassification.schema.json",
+      "service": null,
+      "title": "RawClassification"
+    },
+    {
+      "id": "components/ObservationRequest.schema.json",
+      "kind": "component",
+      "path": "components/ObservationRequest.schema.json",
+      "service": null,
+      "title": "ObservationRequest"
+    },
+    {
+      "id": "database/MessageModel.schema.json",
+      "kind": "database",
+      "path": "database/MessageModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "tools/TimeGap.schema.json",
+      "kind": "tool",
+      "path": "tools/TimeGap.schema.json",
+      "service": null,
+      "title": "TimeGap"
+    },
+    {
+      "id": "tools/SegmentationOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/SegmentationOutput.schema.json",
+      "service": null,
+      "title": "SegmentationOutput"
+    },
+    {
+      "id": "tools/SubjectType.schema.json",
+      "kind": "tool",
+      "path": "tools/SubjectType.schema.json",
+      "service": null,
+      "title": "SubjectType"
+    },
+    {
+      "id": "agentic/AgentMessageType.schema.json",
+      "kind": "agentic",
+      "path": "agentic/AgentMessageType.schema.json",
+      "service": null,
+      "title": "AgentMessageType"
+    },
+    {
+      "id": "types/RawWeaveUnit.schema.json",
+      "kind": "type",
+      "path": "types/RawWeaveUnit.schema.json",
+      "service": null,
+      "title": "RawWeaveUnit"
+    },
+    {
+      "id": "types/UIHeddleResult.schema.json",
+      "kind": "type",
+      "path": "types/UIHeddleResult.schema.json",
+      "service": null,
+      "title": "UIHeddleResult"
+    },
+    {
+      "id": "windmill/PhysicsState.schema.json",
+      "kind": "windmill",
+      "path": "windmill/PhysicsState.schema.json",
+      "service": null,
+      "title": "PhysicsState"
+    },
+    {
+      "id": "systems/FatesNona.system.json",
+      "kind": "system",
+      "path": "systems/FatesNona.system.json",
+      "service": null,
+      "title": "FatesNona"
+    },
+    {
+      "id": "agentic/ConversationTurn.schema.json",
+      "kind": "agentic",
+      "path": "agentic/ConversationTurn.schema.json",
+      "service": null,
+      "title": "ConversationTurn"
+    },
+    {
+      "id": "systems/FatesDecima.system.json",
+      "kind": "system",
+      "path": "systems/FatesDecima.system.json",
+      "service": null,
+      "title": "FatesDecima"
+    },
+    {
+      "id": "windmill/ConciergeInput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/ConciergeInput.schema.json",
+      "service": null,
+      "title": "ConciergeInput"
+    },
+    {
+      "id": "tools/EntityType.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityType.schema.json",
+      "service": null,
+      "title": "EntityType"
+    },
+    {
+      "id": "components/SimLOD.schema.json",
+      "kind": "component",
+      "path": "components/SimLOD.schema.json",
+      "service": null,
+      "title": "SimLOD"
+    },
+    {
+      "id": "tools/EntityPatterns.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityPatterns.schema.json",
+      "service": null,
+      "title": "EntityPatterns"
+    },
+    {
+      "id": "config/SystemManifest.schema.json",
+      "kind": "config",
+      "path": "config/SystemManifest.schema.json",
+      "service": null,
+      "title": "SystemManifest"
+    },
+    {
+      "id": "types/ContentClassificationResponse.schema.json",
+      "kind": "type",
+      "path": "types/ContentClassificationResponse.schema.json",
+      "service": null,
+      "title": "ContentClassificationResponse"
+    },
+    {
+      "id": "tools/IdentifiedVerb.schema.json",
+      "kind": "tool",
+      "path": "tools/IdentifiedVerb.schema.json",
+      "service": null,
+      "title": "IdentifiedVerb"
+    },
+    {
+      "id": "entities/Bond.schema.json",
+      "kind": "entity",
+      "path": "entities/Bond.schema.json",
+      "service": null,
+      "title": "Bond"
+    },
+    {
+      "id": "tools/Segment.schema.json",
+      "kind": "tool",
+      "path": "tools/Segment.schema.json",
+      "service": null,
+      "title": "Segment"
+    },
+    {
+      "id": "tools/BindingGraphUpdate.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingGraphUpdate.schema.json",
+      "service": null,
+      "title": "BindingGraphUpdate"
+    },
+    {
+      "id": "tools/VerbTense.schema.json",
+      "kind": "tool",
+      "path": "tools/VerbTense.schema.json",
+      "service": null,
+      "title": "VerbTense"
+    },
+    {
+      "id": "types/TenantMember.schema.json",
+      "kind": "type",
+      "path": "types/TenantMember.schema.json",
+      "service": null,
+      "title": "TenantMember"
+    },
+    {
+      "id": "components/ClassificationSuperposition.schema.json",
+      "kind": "component",
+      "path": "components/ClassificationSuperposition.schema.json",
+      "service": null,
+      "title": "ClassificationSuperposition"
+    },
+    {
+      "id": "types/UIThinkingStep.schema.json",
+      "kind": "type",
+      "path": "types/UIThinkingStep.schema.json",
+      "service": null,
+      "title": "UIThinkingStep"
+    },
+    {
+      "id": "tools/BindingHintInput.schema.json",
+      "kind": "tool",
+      "path": "tools/BindingHintInput.schema.json",
+      "service": null,
+      "title": "BindingHintInput"
+    },
+    {
+      "id": "entities_api/AudioBlock.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/AudioBlock.schema.json",
+      "service": null,
+      "title": "AudioBlock"
+    },
+    {
+      "id": "primitives/QueryTarget.schema.json",
+      "kind": "primitive",
+      "path": "primitives/QueryTarget.schema.json",
+      "service": null,
+      "title": "QueryTarget"
+    },
+    {
+      "id": "tools/InteractionFrequency.schema.json",
+      "kind": "tool",
+      "path": "tools/InteractionFrequency.schema.json",
+      "service": null,
+      "title": "InteractionFrequency"
+    },
+    {
+      "id": "ui/ImageBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/ImageBlock.schema.json",
+      "service": null,
+      "title": "ImageBlock"
+    },
+    {
+      "id": "types/ShuttleStatus.schema.json",
+      "kind": "type",
+      "path": "types/ShuttleStatus.schema.json",
+      "service": null,
+      "title": "ShuttleStatus"
+    },
+    {
+      "id": "components/CourseDetails.schema.json",
+      "kind": "component",
+      "path": "components/CourseDetails.schema.json",
+      "service": null,
+      "title": "CourseDetails"
+    },
+    {
+      "id": "components/QuantumState.schema.json",
+      "kind": "component",
+      "path": "components/QuantumState.schema.json",
+      "service": null,
+      "title": "QuantumState"
+    },
+    {
+      "id": "conversation/Channel.schema.json",
+      "kind": "conversation",
+      "path": "conversation/Channel.schema.json",
+      "service": null,
+      "title": "Channel"
+    },
+    {
+      "id": "entities_api/MediaType.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/MediaType.schema.json",
+      "service": null,
+      "title": "MediaType"
+    },
+    {
+      "id": "primitives/MessageId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/MessageId.schema.json",
+      "service": null,
+      "title": "MessageId"
+    },
+    {
+      "id": "tools/DurationCategory.schema.json",
+      "kind": "tool",
+      "path": "tools/DurationCategory.schema.json",
+      "service": null,
+      "title": "DurationCategory"
+    },
+    {
+      "id": "tools/PhysicsHintOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/PhysicsHintOutput.schema.json",
+      "service": null,
+      "title": "PhysicsHintOutput"
+    },
+    {
+      "id": "database/QuantumStateModel.schema.json",
+      "kind": "database",
+      "path": "database/QuantumStateModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "types/UIChannel.schema.json",
+      "kind": "type",
+      "path": "types/UIChannel.schema.json",
+      "service": null,
+      "title": "UIChannel"
+    },
+    {
+      "id": "windmill/ContinuationOutput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/ContinuationOutput.schema.json",
+      "service": null,
+      "title": "ContinuationOutput"
+    },
+    {
+      "id": "auth/DeletionRequest.schema.json",
+      "kind": "auth",
+      "path": "auth/DeletionRequest.schema.json",
+      "service": null,
+      "title": "DeletionRequest"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/Queue.meta.schema.json",
+      "kind": null,
+      "path": "ecs/Queue.meta.schema.json",
+      "service": null,
+      "title": "ECS Queue Meta-Schema"
+    },
+    {
+      "id": "conversation/ConversationMessage.schema.json",
+      "kind": "conversation",
+      "path": "conversation/ConversationMessage.schema.json",
+      "service": null,
+      "title": "ConversationMessage"
+    },
+    {
+      "id": "tools/ContextStrategy.schema.json",
+      "kind": "tool",
+      "path": "tools/ContextStrategy.schema.json",
+      "service": null,
+      "title": "ContextStrategy"
+    },
+    {
+      "id": "auth/ExportStatus.schema.json",
+      "kind": "auth",
+      "path": "auth/ExportStatus.schema.json",
+      "service": null,
+      "title": "ExportStatus"
+    },
+    {
+      "id": "primitives/TemporalMarker.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TemporalMarker.schema.json",
+      "service": null,
+      "title": "TemporalMarker"
+    },
+    {
+      "id": "primitives/UIPhysicsResult.schema.json",
+      "kind": "primitive",
+      "path": "primitives/UIPhysicsResult.schema.json",
+      "service": null,
+      "title": "UIPhysicsResult"
+    },
+    {
+      "id": "config/AIProvider.schema.json",
+      "kind": "config",
+      "path": "config/AIProvider.schema.json",
+      "service": null,
+      "title": "AIProvider"
+    },
+    {
+      "id": "primitives/DbConnectionString.schema.json",
+      "kind": "primitive",
+      "path": "primitives/DbConnectionString.schema.json",
+      "service": null,
+      "title": "DbConnectionString"
+    },
+    {
+      "id": "tools/TemporalMarker.schema.json",
+      "kind": "tool",
+      "path": "tools/TemporalMarker.schema.json",
+      "service": null,
+      "title": "TemporalMarker"
+    },
+    {
+      "id": "entities_api/WebpageBlock.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/WebpageBlock.schema.json",
+      "service": null,
+      "title": "WebpageBlock"
+    },
+    {
+      "id": "tools/ThreadReference.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadReference.schema.json",
+      "service": null,
+      "title": "ThreadReference"
+    },
+    {
+      "id": "types/Tenant.schema.json",
+      "kind": "type",
+      "path": "types/Tenant.schema.json",
+      "service": null,
+      "title": "Tenant"
+    },
+    {
+      "id": "auth/RecordConsentInput.schema.json",
+      "kind": "auth",
+      "path": "auth/RecordConsentInput.schema.json",
+      "service": null,
+      "title": "RecordConsentInput"
+    },
+    {
+      "id": "types/DbStoreError.schema.json",
+      "kind": "error",
+      "path": "types/DbStoreError.schema.json",
+      "service": "familiar-daemon",
+      "title": "DbStoreError"
+    },
+    {
+      "id": "entities_api/CourseResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/CourseResponse.schema.json",
+      "service": null,
+      "title": "CourseResponse"
+    },
+    {
+      "id": "tools/BoundingBox.schema.json",
+      "kind": "tool",
+      "path": "tools/BoundingBox.schema.json",
+      "service": null,
+      "title": "BoundingBox"
+    },
+    {
+      "id": "types/MomentType.schema.json",
+      "kind": "type",
+      "path": "types/MomentType.schema.json",
+      "service": null,
+      "title": "MomentType"
+    },
+    {
+      "id": "auth/DeletionStatus.schema.json",
+      "kind": "auth",
+      "path": "auth/DeletionStatus.schema.json",
+      "service": null,
+      "title": "DeletionStatus"
+    },
+    {
+      "id": "tools/TemporalBinding.schema.json",
+      "kind": "tool",
+      "path": "tools/TemporalBinding.schema.json",
+      "service": null,
+      "title": "TemporalBinding"
+    },
+    {
+      "id": "components/CognitiveDimensions.schema.json",
+      "kind": "component",
+      "path": "components/CognitiveDimensions.schema.json",
+      "service": null,
+      "title": "CognitiveDimensions"
+    },
+    {
+      "id": "tools/EntityClassifierInput.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityClassifierInput.schema.json",
+      "service": null,
+      "title": "EntityClassifierInput"
+    },
+    {
+      "id": "entities/InviteRole.schema.json",
+      "kind": "entity",
+      "path": "entities/InviteRole.schema.json",
+      "service": null,
+      "title": "InviteRole"
+    },
+    {
+      "id": "components/ResponseMetadata.schema.json",
+      "kind": "component",
+      "path": "components/ResponseMetadata.schema.json",
+      "service": null,
+      "title": "ResponseMetadata"
+    },
+    {
+      "id": "primitives/NormalizedFloat.schema.json",
+      "kind": "primitive",
+      "path": "primitives/NormalizedFloat.schema.json",
+      "service": null,
+      "title": "NormalizedFloat"
+    },
+    {
+      "id": "entities/ThreadMessage.schema.json",
+      "kind": "entity",
+      "path": "entities/ThreadMessage.schema.json",
+      "service": null,
+      "title": "ThreadMessage"
+    },
+    {
+      "id": "primitives/InvitationId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/InvitationId.schema.json",
+      "service": null,
+      "title": "InvitationId"
+    },
+    {
+      "id": "auth/JoinRequestStatus.schema.json",
+      "kind": "auth",
+      "path": "auth/JoinRequestStatus.schema.json",
+      "service": null,
+      "title": "JoinRequestStatus"
+    },
+    {
+      "id": "conversation/ListMessagesOptions.schema.json",
+      "kind": "conversation",
+      "path": "conversation/ListMessagesOptions.schema.json",
+      "service": null,
+      "title": "ListMessagesOptions"
+    },
+    {
+      "id": "auth/FamilyInvitation.schema.json",
+      "kind": "auth",
+      "path": "auth/FamilyInvitation.schema.json",
+      "service": null,
+      "title": "FamilyInvitation"
+    },
+    {
+      "id": "tools/TemporalScope.schema.json",
+      "kind": "tool",
+      "path": "tools/TemporalScope.schema.json",
+      "service": null,
+      "title": "TemporalScope"
+    },
+    {
+      "id": "auth/JoinRequest.schema.json",
+      "kind": "auth",
+      "path": "auth/JoinRequest.schema.json",
+      "service": null,
+      "title": "JoinRequest"
+    },
+    {
+      "id": "primitives/EntityId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/EntityId.schema.json",
+      "service": null,
+      "title": "EntityId"
+    },
+    {
+      "id": "primitives/ThreadRole.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ThreadRole.schema.json",
+      "service": null,
+      "title": "ThreadRole"
+    },
+    {
+      "id": "tools/ThreadRelationType.schema.json",
+      "kind": "tool",
+      "path": "tools/ThreadRelationType.schema.json",
+      "service": null,
+      "title": "ThreadRelationType"
+    },
+    {
+      "id": "tools/ErrorStrategy.schema.json",
+      "kind": "tool",
+      "path": "tools/ErrorStrategy.schema.json",
+      "service": null,
+      "title": "ErrorStrategy"
+    },
+    {
+      "id": "auth/PublicUser.schema.json",
+      "kind": "auth",
+      "path": "auth/PublicUser.schema.json",
+      "service": null,
+      "title": "PublicUser"
+    },
+    {
+      "id": "primitives/TemporalMarkerType.schema.json",
+      "kind": "primitive",
+      "path": "primitives/TemporalMarkerType.schema.json",
+      "service": null,
+      "title": "TemporalMarkerType"
+    },
+    {
+      "id": "auth/CreateJoinRequestInput.schema.json",
+      "kind": "auth",
+      "path": "auth/CreateJoinRequestInput.schema.json",
+      "service": null,
+      "title": "CreateJoinRequestInput"
+    },
+    {
+      "id": "primitives/EmotionalTone.schema.json",
+      "kind": "primitive",
+      "path": "primitives/EmotionalTone.schema.json",
+      "service": null,
+      "title": "EmotionalTone"
+    },
+    {
+      "id": "windmill/ClassifierInput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/ClassifierInput.schema.json",
+      "service": null,
+      "title": "ClassifierInput"
+    },
+    {
+      "id": "primitives/UIHeddleSegment.schema.json",
+      "kind": "primitive",
+      "path": "primitives/UIHeddleSegment.schema.json",
+      "service": null,
+      "title": "UIHeddleSegment"
+    },
+    {
+      "id": "agentic/AgentSpeaker.schema.json",
+      "kind": "agentic",
+      "path": "agentic/AgentSpeaker.schema.json",
+      "service": null,
+      "title": "AgentSpeaker"
+    },
+    {
+      "id": "components/TigerDataStore.component.json",
+      "kind": "component",
+      "path": "components/TigerDataStore.component.json",
+      "service": null,
+      "title": "TigerDataStore"
+    },
+    {
+      "id": "tools/EntityClassificationContext.schema.json",
+      "kind": "tool",
+      "path": "tools/EntityClassificationContext.schema.json",
+      "service": null,
+      "title": "EntityClassificationContext"
+    },
+    {
+      "id": "components/FieldExcitation.schema.json",
+      "kind": "component",
+      "path": "components/FieldExcitation.schema.json",
+      "service": null,
+      "title": "FieldExcitation"
+    },
+    {
+      "id": "tools/EmotionalTone.schema.json",
+      "kind": "tool",
+      "path": "tools/EmotionalTone.schema.json",
+      "service": null,
+      "title": "EmotionalTone"
+    },
+    {
+      "id": "components/SimulationTier.schema.json",
+      "kind": "component",
+      "path": "components/SimulationTier.schema.json",
+      "service": null,
+      "title": "SimulationTier"
+    },
+    {
+      "id": "ui/TextObject.schema.json",
+      "kind": "ui",
+      "path": "ui/TextObject.schema.json",
+      "service": null,
+      "title": "TextObject"
+    },
+    {
+      "id": "conversation/FamiliarEntityType.schema.json",
+      "kind": "conversation",
+      "path": "conversation/FamiliarEntityType.schema.json",
+      "service": null,
+      "title": "FamiliarEntityType"
+    },
+    {
+      "id": "types/AgenticEvent.schema.json",
+      "kind": "type",
+      "path": "types/AgenticEvent.schema.json",
+      "service": null,
+      "title": "AgenticEvent"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/System.meta.schema.json",
+      "kind": null,
+      "path": "ecs/System.meta.schema.json",
+      "service": null,
+      "title": "ECS System Meta-Schema"
+    },
+    {
+      "id": "auth/MagicLinkCreated.schema.json",
+      "kind": "auth",
+      "path": "auth/MagicLinkCreated.schema.json",
+      "service": null,
+      "title": "MagicLinkCreated"
+    },
+    {
+      "id": "tools/VisionSegmentFeatures.schema.json",
+      "kind": "tool",
+      "path": "tools/VisionSegmentFeatures.schema.json",
+      "service": null,
+      "title": "VisionSegmentFeatures"
+    },
+    {
+      "id": "contracts/TraceStatus.schema.json",
+      "kind": "contract",
+      "path": "contracts/TraceStatus.schema.json",
+      "service": null,
+      "title": "TraceStatus"
+    },
+    {
+      "id": "types/MessageStatusType.schema.json",
+      "kind": "type",
+      "path": "types/MessageStatusType.schema.json",
+      "service": null,
+      "title": "MessageStatusType"
+    },
+    {
+      "id": "contracts/EnvelopeV1.schema.json",
+      "kind": "contract",
+      "path": "contracts/EnvelopeV1.schema.json",
+      "service": null,
+      "title": "EnvelopeV1"
+    },
+    {
+      "id": "auth/CurrentUser.schema.json",
+      "kind": "auth",
+      "path": "auth/CurrentUser.schema.json",
+      "service": null,
+      "title": "CurrentUser"
+    },
+    {
+      "id": "tools/InputMapping.schema.json",
+      "kind": "tool",
+      "path": "tools/InputMapping.schema.json",
+      "service": null,
+      "title": "InputMapping"
+    },
+    {
+      "id": "auth/ConsentType.schema.json",
+      "kind": "auth",
+      "path": "auth/ConsentType.schema.json",
+      "service": null,
+      "title": "ConsentType"
+    },
+    {
+      "id": "types/MemberRole.schema.json",
+      "kind": "type",
+      "path": "types/MemberRole.schema.json",
+      "service": null,
+      "title": "MemberRole"
+    },
+    {
+      "id": "types/UIToolCall.schema.json",
+      "kind": "type",
+      "path": "types/UIToolCall.schema.json",
+      "service": null,
+      "title": "UIToolCall"
+    },
+    {
+      "id": "primitives/InviteCode.schema.json",
+      "kind": "primitive",
+      "path": "primitives/InviteCode.schema.json",
+      "service": null,
+      "title": "String"
+    },
+    {
+      "id": "ui/ImageElement.schema.json",
+      "kind": "ui",
+      "path": "ui/ImageElement.schema.json",
+      "service": null,
+      "title": "ImageElement"
+    },
+    {
+      "id": "tools/PurposePipeline.schema.json",
+      "kind": "tool",
+      "path": "tools/PurposePipeline.schema.json",
+      "service": null,
+      "title": "PurposePipeline"
+    },
+    {
+      "id": "database/ChannelModel.schema.json",
+      "kind": "database",
+      "path": "database/ChannelModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "resources/openai-gpt4.resource.json",
+      "kind": "resource",
+      "path": "resources/openai-gpt4.resource.json",
+      "service": null,
+      "title": "OpenAIGPT4"
+    },
+    {
+      "id": "tools/TemporalProperties.schema.json",
+      "kind": "tool",
+      "path": "tools/TemporalProperties.schema.json",
+      "service": null,
+      "title": "TemporalProperties"
+    },
+    {
+      "id": "ui/MarkdownTextObject.schema.json",
+      "kind": "ui",
+      "path": "ui/MarkdownTextObject.schema.json",
+      "service": null,
+      "title": "MarkdownTextObject"
+    },
+    {
+      "id": "components/WeaveUnitClassification.schema.json",
+      "kind": "component",
+      "path": "components/WeaveUnitClassification.schema.json",
+      "service": null,
+      "title": "WeaveUnitClassification"
+    },
+    {
+      "id": "systems/FatesMorta.system.json",
+      "kind": "system",
+      "path": "systems/FatesMorta.system.json",
+      "service": null,
+      "title": "FatesMorta"
+    },
+    {
+      "id": "tools/LinguisticAnalysis.schema.json",
+      "kind": "tool",
+      "path": "tools/LinguisticAnalysis.schema.json",
+      "service": null,
+      "title": "LinguisticAnalysis"
+    },
+    {
+      "id": "database/EntityRegistryModel.schema.json",
+      "kind": "database",
+      "path": "database/EntityRegistryModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "tools/DetectedBond.schema.json",
+      "kind": "tool",
+      "path": "tools/DetectedBond.schema.json",
+      "service": null,
+      "title": "DetectedBond"
+    },
+    {
+      "id": "primitives/QuantizedCoord.schema.json",
+      "kind": "primitive",
+      "path": "primitives/QuantizedCoord.schema.json",
+      "service": null,
+      "title": "QuantizedCoord"
+    },
+    {
+      "id": "windmill/ConciergeOutput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/ConciergeOutput.schema.json",
+      "service": null,
+      "title": "ConciergeOutput"
+    },
+    {
+      "id": "primitives/DeletionRequestId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/DeletionRequestId.schema.json",
+      "service": null,
+      "title": "DeletionRequestId"
+    },
+    {
+      "id": "tools/CommandType.schema.json",
+      "kind": "tool",
+      "path": "tools/CommandType.schema.json",
+      "service": null,
+      "title": "CommandType"
+    },
+    {
+      "id": "primitives/JoinRequestId.schema.json",
+      "kind": "primitive",
+      "path": "primitives/JoinRequestId.schema.json",
+      "service": null,
+      "title": "JoinRequestId"
+    },
+    {
+      "id": "tools/BondEvidence.schema.json",
+      "kind": "tool",
+      "path": "tools/BondEvidence.schema.json",
+      "service": null,
+      "title": "BondEvidence"
+    },
+    {
+      "id": "types/PromptPhase.schema.json",
+      "kind": "type",
+      "path": "types/PromptPhase.schema.json",
+      "service": null,
+      "title": "PromptPhase"
+    },
+    {
+      "id": "agentic/ToolCallResult.schema.json",
+      "kind": "agentic",
+      "path": "agentic/ToolCallResult.schema.json",
+      "service": null,
+      "title": "ToolCallResult"
+    },
+    {
+      "id": "nodes/familiar-daemon.node.json",
+      "kind": "node",
+      "path": "nodes/familiar-daemon.node.json",
+      "service": null,
+      "title": "FamiliarDaemon"
+    },
+    {
+      "id": "components/ProviderConfig.schema.json",
+      "kind": "component",
+      "path": "components/ProviderConfig.schema.json",
+      "service": null,
+      "title": "ProviderConfig"
+    },
+    {
+      "id": "ui/PlainTextInputElement.schema.json",
+      "kind": "ui",
+      "path": "ui/PlainTextInputElement.schema.json",
+      "service": null,
+      "title": "PlainTextInputElement"
+    },
+    {
+      "id": "contracts/SchemaInfo.schema.json",
+      "kind": "contract",
+      "path": "contracts/SchemaInfo.schema.json",
+      "service": null,
+      "title": "SchemaInfo"
+    },
+    {
+      "id": "tools/BondChanges.schema.json",
+      "kind": "tool",
+      "path": "tools/BondChanges.schema.json",
+      "service": null,
+      "title": "BondChanges"
+    },
+    {
+      "id": "agentic/ToolCallRequest.schema.json",
+      "kind": "agentic",
+      "path": "agentic/ToolCallRequest.schema.json",
+      "service": null,
+      "title": "ToolCallRequest"
+    },
+    {
+      "id": "entities_api/MediaRef.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/MediaRef.schema.json",
+      "service": null,
+      "title": "MediaRef"
+    },
+    {
+      "id": "tools/PipelineTrigger.schema.json",
+      "kind": "tool",
+      "path": "tools/PipelineTrigger.schema.json",
+      "service": null,
+      "title": "PipelineTrigger"
+    },
+    {
+      "id": "primitives/RetryConfig.schema.json",
+      "kind": "primitive",
+      "path": "primitives/RetryConfig.schema.json",
+      "service": null,
+      "title": "RetryConfig"
+    },
+    {
+      "id": "tools/SpawnAction.schema.json",
+      "kind": "tool",
+      "path": "tools/SpawnAction.schema.json",
+      "service": null,
+      "title": "SpawnAction"
+    },
+    {
+      "id": "types/RawMessageIntent.schema.json",
+      "kind": "type",
+      "path": "types/RawMessageIntent.schema.json",
+      "service": null,
+      "title": "RawMessageIntent"
+    },
+    {
+      "id": "primitives/MaxTokens.schema.json",
+      "kind": "primitive",
+      "path": "primitives/MaxTokens.schema.json",
+      "service": null,
+      "title": "MaxTokens"
+    },
+    {
+      "id": "https://familiar.dev/schemas/ecs/Node.meta.schema.json",
+      "kind": null,
+      "path": "ecs/Node.meta.schema.json",
+      "service": null,
+      "title": "ECS Node Meta-Schema"
+    },
+    {
+      "id": "entities/ThreadSummary.schema.json",
+      "kind": "entity",
+      "path": "entities/ThreadSummary.schema.json",
+      "service": null,
+      "title": "ThreadSummary"
+    },
+    {
+      "id": "windmill/PhysicsInput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/PhysicsInput.schema.json",
+      "service": null,
+      "title": "PhysicsInput"
+    },
+    {
+      "id": "primitives/RelationshipType.schema.json",
+      "kind": "primitive",
+      "path": "primitives/RelationshipType.schema.json",
+      "service": null,
+      "title": "RelationshipType"
+    },
+    {
+      "id": "windmill/RAGInput.schema.json",
+      "kind": "windmill",
+      "path": "windmill/RAGInput.schema.json",
+      "service": null,
+      "title": "RAGInput"
+    },
+    {
+      "id": "database/AuditLogEntryModel.schema.json",
+      "kind": "database",
+      "path": "database/AuditLogEntryModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "tools/UserPurposePatterns.schema.json",
+      "kind": "tool",
+      "path": "tools/UserPurposePatterns.schema.json",
+      "service": null,
+      "title": "UserPurposePatterns"
+    },
+    {
+      "id": "auth/SessionCreated.schema.json",
+      "kind": "auth",
+      "path": "auth/SessionCreated.schema.json",
+      "service": null,
+      "title": "SessionCreated"
+    },
+    {
+      "id": "primitives/ButtonStyle.schema.json",
+      "kind": "primitive",
+      "path": "primitives/ButtonStyle.schema.json",
+      "service": null,
+      "title": "ButtonStyle"
+    },
+    {
+      "id": "entities/Course.schema.json",
+      "kind": "entity",
+      "path": "entities/Course.schema.json",
+      "service": null,
+      "title": "Course"
+    },
+    {
+      "id": "tools/ClassificationReasoning.schema.json",
+      "kind": "tool",
+      "path": "tools/ClassificationReasoning.schema.json",
+      "service": null,
+      "title": "ClassificationReasoning"
+    },
+    {
+      "id": "tools/ToolErrorCode.schema.json",
+      "kind": "tool",
+      "path": "tools/ToolErrorCode.schema.json",
+      "service": null,
+      "title": "ToolErrorCode"
+    },
+    {
+      "id": "components/Timestamps.schema.json",
+      "kind": "component",
+      "path": "components/Timestamps.schema.json",
+      "service": null,
+      "title": "Timestamps"
+    },
+    {
+      "id": "ui/AccordionBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/AccordionBlock.schema.json",
+      "service": null,
+      "title": "AccordionBlock"
+    },
+    {
+      "id": "tools/PurposeClassifierOutput.schema.json",
+      "kind": "tool",
+      "path": "tools/PurposeClassifierOutput.schema.json",
+      "service": null,
+      "title": "PurposeClassifierOutput"
+    },
+    {
+      "id": "entities_api/WeaveUnitResponse.schema.json",
+      "kind": "entities_api",
+      "path": "entities_api/WeaveUnitResponse.schema.json",
+      "service": null,
+      "title": "WeaveUnitResponse"
+    },
+    {
+      "id": "components/ChatMessage.schema.json",
+      "kind": "component",
+      "path": "components/ChatMessage.schema.json",
+      "service": null,
+      "title": "ChatMessage"
+    },
+    {
+      "id": "tools/ParsedTemporal.schema.json",
+      "kind": "tool",
+      "path": "tools/ParsedTemporal.schema.json",
+      "service": null,
+      "title": "ParsedTemporal"
+    },
+    {
+      "id": "queues/daemon-queue.queue.json",
+      "kind": "queue",
+      "path": "queues/daemon-queue.queue.json",
+      "service": null,
+      "title": "DaemonQueue"
+    },
+    {
+      "id": "components/TaskDynamics.schema.json",
+      "kind": "component",
+      "path": "components/TaskDynamics.schema.json",
+      "service": null,
+      "title": "TaskDynamics"
+    },
+    {
+      "id": "entities/Moment.schema.json",
+      "kind": "entity",
+      "path": "entities/Moment.schema.json",
+      "service": null,
+      "title": "Moment"
+    },
+    {
+      "id": "conversation/UpdateEntityStatusInput.schema.json",
+      "kind": "conversation",
+      "path": "conversation/UpdateEntityStatusInput.schema.json",
+      "service": null,
+      "title": "UpdateEntityStatusInput"
+    },
+    {
+      "id": "database/TenantModel.schema.json",
+      "kind": "database",
+      "path": "database/TenantModel.schema.json",
+      "service": null,
+      "title": "Model"
+    },
+    {
+      "id": "tools/ContextWindow.schema.json",
+      "kind": "tool",
+      "path": "tools/ContextWindow.schema.json",
+      "service": null,
+      "title": "ContextWindow"
+    },
+    {
+      "id": "systems/FatesGate.system.json",
+      "kind": "system",
+      "path": "systems/FatesGate.system.json",
+      "service": null,
+      "title": "FatesGate"
+    },
+    {
+      "id": "tools/BondUpdate.schema.json",
+      "kind": "tool",
+      "path": "tools/BondUpdate.schema.json",
+      "service": null,
+      "title": "BondUpdate"
+    },
+    {
+      "id": "components/LlmRequestDebug.schema.json",
+      "kind": "component",
+      "path": "components/LlmRequestDebug.schema.json",
+      "service": null,
+      "title": "LlmRequestDebug"
+    },
+    {
+      "id": "tools/QueryAnalysis.schema.json",
+      "kind": "tool",
+      "path": "tools/QueryAnalysis.schema.json",
+      "service": null,
+      "title": "QueryAnalysis"
+    },
+    {
+      "id": "tools/PipelineType.schema.json",
+      "kind": "tool",
+      "path": "tools/PipelineType.schema.json",
+      "service": null,
+      "title": "PipelineType"
+    },
+    {
+      "id": "types/AgenticCommand.schema.json",
+      "kind": "input",
+      "path": "types/AgenticCommand.schema.json",
+      "service": "familiar-daemon",
+      "title": "AgenticCommand"
+    },
+    {
+      "id": "ui/SectionBlock.schema.json",
+      "kind": "ui",
+      "path": "ui/SectionBlock.schema.json",
+      "service": null,
+      "title": "SectionBlock"
+    },
+    {
+      "id": "tenant/Tenant.schema.json",
+      "kind": "tenant",
+      "path": "tenant/Tenant.schema.json",
+      "service": null,
+      "title": "Tenant"
+    }
+  ]
+}

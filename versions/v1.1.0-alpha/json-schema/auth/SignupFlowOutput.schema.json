@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SignupFlowOutput",
+  "description": "Output from the signup Windmill flow",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "$ref": "../primitives/UserId.schema.json"
+    },
+    "session_token": {
+      "type": "string"
+    },
+    "session_expires_at": {
+      "$ref": "../primitives/Timestamp.schema.json"
+    },
+    "needs_family": {
+      "type": "boolean"
+    },
+    "joined_family_id": {
+      "anyOf": [
+        { "$ref": "../primitives/TenantId.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "joined_family_name": {
+      "type": ["string", "null"]
+    }
+  },
+  "required": ["user_id", "session_token", "session_expires_at", "needs_family"],
+  "x-familiar-kind": "response"
+}
+

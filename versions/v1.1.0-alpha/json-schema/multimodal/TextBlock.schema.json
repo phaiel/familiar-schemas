@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TextBlock",
+  "description": "Text block for multimodal weave requests",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string"
+    }
+  },
+  "required": ["content"],
+  "x-familiar-kind": "component"
+}
+

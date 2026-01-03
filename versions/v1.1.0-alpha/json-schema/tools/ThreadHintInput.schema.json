@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "RecentThread": {
+      "description": "A recently referenced thread",
+      "properties": {
+        "mention_count": {
+          "description": "Mention count in recent context",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "recency": {
+          "description": "How recently mentioned (in messages)",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "thread": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ThreadReference.schema.json"
+            }
+          ],
+          "description": "Thread reference"
+        }
+      },
+      "required": [
+        "mention_count",
+        "recency",
+        "thread"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Input for thread hint generation",
+  "properties": {
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "../primitives/EntityType.schema.json"
+        }
+      ],
+      "description": "Entity type being spawned"
+    },
+    "known_threads": {
+      "default": [],
+      "description": "Known threads for matching",
+      "items": {
+        "$ref": "../primitives/ThreadReference.schema.json"
+      },
+      "type": "array"
+    },
+    "recent_threads": {
+      "default": [],
+      "description": "Recent threads for context",
+      "items": {
+        "$ref": "RecentThread.schema.json"
+      },
+      "type": "array"
+    },
+    "segment": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Segment.schema.json"
+        }
+      ],
+      "description": "The segment to analyze"
+    }
+  },
+  "required": [
+    "entity_type",
+    "segment"
+  ],
+  "title": "ThreadHintInput",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "input",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

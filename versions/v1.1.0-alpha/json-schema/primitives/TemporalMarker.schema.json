@@ -1,0 +1,38 @@
+{
+  "$id": "primitives/TemporalMarker.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A temporal marker in the segment",
+  "properties": {
+    "marker_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TemporalMarkerType"
+        }
+      ],
+      "description": "Type of temporal reference"
+    },
+    "parsed": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ParsedTemporal"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Parsed temporal value (if parseable)"
+    },
+    "text": {
+      "description": "The text of the marker",
+      "type": "string"
+    }
+  },
+  "required": [
+    "marker_type",
+    "text"
+  ],
+  "title": "TemporalMarker",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Node.meta.schema.json",
+  "title": "ECS Node Meta-Schema",
+  "description": "Schema for defining ECS Nodes - service definitions that compose Systems and Components (e.g., familiar-daemon, familiar-worker)",
+  "type": "object",
+  "required": ["title", "x-familiar-kind", "x-familiar-queue", "x-familiar-resource-class"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "http://json-schema.org/draft-07/schema#"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable name for the node (e.g., FamiliarDaemon)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the node's purpose"
+    },
+    "x-familiar-kind": {
+      "type": "string",
+      "const": "node",
+      "description": "Must be 'node' for node schemas"
+    },
+    "x-familiar-queue": {
+      "type": "string",
+      "description": "The Temporal task queue this node consumes from"
+    },
+    "x-familiar-resource-class": {
+      "type": "string",
+      "enum": ["llm", "io", "cpu", "batch"],
+      "description": "Resource class for automatic scaling configuration"
+    },
+    "x-familiar-systems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "pattern": "^(\\.\\./)*(systems/)?[A-Za-z]+\\.system\\.json$",
+            "description": "Reference to a system schema"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of systems this node executes"
+    },
+    "x-familiar-components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "pattern": "^(\\.\\./)*(components/)?[A-Za-z]+\\.component\\.json$",
+            "description": "Reference to a component schema"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of components this node initializes"
+    },
+    "x-familiar-resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "pattern": "^(\\.\\./)*(resources/)?[a-z-]+\\.resource\\.json$",
+            "description": "Reference to a resource schema"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of external resources this node connects to"
+    },
+    "x-familiar-concurrency": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 10,
+      "description": "Default concurrency for this node's worker"
+    },
+    "x-familiar-memory": {
+      "type": "string",
+      "pattern": "^\\d+(Mi|Gi)$",
+      "description": "Memory allocation (e.g., '2Gi', '512Mi')"
+    }
+  },
+  "additionalProperties": true,
+  "x-familiar-generated": false
+}
+

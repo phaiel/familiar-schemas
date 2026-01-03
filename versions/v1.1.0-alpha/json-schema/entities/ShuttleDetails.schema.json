@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Processing metadata for a Shuttle\n\nThese are transient concerns - each Shuttle may use different providers, models, or have different latencies. This info belongs on the Shuttle, not the Course.",
+  "properties": {
+    "latency_ms": {
+      "description": "Latency in milliseconds",
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "model": {
+      "description": "Model used (e.g., \"claude-sonnet-4\", \"gpt-4o\")",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "description": "LLM provider (e.g., \"anthropic\", \"openai\")",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spawn_count": {
+      "default": 0,
+      "description": "Number of entities spawned",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "tokens_used": {
+      "description": "Token usage",
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "unit_count": {
+      "default": 0,
+      "description": "Number of weave units processed",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "type": "object",
+  "title": "ShuttleDetails",
+  "x-familiar-kind": "entity"
+}

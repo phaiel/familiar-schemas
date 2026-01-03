@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Identity",
+  "description": "Core identity component that all entities possess",
+  "type": "object",
+  "required": [
+    "created_at",
+    "id",
+    "tenant_id"
+  ],
+  "properties": {
+    "created_at": {
+      "description": "When this entity was created",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Timestamp"
+        }
+      ]
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "allOf": [
+        {
+          "$ref": "#/definitions/UUID"
+        }
+      ]
+    },
+    "tenant_id": {
+      "description": "Tenant (family/user) this entity belongs to",
+      "allOf": [
+        {
+          "$ref": "#/definitions/UUID"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "Timestamp": {
+      "description": "An ISO 8601 timestamp (serialized as string)",
+      "type": "string",
+      "format": "date-time"
+    },
+    "UUID": {
+      "description": "A UUID (serialized as string)",
+      "type": "string",
+      "format": "uuid"
+    }
+  }
+}

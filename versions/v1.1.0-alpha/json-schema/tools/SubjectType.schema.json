@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of subjects",
+  "oneOf": [
+    {
+      "description": "The user themselves",
+      "enum": [
+        "self_"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Another person",
+      "enum": [
+        "person"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A place",
+      "enum": [
+        "place"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An organization",
+      "enum": [
+        "organization"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A concept/topic",
+      "enum": [
+        "concept"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An event",
+      "enum": [
+        "event"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An object/thing",
+      "enum": [
+        "object"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Unknown/other",
+      "enum": [
+        "other"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "SubjectType",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-enum-repr": "simple_enum",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  },
+  "x-familiar-variants": {
+    "concept": "Concept",
+    "event": "Event",
+    "object": "Object",
+    "organization": "Organization",
+    "other": "Other",
+    "person": "Person",
+    "place": "Place",
+    "self_": "Self_"
+  }
+}

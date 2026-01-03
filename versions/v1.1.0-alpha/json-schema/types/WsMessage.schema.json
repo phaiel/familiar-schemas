@@ -1,0 +1,439 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AccordionState": {
+      "enum": [
+        "collapsed",
+        "expanded"
+      ],
+      "type": "string"
+    },
+    "Block": {
+      "description": "A single visual block in a message",
+      "oneOf": [
+        {
+          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
+          "properties": {
+            "accessory": {
+              "anyOf": [
+                {
+                  "$ref": "../primitives/BlockElement.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fields": {
+              "items": {
+                "$ref": "../primitives/TextObject.schema.json"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "text": {
+              "$ref": "../primitives/TextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "section"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A visual separator",
+          "properties": {
+            "type": {
+              "enum": [
+                "divider"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays an image with optional title",
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "$ref": "../primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": {
+              "enum": [
+                "image"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A container for interactive elements (buttons, selects, etc.)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../primitives/BlockElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "actions"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays contextual info (small grey text, images)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../primitives/ContextElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "context"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A header with large, bold text",
+          "properties": {
+            "text": {
+              "$ref": "../primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "header"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An input field",
+          "properties": {
+            "element": {
+              "$ref": "../primitives/BlockElement.schema.json"
+            },
+            "hint": {
+              "anyOf": [
+                {
+                  "$ref": "../primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "label": {
+              "$ref": "../primitives/PlainTextObject.schema.json"
+            },
+            "optional": {
+              "default": false,
+              "type": "boolean"
+            },
+            "type": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "element",
+            "label",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A collapsible container",
+          "properties": {
+            "blocks": {
+              "items": {
+                "$ref": "../ui/Block.schema.json"
+              },
+              "type": "array"
+            },
+            "initial_state": {
+              "allOf": [
+                {
+                  "$ref": "../ui/AccordionState.schema.json"
+                }
+              ],
+              "default": "collapsed"
+            },
+            "summary": {
+              "$ref": "../primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "accordion"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "blocks",
+            "summary",
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "BlockMessage": {
+      "description": "The root container for a Block Kit message",
+      "properties": {
+        "blocks": {
+          "items": {
+            "$ref": "../ui/Block.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "blocks"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A message sent from the server to the client via WebSocket",
+  "oneOf": [
+    {
+      "description": "Connection status / Handshake",
+      "properties": {
+        "job_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "status"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "status",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Typing indicator (agent is processing)",
+      "properties": {
+        "job_id": {
+          "type": "string"
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "enum": [
+            "typing"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Job progress update (with optional Block Kit content)",
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "../ui/BlockMessage.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "details": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "progress"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Job completed successfully (with Block Kit content)",
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "../ui/BlockMessage.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "job_id": {
+          "type": "string"
+        },
+        "result": true,
+        "type": {
+          "enum": [
+            "complete"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Error occurred (with Block Kit content)",
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "../ui/BlockMessage.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "job_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "error"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "message",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Message status update (sent, delivered, read)",
+      "properties": {
+        "message_id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "../types/MessageStatusType.schema.json"
+        },
+        "type": {
+          "enum": [
+            "message_status"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "status",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "WsMessage",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-discriminator": "type",
+  "x-familiar-enum-repr": "internally_tagged",
+  "x-familiar-kind": "type",
+  "x-familiar-variants": {
+    "complete": "Complete",
+    "error": "Error",
+    "message_status": "MessageStatus",
+    "progress": "Progress",
+    "status": "Status",
+    "typing": "Typing"
+  }
+}

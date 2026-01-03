@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "UIChannelMessage": {
+      "description": "A user message that starts a thread in a channel",
+      "properties": {
+        "content": {
+          "description": "Original user message content",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "is_active": {
+          "default": false,
+          "description": "Is this the active/latest message?",
+          "type": "boolean"
+        },
+        "is_expanded": {
+          "default": false,
+          "description": "Is thread expanded in UI?",
+          "type": "boolean"
+        },
+        "thread": {
+          "description": "Thread of responses and follow-ups",
+          "items": {
+            "$ref": "UIThreadItem.schema.json"
+          },
+          "type": "array"
+        },
+        "timestamp": {
+          "description": "When posted",
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "id",
+        "thread",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classification results",
+          "items": {
+            "$ref": "../primitives/UIClassification.schema.json"
+          },
+          "type": "array"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UIPhysicsResult.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints"
+        },
+        "purpose": {
+          "default": null,
+          "description": "Detected purpose/intent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "default": [],
+          "description": "Segmented content",
+          "items": {
+            "$ref": "../primitives/UIHeddleSegment.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UIThreadItem": {
+      "description": "An item in a conversation thread (user message or AI response)",
+      "properties": {
+        "agent_speaker": {
+          "default": null,
+          "description": "For assistant messages: which agent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "description": "Text content",
+          "type": "string"
+        },
+        "current_activity": {
+          "default": null,
+          "description": "Activity description for typing state",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "heddle_result": {
+          "anyOf": [
+            {
+              "$ref": "UIHeddleResult.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Heddle classification result"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "is_typing": {
+          "default": false,
+          "description": "Is this message still being generated?",
+          "type": "boolean"
+        },
+        "role": {
+          "description": "Role: \"user\" or \"assistant\"",
+          "type": "string"
+        },
+        "status": {
+          "default": null,
+          "description": "Current status",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "default": null,
+          "description": "Summary for collapsed display",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thinking_steps": {
+          "default": [],
+          "description": "Chain of thought steps",
+          "items": {
+            "$ref": "../types/UIThinkingStep.schema.json"
+          },
+          "type": "array"
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "type": "string"
+        },
+        "tool_calls": {
+          "default": [],
+          "description": "Tool calls made",
+          "items": {
+            "$ref": "UIToolCall.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "content",
+        "id",
+        "role",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "properties": {
+        "arguments": {
+          "default": null,
+          "description": "Arguments passed to the tool"
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "default": null,
+          "description": "Result from the tool"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolCallStatus.schema.json"
+            }
+          ],
+          "description": "Current status"
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A channel (persistent conversation space)",
+  "properties": {
+    "created_at": {
+      "description": "When created",
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique ID",
+      "type": "string"
+    },
+    "messages": {
+      "description": "Messages in this channel",
+      "items": {
+        "$ref": "UIChannelMessage.schema.json"
+      },
+      "type": "array"
+    },
+    "name": {
+      "description": "Display name",
+      "type": "string"
+    },
+    "updated_at": {
+      "description": "When last updated",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "messages",
+    "name",
+    "updated_at"
+  ],
+  "title": "UIChannel",
+  "type": "object",
+  "x-familiar-kind": "type"
+}

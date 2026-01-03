@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PostgresMain",
+  "description": "Primary PostgreSQL database for core application data including auth, users, and configuration.",
+  "x-familiar-kind": "resource",
+  "x-familiar-resource-type": "database",
+  "x-familiar-virtual": false,
+  "x-familiar-config": { "$ref": "../components/DbPoolConfig.schema.json" },
+  "x-familiar-connection-pool": {
+    "min": 5,
+    "max": 20
+  },
+  "x-familiar-tables": [
+    "users",
+    "tenants",
+    "sessions",
+    "invitations",
+    "join_requests",
+    "magic_links",
+    "consent_records",
+    "audit_logs"
+  ],
+  "x-familiar-health-check": {
+    "endpoint": "/health/db",
+    "interval": "30s"
+  }
+}
+
+
+
+

@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationResponse": {
+      "description": "Classification with weight",
+      "properties": {
+        "entity_type": {
+          "type": "string"
+        },
+        "weight": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "PhysicsHintResponse": {
+      "description": "Physics hints from LLM",
+      "properties": {
+        "arousal": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  "description": "A weave unit in the response",
+  "properties": {
+    "classifications": {
+      "items": {
+        "$ref": "ClassificationResponse.schema.json"
+      },
+      "type": "array"
+    },
+    "content": {
+      "type": "string"
+    },
+    "index": {
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "physics_hint": {
+      "anyOf": [
+        {
+          "$ref": "PhysicsHintResponse.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "primary_thread": {
+      "description": "Primary thread (main subject/actor)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "purpose": {
+      "description": "Purpose of this specific weave unit (LOG, QUERY, COMMAND, INFER, REFERENCE)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "secondary_threads": {
+      "default": [],
+      "description": "Secondary threads (other people/places/things)",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "spawned_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "temporal_marker": {
+      "default": null,
+      "description": "Temporal marker (when: absolute, relative, frequency, duration) Always included in output for debugging (even if null)",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "classifications",
+    "content",
+    "index"
+  ],
+  "title": "WeaveUnitResponse",
+  "type": "object",
+  "x-familiar-kind": "entities_api",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

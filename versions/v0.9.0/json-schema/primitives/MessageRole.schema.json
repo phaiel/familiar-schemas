@@ -1,0 +1,29 @@
+{
+  "$id": "primitives/MessageRole.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role in a chat conversation",
+  "oneOf": [
+    {
+      "description": "System instructions",
+      "enum": [
+        "system"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "User input",
+      "enum": [
+        "user"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Assistant response",
+      "enum": [
+        "assistant"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "MessageRole"
+}

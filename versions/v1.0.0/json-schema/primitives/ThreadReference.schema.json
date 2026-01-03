@@ -1,0 +1,35 @@
+{
+  "$id": "primitives/ThreadReference.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Reference to an existing thread",
+  "properties": {
+    "aliases": {
+      "default": [],
+      "description": "Aliases for matching",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "id": {
+      "description": "Thread ID",
+      "type": "string"
+    },
+    "name": {
+      "description": "Thread name/label",
+      "type": "string"
+    },
+    "thread_type": {
+      "description": "Thread type (person, place, concept, etc.)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "thread_type"
+  ],
+  "title": "ThreadReference",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}

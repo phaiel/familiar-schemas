@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Event",
+    "Realization",
+    "Interaction",
+    "Observation"
+  ],
+  "title": "MomentType",
+  "type": "string"
+}

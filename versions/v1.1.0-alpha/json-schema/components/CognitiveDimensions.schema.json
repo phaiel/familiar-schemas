@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Defines the \"personality\" of an entity using the Five-Factor Model (OCEAN). These dimensions directly modulate the physics constants of the simulation.",
+  "properties": {
+    "agreeableness": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Agreeableness** Physics: **Damping / Friction**. High: High damping (absorbs shocks/conflict), reduces system energy. Low: Low damping (elastic collisions), amplifies conflict."
+    },
+    "conscientiousness": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Conscientiousness** Physics: **Spring Stiffness / Rigidity**. High: Strong restorative forces, low drift, adheres to intent. Low: Loose coupling, high drift."
+    },
+    "extraversion": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Extraversion** Physics: **Social Gravity Mass**. High: Large attractive radius, radiates energy (Arousal) to neighbors. Low: Small radius, absorbs energy."
+    },
+    "neuroticism": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Neuroticism (Emotional Stability)** Physics: **Volatility / Reactivity**. High: Low inertia (easily moved by small forces), unstable equilibrium. Low: High inertia (stable), resilient to perturbations."
+    },
+    "openness": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Openness to Experience** Physics: **Simulation Temperature**. High: High exploration, high volatility, accepts new connections easily. Low: Rigid structure, low noise tolerance."
+    }
+  },
+  "required": [
+    "agreeableness",
+    "conscientiousness",
+    "extraversion",
+    "neuroticism",
+    "openness"
+  ],
+  "title": "CognitiveDimensions",
+  "type": "object",
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

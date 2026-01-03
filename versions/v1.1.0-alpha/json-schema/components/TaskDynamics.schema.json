@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Models the state of a Task/Intent using Cybernetics and Thermodynamics principles.",
+  "properties": {
+    "activation_energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Activation Energy (Invested Work)** Thermodynamics: The cumulative work performed on the system. Used to calculate \"Sunk Cost\" gravity."
+    },
+    "completion": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Completion (Inverse Discrepancy)** Cybernetics: 1.0 - Error Signal. How close the system is to the Goal State."
+    },
+    "entropy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Entropy (Disorder)** Information Theory: The uncertainty or \"noise\" in the process. High Entropy: Exploring, Brainstorming, Chaotic. Low Entropy: Executing, Refined, Linear."
+    },
+    "primary_status_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "activation_energy",
+    "completion",
+    "entropy"
+  ],
+  "title": "TaskDynamics",
+  "type": "object",
+  "x-familiar-field-alias": "dynamics",
+  "x-familiar-field-order": 50,
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-rust-impl-ids": [
+    "TaskDynamics"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$id": "primitives/EntityMentionType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of entity mentions",
+  "enum": [
+    "PERSON",
+    "PLACE",
+    "ORGANIZATION",
+    "DATE_TIME",
+    "EVENT",
+    "CONCEPT",
+    "OBJECT",
+    "ACTIVITY"
+  ],
+  "title": "EntityMentionType",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}

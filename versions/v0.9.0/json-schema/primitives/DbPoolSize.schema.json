@@ -1,0 +1,8 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Connection pool size configuration",
+  "format": "uint32",
+  "minimum": 0.0,
+  "title": "DbPoolSize",
+  "type": "integer"
+}

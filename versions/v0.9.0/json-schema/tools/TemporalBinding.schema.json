@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "TemporalRelation": {
+      "description": "Temporal relationships",
+      "enum": [
+        "before",
+        "after",
+        "during",
+        "simultaneous",
+        "overlapping"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Temporal aspect of binding",
+  "properties": {
+    "gap": {
+      "default": null,
+      "description": "Time gap (if known)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relation": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TemporalRelation"
+        }
+      ],
+      "description": "Time relationship"
+    }
+  },
+  "required": [
+    "relation"
+  ],
+  "title": "TemporalBinding",
+  "type": "object"
+}

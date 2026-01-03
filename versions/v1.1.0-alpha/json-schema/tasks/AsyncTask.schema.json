@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AsyncTask",
+  "description": "An async task tracked in the database",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "task_type": {
+      "type": "string"
+    },
+    "correlation_id": {
+      "type": "string"
+    },
+    "windmill_job_id": {
+      "type": ["string", "null"]
+    },
+    "windmill_flow_path": {
+      "type": ["string", "null"]
+    },
+    "status": {
+      "$ref": "./AsyncTaskStatus.schema.json"
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "output": {
+      "anyOf": [
+        { "type": "object", "additionalProperties": true },
+        { "type": "null" }
+      ]
+    },
+    "error_message": {
+      "type": ["string", "null"]
+    },
+    "user_id": {
+      "anyOf": [
+        { "$ref": "../primitives/UserId.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "tenant_id": {
+      "anyOf": [
+        { "$ref": "../primitives/TenantId.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "created_at": {
+      "$ref": "../primitives/Timestamp.schema.json"
+    },
+    "started_at": {
+      "anyOf": [
+        { "$ref": "../primitives/Timestamp.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "completed_at": {
+      "anyOf": [
+        { "$ref": "../primitives/Timestamp.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "attempt_count": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "max_attempts": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "next_retry_at": {
+      "anyOf": [
+        { "$ref": "../primitives/Timestamp.schema.json" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "required": ["id", "task_type", "correlation_id", "status", "input", "created_at", "attempt_count", "max_attempts"],
+  "x-familiar-kind": "entity"
+}
+

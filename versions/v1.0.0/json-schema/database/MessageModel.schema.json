@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "agent_speaker": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "channel_id": {
+      "$ref": "../primitives/ChannelId.schema.json"
+    },
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../primitives/MessageId.schema.json"
+    },
+    "metadata": true,
+    "parent_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "role": {
+      "$ref": "../primitives/MessageRole.schema.json"
+    },
+    "sender_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thinking_steps": true,
+    "tool_calls": true,
+    "weave_result": true
+  },
+  "required": [
+    "channel_id",
+    "content",
+    "created_at",
+    "id",
+    "metadata",
+    "role",
+    "thinking_steps",
+    "tool_calls"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

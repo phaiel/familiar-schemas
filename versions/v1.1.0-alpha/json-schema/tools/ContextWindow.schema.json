@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Context window for binding analysis",
+  "properties": {
+    "following": {
+      "default": [],
+      "description": "Following content",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "preceding": {
+      "default": [],
+      "description": "Preceding content",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "time_span_hours": {
+      "default": null,
+      "description": "Time span in hours",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "title": "ContextWindow",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

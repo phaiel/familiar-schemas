@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Request for magic link",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "invite_code": {
+      "default": null,
+      "description": "Optional invite code for signup flow",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "email"
+  ],
+  "title": "MagicLinkRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

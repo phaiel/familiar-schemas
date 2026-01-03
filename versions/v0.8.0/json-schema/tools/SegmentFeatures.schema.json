@@ -1,0 +1,261 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EmotionalTone": {
+      "description": "Emotional tone detected in segment",
+      "properties": {
+        "arousal": {
+          "description": "Arousal (0.0 calm to 1.0 excited)",
+          "format": "double",
+          "type": "number"
+        },
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "primary": {
+          "description": "Primary emotion",
+          "type": "string"
+        },
+        "valence": {
+          "description": "Valence (-1.0 negative to 1.0 positive)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "arousal",
+        "confidence",
+        "primary",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "EntityMention": {
+      "description": "An entity mention within a segment",
+      "properties": {
+        "confidence": {
+          "description": "Confidence in detection",
+          "format": "double",
+          "type": "number"
+        },
+        "end": {
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityMentionType"
+            }
+          ],
+          "description": "Type of entity mentioned"
+        },
+        "resolved_id": {
+          "default": null,
+          "description": "Resolved entity ID (if matched to known entity)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start": {
+          "description": "Position in segment",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "text": {
+          "description": "The text of the mention",
+          "type": "string"
+        }
+      },
+      "required": [
+        "confidence",
+        "end",
+        "entity_type",
+        "start",
+        "text"
+      ],
+      "type": "object"
+    },
+    "EntityMentionType": {
+      "description": "Types of entity mentions",
+      "enum": [
+        "PERSON",
+        "PLACE",
+        "ORGANIZATION",
+        "DATE_TIME",
+        "EVENT",
+        "CONCEPT",
+        "OBJECT",
+        "ACTIVITY"
+      ],
+      "type": "string"
+    },
+    "ParsedTemporal": {
+      "description": "Parsed temporal information",
+      "properties": {
+        "date": {
+          "default": null,
+          "description": "ISO 8601 date if specific",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relative_days": {
+          "default": null,
+          "description": "Relative offset (e.g., -1 for \"yesterday\")",
+          "format": "int32",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "time_of_day": {
+          "default": null,
+          "description": "Time of day if mentioned",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "TemporalMarker": {
+      "description": "A temporal marker in the segment",
+      "properties": {
+        "marker_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalMarkerType"
+            }
+          ],
+          "description": "Type of temporal reference"
+        },
+        "parsed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ParsedTemporal"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parsed temporal value (if parseable)"
+        },
+        "text": {
+          "description": "The text of the marker",
+          "type": "string"
+        }
+      },
+      "required": [
+        "marker_type",
+        "text"
+      ],
+      "type": "object"
+    },
+    "TemporalMarkerType": {
+      "description": "Types of temporal markers",
+      "oneOf": [
+        {
+          "description": "Specific date (January 5th)",
+          "enum": [
+            "absolute"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relative reference (yesterday, last week)",
+          "enum": [
+            "relative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Duration (for 2 hours)",
+          "enum": [
+            "duration"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Frequency (every day, weekly)",
+          "enum": [
+            "frequency"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Time of day (in the morning)",
+          "enum": [
+            "time_of_day"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Extracted features from a segment",
+  "properties": {
+    "emotional_tone": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EmotionalTone"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Emotional tone (if detectable)"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords extracted",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "language": {
+      "default": null,
+      "description": "Language detected",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mentions": {
+      "default": [],
+      "description": "Entity mentions found",
+      "items": {
+        "$ref": "#/definitions/EntityMention"
+      },
+      "type": "array"
+    },
+    "subject": {
+      "default": null,
+      "description": "Primary subject/actor mentioned",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporal_markers": {
+      "default": [],
+      "description": "Temporal markers detected",
+      "items": {
+        "$ref": "#/definitions/TemporalMarker"
+      },
+      "type": "array"
+    }
+  },
+  "title": "SegmentFeatures",
+  "type": "object"
+}

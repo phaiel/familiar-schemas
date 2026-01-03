@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Complete message classification (intent + optional details)",
+  "properties": {
+    "confidence": {
+      "description": "Confidence in the classification (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "intent": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "description": "Primary intent of the message"
+    },
+    "query_target": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/QueryTarget.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY, what data is being requested"
+    },
+    "query_type": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/QueryType.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY, what type of query"
+    },
+    "secondary_intents": {
+      "description": "Alternative intents that might also apply",
+      "items": {
+        "items": [
+          {
+            "$ref": "../primitives/MessageIntent.schema.json"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "confidence",
+    "intent"
+  ],
+  "title": "MessageClassification",
+  "type": "object",
+  "x-familiar-kind": "type"
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Reasoning behind classification",
+  "properties": {
+    "explanations": {
+      "default": [],
+      "description": "Why certain types were included/excluded",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "key_phrases": {
+      "default": [],
+      "description": "Key phrases that influenced classification",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "main_verb": {
+      "default": null,
+      "description": "Main verb identified",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "verb_category": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/VerbCategory.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Verb category"
+    }
+  },
+  "title": "ClassificationReasoning",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

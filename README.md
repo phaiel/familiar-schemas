@@ -25,6 +25,28 @@ familiar-schemas/
 └── Cargo.toml
 ```
 
+## 🎯 Schema-First Architecture
+
+This registry is the **source of truth** for all types across the Familiar platform:
+
+```
+JSON Schema (familiar-schemas)
+    │
+    ├──▶ TypeScript (generate-typescript.sh)
+    │      └── familiar-ui, familiar-api clients
+    │
+    ├──▶ Pydantic (datamodel-codegen) [future]
+    │      └── Windmill scripts
+    │
+    └──▶ Rust (manual, drift-checked)
+           └── familiar-core, familiar-worker
+```
+
+**Workflow:**
+1. Define types as JSON Schema in `familiar-schemas`
+2. Generate TypeScript/Pydantic from the schema
+3. Manually maintain Rust types, validated by `schema-drift`
+
 ## 🔒 Immutability Guarantees
 
 - **Append-Only**: Once a version is registered, it **cannot be modified**
@@ -72,6 +94,21 @@ cargo run --bin schema-registry -- get CommandEnvelope
 # Get specific version
 cargo run --bin schema-registry -- get CommandEnvelope --version v0.1.0
 ```
+
+### Generate TypeScript Types (Schema-First)
+
+```bash
+# Generate TypeScript from latest version
+./scripts/generate-typescript.sh
+
+# Generate from specific version
+./scripts/generate-typescript.sh --version v0.7.0
+
+# Custom output directory
+./scripts/generate-typescript.sh --output ../docs/v4/familiar-ui/types/generated
+```
+
+**Requires**: `npm install -g json-schema-to-typescript`
 
 ### Check Compatibility
 
@@ -216,4 +253,5 @@ fi
 ## 📄 License
 
 MIT
+
 

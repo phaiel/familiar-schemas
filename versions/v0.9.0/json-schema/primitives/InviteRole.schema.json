@@ -1,0 +1,12 @@
+{
+  "$id": "primitives/InviteRole.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role to assign when invitation is accepted",
+  "enum": [
+    "admin",
+    "member",
+    "guest"
+  ],
+  "title": "InviteRole",
+  "type": "string"
+}

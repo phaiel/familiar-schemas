@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Common timestamps for all persistent entities\n\nThis component captures: - `created_at`: When the entity was first created - `updated_at`: When the entity was last modified\n\nUse `#[serde(flatten)]` to embed directly into entity structs: ```rust,ignore pub struct MyEntity { pub id: MyId, #[serde(flatten)] pub timestamps: Timestamps, // ... other fields } ```",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "updated_at"
+  ],
+  "title": "Timestamps",
+  "type": "object",
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-rust-impl-ids": [
+    "Timestamps"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

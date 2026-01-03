@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MemberRole": {
+      "enum": [
+        "Admin",
+        "Member",
+        "Guest"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Email.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "id": {
+      "$ref": "../primitives/ThreadId.schema.json"
+    },
+    "user_id": {
+      "$ref": "../primitives/UserId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "$ref": "../types/MemberRole.schema.json"
+    },
+    "settings": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "user_id",
+    "name",
+    "role",
+    "settings",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "tenant_members",
+  "x-familiar-module": "conversation",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "belongs_to",
+      "target": "TenantModel",
+      "from": "tenant_id",
+      "to": "id"
+    },
+    {
+      "type": "belongs_to",
+      "target": "UserModel",
+      "from": "user_id",
+      "to": "id"
+    }
+  ]
+}

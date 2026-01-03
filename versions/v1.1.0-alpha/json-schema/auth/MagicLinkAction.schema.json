@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MagicLinkAction",
+  "description": "Magic link action type",
+  "type": "string",
+  "enum": ["request", "consume"],
+  "x-familiar-kind": "enum"
+}
+

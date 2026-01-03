@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InternalStateType": {
+      "enum": [
+        "emotional_shift",
+        "realization",
+        "reflection",
+        "observation",
+        "reaction"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Core identity component that all entities possess",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "state_type": {
+      "$ref": "#/definitions/InternalStateType"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "state_type",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Pulse",
+  "type": "object"
+}

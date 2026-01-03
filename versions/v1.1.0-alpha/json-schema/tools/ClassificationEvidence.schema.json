@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EvidenceType": {
+      "description": "Types of evidence for classification",
+      "oneOf": [
+        {
+          "description": "Verb type (action vs state)",
+          "enum": [
+            "verb_type"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Keywords detected",
+          "enum": [
+            "keywords"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal indicators",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional indicators",
+          "enum": [
+            "emotional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity mentions",
+          "enum": [
+            "entity_mention"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relational language",
+          "enum": [
+            "relational"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Pattern indicators",
+          "enum": [
+            "pattern"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Context from surrounding content",
+          "enum": [
+            "context"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Evidence for a classification",
+  "properties": {
+    "description": {
+      "description": "Description of evidence",
+      "type": "string"
+    },
+    "evidence_type": {
+      "allOf": [
+        {
+          "$ref": "EvidenceType.schema.json"
+        }
+      ],
+      "description": "Type of evidence"
+    },
+    "weight": {
+      "description": "How much this evidence contributes",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "description",
+    "evidence_type",
+    "weight"
+  ],
+  "title": "ClassificationEvidence",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

@@ -1,0 +1,255 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Errors that can occur during AI observation",
+  "oneOf": [
+    {
+      "description": "Configuration error (missing API key, invalid model, etc.)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Configuration"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "The AI provider returned an invalid response",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "raw_response": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "InvalidResponse"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Network or API error",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "status_code": {
+              "format": "uint16",
+              "minimum": 0.0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Network"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Rate limit exceeded",
+      "properties": {
+        "details": {
+          "properties": {
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "retry_after_ms": {
+              "format": "uint64",
+              "minimum": 0.0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "RateLimited"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "The AI refused to process (content policy)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            }
+          },
+          "required": [
+            "message",
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "ContentFiltered"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Deserialization failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "raw_content": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "ParseError"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Timeout",
+      "properties": {
+        "details": {
+          "properties": {
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "timeout_ms": {
+              "format": "uint64",
+              "minimum": 0.0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "provider",
+            "timeout_ms"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Timeout"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "ObserverError",
+  "x-familiar-content": "details",
+  "x-familiar-discriminator": "type",
+  "x-familiar-enum-repr": "adjacently_tagged",
+  "x-familiar-kind": "type",
+  "x-familiar-variants": {
+    "Configuration": "Configuration",
+    "ContentFiltered": "ContentFiltered",
+    "InvalidResponse": "InvalidResponse",
+    "Network": "Network",
+    "ParseError": "ParseError",
+    "RateLimited": "RateLimited",
+    "Timeout": "Timeout"
+  }
+}

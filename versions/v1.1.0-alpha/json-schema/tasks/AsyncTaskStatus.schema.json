@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AsyncTaskStatus",
+  "description": "Status of an async task",
+  "type": "string",
+  "enum": ["pending", "queued", "running", "completed", "failed", "cancelled"],
+  "x-familiar-kind": "enum"
+}
+

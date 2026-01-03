@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pulse",
+  "description": "Core identity component that all entities possess",
+  "type": "object",
+  "required": [
+    "amplitude",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "state_type",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "properties": {
+    "amplitude": {
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "created_at": {
+      "description": "When this entity was created",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Timestamp"
+        }
+      ]
+    },
+    "energy": {
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "id": {
+      "description": "Unique identifier for this entity",
+      "allOf": [
+        {
+          "$ref": "#/definitions/UUID"
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QuantizedCoord"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "state_type": {
+      "$ref": "#/definitions/InternalStateType"
+    },
+    "temperature": {
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NormalizedFloat"
+        }
+      ]
+    },
+    "tenant_id": {
+      "description": "Tenant (family/user) this entity belongs to",
+      "allOf": [
+        {
+          "$ref": "#/definitions/UUID"
+        }
+      ]
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QuantizedCoord"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    }
+  },
+  "definitions": {
+    "InternalStateType": {
+      "type": "string",
+      "enum": [
+        "emotional_shift",
+        "realization",
+        "reflection",
+        "observation",
+        "reaction"
+      ]
+    },
+    "NormalizedFloat": {
+      "description": "A float value normalized to [0.0, 1.0]",
+      "type": "number",
+      "format": "double"
+    },
+    "QuantizedCoord": {
+      "description": "A quantized coordinate in the 3D VAE Manifold Uses i64 for precision in physics calculations",
+      "type": "integer",
+      "format": "int64"
+    },
+    "Timestamp": {
+      "description": "An ISO 8601 timestamp (serialized as string)",
+      "type": "string",
+      "format": "date-time"
+    },
+    "UUID": {
+      "description": "A UUID (serialized as string)",
+      "type": "string",
+      "format": "uuid"
+    }
+  }
+}

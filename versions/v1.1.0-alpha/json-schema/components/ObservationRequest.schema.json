@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ModelConfig": {
+      "description": "Model definition with all configuration",
+      "properties": {
+        "api_model_id": {
+          "description": "The actual API model ID to send to the provider",
+          "type": "string"
+        },
+        "context_window": {
+          "description": "Context window size (tokens)",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "deprecated": {
+          "default": false,
+          "description": "Whether this model is deprecated",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Unique identifier (e.g., \"gpt-4o\", \"claude-sonnet-4\")",
+          "type": "string"
+        },
+        "name": {
+          "description": "Human-readable name",
+          "type": "string"
+        },
+        "notes": {
+          "default": null,
+          "description": "Notes about the model",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider": {
+          "allOf": [
+            {
+              "$ref": "../primitives/AIProvider.schema.json"
+            }
+          ],
+          "description": "The provider"
+        },
+        "supports_json_mode": {
+          "description": "Whether the model supports JSON mode",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "api_model_id",
+        "context_window",
+        "id",
+        "name",
+        "provider",
+        "supports_json_mode"
+      ],
+      "type": "object"
+    },
+    "RequestConfig": {
+      "description": "Configuration for an AI completion request",
+      "properties": {
+        "json_mode": {
+          "type": "boolean"
+        },
+        "max_tokens": {
+          "$ref": "../primitives/MaxTokens.schema.json"
+        },
+        "model": {
+          "$ref": "../config/ModelConfig.schema.json"
+        },
+        "retry": {
+          "$ref": "../primitives/RetryConfig.schema.json"
+        },
+        "temperature": {
+          "$ref": "../primitives/Temperature.schema.json"
+        },
+        "timeout_ms": {
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "json_mode",
+        "max_tokens",
+        "model",
+        "retry",
+        "temperature",
+        "timeout_ms"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A complete Heddle observation request",
+  "properties": {
+    "config": {
+      "$ref": "RequestConfig.schema.json"
+    },
+    "context": {
+      "type": "string"
+    },
+    "segment": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "config",
+    "context",
+    "segment"
+  ],
+  "title": "ObservationRequest",
+  "type": "object",
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-rust-impl-ids": [
+    "ObservationRequest"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

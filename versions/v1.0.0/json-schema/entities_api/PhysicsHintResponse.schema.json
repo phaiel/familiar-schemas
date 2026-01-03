@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Physics hints from LLM",
+  "properties": {
+    "arousal": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "clarity": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "intrusiveness": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "significance": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "valence": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "volatility": {
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "title": "PhysicsHintResponse",
+  "type": "object",
+  "x-familiar-kind": "entities_api",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

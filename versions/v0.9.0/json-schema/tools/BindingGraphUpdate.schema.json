@@ -1,0 +1,351 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BindingCharacteristics": {
+      "description": "Binding characteristics",
+      "properties": {
+        "binding_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/BindingType"
+            }
+          ],
+          "description": "Type of cognitive binding"
+        },
+        "directionality": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Directionality"
+            }
+          ],
+          "description": "Directionality"
+        },
+        "salience": {
+          "description": "Salience (how notable/memorable)",
+          "format": "double",
+          "type": "number"
+        },
+        "semantic": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SemanticProperties"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Semantic properties"
+        },
+        "strength": {
+          "description": "Strength of binding (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "temporal": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TemporalProperties"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Temporal properties"
+        }
+      },
+      "required": [
+        "binding_type",
+        "directionality",
+        "salience",
+        "strength"
+      ],
+      "type": "object"
+    },
+    "BindingType": {
+      "description": "Types of cognitive binding",
+      "oneOf": [
+        {
+          "description": "Cause leads to effect",
+          "enum": [
+            "causal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal sequence (before/after)",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Associated by proximity/context",
+          "enum": [
+            "associative"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Part-whole relationship",
+          "enum": [
+            "compositional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Contrast/opposition",
+          "enum": [
+            "contrastive"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Similarity/analogy",
+          "enum": [
+            "analogical"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Enables/prerequisite",
+          "enum": [
+            "enabling"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Thematic connection",
+          "enum": [
+            "thematic"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "Directionality": {
+      "description": "Directionality of binding",
+      "oneOf": [
+        {
+          "description": "Only source → target",
+          "enum": [
+            "unidirectional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Both directions",
+          "enum": [
+            "bidirectional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "No inherent direction",
+          "enum": [
+            "undirected"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "GraphUpdateType": {
+      "description": "Types of graph updates",
+      "oneOf": [
+        {
+          "description": "Add new binding",
+          "enum": [
+            "add_binding"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Strengthen existing binding",
+          "enum": [
+            "strengthen_binding"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Weaken existing binding",
+          "enum": [
+            "weaken_binding"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Remove binding",
+          "enum": [
+            "remove_binding"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Merge duplicate bindings",
+          "enum": [
+            "merge_bindings"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "SemanticProperties": {
+      "description": "Semantic properties of binding",
+      "properties": {
+        "relationship_description": {
+          "default": null,
+          "description": "Relationship description",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shared_concepts": {
+          "default": [],
+          "description": "Shared concepts/topics",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "similarity": {
+          "description": "Semantic similarity score",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "similarity"
+      ],
+      "type": "object"
+    },
+    "TemporalProperties": {
+      "description": "Temporal properties of binding",
+      "properties": {
+        "gap": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TimeGap"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Time gap between entities"
+        },
+        "recurring": {
+          "default": false,
+          "description": "Is this a recurring pattern?",
+          "type": "boolean"
+        },
+        "relation": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TemporalRelation"
+            }
+          ],
+          "description": "Time relation"
+        }
+      },
+      "required": [
+        "relation"
+      ],
+      "type": "object"
+    },
+    "TemporalRelation": {
+      "description": "Temporal relationships",
+      "enum": [
+        "before",
+        "after",
+        "during",
+        "simultaneous",
+        "overlapping"
+      ],
+      "type": "string"
+    },
+    "TimeGap": {
+      "description": "Time gap between entities",
+      "properties": {
+        "approximate": {
+          "description": "Is this approximate?",
+          "type": "boolean"
+        },
+        "unit": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TimeUnit"
+            }
+          ],
+          "description": "Duration unit"
+        },
+        "value": {
+          "description": "Duration value",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "approximate",
+        "unit",
+        "value"
+      ],
+      "type": "object"
+    },
+    "TimeUnit": {
+      "description": "Time units",
+      "enum": [
+        "seconds",
+        "minutes",
+        "hours",
+        "days",
+        "weeks",
+        "months",
+        "years"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Update to the binding graph",
+  "properties": {
+    "binding": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/BindingCharacteristics"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Binding characteristics"
+    },
+    "source_id": {
+      "description": "Source entity ID",
+      "type": "string"
+    },
+    "target_id": {
+      "default": null,
+      "description": "Target entity ID",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "update_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUpdateType"
+        }
+      ],
+      "description": "Type of update"
+    }
+  },
+  "required": [
+    "source_id",
+    "update_type"
+  ],
+  "title": "BindingGraphUpdate",
+  "type": "object"
+}

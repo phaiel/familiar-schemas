@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Represents an emotional state using the PAD (Pleasure-Arousal-Dominance) Model. Scientific Basis: Mehrabian & Russell (1974).",
+  "properties": {
+    "arousal": {
+      "allOf": [
+        {
+          "$ref": "../primitives/SignedNormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Arousal (Activation)** -1.0: Sleep/Coma (Low Energy) 0.0: Alert +1.0: Panic/Frenzy (High Energy)"
+    },
+    "dominance": {
+      "allOf": [
+        {
+          "$ref": "../primitives/SignedNormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Dominance (Control)** -1.0: Submissive/Overwhelmed 0.0: Balanced +1.0: Dominant/In-Control"
+    },
+    "valence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/SignedNormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Pleasure (Valence)** -1.0: Agony/Despair (Negative) 0.0: Neutral +1.0: Ecstasy/Joy (Positive)"
+    }
+  },
+  "required": [
+    "arousal",
+    "dominance",
+    "valence"
+  ],
+  "title": "EmotionalState",
+  "type": "object",
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-rust-impl-ids": [
+    "EmotionalState"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Classification result for a weave unit (determines which entity type to spawn)",
+  "properties": {
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "../primitives/HeddleEntityType.schema.json"
+        }
+      ],
+      "description": "The entity type this unit may become"
+    },
+    "weight": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "Confidence weight (0.0 to 1.0)"
+    }
+  },
+  "required": [
+    "entity_type",
+    "weight"
+  ],
+  "title": "WeaveUnitClassification",
+  "type": "object"
+}

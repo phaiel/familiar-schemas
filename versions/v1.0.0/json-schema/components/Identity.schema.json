@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Core identity component that all entities possess",
+  "properties": {
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "tenant_id"
+  ],
+  "title": "Identity",
+  "type": "object",
+  "x-familiar-kind": "component",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

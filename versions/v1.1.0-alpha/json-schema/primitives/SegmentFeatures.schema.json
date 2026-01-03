@@ -1,0 +1,62 @@
+{
+  "$id": "primitives/SegmentFeatures.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Extracted features from a segment",
+  "properties": {
+    "emotional_tone": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EmotionalTone"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Emotional tone (if detectable)"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords extracted",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "language": {
+      "default": null,
+      "description": "Language detected",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mentions": {
+      "default": [],
+      "description": "Entity mentions found",
+      "items": {
+        "$ref": "#/definitions/EntityMention"
+      },
+      "type": "array"
+    },
+    "subject": {
+      "default": null,
+      "description": "Primary subject/actor mentioned",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporal_markers": {
+      "default": [],
+      "description": "Temporal markers detected",
+      "items": {
+        "$ref": "#/definitions/TemporalMarker"
+      },
+      "type": "array"
+    }
+  },
+  "title": "SegmentFeatures",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}

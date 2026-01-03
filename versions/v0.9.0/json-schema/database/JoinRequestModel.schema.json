@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "JoinRequestStatus": {
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_by": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/definitions/JoinRequestStatus"
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "user_id": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "status",
+    "tenant_id",
+    "user_id"
+  ],
+  "title": "Model",
+  "type": "object"
+}

@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EntityStatus": {
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected",
+        "AutoSpawned"
+      ],
+      "type": "string"
+    },
+    "FamiliarEntityType": {
+      "enum": [
+        "Moment",
+        "Pulse",
+        "Intent",
+        "Thread",
+        "Bond",
+        "Motif",
+        "Filament",
+        "Focus"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "entity_type": {
+      "$ref": "../entities/FamiliarEntityType.schema.json"
+    },
+    "id": {
+      "$ref": "../primitives/EntityId.schema.json"
+    },
+    "metadata": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "physics": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "qdrant_collection": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "qdrant_point_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_by": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UserId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_channel_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/ChannelId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_message_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/MessageId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "$ref": "../entities/EntityStatus.schema.json"
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "content",
+    "created_at",
+    "entity_type",
+    "id",
+    "metadata",
+    "status",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "familiar_entities",
+  "x-familiar-module": "conversation",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "belongs_to",
+      "target": "TenantModel",
+      "from": "tenant_id",
+      "to": "id"
+    }
+  ]
+}

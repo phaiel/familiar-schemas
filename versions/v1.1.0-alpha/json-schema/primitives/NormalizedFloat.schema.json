@@ -1,0 +1,9 @@
+{
+  "$id": "primitives/NormalizedFloat.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A float value normalized to [0.0, 1.0]",
+  "format": "double",
+  "title": "NormalizedFloat",
+  "type": "number",
+  "x-familiar-kind": "primitive"
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Configuration for spawn decisions",
+  "properties": {
+    "auto_spawn_enabled": {
+      "default": true,
+      "description": "Whether to auto-spawn high confidence entities",
+      "type": "boolean"
+    },
+    "high_confidence_threshold": {
+      "default": 0.8,
+      "description": "High confidence threshold (auto-spawn above this)",
+      "format": "double",
+      "type": "number"
+    },
+    "low_confidence_threshold": {
+      "default": 0.3,
+      "description": "Low confidence threshold (skip below this)",
+      "format": "double",
+      "type": "number"
+    },
+    "manual_only_types": {
+      "default": [],
+      "description": "Entity types that should never auto-spawn",
+      "items": {
+        "$ref": "../primitives/EntityType.schema.json"
+      },
+      "type": "array"
+    },
+    "max_entities_per_segment": {
+      "default": 3,
+      "description": "Maximum entities to spawn from one segment",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "medium_confidence_threshold": {
+      "default": 0.5,
+      "description": "Medium confidence threshold (suggest above this)",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "title": "SpawnConfig",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-rust-default": "custom",
+  "x-familiar-rust-derive-exclude": [
+    "Default"
+  ],
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

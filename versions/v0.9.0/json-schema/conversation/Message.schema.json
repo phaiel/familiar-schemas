@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A message in a channel",
+  "properties": {
+    "agent_speaker": {
+      "default": null,
+      "description": "Which agent generated this (for assistant messages)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "channel_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "metadata": {
+      "default": null
+    },
+    "parent_id": {
+      "default": null,
+      "description": "Parent message for threading",
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "role": {
+      "$ref": "../primitives/MessageRole.schema.json"
+    },
+    "sender_id": {
+      "default": null,
+      "description": "Sender (None for AI/system messages)",
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thinking_steps": {
+      "default": null,
+      "description": "Chain of thought steps"
+    },
+    "tool_calls": {
+      "default": null,
+      "description": "Tool calls made"
+    },
+    "weave_result": {
+      "default": null,
+      "description": "Full weave_result from Fates pipeline"
+    }
+  },
+  "required": [
+    "channel_id",
+    "content",
+    "created_at",
+    "id",
+    "role"
+  ],
+  "title": "Message",
+  "type": "object"
+}

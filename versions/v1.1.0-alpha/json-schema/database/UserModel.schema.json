@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "deletion_requested_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "$ref": "../primitives/Email.schema.json",
+      "x-familiar-unique": true
+    },
+    "email_verified": {
+      "type": "boolean"
+    },
+    "gdpr_consents": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "id": {
+      "$ref": "../primitives/UserId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "password_hash": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/PasswordHash.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "primary_tenant_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/TenantId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "settings": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "email_verified",
+    "gdpr_consents",
+    "id",
+    "name",
+    "settings",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "users",
+  "x-familiar-module": "auth",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "has_many",
+      "target": "AuthSessionModel",
+      "field": "sessions"
+    },
+    {
+      "type": "has_many",
+      "target": "ConsentRecordModel",
+      "field": "consents"
+    }
+  ]
+}

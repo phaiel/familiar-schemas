@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassifiedPurpose": {
+      "description": "A classified purpose with confidence",
+      "properties": {
+        "confidence": {
+          "description": "Confidence score (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "evidence": {
+          "default": [],
+          "description": "Evidence/reasoning for classification",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolPurpose.schema.json"
+            }
+          ],
+          "description": "The purpose of the message"
+        }
+      },
+      "required": [
+        "confidence",
+        "purpose"
+      ],
+      "type": "object"
+    },
+    "UserPurposePatterns": {
+      "description": "User's historical purpose patterns",
+      "properties": {
+        "primary_purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolPurpose.schema.json"
+            }
+          ],
+          "description": "Most common purpose"
+        },
+        "purpose_distribution": {
+          "additionalProperties": {
+            "format": "double",
+            "type": "number"
+          },
+          "default": {},
+          "description": "Distribution of purposes (purpose -> frequency)",
+          "type": "object"
+        }
+      },
+      "required": [
+        "primary_purpose"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Context for purpose classification",
+  "properties": {
+    "conversation_history": {
+      "default": [],
+      "description": "Previous messages in conversation",
+      "items": {
+        "$ref": "../primitives/ConversationTurn.schema.json"
+      },
+      "type": "array"
+    },
+    "previous_classifications": {
+      "default": [],
+      "description": "Previous classifications detected",
+      "items": {
+        "$ref": "ClassifiedPurpose.schema.json"
+      },
+      "type": "array"
+    },
+    "user_patterns": {
+      "anyOf": [
+        {
+          "$ref": "UserPurposePatterns.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "User's typical patterns (if known)"
+    }
+  },
+  "title": "PurposeContext",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

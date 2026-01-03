@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A segment from Heddle",
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "subject": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content"
+  ],
+  "title": "UIHeddleSegment",
+  "type": "object"
+}

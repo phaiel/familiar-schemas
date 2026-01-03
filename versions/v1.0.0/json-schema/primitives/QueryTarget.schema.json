@@ -1,0 +1,42 @@
+{
+  "$id": "primitives/QueryTarget.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Query target - what data is the query looking for?",
+  "properties": {
+    "entity_types": {
+      "default": [],
+      "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords extracted from the query",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "temporal_scope": {
+      "default": null,
+      "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thread_hints": {
+      "default": [],
+      "description": "Specific thread hints (names, concepts) to search for",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "title": "QueryTarget",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}

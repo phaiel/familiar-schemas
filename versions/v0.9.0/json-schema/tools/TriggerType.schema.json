@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of triggers",
+  "oneOf": [
+    {
+      "description": "Match on purpose type",
+      "enum": [
+        "purpose"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Match on modality",
+      "enum": [
+        "modality"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Match on entity type",
+      "enum": [
+        "entity_type"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Match on keyword",
+      "enum": [
+        "keyword"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Custom condition",
+      "enum": [
+        "custom"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "TriggerType"
+}

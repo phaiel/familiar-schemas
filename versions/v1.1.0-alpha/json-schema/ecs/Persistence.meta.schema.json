@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Persistence.meta.schema.json",
+  "title": "Persistence Configuration",
+  "description": "Structured persistence configuration for entity schemas. Enables codegen to scaffold tables, indexes, and migrations.",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "type": "string",
+      "description": "Database profile/driver (e.g., postgres, sqlite, dynamodb)",
+      "enum": ["postgres", "sqlite", "dynamodb", "redis", "none"]
+    },
+    "table": {
+      "type": "string",
+      "description": "Table name for this entity"
+    },
+    "primary_key": {
+      "type": "string",
+      "description": "Primary key field name",
+      "default": "id"
+    },
+    "indexes": {
+      "type": "array",
+      "description": "Fields to create indexes on",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uniques": {
+      "type": "array",
+      "description": "Unique constraints (arrays of field names for composite uniques)",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "partition_key": {
+      "type": "string",
+      "description": "Partition key for distributed databases"
+    },
+    "sort_key": {
+      "type": "string",
+      "description": "Sort key for ordered retrieval"
+    }
+  },
+  "required": ["profile", "table"],
+  "x-familiar-kind": "codegen",
+  "x-familiar-generated": false
+}
+
+
+
+

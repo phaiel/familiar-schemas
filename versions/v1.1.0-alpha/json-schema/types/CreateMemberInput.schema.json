@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for creating a new tenant member",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "anyOf": [
+        {
+          "$ref": "../types/MemberRole.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "user_id": {
+      "$ref": "../primitives/UserId.schema.json"
+    }
+  },
+  "required": [
+    "name",
+    "tenant_id",
+    "user_id"
+  ],
+  "title": "CreateMemberInput",
+  "type": "object",
+  "x-familiar-kind": "type"
+}

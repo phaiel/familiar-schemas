@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PostgresTiger",
+  "description": "TimescaleDB instance for Tiger physics engine data - moments, pulses, bonds, and filaments.",
+  "x-familiar-kind": "resource",
+  "x-familiar-resource-type": "database",
+  "x-familiar-virtual": false,
+  "x-familiar-config": { "$ref": "../components/DbPoolConfig.schema.json" },
+  "x-familiar-connection-pool": {
+    "min": 10,
+    "max": 50
+  },
+  "x-familiar-tables": [
+    "moments",
+    "threads",
+    "pulses",
+    "bonds",
+    "filaments",
+    "shuttles",
+    "courses",
+    "weaves"
+  ],
+  "x-familiar-health-check": {
+    "endpoint": "/health/tiger",
+    "interval": "15s"
+  }
+}
+
+
+
+

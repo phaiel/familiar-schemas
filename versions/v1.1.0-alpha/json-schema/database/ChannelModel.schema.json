@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ChannelType": {
+      "enum": [
+        "Personal",
+        "Family",
+        "Shared"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "channel_type": {
+      "$ref": "../entities/ChannelType.schema.json"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../primitives/ChannelId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "owner_id": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UserId.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "settings": {
+      "x-familiar-column-type": "JsonBinary"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "format": "int32",
+      "description": "Optimistic locking version - incremented on each update",
+      "x-familiar-default-value": 0
+    }
+  },
+  "required": [
+    "channel_type",
+    "created_at",
+    "id",
+    "name",
+    "settings",
+    "tenant_id",
+    "updated_at",
+    "version"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "channels",
+  "x-familiar-module": "conversation",
+  "x-familiar-primary-key": "id",
+  "x-familiar-relations": [
+    {
+      "type": "belongs_to",
+      "target": "TenantModel",
+      "from": "tenant_id",
+      "to": "id"
+    },
+    {
+      "type": "has_many",
+      "target": "MessageModel",
+      "field": "messages"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InviteRole": {
+      "description": "Role to assign when invitation is accepted",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Public invitation info (for showing what user is joining)",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "is_valid": {
+      "type": "boolean"
+    },
+    "role": {
+      "$ref": "#/definitions/InviteRole"
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "tenant_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "is_valid",
+    "role",
+    "tenant_id",
+    "tenant_name"
+  ],
+  "title": "InvitationInfo",
+  "type": "object"
+}

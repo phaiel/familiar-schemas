@@ -1,0 +1,22 @@
+{
+  "$id": "primitives/InviteRole.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role to assign when invitation is accepted",
+  "enum": [
+    "admin",
+    "member",
+    "guest"
+  ],
+  "title": "InviteRole",
+  "type": "string",
+  "x-familiar-kind": "primitive",
+  "x-familiar-sea-orm": {
+    "rs_type": "String",
+    "db_type": "String(StringLen::None)",
+    "values": {
+      "Admin": "admin",
+      "Member": "member",
+      "Guest": "guest"
+    }
+  }
+}

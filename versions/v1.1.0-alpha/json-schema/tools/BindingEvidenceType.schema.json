@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of binding evidence",
+  "oneOf": [
+    {
+      "description": "Explicit linguistic marker",
+      "enum": [
+        "linguistic_marker"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Temporal proximity",
+      "enum": [
+        "temporal_proximity"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Semantic similarity",
+      "enum": [
+        "semantic_similarity"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity co-reference",
+      "enum": [
+        "co_reference"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Emotional similarity",
+      "enum": [
+        "emotional_similarity"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Narrative continuity",
+      "enum": [
+        "narrative_continuity"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "User explicit statement",
+      "enum": [
+        "explicit_statement"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Inferred from context",
+      "enum": [
+        "contextual_inference"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "BindingEvidenceType",
+  "x-familiar-casing": "snake_case",
+  "x-familiar-enum-repr": "simple_enum",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  },
+  "x-familiar-variants": {
+    "co_reference": "CoReference",
+    "contextual_inference": "ContextualInference",
+    "emotional_similarity": "EmotionalSimilarity",
+    "explicit_statement": "ExplicitStatement",
+    "linguistic_marker": "LinguisticMarker",
+    "narrative_continuity": "NarrativeContinuity",
+    "semantic_similarity": "SemanticSimilarity",
+    "temporal_proximity": "TemporalProximity"
+  }
+}
