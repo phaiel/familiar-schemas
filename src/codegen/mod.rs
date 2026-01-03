@@ -312,12 +312,16 @@ pub fn generate_rust(schema_dir: &Path, primitives: HashSet<SchemaId>) -> Result
     output.push_str("    ConsentRecordId, TaskId, ExportRequestId, DeletionRequestId,\n");
     output.push_str("    // Other primitives\n");
     output.push_str("    Email, Temperature, MaxTokens, InviteCode, PasswordHash, SessionToken,\n");
+    output.push_str("    DbPoolSize,\n");
+    output.push_str("    // Re-exported from dependencies\n");
+    output.push_str("    DateTime, Utc, Uuid,\n");
     output.push_str("};\n");
-    output.push_str("// Re-export types from dependencies\n");
-    output.push_str("pub use super::{DateTime, Utc, Uuid};\n");
-    output.push_str("// Timestamp alias for schema compatibility\n");
+    output.push_str("// Type aliases for schema compatibility\n");
     output.push_str("pub type Timestamp = DateTime<Utc>;\n");
-    output.push_str("pub type UUID = Uuid;\n\n");
+    output.push_str("pub type UUID = Uuid;\n");
+    output.push_str("// Alias for schema field references\n");
+    output.push_str("pub type Casing = serde_json::Value; // TODO: fix schema to use CasingConvention\n");
+    output.push_str("pub type EnumRepr = serde_json::Value; // TODO: fix schema to use EnumRepresentation\n\n");
     
     // Generate each type
     for region in regions {
