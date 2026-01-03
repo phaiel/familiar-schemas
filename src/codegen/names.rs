@@ -207,12 +207,16 @@ impl NameResolver {
             .trim_end_matches(".schema.json")
             .trim_end_matches(".json");
         
+        // Replace dots with underscores (dots are invalid in Rust identifiers)
+        // e.g., "Codegen.meta" -> "CodegenMeta"
+        let file_name = file_name.replace('.', "_");
+        
         // If the file name has no separators (already PascalCase), preserve it
         if !file_name.contains('_') && !file_name.contains('-') && !file_name.contains(' ') {
-            return file_name.to_string();
+            return file_name;
         }
         
-        self.to_pascal_case(file_name)
+        self.to_pascal_case(&file_name)
     }
     
     /// Extract directory prefix for disambiguation
