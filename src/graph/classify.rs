@@ -402,7 +402,15 @@ impl<'a> Classifier<'a> {
     }
     
     fn property_to_field(&self, prop: &PropertyShape) -> FieldDef {
-        let rust_name = to_snake_case(&prop.name);
+        // Handle special characters in field names
+        // $ is not valid in Rust identifiers, so strip it
+        let sanitized_name = if prop.name.starts_with('$') {
+            format!("schema_{}", &prop.name[1..])
+        } else {
+            prop.name.clone()
+        };
+        
+        let rust_name = to_snake_case(&sanitized_name);
         let needs_rename = rust_name != prop.name;
         
         FieldDef {
