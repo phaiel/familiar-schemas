@@ -207,6 +207,11 @@ impl NameResolver {
             .trim_end_matches(".schema.json")
             .trim_end_matches(".json");
         
+        // If the file name has no separators (already PascalCase), preserve it
+        if !file_name.contains('_') && !file_name.contains('-') && !file_name.contains(' ') {
+            return file_name.to_string();
+        }
+        
         self.to_pascal_case(file_name)
     }
     
@@ -218,6 +223,16 @@ impl NameResolver {
             // Skip if it's a common directory that doesn't add meaning
             if matches!(dir_name, "json-schema" | "schemas" | "types" | ".." | "." | "src") {
                 return String::new();
+            }
+            // If already PascalCase (no separators), preserve it
+            if !dir_name.contains('_') && !dir_name.contains('-') && !dir_name.contains(' ') {
+                let mut chars = dir_name.chars();
+                return match chars.next() {
+                    None => String::new(),
+                    Some(first) => {
+                        first.to_uppercase().chain(chars).collect()
+                    }
+                };
             }
             return self.to_pascal_case(dir_name);
         }
@@ -402,8 +417,12 @@ mod tests {
     fn test_extract_base_name() {
         let resolver = NameResolver::new(test_config());
         
-        assert_eq!(resolver.extract_base_name("primitives/TenantId.schema.json"), "TenantID");
+        // Already PascalCase - preserve exactly
+        assert_eq!(resolver.extract_base_name("primitives/TenantId.schema.json"), "TenantId");
         assert_eq!(resolver.extract_base_name("entities/Thread.schema.json"), "Thread");
+        assert_eq!(resolver.extract_base_name("primitives/AIProvider.schema.json"), "AIProvider");
+        
+        // Has separators - convert to PascalCase
         assert_eq!(resolver.extract_base_name("some_type"), "SomeType");
     }
     
@@ -411,7 +430,7 @@ mod tests {
     fn test_acronym_preservation() {
         let resolver = NameResolver::new(test_config());
         
-        // ID should be preserved as uppercase
+        // With separators, ID/UUID/API/URL should be preserved as uppercase
         assert_eq!(resolver.to_pascal_case("tenant_id"), "TenantID");
         assert_eq!(resolver.to_pascal_case("user-uuid"), "UserUUID");
         assert_eq!(resolver.to_pascal_case("api_url"), "APIURL");
