@@ -9,7 +9,6 @@
 
 use crate::graph::{
     EmitStrategy, EnumVariant, FieldDef, TypeKind, UnionVariant,
-    FieldType, JsonScalarKind,
 };
 
 use super::{CodegenContext, Region, RenderProfile};
@@ -81,7 +80,7 @@ fn emit_type(region: &Region, ctx: &CodegenContext, profile: &RenderProfile) -> 
 // =============================================================================
 
 /// Emit a Default impl for a struct if it has fields with defaults
-fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext, _profile: &RenderProfile) -> Option<String> {
+fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext, profile: &RenderProfile) -> Option<String> {
     // Get the schema shape and check for defaults
     let schema_shape = ctx.shapes.get(&region.schema_id)?;
 
@@ -97,12 +96,13 @@ fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext,
 
     // Add defaults for all fields
     for field in fields {
+        let rust_type = ctx.resolve_field_type(&field.field_type, false, profile);
         let default_expr = if let Some(default_value) = defaults.get(&field.json_name) {
             // Convert JSON default to Rust expression
-            json_default_to_rust(default_value, &field.field_type)
+            json_default_to_rust(default_value, &rust_type)
         } else {
             // Use standard default for the type
-            get_rust_default_for_field(&field.field_type)
+            format!("{}::default()", rust_type)
         };
         output.push_str(&format!("            {}: {},\n", field.rust_name, default_expr));
     }
@@ -115,61 +115,28 @@ fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext,
 }
 
 /// Convert a JSON default value to a Rust expression
-fn json_default_to_rust(default_value: &serde_json::Value, field_type: &FieldType) -> String {
-    match (field_type, default_value) {
-        (FieldType::SchemaRef(type_name), serde_json::Value::Number(n))
-            if type_name == "NormalizedFloat" => {
-            format!("NormalizedFloat::new({}).unwrap()", n)
+fn json_default_to_rust(default_value: &serde_json::Value, rust_type: &str) -> String {
+    match default_value {
+        serde_json::Value::Number(n) if n.is_f64() => {
+            if rust_type.contains("NormalizedFloat") {
+                format!("{}::new({}).unwrap()", rust_type, n.as_f64().unwrap())
+            } else {
+                format!("{}", n.as_f64().unwrap())
+            }
         }
-        (FieldType::SchemaRef(type_name), serde_json::Value::Number(n))
-            if type_name == "SignedNormalizedFloat" => {
-            format!("SignedNormalizedFloat::new({}).unwrap()", n)
-        }
-        (_, serde_json::Value::Number(n)) if n.is_f64() => {
-            format!("{}", n.as_f64().unwrap())
-        }
-        (_, serde_json::Value::Number(n)) => {
+        serde_json::Value::Number(n) => {
             format!("{}", n)
         }
-        (_, serde_json::Value::String(s)) => {
+        serde_json::Value::String(s) => {
             format!("\"{}\".to_string()", s)
         }
-        (_, serde_json::Value::Bool(b)) => {
+        serde_json::Value::Bool(b) => {
             format!("{}", b)
         }
-        _ => get_rust_default_for_field(field_type),
+        _ => format!("{}::default()", rust_type),
     }
 }
 
-/// Get a reasonable Rust default expression for a field type
-fn get_rust_default_for_field(field_type: &FieldType) -> String {
-    match field_type {
-        FieldType::Scalar(kind) => match kind {
-            JsonScalarKind::String => "\"\".to_string()".to_string(),
-            JsonScalarKind::Integer => "0".to_string(),
-            JsonScalarKind::Number => "0.0".to_string(),
-            JsonScalarKind::Boolean => "false".to_string(),
-            JsonScalarKind::Null => "None".to_string(),
-        },
-        FieldType::SchemaRef(type_name) => {
-            format!("{}::default()", type_name)
-        }
-        FieldType::Array(_) => "vec![]".to_string(),
-        FieldType::Map(_) => "std::collections::HashMap::new()".to_string(),
-        FieldType::FixedArray { items, size } => {
-            let inner_default = get_rust_default_for_field(items);
-            format!("[{}; {}]", inner_default, size)
-        }
-        FieldType::Tuple(items) => {
-            let item_defaults: Vec<String> = items.iter()
-                .map(get_rust_default_for_field)
-                .collect();
-            format!("({})", item_defaults.join(", "))
-        }
-        FieldType::InlineObject => "serde_json::Value::Null".to_string(),
-        FieldType::Unknown => "Default::default()".to_string(),
-    }
-}
 
 // =============================================================================
 // Enum Emission

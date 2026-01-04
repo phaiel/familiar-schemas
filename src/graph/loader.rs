@@ -72,8 +72,9 @@ pub fn load_from_directory(schema_dir: &Path, config: &LoadConfig) -> anyhow::Re
         
         let content = fs::read_to_string(path)?;
         hasher.update(content.as_bytes());
-        
-        let json: serde_json::Value = serde_json::from_str(&content)?;
+
+        let json: serde_json::Value = serde_json::from_str(&content)
+            .map_err(|e| anyhow::anyhow!("Failed to parse JSON in {}: {}", path.display(), e))?;
         
         let (id, node) = extract_node(&json, &relative_path);
         
