@@ -387,7 +387,7 @@ impl<'a> Classifier<'a> {
                 }
             }
             
-            SchemaShape::Object { properties, additional_properties: _ } => {
+            SchemaShape::Object { properties, additional_properties: _, extensions: _, defaults: _ } => {
                 let fields: Vec<FieldDef> = properties
                     .iter()
                     .map(|p| self.property_to_field(p))

@@ -9,6 +9,7 @@
 
 use crate::graph::{
     EmitStrategy, EnumVariant, FieldDef, TypeKind, UnionVariant,
+    FieldType, JsonScalarKind,
 };
 
 use super::{CodegenContext, Region, RenderProfile};
@@ -28,7 +29,6 @@ pub fn emit_region(region: &Region, ctx: &CodegenContext, profile: &RenderProfil
             Some(emit_primitive_comment(region))
         }
         EmitStrategy::Generate | EmitStrategy::GenerateInSccGroup(_) => {
-            eprintln!("DEBUG: Emitting type for {}", region.canonical_name);
             Some(emit_type(region, ctx, profile))
         }
     }
@@ -44,12 +44,8 @@ fn emit_type(region: &Region, ctx: &CodegenContext, profile: &RenderProfile) -> 
     // Add doc comment
     output.push_str(&format!("/// {}\n", region.canonical_name));
     
-    // Add derives - conditionally include Default if the schema has rust impl blocks
-    let mut derives = vec!["Debug", "Clone", "PartialEq", "Serialize", "Deserialize", "JsonSchema"];
-    if region.extensions.generate_default {
-        derives.push("Default");
-        eprintln!("DEBUG: Adding Default derive for {}", region.canonical_name);
-    }
+    // Add derives (Default will be implemented separately if needed)
+    let derives = vec!["Debug", "Clone", "PartialEq", "Serialize", "Deserialize", "JsonSchema"];
     output.push_str(&format!("#[derive({})]\n", derives.join(", ")));
     
     match &region.type_kind {
@@ -61,9 +57,8 @@ fn emit_type(region: &Region, ctx: &CodegenContext, profile: &RenderProfile) -> 
         }
         TypeKind::Struct { fields, flatten_refs } => {
             emit_struct(&mut output, region, fields, flatten_refs, ctx, profile);
-            // Add Default impl if struct has defaults
+            // Add Default impl if struct has default values in schema
             if let Some(default_impl) = emit_default_impl(region, fields, ctx, profile) {
-                eprintln!("DEBUG: Adding Default impl for {}", region.canonical_name);
                 output.push_str(&default_impl);
             }
         }
@@ -86,48 +81,30 @@ fn emit_type(region: &Region, ctx: &CodegenContext, profile: &RenderProfile) -> 
 // =============================================================================
 
 /// Emit a Default impl for a struct if it has fields with defaults
-fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext, profile: &RenderProfile) -> Option<String> {
-    eprintln!("DEBUG: Checking Default impl for {}", region.canonical_name);
+fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext, _profile: &RenderProfile) -> Option<String> {
+    // Get the schema shape and check for defaults
+    let schema_shape = ctx.shapes.get(&region.schema_id)?;
 
-    // Only generate Default for structs (not enums, unions, etc.)
-    if !matches!(region.type_kind, TypeKind::Struct { .. }) {
-        eprintln!("DEBUG: Not a struct");
-        return None;
-    }
-
-    // Check if any fields have default values by looking at the schema
-    let mut has_defaults = false;
-    let mut default_fields = Vec::new();
-
-    for field in fields {
-        eprintln!("DEBUG: Checking field {}", field.name);
-        if let Some(default_value) = get_field_default(region.schema_id, &field.name, ctx) {
-            eprintln!("DEBUG: Found default for {}: {}", field.name, default_value);
-            has_defaults = true;
-            default_fields.push((field.name.clone(), default_value));
-        }
-    }
-
-    if !has_defaults {
-        eprintln!("DEBUG: No defaults found");
-        return None;
-    }
+    let defaults = match schema_shape {
+        crate::graph::SchemaShape::Object { defaults, .. } if !defaults.is_empty() => defaults,
+        _ => return None,
+    };
 
     // Generate the Default impl
     let mut output = format!("\nimpl Default for {} {{\n", region.canonical_name);
     output.push_str("    fn default() -> Self {\n");
     output.push_str("        Self {\n");
 
-    for (field_name, default_value) in &default_fields {
-        output.push_str(&format!("            {}: {},\n", field_name, default_value));
-    }
-
-    // Add defaults for fields without explicit defaults
+    // Add defaults for all fields
     for field in fields {
-        if !default_fields.iter().any(|(name, _)| name == &field.name) {
-            let default_expr = get_rust_default_for_field(&field.field_type, profile);
-            output.push_str(&format!("            {}: {},\n", field.name, default_expr));
-        }
+        let default_expr = if let Some(default_value) = defaults.get(&field.json_name) {
+            // Convert JSON default to Rust expression
+            json_default_to_rust(default_value, &field.field_type)
+        } else {
+            // Use standard default for the type
+            get_rust_default_for_field(&field.field_type)
+        };
+        output.push_str(&format!("            {}: {},\n", field.rust_name, default_expr));
     }
 
     output.push_str("        }\n");
@@ -137,62 +114,59 @@ fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext,
     Some(output)
 }
 
-/// Get the default value for a field from the schema
-fn get_field_default(schema_id: &str, field_name: &str, ctx: &CodegenContext) -> Option<String> {
-    // Get the schema
-    let schema = ctx.shapes.get(schema_id)?.as_object()?;
-
-    // Get properties
-    let properties = schema.get("properties")?.as_object()?;
-
-    // Get the field definition
-    let field_def = properties.get(field_name)?.as_object()?;
-
-    // Check for default value
-    if let Some(default) = field_def.get("default") {
-        match default {
-            serde_json::Value::Number(n) => {
-                if n.is_f64() {
-                    Some(format!("{:.1}", n.as_f64().unwrap()))
-                } else {
-                    Some(n.to_string())
-                }
-            }
-            serde_json::Value::String(s) => Some(format!("\"{}\".to_string()", s)),
-            serde_json::Value::Bool(b) => Some(b.to_string()),
-            _ => None,
+/// Convert a JSON default value to a Rust expression
+fn json_default_to_rust(default_value: &serde_json::Value, field_type: &FieldType) -> String {
+    match (field_type, default_value) {
+        (FieldType::SchemaRef(type_name), serde_json::Value::Number(n))
+            if type_name == "NormalizedFloat" => {
+            format!("NormalizedFloat::new({}).unwrap()", n)
         }
-    } else {
-        None
+        (FieldType::SchemaRef(type_name), serde_json::Value::Number(n))
+            if type_name == "SignedNormalizedFloat" => {
+            format!("SignedNormalizedFloat::new({}).unwrap()", n)
+        }
+        (_, serde_json::Value::Number(n)) if n.is_f64() => {
+            format!("{}", n.as_f64().unwrap())
+        }
+        (_, serde_json::Value::Number(n)) => {
+            format!("{}", n)
+        }
+        (_, serde_json::Value::String(s)) => {
+            format!("\"{}\".to_string()", s)
+        }
+        (_, serde_json::Value::Bool(b)) => {
+            format!("{}", b)
+        }
+        _ => get_rust_default_for_field(field_type),
     }
 }
 
 /// Get a reasonable Rust default expression for a field type
-fn get_rust_default_for_field(field_type: &FieldType, profile: &RenderProfile) -> String {
+fn get_rust_default_for_field(field_type: &FieldType) -> String {
     match field_type {
         FieldType::Scalar(kind) => match kind {
             JsonScalarKind::String => "\"\".to_string()".to_string(),
             JsonScalarKind::Integer => "0".to_string(),
             JsonScalarKind::Number => "0.0".to_string(),
             JsonScalarKind::Boolean => "false".to_string(),
+            JsonScalarKind::Null => "None".to_string(),
         },
         FieldType::SchemaRef(type_name) => {
-            // Assume the referenced type has Default
             format!("{}::default()", type_name)
         }
         FieldType::Array(_) => "vec![]".to_string(),
         FieldType::Map(_) => "std::collections::HashMap::new()".to_string(),
-        FieldType::FixedArray(inner, size) => {
-            let inner_default = get_rust_default_for_field(inner, profile);
+        FieldType::FixedArray { items, size } => {
+            let inner_default = get_rust_default_for_field(items);
             format!("[{}; {}]", inner_default, size)
         }
         FieldType::Tuple(items) => {
             let item_defaults: Vec<String> = items.iter()
-                .map(|item| get_rust_default_for_field(item, profile))
+                .map(get_rust_default_for_field)
                 .collect();
             format!("({})", item_defaults.join(", "))
         }
-        FieldType::InlineObject => "{ /* inline object */ }".to_string(),
+        FieldType::InlineObject => "serde_json::Value::Null".to_string(),
         FieldType::Unknown => "Default::default()".to_string(),
     }
 }

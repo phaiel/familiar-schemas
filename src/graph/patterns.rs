@@ -96,7 +96,7 @@ pub struct CodegenExtensions {
     pub variants: Option<std::collections::HashMap<String, String>>,
     /// Casing convention from x-familiar-casing
     pub casing: Option<String>,
-    /// Whether to generate Default impl from x-familiar-default
+    /// Whether to generate Default derive (if x-familiar-rust-impl-ids exists)
     pub generate_default: bool,
     /// Impl block IDs from x-familiar-rust-impl-ids
     pub rust_impl_ids: Vec<String>,
@@ -155,6 +155,10 @@ pub enum SchemaShape {
         properties: Vec<PropertyShape>,
         /// Additional properties type if specified
         additional_properties: Option<Box<PropertyTypeShape>>,
+        /// Codegen extensions from schema
+        extensions: CodegenExtensions,
+        /// Default values for fields from JSON Schema
+        defaults: std::collections::HashMap<String, serde_json::Value>,
     },
     
     /// Pure $ref to another schema (type alias)
@@ -231,6 +235,9 @@ fn extract_extensions(schema: &serde_json::Value) -> CodegenExtensions {
             .iter()
             .filter_map(|v| v.as_str().map(String::from))
             .collect();
+        // If this schema has Rust impl blocks, it likely needs Default
+        ext.generate_default = true;
+        eprintln!("DEBUG: Found x-familiar-rust-impl-ids for schema, setting generate_default=true");
     }
     
     // x-familiar-field-alias: "physics"
@@ -247,6 +254,10 @@ fn extract_extensions(schema: &serde_json::Value) -> CodegenExtensions {
 
 /// Detect the shape of a single schema
 pub fn detect_shape(schema: &serde_json::Value) -> SchemaShape {
+    // Debug: check if this schema has rust impl ids
+    if schema.get("x-familiar-rust-impl-ids").is_some() {
+        eprintln!("DEBUG: detect_shape called for schema with x-familiar-rust-impl-ids");
+    }
     // Check for $ref first (pure alias)
     // Allow $ref with metadata fields like $schema, $id, title, description, x-familiar-*
     if let Some(ref_target) = schema.get("$ref").and_then(|v| v.as_str()) {
@@ -363,15 +374,25 @@ pub fn detect_shape(schema: &serde_json::Value) -> SchemaShape {
                         shape: detect_property_type(prop),
                     })
                     .collect();
-                
+
+                // Extract default values from properties
+                let defaults: std::collections::HashMap<String, serde_json::Value> = props
+                    .iter()
+                    .filter_map(|(name, prop)| {
+                        prop.get("default").map(|default| (name.clone(), default.clone()))
+                    })
+                    .collect();
+
                 let additional_properties = schema
                     .get("additionalProperties")
                     .filter(|v| !v.is_boolean() || v.as_bool() != Some(false))
                     .map(|v| Box::new(detect_property_type(v)));
-                
+
                 SchemaShape::Object {
                     properties,
                     additional_properties,
+                    extensions: extract_extensions(schema),
+                    defaults,
                 }
             } else if let Some(add_props) = schema.get("additionalProperties") {
                 if !add_props.is_boolean() {
