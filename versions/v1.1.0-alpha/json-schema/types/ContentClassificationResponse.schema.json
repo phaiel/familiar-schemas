@@ -24,49 +24,49 @@
           "default": null,
           "description": "Physics hints for entity spawning (only for LOG purpose)"
         },
-        "purpose": {
-          "allOf": [
-            {
-              "$ref": "../primitives/MessageIntent.schema.json"
-            }
-          ],
-          "default": "LOG",
-          "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
-        },
-        "segment_index": {
-          "description": "Index of the segment being classified",
-          "format": "uint",
-          "minimum": 0.0,
-          "type": "integer"
-        },
-        "weight": {
-          "default": 1.0,
-          "description": "Confidence weight (0.0 to 1.0)",
+        "confidence": {
+          "description": "Confidence in classification (0.0 to 1.0)",
           "format": "double",
           "type": "number"
+        },
+        "segment_id": {
+          "description": "ID of the segment this classification applies to",
+          "type": "string"
         }
       },
       "required": [
         "entity_type",
-        "segment_index"
+        "confidence",
+        "segment_id"
       ],
       "type": "object"
     }
   },
-  "description": "Phase 3 response: Classifications for each segment",
+  "description": "Response from content classification service",
   "properties": {
     "classifications": {
-      "description": "Classifications for each segment",
+      "description": "List of segment classifications",
       "items": {
-        "$ref": "SegmentClassification.schema.json"
+        "$ref": "#/definitions/SegmentClassification"
       },
       "type": "array"
+    },
+    "request_id": {
+      "description": "Request identifier for tracking",
+      "type": "string"
     }
   },
   "required": [
-    "classifications"
+    "classifications",
+    "request_id"
   ],
   "title": "ContentClassificationResponse",
   "type": "object",
-  "x-familiar-kind": "type",
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

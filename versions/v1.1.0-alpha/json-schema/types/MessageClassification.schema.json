@@ -24,43 +24,30 @@
           "type": "null"
         }
       ],
-      "description": "If QUERY, what data is being requested"
+      "description": "Target entity for queries"
     },
-    "query_type": {
+    "response_metadata": {
       "anyOf": [
         {
-          "$ref": "../primitives/QueryType.schema.json"
+          "$ref": "../components/ResponseMetadata.schema.json"
         },
         {
           "type": "null"
         }
       ],
-      "description": "If QUERY, what type of query"
-    },
-    "secondary_intents": {
-      "description": "Alternative intents that might also apply",
-      "items": {
-        "items": [
-          {
-            "$ref": "../primitives/MessageIntent.schema.json"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
+      "description": "Additional response details"
     }
   },
   "required": [
-    "confidence",
     "intent"
   ],
   "title": "MessageClassification",
   "type": "object",
-  "x-familiar-kind": "type",
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

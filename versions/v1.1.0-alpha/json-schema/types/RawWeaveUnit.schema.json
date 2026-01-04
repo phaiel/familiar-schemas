@@ -19,73 +19,35 @@
       "type": "object"
     }
   },
-  "description": "Raw weave unit from LLM output (before validation)",
+  "description": "Raw weave unit with classifications before entity resolution",
   "properties": {
     "classifications": {
-      "description": "Classifications in superposition",
+      "description": "List of raw classifications",
       "items": {
-        "$ref": "RawClassification.schema.json"
+        "$ref": "#/definitions/RawClassification"
       },
       "type": "array"
     },
     "content": {
-      "description": "The extracted/cleaned text content for this weave unit",
+      "description": "Original text content",
       "type": "string"
     },
-    "physics_hint": {
-      "anyOf": [
-        {
-          "$ref": "../types/RawPhysicsHint.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
-    },
-    "primary_thread": {
-      "default": null,
-      "description": "Primary thread: the main subject/actor of this unit",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "purpose": {
-      "allOf": [
-        {
-          "$ref": "../primitives/MessageIntent.schema.json"
-        }
-      ],
-      "default": "LOG",
-      "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
-    },
-    "secondary_threads": {
-      "default": null,
-      "description": "Secondary threads: other people/places/things mentioned",
-      "items": {
-        "type": "string"
-      },
-      "type": [
-        "array",
-        "null"
-      ]
-    },
-    "temporal_marker": {
-      "default": null,
-      "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
-      "type": [
-        "string",
-        "null"
-      ]
+    "metadata": {
+      "description": "Additional processing metadata",
+      "type": "object"
     }
   },
   "required": [
-    "classifications",
-    "content"
+    "content",
+    "classifications"
   ],
   "title": "RawWeaveUnit",
   "type": "object",
-  "x-familiar-kind": "type",
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }
