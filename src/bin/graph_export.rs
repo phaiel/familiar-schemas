@@ -22,7 +22,7 @@ struct Cli {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
-    let schema_dir = cli.schema_dir.unwrap_or_else(|| PathBuf::from("."));
+    let schema_dir = cli.schema_dir.unwrap_or_else(|| PathBuf::from("versions/latest"));
 
     println!("Loading schema graph from: {:?}", schema_dir);
     let graph = SchemaGraph::from_directory(&schema_dir)?;
