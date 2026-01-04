@@ -876,6 +876,9 @@
   "title": "EnvelopeV1",
   "type": "object",
   "x-familiar-kind": "contract",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Contract.meta.schema.json"
+  },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

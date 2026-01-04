@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/EntitiesAPI.meta.schema.json",
+  "title": "Entities API Schema Definition",
+  "description": "Schemas that define API responses for entity data access.",
+  "type": "object",
+  "required": ["title", "x-familiar-kind"],
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "x-familiar-kind": {
+      "const": "entities_api",
+      "description": "Discriminator for entity API response schemas"
+    },
+
+    "x-familiar-service": {
+      "description": "Service that provides this API response",
+      "type": "object",
+      "properties": {
+        "$ref": { "type": "string" }
+      },
+      "required": ["$ref"]
+    },
+
+    "x-familiar-meta-schema": {
+      "$ref": "#",
+      "description": "Self-reference for meta-schema validation"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Contract.meta.schema.json",
+  "title": "Contract Schema Definition",
+  "description": "Schemas that define service contracts and API boundaries.",
+  "type": "object",
+  "required": ["title", "x-familiar-kind"],
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "x-familiar-kind": {
+      "const": "contract",
+      "description": "Discriminator for contract schemas"
+    },
+
+    "x-familiar-service": {
+      "description": "Service that implements this contract",
+      "type": "object",
+      "properties": {
+        "$ref": { "type": "string" }
+      },
+      "required": ["$ref"]
+    },
+
+    "x-familiar-meta-schema": {
+      "$ref": "#",
+      "description": "Self-reference for meta-schema validation"
+    }
+  }
+}

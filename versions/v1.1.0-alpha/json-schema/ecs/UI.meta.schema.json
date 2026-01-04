@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/UI.meta.schema.json",
+  "title": "User Interface Schema Definition",
+  "description": "Schemas that define user interface components and interactions.",
+  "type": "object",
+  "required": ["title", "x-familiar-kind"],
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "x-familiar-kind": {
+      "const": "ui",
+      "description": "Discriminator for UI component schemas"
+    },
+
+    "x-familiar-service": {
+      "description": "Service that renders this UI component",
+      "type": "object",
+      "properties": {
+        "$ref": { "type": "string" }
+      },
+      "required": ["$ref"]
+    },
+
+    "x-familiar-meta-schema": {
+      "$ref": "#",
+      "description": "Self-reference for meta-schema validation"
+    }
+  }
+}

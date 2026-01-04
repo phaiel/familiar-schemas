@@ -91,6 +91,9 @@
   "title": "DataExportRequest",
   "type": "object",
   "x-familiar-kind": "auth",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Auth.meta.schema.json"
+  },
   "x-familiar-requires-auth": true,
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"

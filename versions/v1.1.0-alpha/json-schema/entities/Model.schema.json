@@ -59,6 +59,9 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "entity",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Entity.meta.schema.json"
+  },
   "x-familiar-persistence": {
     "profile": "postgres",
     "table": "models",

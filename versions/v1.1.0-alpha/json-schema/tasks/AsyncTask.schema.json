@@ -15,10 +15,16 @@
       "type": "string"
     },
     "windmill_job_id": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "windmill_flow_path": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "status": {
       "$ref": "./AsyncTaskStatus.schema.json"
@@ -29,23 +35,39 @@
     },
     "output": {
       "anyOf": [
-        { "type": "object", "additionalProperties": true },
-        { "type": "null" }
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "error_message": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "user_id": {
       "anyOf": [
-        { "$ref": "../primitives/UserId.schema.json" },
-        { "type": "null" }
+        {
+          "$ref": "../primitives/UserId.schema.json"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "tenant_id": {
       "anyOf": [
-        { "$ref": "../primitives/TenantId.schema.json" },
-        { "type": "null" }
+        {
+          "$ref": "../primitives/TenantId.schema.json"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "created_at": {
@@ -53,14 +75,22 @@
     },
     "started_at": {
       "anyOf": [
-        { "$ref": "../primitives/Timestamp.schema.json" },
-        { "type": "null" }
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "completed_at": {
       "anyOf": [
-        { "$ref": "../primitives/Timestamp.schema.json" },
-        { "type": "null" }
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "attempt_count": {
@@ -73,13 +103,27 @@
     },
     "next_retry_at": {
       "anyOf": [
-        { "$ref": "../primitives/Timestamp.schema.json" },
-        { "type": "null" }
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
       ]
     }
   },
-  "required": ["id", "task_type", "correlation_id", "status", "input", "created_at", "attempt_count", "max_attempts"],
-  "x-familiar-kind": "entity"
+  "required": [
+    "id",
+    "task_type",
+    "correlation_id",
+    "status",
+    "input",
+    "created_at",
+    "attempt_count",
+    "max_attempts"
+  ],
+  "x-familiar-kind": "entity",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Entity.meta.schema.json"
+  }
 }
-
-

@@ -31,6 +31,9 @@
   "title": "SectionBlock",
   "type": "object",
   "x-familiar-kind": "ui",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/UI.meta.schema.json"
+  },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

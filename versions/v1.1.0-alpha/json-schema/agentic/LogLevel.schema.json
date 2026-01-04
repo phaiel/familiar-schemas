@@ -10,6 +10,9 @@
   "title": "LogLevel",
   "type": "string",
   "x-familiar-kind": "agentic",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Agentic.meta.schema.json"
+  },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"
   }

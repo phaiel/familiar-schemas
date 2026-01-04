@@ -30,6 +30,9 @@
   "title": "ListMessagesOptions",
   "type": "object",
   "x-familiar-kind": "conversation",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Conversation.meta.schema.json"
+  },
   "x-familiar-rust-default": "custom",
   "x-familiar-rust-derive-exclude": [
     "Default"

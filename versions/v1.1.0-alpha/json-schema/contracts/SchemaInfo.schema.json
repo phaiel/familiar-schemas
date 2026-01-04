@@ -25,6 +25,9 @@
   "title": "SchemaInfo",
   "type": "object",
   "x-familiar-kind": "contract",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Contract.meta.schema.json"
+  },
   "x-familiar-rust-default": "custom",
   "x-familiar-rust-derive-exclude": [
     "Default"
