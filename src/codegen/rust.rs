@@ -86,7 +86,10 @@ fn emit_default_impl(region: &Region, fields: &[FieldDef], ctx: &CodegenContext,
     let schema_shape = ctx.shapes.get(&region.schema_id)?;
 
     let defaults = match schema_shape {
-        crate::graph::SchemaShape::Object { defaults, .. } if !defaults.is_empty() => defaults,
+        crate::graph::SchemaShape::Object { defaults, .. } if !defaults.is_empty() => {
+            eprintln!("DEBUG: Found {} defaults for {}", defaults.len(), region.canonical_name);
+            defaults
+        }
         _ => return None,
     };
 

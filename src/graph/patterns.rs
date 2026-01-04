@@ -379,7 +379,10 @@ pub fn detect_shape(schema: &serde_json::Value) -> SchemaShape {
                 let defaults: std::collections::HashMap<String, serde_json::Value> = props
                     .iter()
                     .filter_map(|(name, prop)| {
-                        prop.get("default").map(|default| (name.clone(), default.clone()))
+                        prop.get("default").map(|default| {
+                            eprintln!("DEBUG: Found default for {}: {:?}", name, default);
+                            (name.clone(), default.clone())
+                        })
                     })
                     .collect();
 
