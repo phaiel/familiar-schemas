@@ -17,12 +17,27 @@ use super::{
 };
 
 /// Configuration for schema loading
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct LoadConfig {
     /// Skip schemas matching these path prefixes
     pub skip_prefixes: Vec<String>,
     /// Only load schemas matching these path prefixes
     pub include_prefixes: Vec<String>,
+}
+
+impl Default for LoadConfig {
+    fn default() -> Self {
+        Self {
+            skip_prefixes: vec![
+                "target/".to_string(),           // Rust build artifacts
+                ".git/".to_string(),             // Git repository
+                "node_modules/".to_string(),     // Node.js dependencies
+                ".cargo/".to_string(),           // Cargo metadata
+                "artifacts/".to_string(),        // Generated artifacts
+            ],
+            include_prefixes: Vec::new(),
+        }
+    }
 }
 
 /// Load schemas from a filesystem directory
