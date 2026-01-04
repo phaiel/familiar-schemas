@@ -25,5 +25,5 @@
   ],
   "title": "TokenUsage",
   "type": "object",
-  "x-familiar-kind": "primitive",
+  "x-familiar-kind": "primitive"
 }

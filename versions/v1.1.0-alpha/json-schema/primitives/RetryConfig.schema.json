@@ -30,5 +30,5 @@
   ],
   "title": "RetryConfig",
   "type": "object",
-  "x-familiar-kind": "primitive",
+  "x-familiar-kind": "primitive"
 }
