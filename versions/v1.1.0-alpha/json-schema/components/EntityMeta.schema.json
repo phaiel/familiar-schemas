@@ -4,13 +4,29 @@
   "description": "Standard metadata for tenant-scoped entities",
   "type": "object",
   "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  },
   "x-familiar-field-alias": "meta",
   "x-familiar-field-order": 0,
   "properties": {
-    "id": { "description": "Unique identifier (generic)" },
-    "tenant_id": { "$ref": "../primitives/TenantId.schema.json" },
-    "created_at": { "$ref": "../primitives/Timestamp.schema.json" },
-    "updated_at": { "$ref": "../primitives/Timestamp.schema.json" }
+    "id": {
+      "description": "Unique identifier (generic)"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "created_at": {
+      "$ref": "../primitives/Timestamp.schema.json"
+    },
+    "updated_at": {
+      "$ref": "../primitives/Timestamp.schema.json"
+    }
   },
-  "required": ["id", "tenant_id", "created_at", "updated_at"]
+  "required": [
+    "id",
+    "tenant_id",
+    "created_at",
+    "updated_at"
+  ]
 }

@@ -4,15 +4,21 @@
   "id": "ingest_log",
   "title": "Ingest Log Entry",
   "x-familiar-kind": "technique",
-
-  "input": { "$ref": "../../tools/SegmentationInput.schema.json" },
-
-  "output": { "$ref": "../../entities/Moment.schema.json" },
-
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Technique.meta.schema.json"
+  },
+  "input": {
+    "$ref": "../../tools/SegmentationInput.schema.json"
+  },
+  "output": {
+    "$ref": "../../entities/Moment.schema.json"
+  },
   "steps": [
     {
       "id": "classify",
-      "action": { "$ref": "../actions/llm/classify.action.json" },
+      "action": {
+        "$ref": "../actions/llm/classify.action.json"
+      },
       "args": {
         "text": "${input.input.content}",
         "model_hint": "gpt-4o"

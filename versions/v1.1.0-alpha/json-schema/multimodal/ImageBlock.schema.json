@@ -9,7 +9,10 @@
       "description": "base64 data URI or URL"
     },
     "alt_text": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "analyze": {
       "type": "boolean",
@@ -17,8 +20,11 @@
       "description": "Request vision analysis"
     }
   },
-  "required": ["source"],
-  "x-familiar-kind": "component"
+  "required": [
+    "source"
+  ],
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  }
 }
-
-

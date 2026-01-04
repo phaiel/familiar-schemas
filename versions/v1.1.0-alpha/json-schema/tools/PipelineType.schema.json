@@ -3,42 +3,42 @@
   "description": "Types of standard pipelines",
   "oneOf": [
     {
-      "description": "Memory recording: Segment → Classify → Spawn → Hints → Store",
+      "description": "Memory recording: Segment \u2192 Classify \u2192 Spawn \u2192 Hints \u2192 Store",
       "enum": [
         "memory_recording"
       ],
       "type": "string"
     },
     {
-      "description": "Query: Parse → Search → Format → Return",
+      "description": "Query: Parse \u2192 Search \u2192 Format \u2192 Return",
       "enum": [
         "query"
       ],
       "type": "string"
     },
     {
-      "description": "Analysis: Parse → Search → Analyze → Synthesize",
+      "description": "Analysis: Parse \u2192 Search \u2192 Analyze \u2192 Synthesize",
       "enum": [
         "analysis"
       ],
       "type": "string"
     },
     {
-      "description": "Command: Parse → Validate → Execute → Confirm",
+      "description": "Command: Parse \u2192 Validate \u2192 Execute \u2192 Confirm",
       "enum": [
         "command"
       ],
       "type": "string"
     },
     {
-      "description": "Conversation: Understand → Respond",
+      "description": "Conversation: Understand \u2192 Respond",
       "enum": [
         "conversation"
       ],
       "type": "string"
     },
     {
-      "description": "Multi-modal: Route → Process per modality → Merge",
+      "description": "Multi-modal: Route \u2192 Process per modality \u2192 Merge",
       "enum": [
         "multi_modal"
       ],
@@ -49,6 +49,9 @@
   "x-familiar-casing": "snake_case",
   "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Tool.meta.schema.json"
+  },
   "x-familiar-queue": {
     "$ref": "../queues/worker-queue.queue.json"
   },

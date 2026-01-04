@@ -20,8 +20,14 @@
       "type": "boolean"
     }
   },
-  "required": ["id", "role", "tokens", "included"],
-  "x-familiar-kind": "component"
+  "required": [
+    "id",
+    "role",
+    "tokens",
+    "included"
+  ],
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  }
 }
-
-

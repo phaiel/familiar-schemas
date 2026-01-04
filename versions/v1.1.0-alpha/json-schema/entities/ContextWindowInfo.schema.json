@@ -36,8 +36,16 @@
       }
     }
   },
-  "required": ["total_messages", "total_tokens", "max_tokens", "messages_included", "tokens_used", "messages"],
-  "x-familiar-kind": "component"
+  "required": [
+    "total_messages",
+    "total_tokens",
+    "max_tokens",
+    "messages_included",
+    "tokens_used",
+    "messages"
+  ],
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  }
 }
-
-

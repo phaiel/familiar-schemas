@@ -124,6 +124,9 @@
   "x-familiar-discriminator": "type",
   "x-familiar-enum-repr": "internally_tagged",
   "x-familiar-kind": "tool",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Tool.meta.schema.json"
+  },
   "x-familiar-queue": {
     "$ref": "../queues/worker-queue.queue.json"
   },

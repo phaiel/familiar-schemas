@@ -8,15 +8,24 @@
       "type": "string"
     },
     "duration_secs": {
-      "type": ["number", "null"]
+      "type": [
+        "number",
+        "null"
+      ]
     },
     "transcript": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Pre-transcribed (skip Whisper)"
     }
   },
-  "required": ["source"],
-  "x-familiar-kind": "component"
+  "required": [
+    "source"
+  ],
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  }
 }
-
-

@@ -9,7 +9,10 @@
       "description": "URL to scrape"
     },
     "selector": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Optional CSS selector to extract specific content"
     },
     "extract_images": {
@@ -18,8 +21,11 @@
       "description": "Whether to extract images from the page"
     }
   },
-  "required": ["url"],
-  "x-familiar-kind": "component"
+  "required": [
+    "url"
+  ],
+  "x-familiar-kind": "component",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Component.meta.schema.json"
+  }
 }
-
-

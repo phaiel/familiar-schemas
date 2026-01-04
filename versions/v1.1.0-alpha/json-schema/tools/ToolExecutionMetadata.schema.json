@@ -53,6 +53,9 @@
   "title": "ToolExecutionMetadata",
   "type": "object",
   "x-familiar-kind": "tool",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/Tool.meta.schema.json"
+  },
   "x-familiar-queue": {
     "$ref": "../queues/worker-queue.queue.json"
   },
