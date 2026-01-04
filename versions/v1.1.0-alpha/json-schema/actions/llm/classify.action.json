@@ -3,7 +3,6 @@
   "$id": "actions/llm/classify.action.json",
   "title": "Classify Text",
   "x-familiar-kind": "action",
-  "x-familiar-rust-path": "familiar_core::actions::llm::classify",
 
   "input": {
     "type": "object",

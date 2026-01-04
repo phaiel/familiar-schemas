@@ -4,7 +4,7 @@
   "title": "Action Definition",
   "description": "Defines an atomic capability (Rust function) available to the system.",
   "type": "object",
-  "required": ["title", "x-familiar-kind", "x-familiar-rust-path", "input", "output"],
+  "required": ["title", "x-familiar-kind", "input", "output"],
   "properties": {
     "title": { "type": "string" },
     "description": { "type": "string" },
@@ -12,11 +12,6 @@
     "x-familiar-kind": {
       "const": "action",
       "description": "Discriminator for the graph loader"
-    },
-
-    "x-familiar-rust-path": {
-      "type": "string",
-      "description": "Fully qualified path to the Rust function (e.g., 'familiar_core::actions::llm::classify')."
     },
 
     "input": {
