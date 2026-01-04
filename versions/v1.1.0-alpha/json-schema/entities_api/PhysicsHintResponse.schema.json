@@ -48,9 +48,6 @@
   "title": "PhysicsHintResponse",
   "type": "object",
   "x-familiar-kind": "entities_api",
-  "x-familiar-rust-impl-ids": [
-    "PhysicsHintResponse"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

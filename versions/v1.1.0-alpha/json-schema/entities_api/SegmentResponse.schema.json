@@ -31,9 +31,6 @@
   "title": "SegmentResponse",
   "type": "object",
   "x-familiar-kind": "entities_api",
-  "x-familiar-rust-impl-ids": [
-    "SegmentResponse"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

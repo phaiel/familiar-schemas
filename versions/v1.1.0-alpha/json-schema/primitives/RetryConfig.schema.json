@@ -31,7 +31,4 @@
   "title": "RetryConfig",
   "type": "object",
   "x-familiar-kind": "primitive",
-  "x-familiar-rust-impl-ids": [
-    "RetryConfig"
-  ]
 }

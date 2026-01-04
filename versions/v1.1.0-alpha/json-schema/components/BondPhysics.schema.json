@@ -8,14 +8,17 @@
           "$ref": "../primitives/NormalizedFloat.schema.json"
         }
       ],
+      "default": 0.5,
       "description": "The overall strength or health of the bond. 0.0 = Broken/Weak, 1.0 = Strong/Healthy"
     },
     "damping_coefficient": {
+      "default": 0.5,
       "description": "The 'inertia' of the bond, representing how quickly it returns to equilibrium. Higher values = slower return to rest (lingering effects). Lower values = quick recovery (resilient).",
       "format": "double",
       "type": "number"
     },
     "spring_constant": {
+      "default": 1.0,
       "description": "The 'stiffness' of the bond, representing its resistance to change. Higher values = more rigid relationship (breaks under stress). Lower values = more flexible relationship (stretches without breaking).",
       "format": "double",
       "type": "number"
@@ -34,9 +37,6 @@
   "x-familiar-meta-schema": {
     "$ref": "../ecs/Component.meta.schema.json"
   },
-  "x-familiar-rust-impl-ids": [
-    "BondPhysics"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"
   }

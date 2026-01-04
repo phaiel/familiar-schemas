@@ -876,9 +876,6 @@
   "title": "EnvelopeV1",
   "type": "object",
   "x-familiar-kind": "contract",
-  "x-familiar-rust-impl-ids": [
-    "EnvelopeV1"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

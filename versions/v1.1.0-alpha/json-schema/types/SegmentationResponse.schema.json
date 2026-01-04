@@ -16,8 +16,5 @@
   "title": "SegmentationResponse",
   "type": "object",
   "x-familiar-kind": "output",
-  "x-familiar-rust-impl-ids": [
-    "SegmentationResponse"
-  ],
   "x-familiar-service": "familiar-daemon"
 }

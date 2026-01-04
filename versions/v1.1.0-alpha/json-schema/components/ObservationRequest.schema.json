@@ -116,9 +116,6 @@
   "x-familiar-meta-schema": {
     "$ref": "../ecs/Component.meta.schema.json"
   },
-  "x-familiar-rust-impl-ids": [
-    "ObservationRequest"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"
   }

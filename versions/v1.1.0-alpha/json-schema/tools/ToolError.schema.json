@@ -116,9 +116,6 @@
   "type": "object",
   "x-familiar-kind": "tool",
   "x-familiar-queue": "worker-queue",
-  "x-familiar-rust-impl-ids": [
-    "ToolError"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

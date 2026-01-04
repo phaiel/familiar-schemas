@@ -63,7 +63,4 @@
   "title": "MessageClassification",
   "type": "object",
   "x-familiar-kind": "type",
-  "x-familiar-rust-impl-ids": [
-    "MessageClassification"
-  ]
 }

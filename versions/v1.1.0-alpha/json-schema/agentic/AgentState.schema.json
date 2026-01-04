@@ -51,9 +51,6 @@
   "title": "AgentState",
   "type": "object",
   "x-familiar-kind": "agentic",
-  "x-familiar-rust-impl-ids": [
-    "AgentState"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"
   }

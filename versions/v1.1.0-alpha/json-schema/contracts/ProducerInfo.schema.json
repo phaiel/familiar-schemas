@@ -25,9 +25,6 @@
   "title": "ProducerInfo",
   "type": "object",
   "x-familiar-kind": "contract",
-  "x-familiar-rust-impl-ids": [
-    "ProducerInfo"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

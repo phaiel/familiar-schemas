@@ -57,9 +57,6 @@
   "title": "ModelConfig",
   "type": "object",
   "x-familiar-kind": "config",
-  "x-familiar-rust-impl-ids": [
-    "ModelConfig"
-  ],
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }
