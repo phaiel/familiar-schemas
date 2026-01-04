@@ -16,7 +16,9 @@
   "title": "FilterOperator",
   "type": "string",
   "x-familiar-kind": "tool",
-  "x-familiar-queue": "worker-queue",
+  "x-familiar-queue": {
+    "$ref": "../queues/worker-queue.queue.json"
+  },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }

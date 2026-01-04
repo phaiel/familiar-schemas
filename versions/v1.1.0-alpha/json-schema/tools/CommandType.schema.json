@@ -70,7 +70,9 @@
   "x-familiar-casing": "SCREAMING_SNAKE_CASE",
   "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-queue": "worker-queue",
+  "x-familiar-queue": {
+    "$ref": "../queues/worker-queue.queue.json"
+  },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   },

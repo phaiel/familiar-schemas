@@ -12,7 +12,9 @@
   "x-familiar-meta-schema": {
     "$ref": "../ecs/System.meta.schema.json"
   },
-  "x-familiar-queue": "daemon-queue",
+  "x-familiar-queue": {
+    "$ref": "../queues/daemon-queue.queue.json"
+  },
   "x-familiar-reads": [
     {
       "$ref": "../entities/Shuttle.schema.json"

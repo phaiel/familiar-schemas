@@ -17,7 +17,9 @@
   "x-familiar-meta-schema": {
     "$ref": "../ecs/Node.meta.schema.json"
   },
-  "x-familiar-queue": "daemon-queue",
+  "x-familiar-queue": {
+    "$ref": "../queues/daemon-queue.queue.json"
+  },
   "x-familiar-resource-class": "llm",
   "x-familiar-resources": [
     {

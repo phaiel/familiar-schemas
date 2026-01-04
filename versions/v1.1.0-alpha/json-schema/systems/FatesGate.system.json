@@ -21,7 +21,9 @@
   "x-familiar-output": {
     "$ref": "../tools/GateOutput.schema.json"
   },
-  "x-familiar-queue": "daemon-queue",
+  "x-familiar-queue": {
+    "$ref": "../queues/daemon-queue.queue.json"
+  },
   "x-familiar-reads": [
     {
       "$ref": "../entities/Moment.schema.json"

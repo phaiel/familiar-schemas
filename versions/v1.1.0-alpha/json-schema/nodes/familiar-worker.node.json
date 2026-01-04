@@ -14,7 +14,9 @@
   "x-familiar-meta-schema": {
     "$ref": "../ecs/Node.meta.schema.json"
   },
-  "x-familiar-queue": "worker-queue",
+  "x-familiar-queue": {
+    "$ref": "../queues/worker-queue.queue.json"
+  },
   "x-familiar-resource-class": "io",
   "x-familiar-resources": [
     {
