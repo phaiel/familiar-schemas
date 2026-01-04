@@ -821,11 +821,83 @@ impl SchemaGraph {
         let Some(artifact) = self.artifacts.get(artifact_id) else {
             return Vec::new();
         };
-        
+
         self.get_file_artifacts(&artifact.file)
             .into_iter()
             .filter(|a| a.artifact_id() != artifact_id)
             .collect()
+    }
+
+    /// Export the schema dependency graph to GraphViz DOT format
+    pub fn to_dot(&self) -> String {
+        let mut output = String::new();
+
+        // Header with styling
+        output.push_str("digraph SchemaGraph {\n");
+        output.push_str("  rankdir=LR;\n");
+        output.push_str("  bgcolor=\"#1e1e1e\";\n");
+        output.push_str("  node [shape=box, style=\"filled,rounded\", fontname=\"Helvetica\", fontsize=10, fontcolor=\"white\", color=\"#404040\"];\n");
+        output.push_str("  edge [fontname=\"Helvetica\", fontsize=8, fontcolor=\"#808080\"];\n");
+        output.push_str("\n");
+
+        // Color mapping for different schema kinds
+        let color_map = [
+            ("component", "#FF9800"),
+            ("entity", "#00BCD4"),
+            ("tool", "#9C27B0"),
+            ("request", "#F44336"),
+            ("response", "#4CAF50"),
+            ("enum", "#FF5722"),
+            ("primitive", "#607D8B"),
+            ("action", "#2196F3"),
+            ("technique", "#FF9800"),
+            ("resource", "#795548"),
+            ("node", "#607D8B"),
+            ("system", "#9C27B0"),
+        ];
+
+        // Nodes
+        for (id, node) in &self.schemas {
+            let title = node.title.as_deref().unwrap_or_else(|| {
+                // Extract title from path if not available
+                node.path.file_stem()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or(id.rsplit('/').next().unwrap_or(id))
+                    .trim_end_matches(".schema.json")
+            });
+
+            let color = color_map.iter()
+                .find(|(kind, _)| node.kind.as_deref() == Some(*kind))
+                .map(|(_, color)| *color)
+                .unwrap_or("#9E9E9E"); // Default gray
+
+            let node_id = id.replace("/", "_").replace(".", "_").replace("-", "_");
+            output.push_str(&format!("  \"{}\" [label=\"{}\", fillcolor=\"{}\"];\n", node_id, title, color));
+        }
+
+        output.push_str("\n");
+
+        // Edges
+        for edge in self.graph.edge_references() {
+            let source_idx = edge.source();
+            let target_idx = edge.target();
+
+            if let (Some(source_id), Some(target_id)) = (
+                self.graph.node_weight(source_idx),
+                self.graph.node_weight(target_idx)
+            ) {
+                let source_node_id = source_id.replace("/", "_").replace(".", "_").replace("-", "_");
+                let target_node_id = target_id.replace("/", "_").replace(".", "_").replace("-", "_");
+
+                // Only include edges between schemas we have nodes for
+                if self.schemas.contains_key(source_id) && self.schemas.contains_key(target_id) {
+                    output.push_str(&format!("  \"{}\" -> \"{}\";\n", source_node_id, target_node_id));
+                }
+            }
+        }
+
+        output.push_str("}\n");
+        output
     }
 }
 

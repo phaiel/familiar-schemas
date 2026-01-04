@@ -90,3 +90,7 @@ path = "src/bin/export.rs"
 [[bin]]
 name = "schema-config"
 path = "src/bin/config.rs"
+
+[[bin]]
+name = "schema-graph-export"
+path = "src/bin/graph_export.rs"
