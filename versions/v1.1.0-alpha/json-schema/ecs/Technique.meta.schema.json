@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Technique.meta.schema.json",
+  "title": "Technique Definition",
+  "description": "A declarative workflow composed of steps.",
+  "type": "object",
+  "required": ["id", "x-familiar-kind", "input", "output", "steps"],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+
+    "x-familiar-kind": { "const": "technique" },
+
+    "input": {
+      "description": "The input contract for this entire flow.",
+      "type": "object",
+      "properties": { "$ref": { "type": "string" } },
+      "required": ["$ref"]
+    },
+
+    "output": {
+      "description": "The return type of this flow.",
+      "type": "object",
+      "properties": { "$ref": { "type": "string" } },
+      "required": ["$ref"]
+    },
+
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "action", "args"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z_][a-z0-9_]*$",
+            "description": "Unique identifier for this step variable (snake_case)."
+          },
+
+          "action": {
+            "description": "Reference to the Action schema to execute.",
+            "type": "object",
+            "properties": { "$ref": { "type": "string" } },
+            "required": ["$ref"]
+          },
+
+          "condition": {
+            "type": "string",
+            "description": "Optional CEL expression. Example: 'input.confidence > 0.9'"
+          },
+
+          "args": {
+            "type": "object",
+            "description": "Map of Argument Name -> Value or Variable Reference.",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Use '${source.field}' for variables, or plain strings for literals."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "../../ecs/Technique.meta.schema.json",
+  "$id": "techniques/ingest_log.technique.json",
+  "id": "ingest_log",
+  "title": "Ingest Log Entry",
+  "x-familiar-kind": "technique",
+
+  "input": { "$ref": "../../tools/SegmentationInput.schema.json" },
+
+  "output": { "$ref": "../../entities/Moment.schema.json" },
+
+  "steps": [
+    {
+      "id": "classify",
+      "action": { "$ref": "../actions/llm/classify.action.json" },
+      "args": {
+        "text": "${input.input.content}",
+        "model_hint": "gpt-4o"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Action.meta.schema.json",
+  "title": "Action Definition",
+  "description": "Defines an atomic capability (Rust function) available to the system.",
+  "type": "object",
+  "required": ["title", "x-familiar-kind", "x-familiar-rust-path", "input", "output"],
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "x-familiar-kind": {
+      "const": "action",
+      "description": "Discriminator for the graph loader"
+    },
+
+    "x-familiar-rust-path": {
+      "type": "string",
+      "description": "Fully qualified path to the Rust function (e.g., 'familiar_core::actions::llm::classify')."
+    },
+
+    "input": {
+      "type": "object",
+      "description": "JSON Schema defining the arguments this function accepts.",
+      "properties": {
+        "type": { "const": "object" },
+        "properties": { "type": "object" },
+        "required": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["type", "properties"]
+    },
+
+    "output": {
+      "description": "Reference to the Entity or Type returned by this action.",
+      "type": "object",
+      "properties": {
+        "$ref": { "type": "string" }
+      },
+      "required": ["$ref"]
+    }
+  }
+}

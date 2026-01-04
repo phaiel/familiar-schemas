@@ -1,0 +1,26 @@
+{
+  "$schema": "../../ecs/Action.meta.schema.json",
+  "$id": "actions/llm/classify.action.json",
+  "title": "Classify Text",
+  "x-familiar-kind": "action",
+  "x-familiar-rust-path": "familiar_core::actions::llm::classify",
+
+  "input": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "description": "The raw text content to classify"
+      },
+      "model_hint": {
+        "type": "string",
+        "description": "Optional model override (e.g. 'gpt-4o')"
+      }
+    },
+    "required": ["text"]
+  },
+
+  "output": {
+    "$ref": "../../entities_api/ClassificationResponse.schema.json"
+  }
+}
