@@ -4,7 +4,7 @@
 
 use std::path::PathBuf;
 use clap::{Parser, Subcommand};
-use familiar_schemas::{SchemaRegistry, SchemaVersion, SchemaType};
+use familiar_schemas::{SchemaRegistry, SchemaType};
 use tracing_subscriber::EnvFilter;
 
 #[derive(Parser)]

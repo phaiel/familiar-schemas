@@ -26,9 +26,7 @@ use crate::graph::{
     compute_scc_analysis, detect_all_shapes, validate_boxed_edges,
 };
 
-pub use cel::{CeleEvaluator, NodeEvaluationContext};
 pub use config::{CodegenConfig, RenderProfile, NamingConfig, Language};
-pub use infra::{generate_infrastructure, InfraEnvironment, InfraError, InfraGenerator};
 pub use names::{NameResolver, ResolvedName, TypeOrigin, NameResolverStats};
 
 // =============================================================================

@@ -94,7 +94,3 @@ path = "src/bin/config.rs"
 [[bin]]
 name = "schema-graph-export"
 path = "src/bin/graph_export.rs"
-
-[[bin]]
-name = "infra-generator"
-path = "src/bin/infra_generator.rs"
