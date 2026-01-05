@@ -15,6 +15,33 @@
       "description": "Discriminator for the graph loader"
     },
 
+    "x-familiar-compute-category": {
+      "$ref": "ComputeCategory.schema.json",
+      "description": "Computational nature for optimization"
+    },
+
+    "x-familiar-execution-model": {
+      "$ref": "ExecutionModel.schema.json",
+      "description": "Execution pattern for concurrency"
+    },
+
+    "x-familiar-side-effects": {
+      "type": "array",
+      "items": { "$ref": "SideEffect.schema.json" },
+      "description": "External system interactions"
+    },
+
+    "x-familiar-reliability": {
+      "$ref": "Reliability.schema.json",
+      "description": "Reliability guarantees for error handling"
+    },
+
+    "x-familiar-dependencies": {
+      "type": "array",
+      "items": { "$ref": "LibraryReference.schema.json" },
+      "description": "External Rust crate dependencies"
+    },
+
     "signature": {
       "type": "object",
       "required": ["inputs", "output"],

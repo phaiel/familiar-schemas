@@ -4,6 +4,24 @@
   "id": "entity.spawn_course",
   "title": "Spawn Course Entity",
   "x-familiar-kind": "action",
+  "x-familiar-compute-category": "state",
+  "x-familiar-execution-model": "async",
+  "x-familiar-side-effects": ["database"],
+  "x-familiar-reliability": "transactional",
+  "x-familiar-dependencies": [
+    {
+      "name": "sqlx",
+      "version": "^0.7",
+      "features": ["postgres", "runtime-tokio"],
+      "purpose": "PostgreSQL database client"
+    },
+    {
+      "name": "serde",
+      "version": "^1.0",
+      "features": ["derive"],
+      "purpose": "Serialization for entity data"
+    }
+  ],
 
   "signature": {
     "inputs": {
