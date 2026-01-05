@@ -1,28 +1,25 @@
 {
   "$schema": "../../ecs/Action.meta.schema.json",
   "$id": "actions/llm/classify.action.json",
+  "id": "llm.classify",
   "title": "Classify Text",
   "x-familiar-kind": "action",
-  "x-familiar-meta-schema": {
-    "$ref": "../ecs/Action.meta.schema.json"
-  },
-  "input": {
-    "type": "object",
-    "properties": {
+
+  "signature": {
+    "inputs": {
       "text": {
-        "type": "string",
-        "description": "The raw text content to classify"
+        "schema": { "$ref": "../../primitives/String.schema.json" },
+        "semantics": "borrow"
       },
       "model_hint": {
-        "type": "string",
-        "description": "Optional model override (e.g. 'gpt-4o')"
+        "schema": { "$ref": "../../primitives/String.schema.json" },
+        "semantics": "borrow",
+        "optional": true
       }
     },
-    "required": [
-      "text"
-    ]
-  },
-  "output": {
-    "$ref": "../../entities_api/ClassificationResponse.schema.json"
+    "output": {
+      "schema": { "$ref": "../../entities_api/ClassificationResponse.schema.json" },
+      "nature": "atomic"
+    }
   }
 }

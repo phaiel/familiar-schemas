@@ -42,6 +42,53 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
 
+// --- IO Port Architecture Types ---
+
+/// Action definition with signature-based IO ports
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ActionDef {
+    pub id: String,
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub signature: SignatureDef,
+}
+
+/// Signature defining input/output contracts with memory semantics
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SignatureDef {
+    pub inputs: HashMap<String, InputPortDef>,
+    pub output: OutputPortDef,
+}
+
+/// Input port definition with memory semantics
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct InputPortDef {
+    pub schema: SchemaRef,
+    #[serde(default = "default_borrow_semantics")]
+    pub semantics: String, // "borrow", "move", "borrow_mut", "clone"
+    #[serde(default)]
+    pub optional: bool,
+}
+
+/// Output port definition with execution nature
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OutputPortDef {
+    pub schema: SchemaRef,
+    #[serde(default = "default_atomic_nature")]
+    pub nature: String, // "atomic", "stream", "future"
+}
+
+/// Schema reference ($ref)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SchemaRef {
+    #[serde(rename = "$ref")]
+    pub ref_path: String,
+}
+
+// Default value helpers
+fn default_borrow_semantics() -> String { "borrow".to_string() }
+fn default_atomic_nature() -> String { "atomic".to_string() }
+
 // Re-export loader functions
 pub use loader::{LoadConfig, load_from_directory, load_from_embedded};
 
