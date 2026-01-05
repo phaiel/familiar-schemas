@@ -7,10 +7,10 @@
   "x-familiar-kind": "node",
 
   "constraints": {
-    "memory": "node.available_memory > 4Gi",
+    "memory": "node.available_memory > 4000000",
     "ml_ready": "node.has_ml_libraries == true",
     "load": "node.active_ml_jobs < 8",
-    "gpu": "node.gpu_memory_available > 2Gi"
+    "gpu": "node.gpu_memory_available > 2000000"
   },
 
   "resources": {

@@ -7,7 +7,7 @@
   "x-familiar-kind": "node",
 
   "constraints": {
-    "memory": "node.available_memory > 1Gi",
+    "memory": "node.available_memory > 1000000",
     "cpu": "node.cpu_usage < 0.9",
     "io_capacity": "node.active_db_connections < 50"
   },
