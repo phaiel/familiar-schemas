@@ -11,60 +11,16 @@
       "type": "string"
     }
   },
-  "description": "Core identity component that all entities possess",
+  "title": "Thread",
+  "description": "A narrative thread connecting moments in the cognitive manifold.",
+  "x-familiar-kind": "entity",
+  "allOf": [
+    { "$ref": "../architecture/meta/PhysicalEntity.meta.schema.json" }
+  ],
   "properties": {
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
     "id": {
-      "$ref": "../primitives/ThreadId.schema.json"
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "physics": {
-      "$ref": "../components/FieldExcitation.schema.json",
-      "description": "Field excitation physics state"
-    },
-    "amplitudes": {
-      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
-      "items": {
-        "items": [
-          {
-            "format": "double",
-            "type": "number"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
-    },
-    "coherence": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
-    },
-    "frequency": {
-      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
+      "$ref": "../primitives/ThreadId.schema.json",
+      "description": "Unique thread identifier"
     },
     "metadata": {
       "additionalProperties": {
@@ -80,12 +36,6 @@
     }
   },
   "required": [
-    "created_at",
-    "id",
-    "tenant_id",
-    "physics",
-    "amplitudes",
-    "coherence",
     "metadata",
     "text",
     "thread_type"
@@ -94,16 +44,18 @@
   "type": "object",
   "x-familiar-kind": "entity",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Entity.meta.schema.json"
+    "$ref": "../architecture/meta/PhysicalEntity.meta.schema.json"
   },
   "x-familiar-persistence": {
-    "profile": "postgres",
+    "profile": "timescaledb",
+    "hypertable": true,
     "table": "threads",
-    "primary_key": "id",
+    "primary_key": ["id", "t_coord"],
+    "partition_column": "t_coord",
     "indexes": [
       "tenant_id",
-      "user_id",
-      "created_at"
+      "t_coord",
+      "thread_type"
     ]
   },
   "x-familiar-service": {

@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CoreRouter",
+  "description": "The central routing engine that makes intelligent distribution decisions based on telemetry and policies.",
+  "x-familiar-kind": "system",
+  "x-familiar-meta-schema": {
+    "$ref": "../../architecture/meta/System.meta.schema.json"
+  },
+  "inputs": {
+    "routing_request": {
+      "$ref": "../../architecture/router/RoutingContext.schema.json"
+    }
+  },
+  "dispatch": [
+    {
+      "trigger": "internal:routing.request",
+      "input_key": "routing_request",
+      "technique": {
+        "$ref": "../../techniques/routing/core_routing.technique.json"
+      },
+      "routing_policy": "true",
+      "output": {
+        "decision": {
+          "$ref": "../../architecture/router/RoutingDecision.schema.json"
+        },
+        "trace": {
+          "$ref": "../../architecture/router/RoutingTrace.schema.json"
+        }
+      },
+      "constraints": {
+        "timeout": "config:routing.decision_timeout_ms",
+        "retries": "config:routing.max_routing_retries"
+      }
+    }
+  ],
+  "default_node": {
+    "$ref": "../nodes/familiar-router.node.json"
+  },
+  "default_queue": {
+    "$ref": "../queues/routing-queue.queue.json"
+  },
+  "x-familiar-logic": "builtin::router",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-router.node.json"
+  },
+  "x-familiar-persistence": {
+    "profile": "timescaledb",
+    "hypertable": true,
+    "table": "core_router_instances",
+    "primary_key": ["id", "t_coord"],
+    "partition_column": "t_coord"
+  }
+}

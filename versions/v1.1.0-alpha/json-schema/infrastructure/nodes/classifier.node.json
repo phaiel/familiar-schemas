@@ -7,16 +7,16 @@
   "x-familiar-kind": "node",
 
   "constraints": {
-    "memory": "node.available_memory > 4000000",
+    "memory": "node.available_memory > config:nodes.classifier.constraints.memory_threshold",
     "ml_ready": "node.has_ml_libraries == true",
     "load": "node.active_ml_jobs < 8",
     "gpu": "node.gpu_memory_available > 2000000"
   },
 
   "resources": {
-    "cpu": "8000m",
-    "memory": "32Gi",
-    "gpu": "2"
+    "cpu": "config:nodes.classifier.resources.cpu",
+    "memory": "config:nodes.classifier.resources.memory",
+    "gpu": "config:nodes.classifier.resources.gpu"
   },
 
   "systems": [

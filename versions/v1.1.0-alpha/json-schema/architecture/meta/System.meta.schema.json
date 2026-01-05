@@ -38,7 +38,12 @@
         "properties": {
           "trigger": {
             "type": "string",
-            "description": "Event trigger (e.g., 'kafka:commands.weave')"
+            "pattern": "^(kafka|temporal|cron|webhook|internal|sqs|redis|http):.+$",
+            "description": "Event trigger with standardized prefix (e.g., 'kafka:commands.weave')"
+          },
+          "input_key": {
+            "type": "string",
+            "description": "Key in the inputs map that defines the schema for this trigger"
           },
           "technique": {
             "$ref": "../references/SchemaRef.meta.schema.json",
@@ -48,18 +53,26 @@
             "type": "string",
             "description": "CEL expression for intelligent routing (e.g., 'input.size > 10k ? \"gpu-pool\" : \"cpu-pool\"')"
           },
+          "output": {
+            "type": "object",
+            "description": "Output specification for this dispatch rule",
+            "properties": {
+              "schema": { "$ref": "../references/SchemaRef.meta.schema.json" },
+              "queue": { "$ref": "../references/SchemaRef.meta.schema.json" }
+            }
+          },
           "constraints": {
             "type": "object",
             "description": "Runtime constraints for this dispatch",
             "properties": {
               "timeout": {
-                "type": "string",
-                "description": "Activity timeout"
+                "type": ["string", "null"],
+                "description": "Activity timeout (string for config:// or CEL expressions)"
               },
               "retries": {
-                "type": "integer",
-                "minimum": 0,
-                "default": 3
+                "type": ["integer", "string", "null"],
+                "description": "Retry count or config:// reference (integer for direct value, string for config://)",
+                "minimum": 0
               },
               "priority": {
                 "type": "string",
@@ -74,33 +87,137 @@
 
     "inputs": {
       "type": "object",
-      "description": "Expected input schemas for this system",
+      "description": "Input schema definitions keyed by input_key for dispatch rules",
       "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "schema": { "$ref": "../references/SchemaRef.meta.schema.json" },
-          "queue": { "$ref": "../references/SchemaRef.meta.schema.json" }
-        }
+        "$ref": "../references/SchemaRef.meta.schema.json",
+        "description": "Reference to the input schema for this key"
       }
     },
 
     "output": {
       "type": "object",
-      "description": "Expected output schema",
+      "description": "Default output schema (used when dispatch rules don't specify output)",
       "properties": {
         "schema": { "$ref": "../references/SchemaRef.meta.schema.json" },
         "queue": { "$ref": "../references/SchemaRef.meta.schema.json" }
       }
     },
 
-    "node": {
+    "default_node": {
       "$ref": "../references/SchemaRef.meta.schema.json",
-      "description": "Node that executes this system"
+      "description": "Default node that executes this system (used when routing_policy doesn't specify a pool)"
     },
 
-    "queue": {
+    "default_queue": {
       "$ref": "../references/SchemaRef.meta.schema.json",
-      "description": "Default queue for this system"
+      "description": "Default queue for this system (used when dispatch rules don't specify output queue)"
+    },
+
+    "x-familiar-pgo": {
+      "type": "object",
+      "description": "Profile-Guided Optimization configuration for performance-critical systems",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether PGO is enabled for this system (should be true for hot paths)"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "default": "medium",
+          "description": "PGO priority level - affects build time and optimization aggressiveness"
+        },
+        "workload_samples": {
+          "type": "array",
+          "description": "References to representative workload samples for PGO training",
+          "items": {
+            "type": "object",
+            "properties": {
+              "$ref": {
+                "type": "string",
+                "description": "Reference to a workload sample JSON file"
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0,
+                "default": 1.0,
+                "description": "Relative weight of this sample in the training set"
+              }
+            },
+            "required": ["$ref"]
+          }
+        },
+        "optimization_goal": {
+          "type": "string",
+          "enum": ["latency", "throughput", "memory", "balanced"],
+          "default": "balanced",
+          "description": "Primary optimization goal for this system's workload"
+        },
+        "sample_count": {
+          "type": "string",
+          "description": "Number of workload samples to use (config:// reference)",
+          "default": "config:pgo.default_sample_count"
+        },
+        "warmup_iterations": {
+          "type": "string",
+          "description": "Number of warmup iterations before profiling (config:// reference)",
+          "default": "config:pgo.default_warmup_iterations"
+        },
+        "profile_retention_days": {
+          "type": "string",
+          "description": "Days to retain PGO profiles before expiration (config:// reference)",
+          "default": "config:pgo.default_profile_retention_days"
+        },
+        "instrumentation_flags": {
+          "type": "object",
+          "description": "Additional Rust compiler flags for instrumentation",
+          "properties": {
+            "llvm_args": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Additional LLVM arguments for instrumentation"
+            }
+          }
+        },
+        "profile_cache": {
+          "type": "object",
+          "description": "Profile caching configuration to avoid redundant sampling",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "ttl_days": {
+              "type": "string",
+              "description": "How long to cache profiles before re-sampling (config:// reference)",
+              "default": "config:pgo.default_profile_cache_ttl_days"
+            },
+            "invalidate_on_schema_change": {
+              "type": "boolean",
+              "default": true,
+              "description": "Invalidate profile cache when system schema changes"
+            }
+          }
+        },
+        "performance_targets": {
+          "type": "object",
+          "description": "Performance targets that must be met with PGO optimization",
+          "properties": {
+            "min_improvement_percent": {
+              "type": "string",
+              "description": "Minimum performance improvement required (config:// reference)",
+              "default": "config:pgo.default_min_improvement_percent"
+            },
+            "max_regression_percent": {
+              "type": "string",
+              "description": "Maximum allowed performance regression (config:// reference)",
+              "default": "config:pgo.default_max_regression_percent"
+            }
+          }
+        }
+      }
     }
   },
   "additionalProperties": true,

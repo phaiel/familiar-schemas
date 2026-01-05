@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-familiar-kind": "workload_sample",
+  "description": "Batch processing of multiple segments for efficiency",
+  "input": {
+    "batch_request": {
+      "request_id": "sample-batch-001",
+      "segments": [
+        {
+          "id": "seg-batch-001",
+          "content": "Neural networks use backpropagation to adjust synaptic weights based on error gradients.",
+          "segment_type": "technical",
+          "urgency": "normal"
+        },
+        {
+          "id": "seg-batch-002",
+          "content": "The human brain contains approximately 86 billion neurons forming complex connection patterns.",
+          "segment_type": "scientific",
+          "urgency": "normal"
+        },
+        {
+          "id": "seg-batch-003",
+          "content": "Consciousness emerges from the integration of sensory information across distributed neural networks.",
+          "segment_type": "philosophical",
+          "urgency": "high"
+        }
+      ],
+      "batch_size": 3,
+      "processing_priority": "balanced"
+    }
+  },
+  "expected_output": {
+    "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+    "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+  },
+  "performance_expectations": {
+    "target_latency_ms": 400,
+    "expected_cpu_percent": 35,
+    "expected_memory_mb": 256
+  }
+}

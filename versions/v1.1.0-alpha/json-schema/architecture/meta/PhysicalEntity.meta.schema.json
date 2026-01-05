@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Physical Entity Meta-Schema",
+  "description": "The mandatory physical properties for the Symmetric Seven entities in the 4D VAE Manifold.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "../../components/EntityMeta.schema.json" }
+  ],
+  "required": [
+    "id",
+    "tenant_id",
+    "physics",
+    "t_coord",
+    "is_latent",
+    "quantum"
+  ],
+  "properties": {
+    "physics": {
+      "$ref": "../../components/FieldExcitation.schema.json",
+      "description": "3D VAE coordinates + Field properties (Mass, Energy, Temp)."
+    },
+
+    "t_coord": {
+      "type": "integer",
+      "description": "The 4th dimension coordinate (Block Depth). 0 = Latent/Vacuum."
+    },
+
+    "is_latent": {
+      "type": "boolean",
+      "default": true,
+      "description": "The Observation Flag. True = Ripple in Simulation, False = Immutable Memory in Block."
+    },
+
+    "quantum": {
+      "type": "object",
+      "description": "Wave-nature properties for resonance and interference analytics.",
+      "required": ["amplitudes", "coherence"],
+      "properties": {
+        "amplitudes": {
+          "type": "array",
+          "items": { "type": "array", "minItems": 2, "maxItems": 2 },
+          "description": "Complex vector (Real, Imaginary) representing phase and magnitude."
+        },
+        "coherence": { "$ref": "../../primitives/NormalizedFloat.schema.json" },
+        "frequency": { "type": "number" }
+      }
+    }
+  },
+  "x-familiar-persistence": {
+    "profile": "timescaledb",
+    "hypertable": true,
+    "partition_column": "t_coord",
+    "chunk_time_interval": "config://physics.block.chunk_size",
+    "compression_policy": {
+      "after": "config://physics.block.compression_delay"
+    }
+  }
+}

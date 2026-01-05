@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "routing-queue",
+  "description": "High-priority queue for routing decisions and telemetry processing.",
+  "x-familiar-kind": "queue",
+  "x-familiar-meta-schema": {
+    "$ref": "../../architecture/meta/Queue.meta.schema.json"
+  },
+  "capacity": "config:queues.routing_queue.capacity",
+  "retention_policy": {
+    "max_age_hours": "config:queues.routing_queue.retention_hours",
+    "max_size_mb": "config:queues.routing_queue.max_size_mb"
+  },
+  "priority_levels": ["critical", "high", "normal", "low"],
+  "message_schema": {
+    "$ref": "../../architecture/router/RoutingContext.schema.json"
+  },
+  "x-familiar-persistence": {
+    "profile": "timescaledb",
+    "hypertable": true,
+    "table": "routing_queue",
+    "partition_column": "created_at",
+    "chunk_time_interval": "1h",
+    "compression_policy": {
+      "after": "24h"
+    }
+  }
+}

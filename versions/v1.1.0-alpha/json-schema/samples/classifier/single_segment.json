@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-familiar-kind": "workload_sample",
+  "description": "Single segment classification for entity and purpose analysis",
+  "input": {
+    "classification_request": {
+      "request_id": "sample-classify-001",
+      "segment": {
+        "id": "seg-001",
+        "content": "The quantum field theory describes how particles interact through force-carrying bosons, mediating electromagnetic, weak, and strong nuclear forces.",
+        "segment_type": "scientific",
+        "urgency": "high"
+      }
+    }
+  },
+  "expected_output": {
+    "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+    "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+  },
+  "performance_expectations": {
+    "target_latency_ms": 150,
+    "expected_cpu_percent": 20,
+    "expected_memory_mb": 128
+  }
+}

@@ -8,58 +8,71 @@
   "dispatch": [
     {
       "trigger": "kafka:classification.requests",
+      "input_key": "classification_request",
       "technique": { "$ref": "../../techniques/classification/classify-input.technique.json" },
       "routing_policy": "input.urgency == 'high' ? 'gpu-pool' : 'cpu-pool'",
+      "output": {
+        "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+        "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+      },
       "constraints": {
-        "timeout": "120s",
-        "retries": 2,
+        "timeout": "config:systems.classifier_system.timeouts.classification",
+        "retries": "config:systems.classifier_system.retries.classification",
         "priority": "input.urgency"
       }
     },
     {
       "trigger": "kafka:segment.ready",
+      "input_key": "segment_request",
       "technique": { "$ref": "../../techniques/classification/entity-only.technique.json" },
       "routing_policy": "'cpu-pool'",
+      "output": {
+        "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+        "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+      },
       "constraints": {
-        "timeout": "30s",
-        "retries": 3
+        "timeout": "config:systems.classifier_system.timeouts.entity_segment",
+        "retries": "config:systems.classifier_system.retries.entity_segment"
       }
     },
     {
       "trigger": "kafka:purpose.requests",
+      "input_key": "batch_request",
       "technique": { "$ref": "../../techniques/classification/purpose-only.technique.json" },
       "routing_policy": "'cpu-pool'",
+      "output": {
+        "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+        "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+      },
       "constraints": {
-        "timeout": "60s",
-        "retries": 2
+        "timeout": "config:systems.classifier_system.timeouts.purpose_classification",
+        "retries": "config:systems.classifier_system.retries.purpose_classification"
       }
     }
   ],
   "inputs": {
-    "classification_request": {
-      "schema": { "$ref": "../../primitives/Segment.schema.json" },
-      "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
-    },
-    "segment_request": {
-      "schema": { "$ref": "../../primitives/Segment.schema.json" },
-      "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
-    },
-    "batch_request": {
-      "schema": {
-        "type": "array",
-        "items": { "$ref": "../../primitives/Segment.schema.json" }
-      },
-      "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
-    }
+    "classification_request": { "$ref": "../../primitives/Segment.schema.json" },
+    "segment_request": { "$ref": "../../primitives/Segment.schema.json" },
+    "batch_request": { "$ref": "../../primitives/SegmentBatch.schema.json" }
   },
   "output": {
     "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
     "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
   },
-  "node": {
+  "default_node": {
     "$ref": "../../infrastructure/nodes/classifier.node.json"
   },
-  "queue": {
+  "default_queue": {
     "$ref": "../../infrastructure/queues/classifier-queue.queue.json"
+  },
+
+  "x-familiar-pgo": {
+    "enabled": true,
+    "priority": "high",
+    "optimization_goal": "throughput",
+    "workload_samples": [
+      { "$ref": "../../samples/classifier/single_segment.json" },
+      { "$ref": "../../samples/classifier/batch_segments.json" }
+    ]
   }
 }

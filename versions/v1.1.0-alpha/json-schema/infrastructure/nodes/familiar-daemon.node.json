@@ -7,17 +7,17 @@
   "x-familiar-kind": "node",
 
   "constraints": {
-    "memory": "node.available_memory > 2000000",
-    "cpu": "node.cpu_usage < 0.8",
+    "memory": "node.available_memory > config:nodes.familiar_daemon.constraints.memory_threshold",
+    "cpu": "node.cpu_usage < config:nodes.familiar_daemon.constraints.cpu_threshold",
     "version": "node.schema_version >= '1.2.0'",
-    "health": "node.queue_depth < 100 && node.error_rate < 0.05",
+    "health": "node.queue_depth < config:nodes.familiar_daemon.constraints.queue_depth_threshold && node.error_rate < config:nodes.familiar_daemon.constraints.error_rate_threshold",
     "llm_capacity": "node.active_llm_jobs < 8"
   },
 
   "resources": {
-    "cpu": "2000m",
-    "memory": "8Gi",
-    "storage": "50Gi"
+    "cpu": "config:nodes.familiar_daemon.resources.cpu",
+    "memory": "config:nodes.familiar_daemon.resources.memory",
+    "storage": "config:nodes.familiar_daemon.resources.storage"
   },
 
   "systems": [

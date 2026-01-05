@@ -2,10 +2,7 @@
 name = "familiar-schemas"
 version = "0.1.0"
 edition = "2021"
-description = "Versioned, append-only schema registry for the Familiar platform"
-authors = ["Eric Theiss"]
-license = "MIT"
-repository = "https://github.com/familiar/familiar-schemas"
+description = "Pure, immutable schema library for the Familiar platform"
 
 [dependencies]
 # Serialization
@@ -21,76 +18,5 @@ sha2 = "0.10"
 # Date/time
 chrono = { version = "0.4", features = ["serde"] }
 
-# AVRO support (legacy, being phased out)
-apache-avro = "0.16"
-
-# JSON Schema validation
-jsonschema = "0.17"
-
-# Multi-format schema diffing (JSON Schema, Protobuf, Avro, OpenAPI)
-rusty-schema-diff = "0.1"
-
-# Text diffing for compatibility checking
-similar = "2.3"
-
 # Error handling
 thiserror = "1.0"
-
-# CLI
-clap = { version = "4.0", features = ["derive"] }
-
-# Git operations
-git2 = "0.18"
-
-# Logging
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-
-# File walking
-walkdir = "2.4"
-ignore = "0.4"
-
-# Regex
-regex = "1.10"
-
-# Configuration
-config_crate = { package = "config", version = "0.14", features = ["toml"] }
-toml = "0.8"
-directories = "5.0"
-
-# General utilities
-anyhow = "1.0"
-
-# ========== Graph Infrastructure (NEW) ==========
-
-# Graph data structures and algorithms (SCC, toposort, closure)
-petgraph = "0.6"
-
-# Fuzzy search for schema names
-fuzzy-matcher = "0.3"
-
-# Embed schema files at compile time
-include_dir = "0.7"
-
-[dev-dependencies]
-tempfile = "3.8"
-
-[[bin]]
-name = "schema-registry"
-path = "src/bin/registry.rs"
-
-[[bin]]
-name = "schema-validator"
-path = "src/bin/validator.rs"
-
-[[bin]]
-name = "schema-export"
-path = "src/bin/export.rs"
-
-[[bin]]
-name = "schema-config"
-path = "src/bin/config.rs"
-
-[[bin]]
-name = "schema-graph-export"
-path = "src/bin/graph_export.rs"

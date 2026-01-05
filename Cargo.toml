@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "packages/familiar-schemas",
-    "xtask"
+    "packages/familiar-schemas"
 ]
 resolver = "2"

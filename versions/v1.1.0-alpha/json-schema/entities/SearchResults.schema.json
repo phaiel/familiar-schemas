@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "entities/SearchResults.schema.json",
+  "title": "Search Results",
+  "description": "Results of a memory search operation containing ranked matches",
+  "type": "object",
+  "required": ["query", "results", "total_found"],
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "The original search query"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "content", "score", "relevance"],
+        "properties": {
+          "id": { "type": "string" },
+          "content": { "type": "string" },
+          "score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+          "relevance": { "type": "string", "enum": ["high", "medium", "low"] },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "metadata": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "description": "Ranked search results"
+    },
+    "total_found": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of matching results found"
+    },
+    "processing_time": {
+      "type": "number",
+      "description": "Time taken to search in seconds"
+    },
+    "search_metadata": {
+      "type": "object",
+      "description": "Search algorithm metadata",
+      "additionalProperties": true
+    }
+  },
+  "x-familiar-kind": "entity"
+}

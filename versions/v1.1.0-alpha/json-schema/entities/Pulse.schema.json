@@ -1,30 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Core identity component that all entities possess",
+  "title": "Pulse",
+  "description": "A quantum entity representing a wave of subjective experience. This is the atomic unit of emotional memory (The Wave).",
+  "x-familiar-kind": "entity",
+  "allOf": [
+    { "$ref": "../architecture/meta/PhysicalEntity.meta.schema.json" }
+  ],
   "properties": {
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "physics": {
-      "$ref": "../components/FieldExcitation.schema.json",
-      "description": "Field excitation physics state"
-    },
     "metadata": {
       "additionalProperties": {
         "type": "string"
@@ -39,27 +21,21 @@
     }
   },
   "required": [
-    "created_at",
-    "id",
-    "tenant_id",
-    "physics",
     "metadata",
     "state_type",
     "text"
   ],
-  "title": "Pulse",
   "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Entity.meta.schema.json"
-  },
   "x-familiar-persistence": {
-    "profile": "postgres",
+    "profile": "timescaledb",
+    "hypertable": true,
     "table": "pulses",
-    "primary_key": "id",
+    "primary_key": ["id", "t_coord"],
+    "partition_column": "t_coord",
     "indexes": [
-      "moment_id",
-      "created_at"
+      "tenant_id",
+      "t_coord",
+      "state_type"
     ]
   },
   "x-familiar-service": {

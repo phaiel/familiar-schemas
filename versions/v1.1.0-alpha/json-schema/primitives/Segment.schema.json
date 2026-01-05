@@ -45,6 +45,12 @@
         }
       ],
       "description": "Original modality"
+    },
+    "urgency": {
+      "description": "Processing urgency level",
+      "type": "string",
+      "enum": ["low", "normal", "high", "critical"],
+      "default": "normal"
     }
   },
   "required": [

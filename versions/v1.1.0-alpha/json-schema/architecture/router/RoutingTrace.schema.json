@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RoutingTrace",
+  "description": "Complete audit trail of a routing decision for debugging and analytics.",
+  "x-familiar-kind": "router_trace",
+  "x-familiar-meta-schema": {
+    "$ref": "../meta/Router.meta.schema.json"
+  },
+  "type": "object",
+  "required": ["request_id", "timestamp", "decision", "evaluation_steps"],
+  "properties": {
+    "request_id": {
+      "$ref": "../../primitives/UUID.schema.json",
+      "description": "ID of the request that was routed"
+    },
+
+    "timestamp": {
+      "$ref": "../../primitives/Timestamp.schema.json",
+      "description": "When the routing decision was made"
+    },
+
+    "decision": {
+      "$ref": "RoutingDecision.schema.json",
+      "description": "The final routing decision that was made"
+    },
+
+    "evaluation_steps": {
+      "description": "Step-by-step breakdown of the routing evaluation",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step_type", "description"],
+        "properties": {
+          "step_type": {
+            "type": "string",
+            "enum": ["constraint_evaluation", "weight_calculation", "node_filtering", "system_selection", "fallback_activation"],
+            "description": "Type of evaluation step"
+          },
+          "description": { "type": "string", "description": "Human-readable description of this step" },
+          "timestamp": { "$ref": "../../primitives/Timestamp.schema.json" },
+          "duration_ms": { "type": "number", "description": "Time taken for this step" },
+
+          "cel_expressions": {
+            "description": "CEL expressions evaluated in this step",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "expression": { "type": "string", "description": "The CEL expression string" },
+                "context_values": {
+                  "type": "object",
+                  "description": "Variable bindings used in evaluation",
+                  "additionalProperties": true
+                },
+                "result": { "description": "Result of CEL evaluation" },
+                "success": { "type": "boolean", "description": "Whether evaluation succeeded" },
+                "error_message": { "type": "string" }
+              },
+              "required": ["expression", "result", "success"]
+            }
+          },
+
+          "candidates_considered": {
+            "type": "integer",
+            "description": "Number of candidates evaluated at this step"
+          },
+
+          "candidates_filtered": {
+            "type": "integer",
+            "description": "Number of candidates that passed this step"
+          },
+
+          "metadata": {
+            "type": "object",
+            "description": "Step-specific metadata",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+
+    "performance_metrics": {
+      "description": "Performance characteristics of the routing evaluation",
+      "type": "object",
+      "properties": {
+        "total_evaluation_time_ms": { "type": "number", "minimum": 0.0 },
+        "memory_used_kb": { "type": "integer", "minimum": 0 },
+        "nodes_evaluated": { "type": "integer", "minimum": 0 },
+        "systems_evaluated": { "type": "integer", "minimum": 0 },
+        "constraints_evaluated": { "type": "integer", "minimum": 0 },
+        "cache_hits": { "type": "integer", "minimum": 0 },
+        "cache_misses": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "context_snapshot": {
+      "description": "Snapshot of the routing context at decision time",
+      "type": "object",
+      "properties": {
+        "node_count": { "type": "integer", "description": "Total nodes available" },
+        "system_count": { "type": "integer", "description": "Total systems available" },
+        "request_complexity": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "high_load_nodes": {
+          "type": "integer",
+          "description": "Nodes with >80% utilization"
+        },
+        "unhealthy_nodes": {
+          "type": "integer",
+          "description": "Nodes marked as unhealthy"
+        }
+      }
+    },
+
+    "debug_info": {
+      "description": "Debugging information for development",
+      "type": "object",
+      "properties": {
+        "router_version": { "type": "string" },
+        "schema_version": { "type": "string" },
+        "random_seed": { "type": "integer", "description": "Random seed used for tie-breaking" },
+        "feature_flags": {
+          "type": "object",
+          "description": "Active feature flags during routing",
+          "additionalProperties": { "type": "boolean" }
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Non-fatal warnings during routing"
+        }
+      }
+    }
+  },
+
+  "x-familiar-persistence": {
+    "profile": "timescaledb",
+    "hypertable": true,
+    "table": "routing_traces",
+    "primary_key": ["request_id", "timestamp"],
+    "partition_column": "timestamp",
+    "indexes": [
+      "request_id",
+      "target_node_id",
+      "target_system_id",
+      "confidence_score"
+    ],
+    "retention_policy": {
+      "duration": "30d",
+      "chunk_size": "1d"
+    }
+  }
+}

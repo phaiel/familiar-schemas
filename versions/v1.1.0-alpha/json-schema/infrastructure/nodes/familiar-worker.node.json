@@ -7,15 +7,15 @@
   "x-familiar-kind": "node",
 
   "constraints": {
-    "memory": "node.available_memory > 1000000",
-    "cpu": "node.cpu_usage < 0.9",
+    "memory": "node.available_memory > config:nodes.familiar_worker.constraints.memory_threshold",
+    "cpu": "node.cpu_usage < config:nodes.familiar_worker.constraints.cpu_threshold",
     "io_capacity": "node.active_db_connections < 50"
   },
 
   "resources": {
-    "cpu": "4000m",
-    "memory": "16Gi",
-    "storage": "200Gi"
+    "cpu": "config:nodes.familiar_worker.resources.cpu",
+    "memory": "config:nodes.familiar_worker.resources.memory",
+    "storage": "config:nodes.familiar_worker.resources.storage"
   },
 
   "systems": [

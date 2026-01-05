@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RoutingDecision",
+  "description": "The output of the routing engine specifying where and how to execute a request.",
+  "x-familiar-kind": "router_decision",
+  "x-familiar-meta-schema": {
+    "$ref": "../meta/Router.meta.schema.json"
+  },
+  "type": "object",
+  "required": ["request_id", "target_node", "target_system", "priority", "confidence_score"],
+  "properties": {
+    "request_id": {
+      "$ref": "../../primitives/UUID.schema.json",
+      "description": "ID of the request being routed"
+    },
+
+    "target_node": {
+      "description": "The selected execution node",
+      "type": "object",
+      "required": ["id", "endpoint"],
+      "properties": {
+        "id": { "type": "string", "description": "Node identifier" },
+        "endpoint": { "type": "string", "description": "Network endpoint for the node" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "region": { "type": "string" },
+            "zone": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "target_system": {
+      "description": "The selected system instance to handle the request",
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string", "description": "System instance identifier" },
+        "type": { "type": "string", "description": "System type (FatesGate, ClassifierSystem, etc.)" },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "System capabilities relevant to this request"
+        }
+      }
+    },
+
+    "execution_parameters": {
+      "description": "Runtime parameters for execution",
+      "type": "object",
+      "properties": {
+        "timeout_ms": { "type": "integer", "minimum": 0 },
+        "max_retries": { "type": "integer", "minimum": 0 },
+        "priority_queue": { "type": "string", "description": "Target queue name" },
+        "resource_limits": {
+          "type": "object",
+          "properties": {
+            "max_cpu_percent": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+            "max_memory_mb": { "type": "integer", "minimum": 0 },
+            "max_gpu_memory_mb": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+
+    "priority": {
+      "type": "string",
+      "enum": ["low", "normal", "high", "critical"],
+      "description": "Computed priority level for execution",
+      "default": "normal"
+    },
+
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Router's confidence in this decision (0.0 = random guess, 1.0 = optimal)"
+    },
+
+    "fallback_options": {
+      "description": "Alternative routing options if primary fails",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "node_id": { "type": "string" },
+          "system_id": { "type": "string" },
+          "priority_penalty": { "type": "number", "description": "Performance penalty vs primary" }
+        }
+      }
+    },
+
+    "routing_metadata": {
+      "description": "Additional metadata about the routing decision",
+      "type": "object",
+      "properties": {
+        "selected_by": { "type": "string", "description": "Routing algorithm used" },
+        "evaluation_time_ms": { "type": "number", "description": "Time taken to make decision" },
+        "constraints_satisfied": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of constraints that were satisfied"
+        },
+        "constraints_violated": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of constraints that were violated but overridden"
+        }
+      }
+    }
+  }
+}

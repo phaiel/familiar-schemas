@@ -213,6 +213,12 @@
         "null"
       ]
     },
+    "complexity": {
+      "description": "Query complexity score for routing decisions (0.0-1.0)",
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
     "weave": {
       "description": "The raw user input (the \"weave\" of thought)",
       "type": [
