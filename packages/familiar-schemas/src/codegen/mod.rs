@@ -13,7 +13,9 @@
 //! Key principle: Classification (SchemaShape, SCC, TypeKind) is config-free.
 //! Only emission/rendering uses configuration (RenderProfile).
 
+pub mod cel;
 pub mod config;
+pub mod infra;
 pub mod names;
 pub mod rust;
 
@@ -26,7 +28,9 @@ use crate::graph::{
     compute_scc_analysis, detect_all_shapes, validate_boxed_edges,
 };
 
+pub use cel::{CeleEvaluator, NodeEvaluationContext};
 pub use config::{CodegenConfig, RenderProfile, NamingConfig, Language};
+pub use infra::{generate_infrastructure, InfraEnvironment, InfraError, InfraGenerator};
 pub use names::{NameResolver, ResolvedName, TypeOrigin, NameResolverStats};
 
 // =============================================================================

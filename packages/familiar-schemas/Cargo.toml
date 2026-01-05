@@ -61,6 +61,9 @@ directories = "5.0"
 # General utilities
 anyhow = "1.0"
 
+# CEL evaluation for multi-node constraints
+cel-interpreter = "0.4"
+
 # ========== Graph Infrastructure (NEW) ==========
 
 # Graph data structures and algorithms (SCC, toposort, closure)
@@ -94,3 +97,7 @@ path = "src/bin/config.rs"
 [[bin]]
 name = "schema-graph-export"
 path = "src/bin/graph_export.rs"
+
+[[bin]]
+name = "infra-generator"
+path = "src/bin/infra_generator.rs"
