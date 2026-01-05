@@ -163,7 +163,7 @@
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Conversation.meta.schema.json"
+    "$ref": "../architecture/meta/Conversation.meta.schema.json"
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"

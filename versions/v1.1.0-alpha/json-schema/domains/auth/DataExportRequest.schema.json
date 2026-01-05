@@ -92,7 +92,7 @@
   "type": "object",
   "x-familiar-kind": "auth",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Auth.meta.schema.json"
+    "$ref": "../architecture/meta/Auth.meta.schema.json"
   },
   "x-familiar-requires-auth": true,
   "x-familiar-service": {

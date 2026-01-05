@@ -10,7 +10,7 @@
   ],
   "x-familiar-kind": "system",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/System.meta.schema.json"
+    "$ref": "../architecture/meta/System.meta.schema.json"
   },
   "x-familiar-queue": {
     "$ref": "../queues/daemon-queue.queue.json"

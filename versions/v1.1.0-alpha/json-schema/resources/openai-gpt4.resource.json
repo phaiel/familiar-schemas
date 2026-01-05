@@ -10,7 +10,7 @@
   },
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Resource.meta.schema.json"
+    "$ref": "../architecture/meta/Resource.meta.schema.json"
   },
   "x-familiar-models": [
     "gpt-4",

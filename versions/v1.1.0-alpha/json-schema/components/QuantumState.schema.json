@@ -48,7 +48,7 @@
   "x-familiar-field-order": 30,
   "x-familiar-kind": "component",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Component.meta.schema.json"
+    "$ref": "../architecture/meta/Component.meta.schema.json"
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"

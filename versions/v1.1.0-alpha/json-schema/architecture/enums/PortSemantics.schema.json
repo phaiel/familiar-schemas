@@ -1,5 +1,5 @@
 {
-  "$id": "https://familiar.dev/schemas/meta/PortSemantics.schema.json",
+  "$id": "https://familiar.dev/schem../architecture/enums/PortSemantics.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Port Semantics",
   "description": "Defines how data is passed between the Arena and the Action.",

@@ -61,7 +61,7 @@
               },
               "semantics": {
                 "description": "Memory management for the Arena",
-                "$ref": "../meta/PortSemantics.schema.json",
+                "$ref": "../architecture/enums/PortSemantics.schema.json",
                 "default": "borrow"
               },
               "optional": {

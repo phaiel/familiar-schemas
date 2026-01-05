@@ -5,7 +5,7 @@
   "type": "object",
   "x-familiar-kind": "component",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Component.meta.schema.json"
+    "$ref": "../architecture/meta/Component.meta.schema.json"
   },
   "x-familiar-field-alias": "meta",
   "x-familiar-field-order": 0,

@@ -15,7 +15,7 @@
   "x-familiar-kind": "node",
   "x-familiar-memory": "2Gi",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Node.meta.schema.json"
+    "$ref": "../architecture/meta/Node.meta.schema.json"
   },
   "x-familiar-queue": {
     "$ref": "../queues/daemon-queue.queue.json"

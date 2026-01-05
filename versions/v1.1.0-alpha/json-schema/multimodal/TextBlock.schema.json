@@ -13,6 +13,6 @@
   ],
   "x-familiar-kind": "component",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Component.meta.schema.json"
+    "$ref": "../architecture/meta/Component.meta.schema.json"
   }
 }

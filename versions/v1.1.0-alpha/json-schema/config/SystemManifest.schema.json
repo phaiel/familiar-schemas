@@ -83,7 +83,7 @@
   "type": "object",
   "x-familiar-kind": "config",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Config.meta.schema.json"
+    "$ref": "../architecture/meta/Config.meta.schema.json"
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"

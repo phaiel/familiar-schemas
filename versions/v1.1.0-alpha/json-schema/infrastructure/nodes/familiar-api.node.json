@@ -5,7 +5,7 @@
   "title": "FamiliarAPI",
   "x-familiar-kind": "node",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Node.meta.schema.json"
+    "$ref": "../architecture/meta/Node.meta.schema.json"
   },
   "x-familiar-concurrency": 10,
   "x-familiar-memory": "256Mi",

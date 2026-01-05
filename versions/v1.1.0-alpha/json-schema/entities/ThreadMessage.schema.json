@@ -11,7 +11,7 @@
               "type": "string"
             },
             "level": {
-              "$ref": "../domains/agentic/LogLevel.schema.json"
+              "$ref": "../domai../domains/agentic/LogLevel.schema.json"
             },
             "message_type": {
               "enum": [
@@ -95,7 +95,7 @@
             },
             "findings": {
               "items": {
-                "$ref": "../domains/agentic/Finding.schema.json"
+                "$ref": "../domai../domains/agentic/Finding.schema.json"
               },
               "type": "array"
             },
@@ -252,7 +252,7 @@
     "message_type": {
       "anyOf": [
         {
-          "$ref": "../domains/agentic/AgentMessageType.schema.json"
+          "$ref": "../domai../domains/agentic/AgentMessageType.schema.json"
         },
         {
           "type": "null"
@@ -292,7 +292,7 @@
   "type": "object",
   "x-familiar-kind": "entity",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Entity.meta.schema.json"
+    "$ref": "../architecture/meta/Entity.meta.schema.json"
   },
   "x-familiar-persistence": {
     "profile": "postgres",

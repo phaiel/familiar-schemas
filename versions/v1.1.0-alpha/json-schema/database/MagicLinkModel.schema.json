@@ -30,7 +30,7 @@
       "x-familiar-column-type": "JsonBinary"
     },
     "purpose": {
-      "$ref": "../domains/auth/MagicLinkPurpose.schema.json"
+      "$ref": "../domai../domains/auth/MagicLinkPurpose.schema.json"
     },
     "token_hash": {
       "type": "string"
@@ -56,7 +56,7 @@
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Database.meta.schema.json"
+    "$ref": "../architecture/meta/Database.meta.schema.json"
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-daemon.node.json"

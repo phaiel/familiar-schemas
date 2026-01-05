@@ -11,7 +11,7 @@
   ],
   "x-familiar-kind": "queue",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Queue.meta.schema.json"
+    "$ref": "../architecture/meta/Queue.meta.schema.json"
   },
   "x-familiar-queue-type": "temporal",
   "x-familiar-resource-class": "io",

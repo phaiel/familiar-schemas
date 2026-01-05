@@ -463,7 +463,7 @@
   "x-familiar-enum-repr": "internally_tagged",
   "x-familiar-kind": "ui",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/UI.meta.schema.json"
+    "$ref": "../architecture/meta/UI.meta.schema.json"
   },
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
