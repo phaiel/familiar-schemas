@@ -23,13 +23,13 @@
   "type": "object",
   "x-familiar-kind": "tool-payload",
   "x-familiar-queue": {
-    "$ref": "../queues/daemon-queue.queue.json"
+    "$ref": "../infrastructure/queues/daemon-queue.queue.json"
   },
   "x-familiar-role": "input",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
   },
   "x-familiar-system": {
-    "$ref": "../systems/FatesGate.system.json"
+    "$ref": "../infrastructure/systems/FatesGate.system.json"
   }
 }

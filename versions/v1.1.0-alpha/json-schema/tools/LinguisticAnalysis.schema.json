@@ -95,9 +95,9 @@
     "$ref": "../architecture/meta/Tool.meta.schema.json"
   },
   "x-familiar-queue": {
-    "$ref": "../queues/worker-queue.queue.json"
+    "$ref": "../infrastructure/queues/worker-queue.queue.json"
   },
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
   }
 }

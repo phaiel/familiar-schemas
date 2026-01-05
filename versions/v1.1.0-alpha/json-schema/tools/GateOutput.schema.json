@@ -43,9 +43,9 @@
   "x-familiar-kind": "tool-payload",
   "x-familiar-role": "output",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
   },
   "x-familiar-system": {
-    "$ref": "../systems/FatesGate.system.json"
+    "$ref": "../infrastructure/systems/FatesGate.system.json"
   }
 }

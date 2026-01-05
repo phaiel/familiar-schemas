@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/nodes/familiar-api.node.json",
+  "$id": "https://familiar.dev/schem../infrastructure/nodes/familiar-api.node.json",
   "description": "API Gateway service providing REST endpoints and request routing.",
   "title": "FamiliarAPI",
   "x-familiar-kind": "node",

@@ -33,6 +33,6 @@
     "Default"
   ],
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
   }
 }

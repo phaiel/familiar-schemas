@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/queues/worker-queue.queue.json",
+  "$id": "https://familiar.dev/schem../infrastructure/queues/worker-queue.queue.json",
   "description": "Temporal task queue for IO-bound batch operations. Routes work to familiar-worker nodes.",
   "title": "WorkerQueue",
   "x-familiar-concurrency": 50,
   "x-familiar-consumers": [
     {
-      "$ref": "../nodes/familiar-worker.node.json"
+      "$ref": "../infrastructure/nodes/familiar-worker.node.json"
     }
   ],
   "x-familiar-kind": "queue",

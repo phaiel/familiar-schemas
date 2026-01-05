@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/nodes/familiar-worker.node.json",
+  "$id": "https://familiar.dev/schem../infrastructure/nodes/familiar-worker.node.json",
   "description": "Batch processing service node for IO-bound operations. Runs non-LLM tasks like database maintenance and exports.",
   "title": "FamiliarWorker",
   "x-familiar-components": [
@@ -15,7 +15,7 @@
     "$ref": "../architecture/meta/Node.meta.schema.json"
   },
   "x-familiar-queue": {
-    "$ref": "../queues/worker-queue.queue.json"
+    "$ref": "../infrastructure/queues/worker-queue.queue.json"
   },
   "x-familiar-resource-class": "io",
   "x-familiar-resources": [

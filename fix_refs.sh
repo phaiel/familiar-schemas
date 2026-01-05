@@ -27,6 +27,11 @@ find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../windmill/|
 # Fix architecture references (ecs/ moved to architecture/)
 find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../ecs/|../architecture/meta/|g' {} \;
 
+# Fix infrastructure references (nodes, systems, queues moved to infrastructure/)
+find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../nodes/|../infrastructure/nodes/|g' {} \;
+find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../systems/|../infrastructure/systems/|g' {} \;
+find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../queues/|../infrastructure/queues/|g' {} \;
+
 # Fix meta references
 find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../meta/PortSemantics|../architecture/enums/PortSemantics|g' {} \;
 

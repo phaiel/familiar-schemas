@@ -74,7 +74,7 @@
     "$ref": "../architecture/meta/Database.meta.schema.json"
   },
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
   },
   "x-familiar-table": "channels",
   "x-familiar-module": "conversation",

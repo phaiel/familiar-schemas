@@ -24,6 +24,6 @@
   },
   "x-familiar-requires-auth": true,
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/nodes/familiar-daemon.node.json",
+  "$id": "https://familiar.dev/schem../infrastructure/nodes/familiar-daemon.node.json",
   "description": "High-performance service node for LLM-connected operations. Runs Fates pipeline systems with low latency.",
   "title": "FamiliarDaemon",
   "x-familiar-components": [
@@ -18,7 +18,7 @@
     "$ref": "../architecture/meta/Node.meta.schema.json"
   },
   "x-familiar-queue": {
-    "$ref": "../queues/daemon-queue.queue.json"
+    "$ref": "../infrastructure/queues/daemon-queue.queue.json"
   },
   "x-familiar-resource-class": "llm",
   "x-familiar-resources": [
@@ -34,16 +34,16 @@
   ],
   "x-familiar-systems": [
     {
-      "$ref": "../systems/FatesGate.system.json"
+      "$ref": "../infrastructure/systems/FatesGate.system.json"
     },
     {
-      "$ref": "../systems/FatesMorta.system.json"
+      "$ref": "../infrastructure/systems/FatesMorta.system.json"
     },
     {
-      "$ref": "../systems/FatesDecima.system.json"
+      "$ref": "../infrastructure/systems/FatesDecima.system.json"
     },
     {
-      "$ref": "../systems/FatesNona.system.json"
+      "$ref": "../infrastructure/systems/FatesNona.system.json"
     }
   ]
 }

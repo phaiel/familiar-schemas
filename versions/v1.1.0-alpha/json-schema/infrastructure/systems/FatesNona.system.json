@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/systems/FatesNona.system.json",
+  "$id": "https://familiar.dev/schem../infrastructure/systems/FatesNona.system.json",
   "description": "Fate of Spinning - handles weaving, connection, and relationship building in the Fates pipeline.",
   "title": "FatesNona",
   "x-familiar-depends": [
@@ -13,7 +13,7 @@
     "$ref": "../architecture/meta/System.meta.schema.json"
   },
   "x-familiar-queue": {
-    "$ref": "../queues/daemon-queue.queue.json"
+    "$ref": "../infrastructure/queues/daemon-queue.queue.json"
   },
   "x-familiar-reads": [
     {
@@ -25,7 +25,7 @@
   ],
   "x-familiar-retries": 3,
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
   },
   "x-familiar-timeout": "60s",
   "x-familiar-writes": [
