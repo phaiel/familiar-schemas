@@ -30,7 +30,7 @@
       "x-familiar-column-type": "JsonBinary"
     },
     "purpose": {
-      "$ref": "../auth/MagicLinkPurpose.schema.json"
+      "$ref": "../domains/auth/MagicLinkPurpose.schema.json"
     },
     "token_hash": {
       "type": "string"

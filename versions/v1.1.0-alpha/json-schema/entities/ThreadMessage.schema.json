@@ -11,7 +11,7 @@
               "type": "string"
             },
             "level": {
-              "$ref": "../agentic/LogLevel.schema.json"
+              "$ref": "../domains/agentic/LogLevel.schema.json"
             },
             "message_type": {
               "enum": [
@@ -95,7 +95,7 @@
             },
             "findings": {
               "items": {
-                "$ref": "../agentic/Finding.schema.json"
+                "$ref": "../domains/agentic/Finding.schema.json"
               },
               "type": "array"
             },
@@ -252,7 +252,7 @@
     "message_type": {
       "anyOf": [
         {
-          "$ref": "../agentic/AgentMessageType.schema.json"
+          "$ref": "../domains/agentic/AgentMessageType.schema.json"
         },
         {
           "type": "null"

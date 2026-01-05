@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "meta/CodegenMeta.schema.json",
+  "$id": "architecture/meta/RustCodegen.meta.schema.json",
   "title": "CodegenMeta",
   "description": "Meta-schema for Rust codegen extensions. Cross-cutting, applies to all schema types.",
   "x-familiar-kind": "meta",

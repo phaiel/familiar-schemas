@@ -98,7 +98,7 @@
       "type": "object"
     }
   },
-  "description": "Current user info (for /api/auth/me)",
+  "description": "Current user info (for /a../domains/auth/me)",
   "properties": {
     "memberships": {
       "description": "User's family memberships",
