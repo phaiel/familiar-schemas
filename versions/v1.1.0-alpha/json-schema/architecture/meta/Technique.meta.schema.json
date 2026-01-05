@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/Technique.meta.schema.json",
+  "title": "Technique Definition (ISA)",
+  "description": "A constrained workflow using exactly 5 step types: call, switch, map, parallel, transform.",
+  "type": "object",
+  "required": ["id", "x-familiar-kind", "input", "output", "steps"],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "x-familiar-kind": { "const": "technique" },
+
+    "input": {
+      "description": "The input contract for this entire flow.",
+      "type": "object",
+      "properties": { "$ref": { "type": "string" } },
+      "required": ["$ref"]
+    },
+
+    "output": {
+      "description": "The return type of this flow.",
+      "type": "object",
+      "properties": { "$ref": { "type": "string" } },
+      "required": ["$ref"]
+    },
+
+    "steps": {
+      "type": "array",
+      "description": "Constrained instruction set: call, switch, map, parallel, transform",
+      "items": { "$ref": "architecture/steps/Step.meta.schema.json" }
+    },
+
+    "return": {
+      "type": "object",
+      "description": "Final output construction using CEL expressions",
+      "additionalProperties": true
+    }
+  }
+}

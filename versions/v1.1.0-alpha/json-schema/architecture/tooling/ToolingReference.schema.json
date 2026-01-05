@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/architecture/references/ToolingReference.schema.json",
+  "title": "Tooling Reference",
+  "description": "Reference to required tooling capabilities for an action",
+  "type": "object",
+  "required": ["category"],
+  "properties": {
+    "category": {
+      "$ref": "architecture/categories/ToolingCategory.schema.json",
+      "description": "Type of tooling required"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Specific capabilities needed from this tooling"
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Why this tooling is needed for this action"
+    }
+  },
+  "x-familiar-kind": "reference"
+}

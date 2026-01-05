@@ -1,5 +1,5 @@
 {
-  "$schema": "../../ecs/Technique.meta.schema.json",
+  "$schema": "../../architecture/meta/Technique.meta.schema.json",
   "$id": "techniques/search_memory.technique.json",
   "id": "search_memory",
   "title": "Search Memory and Context",

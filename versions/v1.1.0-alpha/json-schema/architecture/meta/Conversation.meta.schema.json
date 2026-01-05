@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/Conversation.meta.schema.json",
+  "title": "Conversation Schema Definition",
+  "description": "Schemas that define conversation flows and messaging interactions.",
+  "type": "object",
+  "required": ["title", "x-familiar-kind"],
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "x-familiar-kind": {
+      "const": "conversation",
+      "description": "Discriminator for conversation schemas"
+    },
+
+    "x-familiar-service": {
+      "description": "Service that handles this conversation",
+      "type": "object",
+      "properties": {
+        "$ref": { "type": "string" }
+      },
+      "required": ["$ref"]
+    },
+
+    "x-familiar-meta-schema": {
+      "$ref": "#",
+      "description": "Self-reference for meta-schema validation"
+    }
+  }
+}

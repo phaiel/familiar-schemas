@@ -1,5 +1,5 @@
 {
-  "$schema": "../../ecs/Technique.meta.schema.json",
+  "$schema": "../../architecture/meta/Technique.meta.schema.json",
   "$id": "techniques/ingest_log.technique.json",
   "id": "ingest_log",
   "title": "Ingest Log Entry",

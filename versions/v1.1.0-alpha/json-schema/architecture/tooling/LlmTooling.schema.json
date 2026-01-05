@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/LlmTooling.schema.json",
+  "title": "LLM Tooling",
+  "description": "Available LLM client libraries and their capabilities",
+  "type": "object",
+  "required": ["client"],
+  "properties": {
+    "client": {
+      "type": "string",
+      "enum": ["rig", "async-openai", "anthropic-sdk", "huggingface"],
+      "default": "rig",
+      "description": "LLM client library to use"
+    },
+    "version": {
+      "type": "string",
+      "default": "^0.1",
+      "description": "Version constraint for the client library"
+    },
+    "features": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Required features for this client"
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["openai", "anthropic", "huggingface", "local"]
+      },
+      "description": "Supported LLM providers"
+    }
+  },
+  "x-familiar-kind": "tooling",
+  "x-familiar-tooling-category": "llm"
+}

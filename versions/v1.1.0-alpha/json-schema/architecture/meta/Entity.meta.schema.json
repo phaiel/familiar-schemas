@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/Entity.meta.schema.json",
+  "title": "Business Entity Schema Definition",
+  "description": "Schemas that define core business entities and their properties.",
+  "type": "object",
+  "required": ["title", "x-familiar-kind"],
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+
+    "x-familiar-kind": {
+      "const": "entity",
+      "description": "Discriminator for business entity schemas"
+    },
+
+    "x-familiar-service": {
+      "description": "Service that manages this entity",
+      "type": "object",
+      "properties": {
+        "$ref": { "type": "string" }
+      },
+      "required": ["$ref"]
+    },
+
+    "x-familiar-meta-schema": {
+      "$ref": "#",
+      "description": "Self-reference for meta-schema validation"
+    }
+  }
+}

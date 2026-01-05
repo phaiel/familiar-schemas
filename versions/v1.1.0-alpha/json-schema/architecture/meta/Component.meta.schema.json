@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/Component.meta.schema.json",
+  "title": "ECS Component Meta-Schema",
+  "description": "Schema for defining ECS Components - resources/capabilities that can be composed into Nodes",
+  "type": "object",
+  "required": ["name", "version", "description", "rust_type"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "ecs/Component.meta.schema.json"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Unique identifier for the component (snake_case)"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the component"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the component's purpose"
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "List of component names this component depends on (must be initialized first)"
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["string", "integer", "number", "boolean", "array", "object"]
+          },
+          "default": {},
+          "description": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean",
+            "default": true
+          },
+          "env_var": {
+            "type": "string",
+            "description": "Environment variable to read this config from"
+          }
+        },
+        "required": ["type"]
+      },
+      "description": "Configuration options for initializing the component"
+    },
+    "rust_type": {
+      "type": "string",
+      "description": "The Rust type this component resolves to (e.g., Arc<DatabasePool>)"
+    },
+    "requires_llm": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this component requires LLM connectivity"
+    },
+    "singleton": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether only one instance of this component can exist per Node"
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-generated": false
+}
+

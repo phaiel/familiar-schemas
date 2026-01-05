@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../ecs/Action.meta.schema.json",
+  "$schema": "../../../architecture/meta/Action.meta.schema.json",
   "$id": "actions/entity/search.action.json",
   "id": "entity.search",
   "title": "Search Entities",
