@@ -8,18 +8,16 @@
   "x-familiar-execution-model": "async",
   "x-familiar-side-effects": ["database"],
   "x-familiar-reliability": "transactional",
-  "x-familiar-dependencies": [
+  "x-familiar-tooling": [
     {
-      "name": "sqlx",
-      "version": "^0.7",
-      "features": ["postgres", "runtime-tokio"],
-      "purpose": "PostgreSQL database client"
+      "category": "database",
+      "capabilities": ["write", "transaction", "pool", "async"],
+      "purpose": "Database operations for entity creation"
     },
     {
-      "name": "serde",
-      "version": "^1.0",
-      "features": ["derive"],
-      "purpose": "Serialization for entity data"
+      "category": "serialization",
+      "capabilities": ["json"],
+      "purpose": "Entity data serialization"
     }
   ],
 

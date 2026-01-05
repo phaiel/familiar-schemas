@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/ToolingResolution.schema.json",
+  "title": "Tooling Resolution",
+  "description": "Maps tooling categories and capabilities to actual library implementations",
+  "type": "object",
+  "properties": {
+    "database": {
+      "$ref": "DatabaseTooling.schema.json",
+      "description": "Database tooling configuration"
+    },
+    "llm": {
+      "$ref": "LlmTooling.schema.json",
+      "description": "LLM tooling configuration"
+    },
+    "serialization": {
+      "$ref": "SerializationTooling.schema.json",
+      "description": "Serialization tooling configuration"
+    },
+    "async-runtime": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string",
+          "enum": ["tokio"],
+          "default": "tokio"
+        },
+        "version": {
+          "type": "string",
+          "default": "^1.0"
+        },
+        "features": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["full"]
+        }
+      }
+    },
+    "ml-inference": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string",
+          "enum": ["rust-bert", "tch", "candle"],
+          "default": "rust-bert"
+        },
+        "version": {
+          "type": "string",
+          "default": "^0.21"
+        },
+        "features": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["sentiment-analysis"]
+        }
+      }
+    }
+  },
+  "x-familiar-kind": "configuration"
+}

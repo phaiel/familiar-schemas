@@ -8,18 +8,16 @@
   "x-familiar-execution-model": "async",
   "x-familiar-side-effects": ["network", "llm_api"],
   "x-familiar-reliability": "idempotent",
-  "x-familiar-dependencies": [
+  "x-familiar-tooling": [
     {
-      "name": "rig",
-      "version": "^0.1",
-      "features": ["openai"],
-      "purpose": "OpenAI API client for text classification"
+      "category": "llm",
+      "capabilities": ["text-classification"],
+      "purpose": "LLM API for text classification tasks"
     },
     {
-      "name": "tokio",
-      "version": "^1.0",
-      "features": ["full"],
-      "purpose": "Async runtime for API calls"
+      "category": "async-runtime",
+      "capabilities": ["spawn", "join"],
+      "purpose": "Async execution for API calls"
     }
   ],
 

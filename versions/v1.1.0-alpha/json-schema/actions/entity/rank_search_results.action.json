@@ -8,17 +8,16 @@
   "x-familiar-execution-model": "sync",
   "x-familiar-side-effects": [],
   "x-familiar-reliability": "idempotent",
-  "x-familiar-dependencies": [
+  "x-familiar-tooling": [
     {
-      "name": "rust-bert",
-      "version": "^0.21",
-      "features": ["sentiment-analysis"],
+      "category": "ml-inference",
+      "capabilities": ["text-embedding", "similarity"],
       "purpose": "ML models for relevance scoring and ranking"
     },
     {
-      "name": "ndarray",
-      "version": "^0.15",
-      "purpose": "Numerical computations for ranking algorithms"
+      "category": "serialization",
+      "capabilities": ["json"],
+      "purpose": "Result data serialization"
     }
   ],
 

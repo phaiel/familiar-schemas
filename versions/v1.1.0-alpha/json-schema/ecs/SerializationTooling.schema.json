@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/SerializationTooling.schema.json",
+  "title": "Serialization Tooling",
+  "description": "Available serialization libraries and their capabilities",
+  "type": "object",
+  "required": ["client"],
+  "properties": {
+    "client": {
+      "type": "string",
+      "enum": ["serde", "serde_json", "bincode", "messagepack"],
+      "default": "serde",
+      "description": "Serialization library to use"
+    },
+    "version": {
+      "type": "string",
+      "default": "^1.0",
+      "description": "Version constraint for the library"
+    },
+    "features": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Required features for this library"
+    },
+    "formats": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["json", "binary", "messagepack", "yaml", "toml"]
+      },
+      "description": "Supported serialization formats"
+    }
+  },
+  "x-familiar-kind": "tooling",
+  "x-familiar-tooling-category": "serialization"
+}

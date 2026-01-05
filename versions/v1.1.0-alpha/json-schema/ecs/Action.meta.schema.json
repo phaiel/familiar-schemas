@@ -36,10 +36,10 @@
       "description": "Reliability guarantees for error handling"
     },
 
-    "x-familiar-dependencies": {
+    "x-familiar-tooling": {
       "type": "array",
-      "items": { "$ref": "LibraryReference.schema.json" },
-      "description": "External Rust crate dependencies"
+      "items": { "$ref": "ToolingReference.schema.json" },
+      "description": "Required tooling capabilities for this action"
     },
 
     "signature": {

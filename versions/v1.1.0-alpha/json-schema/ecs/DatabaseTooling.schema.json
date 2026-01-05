@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/DatabaseTooling.schema.json",
+  "title": "Database Tooling",
+  "description": "Available database client libraries and their capabilities",
+  "type": "object",
+  "required": ["client"],
+  "properties": {
+    "client": {
+      "type": "string",
+      "enum": ["tigerdata", "sqlx", "diesel", "tokio-postgres"],
+      "default": "tigerdata",
+      "description": "Database client library to use"
+    },
+    "version": {
+      "type": "string",
+      "default": "^0.8",
+      "description": "Version constraint for the client library"
+    },
+    "features": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Required features for this client"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["read", "write", "transaction", "migration", "pool", "async"]
+      },
+      "description": "Supported database operations"
+    }
+  },
+  "x-familiar-kind": "tooling",
+  "x-familiar-tooling-category": "database"
+}
