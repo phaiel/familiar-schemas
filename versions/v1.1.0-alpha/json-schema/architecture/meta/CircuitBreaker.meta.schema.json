@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/meta/CircuitBreaker.meta.schema.json",
+  "title": "Circuit Breaker Meta-Schema",
+  "description": "Schema for defining circuit breaker patterns to prevent cascading failures",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether circuit breaker is enabled"
+    },
+    "failure_threshold": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 5,
+      "description": "Number of consecutive failures to trigger circuit breaker"
+    },
+    "success_threshold": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 3,
+      "description": "Number of consecutive successes to close circuit breaker"
+    },
+    "recovery_timeout": {
+      "type": "string",
+      "pattern": "^\\d+(s|m|h)$",
+      "default": "30s",
+      "description": "Time to wait before attempting recovery (e.g., '30s', '5m')"
+    },
+    "health_check_interval": {
+      "type": "string",
+      "pattern": "^\\d+(s|m|h)$",
+      "default": "10s",
+      "description": "How often to check service health during recovery"
+    },
+    "failure_detection_window": {
+      "type": "string",
+      "pattern": "^\\d+(s|m|h)$",
+      "default": "60s",
+      "description": "Time window for counting failures"
+    },
+    "slow_call_duration_threshold": {
+      "type": "string",
+      "pattern": "^\\d+(s|ms)$",
+      "default": "5s",
+      "description": "Duration threshold to consider a call 'slow'"
+    },
+    "slow_call_rate_threshold": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.5,
+      "description": "Percentage of slow calls to trigger circuit breaker (0.0-1.0)"
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "meta",
+  "x-familiar-domain": "observability"
+}

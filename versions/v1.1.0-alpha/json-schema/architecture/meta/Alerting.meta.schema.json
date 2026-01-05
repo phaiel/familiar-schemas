@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/meta/Alerting.meta.schema.json",
+  "title": "Alerting Meta-Schema",
+  "description": "Schema for defining alert rules and notification policies",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether alerting is enabled"
+    },
+    "alert_rules": {
+      "type": "array",
+      "description": "Alert rules for monitoring and notifications",
+      "items": {
+        "type": "object",
+        "required": ["name", "condition", "severity"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "Alert rule name (used as alert identifier)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of what this alert detects"
+          },
+          "condition": {
+            "type": "string",
+            "description": "PromQL expression or threshold condition"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["info", "warning", "error", "critical"],
+            "description": "Alert severity level"
+          },
+          "for_duration": {
+            "type": "string",
+            "pattern": "^\\d+(s|m|h)$",
+            "default": "5m",
+            "description": "How long condition must be true before firing alert"
+          },
+          "labels": {
+            "type": "object",
+            "description": "Additional labels to add to the alert",
+            "additionalProperties": { "type": "string" }
+          },
+          "annotations": {
+            "type": "object",
+            "description": "Annotations for alert context and runbooks",
+            "properties": {
+              "summary": { "type": "string" },
+              "description": { "type": "string" },
+              "runbook_url": { "type": "string" },
+              "dashboard_url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "notification_channels": {
+      "type": "array",
+      "description": "Notification destinations for alerts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["slack", "pagerduty", "email", "webhook", "opsgenie"],
+            "description": "Notification channel type"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "Channel endpoint (webhook URL, email address, etc.)"
+          },
+          "severities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["info", "warning", "error", "critical"]
+            },
+            "description": "Severities to send to this channel"
+          },
+          "filters": {
+            "type": "object",
+            "description": "Filters for which alerts to send",
+            "properties": {
+              "alert_names": { "type": "array", "items": { "type": "string" } },
+              "label_matchers": { "type": "object", "additionalProperties": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "inhibit_rules": {
+      "type": "array",
+      "description": "Rules for inhibiting alerts based on other alerts",
+      "items": {
+        "type": "object",
+        "required": ["source_match", "target_match"],
+        "properties": {
+          "source_match": {
+            "type": "object",
+            "description": "Labels that must match on the source alert",
+            "additionalProperties": { "type": "string" }
+          },
+          "target_match": {
+            "type": "object",
+            "description": "Labels that must match on the target alert",
+            "additionalProperties": { "type": "string" }
+          },
+          "equal_labels": {
+            "type": "array",
+            "description": "Labels that must be equal between source and target",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "silence_rules": {
+      "type": "array",
+      "description": "Rules for automatically silencing alerts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "Silence rule name" },
+          "matchers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" },
+                "isRegex": { "type": "boolean", "default": false }
+              }
+            }
+          },
+          "duration": {
+            "type": "string",
+            "pattern": "^\\d+(s|m|h|d)$",
+            "description": "How long to silence matching alerts"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "meta",
+  "x-familiar-domain": "observability"
+}

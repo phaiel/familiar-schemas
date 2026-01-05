@@ -5,6 +5,11 @@
   "description": "Schema for defining ECS Queues - Temporal task queues or Kafka topics that route work to nodes",
   "type": "object",
   "required": ["title", "x-familiar-kind", "x-familiar-queue-type"],
+  "allOf": [
+    { "$ref": "Metrics.meta.schema.json" },
+    { "$ref": "LoadShedding.meta.schema.json" },
+    { "$ref": "QueueMonitoring.meta.schema.json" }
+  ],
   "properties": {
     "$schema": {
       "type": "string",

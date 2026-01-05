@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/meta/ResiliencePolicy.meta.schema.json",
+  "title": "Resilience Policy Meta-Schema",
+  "description": "Schema for defining retry, timeout, and resilience policies",
+  "type": "object",
+  "properties": {
+    "retry_policy": {
+      "type": "object",
+      "description": "Configuration for retry behavior",
+      "properties": {
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 3,
+          "description": "Maximum number of retry attempts"
+        },
+        "initial_delay": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s|m)$",
+          "default": "100ms",
+          "description": "Initial delay before first retry"
+        },
+        "max_delay": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s|m|h)$",
+          "default": "30s",
+          "description": "Maximum delay between retries"
+        },
+        "backoff_multiplier": {
+          "type": "number",
+          "minimum": 1.0,
+          "default": 2.0,
+          "description": "Multiplier for exponential backoff"
+        },
+        "retry_condition": {
+          "type": "string",
+          "enum": ["on_failure", "on_error", "on_timeout", "on_specific_errors"],
+          "default": "on_failure",
+          "description": "When to retry the operation"
+        },
+        "specific_error_codes": {
+          "type": "array",
+          "description": "Specific error codes that should trigger retries",
+          "items": { "type": "string" }
+        },
+        "jitter": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to add random jitter to retry delays"
+        }
+      }
+    },
+    "timeout_policy": {
+      "type": "object",
+      "description": "Configuration for operation timeouts",
+      "properties": {
+        "request_timeout": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s|m)$",
+          "default": "30s",
+          "description": "Total timeout for the entire request"
+        },
+        "connection_timeout": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s)$",
+          "default": "10s",
+          "description": "Timeout for establishing connections"
+        },
+        "idle_timeout": {
+          "type": "string",
+          "pattern": "^\\d+(s|m|h)$",
+          "default": "60s",
+          "description": "Timeout for idle connections"
+        },
+        "per_operation_timeout": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s|m)$",
+          "description": "Timeout per individual operation in a batch"
+        }
+      }
+    },
+    "circuit_breaker": {
+      "$ref": "CircuitBreaker.meta.schema.json",
+      "description": "Circuit breaker configuration for this policy"
+    },
+    "bulkhead": {
+      "type": "object",
+      "description": "Bulkhead pattern configuration for resource isolation",
+      "properties": {
+        "max_concurrent_calls": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 10,
+          "description": "Maximum concurrent calls allowed"
+        },
+        "max_wait_queue_size": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 100,
+          "description": "Maximum size of wait queue for additional calls"
+        },
+        "wait_duration": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s)$",
+          "default": "10s",
+          "description": "Maximum time to wait in queue"
+        }
+      }
+    },
+    "rate_limiting": {
+      "type": "object",
+      "description": "Rate limiting configuration",
+      "properties": {
+        "requests_per_second": {
+          "type": "number",
+          "minimum": 0.1,
+          "description": "Maximum requests per second"
+        },
+        "burst_size": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum burst size allowed"
+        },
+        "strategy": {
+          "type": "string",
+          "enum": ["token_bucket", "leaky_bucket", "fixed_window", "sliding_window"],
+          "default": "token_bucket",
+          "description": "Rate limiting algorithm to use"
+        }
+      }
+    },
+    "fallback_policy": {
+      "type": "object",
+      "description": "Fallback behavior when primary operations fail",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "fallback_operation": { "type": "string", "description": "Name of fallback operation to execute" },
+        "fallback_timeout": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s|m)$",
+          "description": "Timeout for fallback execution"
+        },
+        "cache_fallback_results": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to cache successful fallback results"
+        },
+        "cache_ttl": {
+          "type": "string",
+          "pattern": "^\\d+(s|m|h)$",
+          "default": "5m",
+          "description": "Time to live for cached fallback results"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "meta",
+  "x-familiar-domain": "resilience"
+}

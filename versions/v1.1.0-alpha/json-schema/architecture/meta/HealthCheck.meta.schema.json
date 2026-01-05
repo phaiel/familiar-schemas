@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/meta/HealthCheck.meta.schema.json",
+  "title": "Health Check Meta-Schema",
+  "description": "Schema for defining health check endpoints and liveness/readiness probes",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether health checks are enabled"
+    },
+    "endpoints": {
+      "type": "object",
+      "description": "Health check endpoint configurations",
+      "properties": {
+        "liveness": {
+          "type": "object",
+          "description": "Liveness probe configuration",
+          "properties": {
+            "path": { "type": "string", "default": "/health/live", "description": "HTTP path for liveness checks" },
+            "port": { "type": "integer", "description": "Port to expose liveness checks on" },
+            "initial_delay": { "type": "string", "pattern": "^\\d+(s|m)$", "default": "5s" },
+            "period": { "type": "string", "pattern": "^\\d+(s|m)$", "default": "30s" },
+            "timeout": { "type": "string", "pattern": "^\\d+(s)$", "default": "3s" },
+            "failure_threshold": { "type": "integer", "default": 3 }
+          }
+        },
+        "readiness": {
+          "type": "object",
+          "description": "Readiness probe configuration",
+          "properties": {
+            "path": { "type": "string", "default": "/health/ready", "description": "HTTP path for readiness checks" },
+            "port": { "type": "integer", "description": "Port to expose readiness checks on" },
+            "initial_delay": { "type": "string", "pattern": "^\\d+(s|m)$", "default": "10s" },
+            "period": { "type": "string", "pattern": "^\\d+(s|m)$", "default": "10s" },
+            "timeout": { "type": "string", "pattern": "^\\d+(s)$", "default": "3s" },
+            "failure_threshold": { "type": "integer", "default": 3 }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "description": "Metrics endpoint configuration",
+          "properties": {
+            "path": { "type": "string", "default": "/metrics", "description": "HTTP path for metrics scraping" },
+            "port": { "type": "integer", "description": "Port to expose metrics on" },
+            "authentication": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "bearer_token": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "description": "Individual health check definitions",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "Unique identifier for this health check"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of what this check verifies"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["http_get", "tcp_socket", "exec", "database", "custom"],
+            "description": "Type of health check to perform"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "Target endpoint for the check (URL, host:port, etc.)"
+          },
+          "timeout": {
+            "type": "string",
+            "pattern": "^\\d+(s|ms)$",
+            "default": "5s",
+            "description": "Maximum time to wait for check completion"
+          },
+          "interval": {
+            "type": "string",
+            "pattern": "^\\d+(s|m)$",
+            "default": "30s",
+            "description": "How often to run this check"
+          },
+          "failure_threshold": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 3,
+            "description": "Number of consecutive failures before marking unhealthy"
+          },
+          "success_threshold": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "Number of consecutive successes before marking healthy"
+          },
+          "initial_delay": {
+            "type": "string",
+            "pattern": "^\\d+(s|m)$",
+            "default": "0s",
+            "description": "Delay before starting health checks after startup"
+          },
+          "headers": {
+            "type": "object",
+            "description": "HTTP headers to include in requests (for http_get type)",
+            "additionalProperties": { "type": "string" }
+          },
+          "expected_status": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599,
+            "default": 200,
+            "description": "Expected HTTP status code (for http_get type)"
+          },
+          "database": {
+            "type": "object",
+            "description": "Database-specific configuration (for database type)",
+            "properties": {
+              "connection_string": { "type": "string" },
+              "query": { "type": "string", "default": "SELECT 1" },
+              "timeout": { "type": "string", "pattern": "^\\d+(s|ms)$", "default": "3s" }
+            }
+          }
+        }
+      }
+    },
+    "overall_health": {
+      "type": "object",
+      "description": "Configuration for aggregating individual check results",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["all_healthy", "at_least_one", "custom"],
+          "default": "all_healthy",
+          "description": "How to determine overall health from individual checks"
+        },
+        "custom_logic": {
+          "type": "string",
+          "description": "Custom expression for overall health calculation"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "meta",
+  "x-familiar-domain": "observability"
+}

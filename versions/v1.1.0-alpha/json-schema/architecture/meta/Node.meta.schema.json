@@ -5,6 +5,13 @@
   "description": "Schema for defining ECS Nodes - service definitions that compose Systems and Components (e.g., familiar-daemon, familiar-worker)",
   "type": "object",
   "required": ["id", "x-familiar-kind"],
+  "allOf": [
+    { "$ref": "CircuitBreaker.meta.schema.json" },
+    { "$ref": "LoadShedding.meta.schema.json" },
+    { "$ref": "Metrics.meta.schema.json" },
+    { "$ref": "Tracing.meta.schema.json" },
+    { "$ref": "HealthCheck.meta.schema.json" }
+  ],
   "properties": {
     "id": {
       "type": "string",

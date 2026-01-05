@@ -5,6 +5,12 @@
   "description": "Schema for defining ECS Systems - Temporal activities / business logic units that read and write entities",
   "type": "object",
   "required": ["id", "x-familiar-kind"],
+  "allOf": [
+    { "$ref": "Metrics.meta.schema.json" },
+    { "$ref": "Alerting.meta.schema.json" },
+    { "$ref": "Tracing.meta.schema.json" },
+    { "$ref": "ResiliencePolicy.meta.schema.json" }
+  ],
   "properties": {
     "id": {
       "type": "string",

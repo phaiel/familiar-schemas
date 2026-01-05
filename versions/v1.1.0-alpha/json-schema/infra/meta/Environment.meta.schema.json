@@ -54,6 +54,23 @@
         }
       }
     },
+    "observability": {
+      "type": "object",
+      "description": "Global observability configuration defaults",
+      "allOf": [
+        { "$ref": "../../../architecture/meta/Metrics.meta.schema.json" },
+        { "$ref": "../../../architecture/meta/Tracing.meta.schema.json" },
+        { "$ref": "../../../architecture/meta/Alerting.meta.schema.json" }
+      ]
+    },
+    "resilience": {
+      "type": "object",
+      "description": "Global resilience configuration defaults",
+      "allOf": [
+        { "$ref": "../../../architecture/meta/CircuitBreaker.meta.schema.json" },
+        { "$ref": "../../../architecture/meta/LoadShedding.meta.schema.json" }
+      ]
+    },
     "global": {
       "type": "object",
       "properties": {

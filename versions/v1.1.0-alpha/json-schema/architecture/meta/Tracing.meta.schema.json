@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/meta/Tracing.meta.schema.json",
+  "title": "Tracing Meta-Schema",
+  "description": "Schema for defining OpenTelemetry tracing configuration and span management",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether distributed tracing is enabled"
+    },
+    "service_name": {
+      "type": "string",
+      "description": "Service name for trace identification"
+    },
+    "service_version": {
+      "type": "string",
+      "description": "Service version for trace metadata"
+    },
+    "sampling": {
+      "type": "object",
+      "description": "Trace sampling configuration",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["always_on", "always_off", "traceid_ratio", "parent_based"],
+          "default": "parent_based",
+          "description": "Sampling strategy to use"
+        },
+        "ratio": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "default": 0.1,
+          "description": "Sampling ratio for ratio-based strategies (0.0-1.0)"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Custom sampling rules",
+          "items": {
+            "type": "object",
+            "properties": {
+              "attribute": { "type": "string" },
+              "pattern": { "type": "string" },
+              "ratio": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+            }
+          }
+        }
+      }
+    },
+    "exporters": {
+      "type": "array",
+      "description": "Trace exporters configuration",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["jaeger", "zipkin", "otlp_http", "otlp_grpc", "console"],
+            "description": "Exporter type"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "Exporter endpoint URL"
+          },
+          "headers": {
+            "type": "object",
+            "description": "HTTP headers for exporter requests",
+            "additionalProperties": { "type": "string" }
+          },
+          "batch": {
+            "type": "object",
+            "description": "Batch export configuration",
+            "properties": {
+              "max_batch_size": { "type": "integer", "default": 512 },
+              "max_queue_size": { "type": "integer", "default": 2048 },
+              "export_timeout": { "type": "string", "default": "30s", "pattern": "^\\d+(s|m)$" },
+              "schedule_delay": { "type": "string", "default": "5s", "pattern": "^\\d+(s|ms)$" }
+            }
+          }
+        }
+      }
+    },
+    "span_attributes": {
+      "type": "object",
+      "description": "Default attributes to add to all spans",
+      "additionalProperties": { "type": "string" }
+    },
+    "instrumentation": {
+      "type": "object",
+      "description": "Automatic instrumentation configuration",
+      "properties": {
+        "http_server": { "type": "boolean", "default": true },
+        "http_client": { "type": "boolean", "default": true },
+        "database": { "type": "boolean", "default": true },
+        "messaging": { "type": "boolean", "default": true },
+        "custom": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "enabled": { "type": "boolean", "default": true }
+            }
+          }
+        }
+      }
+    },
+    "propagation": {
+      "type": "object",
+      "description": "Trace context propagation configuration",
+      "properties": {
+        "formats": {
+          "type": "array",
+          "default": ["w3c_trace_context", "w3c_baggage"],
+          "items": {
+            "type": "string",
+            "enum": ["w3c_trace_context", "w3c_baggage", "b3", "jaeger", "xray", "ottrace"]
+          }
+        },
+        "extract_baggage": { "type": "boolean", "default": true },
+        "inject_baggage": { "type": "boolean", "default": true }
+      }
+    },
+    "span_limits": {
+      "type": "object",
+      "description": "Limits for span creation and processing",
+      "properties": {
+        "max_attributes_per_span": { "type": "integer", "default": 128 },
+        "max_events_per_span": { "type": "integer", "default": 128 },
+        "max_links_per_span": { "type": "integer", "default": 128 },
+        "attribute_value_length_limit": { "type": "integer", "default": 4096 },
+        "attribute_count_limit": { "type": "integer", "default": 128 }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "meta",
+  "x-familiar-domain": "observability"
+}

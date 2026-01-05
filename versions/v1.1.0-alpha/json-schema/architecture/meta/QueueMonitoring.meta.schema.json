@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/meta/QueueMonitoring.meta.schema.json",
+  "title": "Queue Monitoring Meta-Schema",
+  "description": "Schema for defining message queue monitoring and performance metrics",
+  "type": "object",
+  "properties": {
+    "depth_tracking": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to track queue depth and backlog"
+    },
+    "throughput_metrics": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to collect throughput metrics (messages/sec)"
+    },
+    "latency_tracking": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to track message processing latency"
+    },
+    "consumer_lag_monitoring": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to monitor consumer lag and processing delays"
+    },
+    "queue_health_indicators": {
+      "type": "object",
+      "description": "Health indicators specific to queue operations",
+      "properties": {
+        "connection_health": { "type": "boolean", "default": true },
+        "partition_balance": { "type": "boolean", "default": true },
+        "rebalance_events": { "type": "boolean", "default": true },
+        "dead_letter_queue_size": { "type": "boolean", "default": true }
+      }
+    },
+    "performance_thresholds": {
+      "type": "object",
+      "description": "Performance thresholds for alerting",
+      "properties": {
+        "max_queue_depth": {
+          "type": "integer",
+          "default": 10000,
+          "description": "Maximum acceptable queue depth"
+        },
+        "max_processing_latency": {
+          "type": "string",
+          "pattern": "^\\d+(ms|s|m)$",
+          "default": "30s",
+          "description": "Maximum acceptable processing latency"
+        },
+        "max_consumer_lag": {
+          "type": "string",
+          "pattern": "^\\d+(s|m|h)$",
+          "default": "5m",
+          "description": "Maximum acceptable consumer lag"
+        },
+        "min_throughput_warning": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Minimum throughput threshold for warnings (messages/sec)"
+        }
+      }
+    },
+    "partition_monitoring": {
+      "type": "object",
+      "description": "Configuration for partition-level monitoring",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "balance_check_interval": {
+          "type": "string",
+          "pattern": "^\\d+(s|m)$",
+          "default": "60s"
+        },
+        "rebalance_alert_threshold": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "default": 0.1,
+          "description": "Threshold for partition imbalance alerts (0.0-1.0)"
+        }
+      }
+    },
+    "message_flow_tracking": {
+      "type": "object",
+      "description": "Tracking of message flow through the system",
+      "properties": {
+        "message_lifecycle_tracking": { "type": "boolean", "default": true },
+        "error_message_tracking": { "type": "boolean", "default": true },
+        "dead_letter_tracking": { "type": "boolean", "default": true },
+        "retry_attempt_tracking": { "type": "boolean", "default": true }
+      }
+    },
+    "alerting_rules": {
+      "type": "array",
+      "description": "Queue-specific alerting rules",
+      "items": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "type": "string",
+            "enum": ["queue_depth_high", "latency_high", "consumer_lag_high", "throughput_low", "partition_unbalanced"],
+            "description": "Condition to monitor"
+          },
+          "threshold": { "type": "number", "description": "Threshold value for the condition" },
+          "severity": {
+            "type": "string",
+            "enum": ["warning", "error", "critical"],
+            "default": "warning"
+          },
+          "evaluation_period": {
+            "type": "string",
+            "pattern": "^\\d+(s|m)$",
+            "default": "5m",
+            "description": "How long condition must be true before alerting"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "meta",
+  "x-familiar-domain": "monitoring"
+}

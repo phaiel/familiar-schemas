@@ -5,6 +5,11 @@
   "description": "Schema for defining ECS Resources - external dependencies like databases and APIs. Resources can be internal (owned) or virtual (external APIs acting as proxy contracts)",
   "type": "object",
   "required": ["title", "x-familiar-kind", "x-familiar-resource-type"],
+  "allOf": [
+    { "$ref": "Metrics.meta.schema.json" },
+    { "$ref": "HealthCheck.meta.schema.json" },
+    { "$ref": "ResourceMonitoring.meta.schema.json" }
+  ],
   "properties": {
     "$schema": {
       "type": "string",

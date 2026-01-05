@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/architecture/meta/LoadShedding.meta.schema.json",
+  "title": "Load Shedding Meta-Schema",
+  "description": "Schema for defining load shedding policies to protect against overload",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether load shedding is enabled"
+    },
+    "cpu_threshold": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.8,
+      "description": "CPU usage threshold to trigger shedding (0.0-1.0)"
+    },
+    "memory_threshold": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.9,
+      "description": "Memory usage threshold to trigger shedding (0.0-1.0)"
+    },
+    "queue_depth_threshold": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1000,
+      "description": "Queue depth threshold to trigger shedding"
+    },
+    "request_rate_threshold": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1000,
+      "description": "Requests per second threshold to trigger shedding"
+    },
+    "shedding_strategy": {
+      "type": "string",
+      "enum": ["random", "priority", "fifo", "lifo", "adaptive"],
+      "default": "adaptive",
+      "description": "Algorithm for selecting requests to shed"
+    },
+    "shedding_rate": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.1,
+      "description": "Percentage of requests to shed when triggered (0.0-1.0)"
+    },
+    "recovery_cooldown": {
+      "type": "string",
+      "pattern": "^\\d+(s|m|h)$",
+      "default": "30s",
+      "description": "Time to wait before reducing shedding rate"
+    },
+    "priority_levels": {
+      "type": "object",
+      "description": "Priority levels for selective shedding",
+      "properties": {
+        "critical": { "type": "integer", "default": 1 },
+        "high": { "type": "integer", "default": 2 },
+        "normal": { "type": "integer", "default": 3 },
+        "low": { "type": "integer", "default": 4 }
+      }
+    },
+    "adaptive_shedding": {
+      "type": "object",
+      "description": "Configuration for adaptive shedding algorithms",
+      "properties": {
+        "learning_rate": { "type": "number", "minimum": 0.0, "maximum": 1.0, "default": 0.1 },
+        "target_latency_percentile": { "type": "number", "minimum": 0.0, "maximum": 1.0, "default": 0.95 },
+        "max_shedding_rate": { "type": "number", "minimum": 0.0, "maximum": 1.0, "default": 0.5 }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "meta",
+  "x-familiar-domain": "resilience"
+}
