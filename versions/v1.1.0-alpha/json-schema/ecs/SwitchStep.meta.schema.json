@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/SwitchStep.meta.schema.json",
+  "title": "Switch Step Definition",
+  "description": "Exclusive branching with CEL condition evaluation",
+  "type": "object",
+  "required": ["id", "kind", "branches"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z_][a-z0-9_]*$",
+      "description": "Unique identifier for this step variable (snake_case)."
+    },
+    "kind": {
+      "const": "switch",
+      "description": "Discriminator for switch step"
+    },
+    "description": { "type": "string" },
+    "branches": {
+      "type": "array",
+      "description": "Ordered list of branches to evaluate",
+      "items": {
+        "type": "object",
+        "required": ["condition", "steps"],
+        "properties": {
+          "condition": {
+            "type": "string",
+            "description": "CEL expression for branching logic"
+          },
+          "steps": {
+            "type": "array",
+            "description": "Steps to execute if condition matches",
+            "items": {
+              "$ref": "Step.meta.schema.json"
+            }
+          }
+        }
+      }
+    },
+    "default": {
+      "type": "array",
+      "description": "Steps to execute if no branches match",
+      "items": {
+        "$ref": "Step.meta.schema.json"
+      }
+    },
+    "x-familiar-visual": {
+      "type": "object",
+      "description": "Visual layout coordinates for flow diagrams",
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"}
+      }
+    }
+  }
+}

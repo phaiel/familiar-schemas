@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Step.meta.schema.json",
+  "title": "Step Definition",
+  "description": "Base schema for all technique steps in the ISA",
+  "type": "object",
+  "required": ["id", "kind"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z_][a-z0-9_]*$",
+      "description": "Unique identifier for this step variable (snake_case)."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["call", "switch", "map", "parallel", "transform"],
+      "description": "Step type discriminator"
+    },
+    "description": { "type": "string" },
+    "x-familiar-visual": {
+      "type": "object",
+      "description": "Visual layout coordinates for flow diagrams",
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"}
+      }
+    }
+  },
+  "oneOf": [
+    { "$ref": "CallStep.meta.schema.json" },
+    { "$ref": "SwitchStep.meta.schema.json" },
+    { "$ref": "MapStep.meta.schema.json" },
+    { "$ref": "ParallelStep.meta.schema.json" },
+    { "$ref": "TransformStep.meta.schema.json" }
+  ]
+}

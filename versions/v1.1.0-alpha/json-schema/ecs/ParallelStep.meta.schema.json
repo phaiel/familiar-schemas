@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/ParallelStep.meta.schema.json",
+  "title": "Parallel Step Definition",
+  "description": "Concurrent execution of multiple named branches",
+  "type": "object",
+  "required": ["id", "kind", "branches"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z_][a-z0-9_]*$",
+      "description": "Unique identifier for this step variable (snake_case)."
+    },
+    "kind": {
+      "const": "parallel",
+      "description": "Discriminator for parallel step"
+    },
+    "description": { "type": "string" },
+    "branches": {
+      "type": "object",
+      "description": "Named branches executing concurrently",
+      "patternProperties": {
+        "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+          "type": "array",
+          "description": "Steps for this branch",
+          "items": {
+            "$ref": "Step.meta.schema.json"
+          }
+        }
+      }
+    },
+    "x-familiar-visual": {
+      "type": "object",
+      "description": "Visual layout coordinates for flow diagrams",
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"}
+      }
+    }
+  }
+}
