@@ -12,6 +12,8 @@
   "steps": [
     {
       "id": "search_entities",
+      "kind": "call",
+      "description": "Search for relevant entities in the knowledge base",
       "action": { "$ref": "../actions/entity/search.action.json" },
       "args": {
         "query": "${input.query}",
@@ -20,11 +22,19 @@
     },
     {
       "id": "rank_results",
+      "kind": "call",
+      "description": "Rank and filter search results by relevance",
       "action": { "$ref": "../actions/entity/rank_search_results.action.json" },
       "args": {
         "results": "${search_entities}",
         "query": "${input.query}"
       }
     }
-  ]
+  ],
+
+  "return": {
+    "results": "${rank_results}",
+    "total_found": "${search_entities.length}",
+    "query": "${input.query}"
+  }
 }

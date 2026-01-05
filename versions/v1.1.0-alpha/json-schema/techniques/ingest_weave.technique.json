@@ -12,6 +12,8 @@
   "steps": [
     {
       "id": "classify_weave",
+      "kind": "call",
+      "description": "Classify the user input to understand intent",
       "action": { "$ref": "../actions/llm/classify.action.json" },
       "args": {
         "text": "${input.content}",
@@ -20,6 +22,8 @@
     },
     {
       "id": "create_course",
+      "kind": "call",
+      "description": "Create a new course entity from the classified input",
       "action": { "$ref": "../actions/entity/spawn_course.action.json" },
       "args": {
         "weave_id": "${input.weave_id}",
@@ -27,5 +31,11 @@
         "content": "${input.content}"
       }
     }
-  ]
+  ],
+
+  "return": {
+    "course_id": "${create_course}",
+    "classification": "${classify_weave}",
+    "processed_at": "${timestamp()}"
+  }
 }

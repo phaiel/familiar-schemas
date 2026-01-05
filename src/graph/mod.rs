@@ -89,6 +89,131 @@ pub struct SchemaRef {
 fn default_borrow_semantics() -> String { "borrow".to_string() }
 fn default_atomic_nature() -> String { "atomic".to_string() }
 
+// --- Technique ISA Types ---
+
+/// Technique definition with constrained ISA
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TechniqueDef {
+    pub id: String,
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub input: SchemaRef,
+    pub output: SchemaRef,
+    pub steps: Vec<Step>,
+    #[serde(default)]
+    pub return_expr: Option<serde_json::Value>,
+}
+
+/// Constrained Instruction Set Architecture - exactly 5 step types
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum Step {
+    #[serde(rename = "call")]
+    Call(CallStep),
+    #[serde(rename = "switch")]
+    Switch(SwitchStep),
+    #[serde(rename = "map")]
+    Map(MapStep),
+    #[serde(rename = "parallel")]
+    Parallel(ParallelStep),
+    #[serde(rename = "transform")]
+    Transform(TransformStep),
+}
+
+/// Execute a Rust Action (the workhorse)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CallStep {
+    pub id: String,
+    #[serde(default)]
+    pub description: Option<String>,
+    pub action: SchemaRef,
+    #[serde(default)]
+    pub args: HashMap<String, String>, // CEL expressions
+    #[serde(default)]
+    pub retry: Option<RetryConfig>,
+    #[serde(default)]
+    pub timeout: Option<String>,
+    #[serde(default)]
+    pub visual: Option<VisualCoords>,
+}
+
+/// Retry configuration for call steps
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RetryConfig {
+    #[serde(default = "default_max_attempts")]
+    pub max_attempts: u32,
+}
+
+fn default_max_attempts() -> u32 { 3 }
+
+/// Exclusive branching (the logic)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SwitchStep {
+    pub id: String,
+    #[serde(default)]
+    pub description: Option<String>,
+    pub branches: Vec<Branch>,
+    #[serde(default)]
+    pub default_branch: Vec<Step>,
+    #[serde(default)]
+    pub visual: Option<VisualCoords>,
+}
+
+/// Branch in a switch statement
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Branch {
+    pub condition: String, // CEL expression
+    pub steps: Vec<Step>,
+}
+
+/// Iteration/fan-out (the scaler)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MapStep {
+    pub id: String,
+    #[serde(default)]
+    pub description: Option<String>,
+    pub items: String, // CEL expression evaluating to array
+    #[serde(default = "default_iterator")]
+    pub iterator: String, // Variable name for current item
+    #[serde(default = "default_concurrency")]
+    pub concurrency: u32,
+    pub steps: Vec<Step>,
+    #[serde(default)]
+    pub visual: Option<VisualCoords>,
+}
+
+fn default_iterator() -> String { "item".to_string() }
+fn default_concurrency() -> u32 { 5 }
+
+/// Concurrent execution of different branches (the speed)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ParallelStep {
+    pub id: String,
+    #[serde(default)]
+    pub description: Option<String>,
+    pub branches: HashMap<String, Vec<Step>>, // Named branches
+    #[serde(default)]
+    pub visual: Option<VisualCoords>,
+}
+
+/// Pure data reshaping (the glue)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TransformStep {
+    pub id: String,
+    #[serde(default)]
+    pub description: Option<String>,
+    pub output: serde_json::Value, // Object constructed using CEL expressions
+    #[serde(default)]
+    pub visual: Option<VisualCoords>,
+}
+
+/// Visual layout coordinates for flow diagrams
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VisualCoords {
+    pub x: f64,
+    pub y: f64,
+}
+
 // Re-export loader functions
 pub use loader::{LoadConfig, load_from_directory, load_from_embedded};
 

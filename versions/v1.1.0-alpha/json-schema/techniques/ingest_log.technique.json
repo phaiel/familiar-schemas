@@ -4,25 +4,27 @@
   "id": "ingest_log",
   "title": "Ingest Log Entry",
   "x-familiar-kind": "technique",
-  "x-familiar-meta-schema": {
-    "$ref": "../ecs/Technique.meta.schema.json"
-  },
-  "input": {
-    "$ref": "../../tools/SegmentationInput.schema.json"
-  },
-  "output": {
-    "$ref": "../../entities/Moment.schema.json"
-  },
+
+  "input": { "$ref": "../../tools/SegmentationInput.schema.json" },
+
+  "output": { "$ref": "../../entities/Moment.schema.json" },
+
   "steps": [
     {
       "id": "classify",
-      "action": {
-        "$ref": "../actions/llm/classify.action.json"
-      },
+      "kind": "call",
+      "description": "Classify log entry content for routing",
+      "action": { "$ref": "../actions/llm/classify.action.json" },
       "args": {
         "text": "${input.input.content}",
         "model_hint": "gpt-4o"
       }
     }
-  ]
+  ],
+
+  "return": {
+    "classification": "${classify}",
+    "log_content": "${input.input.content}",
+    "processed": true
+  }
 }
