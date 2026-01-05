@@ -11,15 +11,21 @@
       "$ref": "../components/ContractEnforcer.component.json"
     }
   ],
-  "x-familiar-input": {
-    "$ref": "../tools/GateInput.schema.json"
-  },
   "x-familiar-kind": "system",
   "x-familiar-meta-schema": {
     "$ref": "../ecs/System.meta.schema.json"
   },
-  "x-familiar-output": {
-    "$ref": "../tools/GateOutput.schema.json"
+  "signature": {
+    "inputs": {
+      "gate_input": {
+        "schema": { "$ref": "../tools/GateInput.schema.json" },
+        "semantics": "borrow"
+      }
+    },
+    "output": {
+      "schema": { "$ref": "../tools/GateOutput.schema.json" },
+      "nature": "atomic"
+    }
   },
   "x-familiar-queue": {
     "$ref": "../queues/daemon-queue.queue.json"
