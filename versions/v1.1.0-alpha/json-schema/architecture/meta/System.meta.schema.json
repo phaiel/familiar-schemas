@@ -4,11 +4,11 @@
   "title": "ECS System Meta-Schema",
   "description": "Schema for defining ECS Systems - Temporal activities / business logic units that read and write entities",
   "type": "object",
-  "required": ["title", "x-familiar-kind"],
+  "required": ["id", "x-familiar-kind"],
   "properties": {
-    "$schema": {
+    "id": {
       "type": "string",
-      "const": "http://json-schema.org/draft-07/schema#"
+      "description": "Unique identifier for this system"
     },
     "title": {
       "type": "string",
@@ -23,96 +23,78 @@
       "const": "system",
       "description": "Must be 'system' for system schemas"
     },
-    "x-familiar-input": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "description": "Reference to the input schema for this system"
-        }
-      },
-      "required": ["$ref"],
-      "description": "The input type this system accepts"
-    },
-    "x-familiar-output": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "description": "Reference to the output schema for this system"
-        }
-      },
-      "required": ["$ref"],
-      "description": "The output type this system produces"
-    },
-    "x-familiar-reads": {
+
+    "dispatch": {
       "type": "array",
+      "description": "Event-driven dispatch rules with CEL routing logic",
       "items": {
         "type": "object",
         "properties": {
-          "$ref": {
+          "trigger": {
             "type": "string",
-            "description": "Reference to an entity schema this system reads"
+            "description": "Event trigger (e.g., 'kafka:commands.weave')"
+          },
+          "technique": {
+            "$ref": "../references/SchemaRef.meta.schema.json",
+            "description": "Technique to execute"
+          },
+          "routing_policy": {
+            "type": "string",
+            "description": "CEL expression for intelligent routing (e.g., 'input.size > 10k ? \"gpu-pool\" : \"cpu-pool\"')"
+          },
+          "constraints": {
+            "type": "object",
+            "description": "Runtime constraints for this dispatch",
+            "properties": {
+              "timeout": {
+                "type": "string",
+                "description": "Activity timeout"
+              },
+              "retries": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 3
+              },
+              "priority": {
+                "type": "string",
+                "description": "CEL: input.user_tier == 'premium' ? 'high' : 'normal'"
+              }
+            }
           }
         },
-        "required": ["$ref"]
-      },
-      "description": "List of entity types this system reads from"
+        "required": ["trigger", "technique"]
+      }
     },
-    "x-familiar-writes": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "description": "Reference to an entity schema this system writes"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of entity types this system writes to"
-    },
-    "x-familiar-depends": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "description": "Reference to a component this system depends on"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of components this system requires"
-    },
-    "x-familiar-service": {
+
+    "inputs": {
       "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "pattern": "^(\\.\\./)*(nodes/)?[a-z-]+\\.node\\.json$",
-          "description": "Reference to the node that runs this system"
+      "description": "Expected input schemas for this system",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "schema": { "$ref": "../references/SchemaRef.meta.schema.json" },
+          "queue": { "$ref": "../references/SchemaRef.meta.schema.json" }
         }
-      },
-      "required": ["$ref"],
-      "description": "The node/service this system runs on"
+      }
     },
-    "x-familiar-queue": {
-      "type": "string",
-      "description": "Override queue for this system (defaults to node's queue)"
+
+    "output": {
+      "type": "object",
+      "description": "Expected output schema",
+      "properties": {
+        "schema": { "$ref": "../references/SchemaRef.meta.schema.json" },
+        "queue": { "$ref": "../references/SchemaRef.meta.schema.json" }
+      }
     },
-    "x-familiar-timeout": {
-      "type": "string",
-      "pattern": "^\\d+(s|m|h)$",
-      "description": "Activity timeout (e.g., '30s', '5m')"
+
+    "node": {
+      "$ref": "../references/SchemaRef.meta.schema.json",
+      "description": "Node that executes this system"
     },
-    "x-familiar-retries": {
-      "type": "integer",
-      "minimum": 0,
-      "default": 3,
-      "description": "Number of retry attempts on failure"
+
+    "queue": {
+      "$ref": "../references/SchemaRef.meta.schema.json",
+      "description": "Default queue for this system"
     }
   },
   "additionalProperties": true,

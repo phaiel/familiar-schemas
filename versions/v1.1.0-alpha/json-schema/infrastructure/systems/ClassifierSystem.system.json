@@ -5,17 +5,36 @@
   "title": "Classification System",
   "description": "Main classification dispatch system for incoming requests",
   "x-familiar-kind": "system",
-  "dispatch": {
-    "classification.requests": {
-      "$ref": "../../techniques/classification/classify-input.technique.json"
+  "dispatch": [
+    {
+      "trigger": "kafka:classification.requests",
+      "technique": { "$ref": "../../techniques/classification/classify-input.technique.json" },
+      "routing_policy": "input.urgency == 'high' ? 'gpu-pool' : 'cpu-pool'",
+      "constraints": {
+        "timeout": "120s",
+        "retries": 2,
+        "priority": "input.urgency"
+      }
     },
-    "segment.ready": {
-      "$ref": "../../techniques/classification/entity-only.technique.json"
+    {
+      "trigger": "kafka:segment.ready",
+      "technique": { "$ref": "../../techniques/classification/entity-only.technique.json" },
+      "routing_policy": "'cpu-pool'",
+      "constraints": {
+        "timeout": "30s",
+        "retries": 3
+      }
     },
-    "purpose.requests": {
-      "$ref": "../../techniques/classification/purpose-only.technique.json"
+    {
+      "trigger": "kafka:purpose.requests",
+      "technique": { "$ref": "../../techniques/classification/purpose-only.technique.json" },
+      "routing_policy": "'cpu-pool'",
+      "constraints": {
+        "timeout": "60s",
+        "retries": 2
+      }
     }
-  },
+  ],
   "inputs": {
     "classification_request": {
       "schema": { "$ref": "../../primitives/Segment.schema.json" },

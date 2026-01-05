@@ -1,78 +1,62 @@
 {
-  "$id": "https://familiar.dev/schem../infrastructure/systems/FatesGate.system.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Entry point to the Fates pipeline. Performs initial classification and routing of incoming messages.",
+  "$schema": "../../architecture/meta/System.meta.schema.json",
+  "$id": "infrastructure/systems/FatesGate.system.json",
+  "id": "fates-gate",
+  "title": "Fates Gate",
+  "description": "Entry point to the Fates pipeline with intelligent routing based on input characteristics",
+  "x-familiar-kind": "system",
+
   "dispatch": [
     {
-      "mapping": {
-        "input": "gate_input"
-      },
-      "technique": {
-        "$ref": "../../techniques/ingest_weave.technique.json"
-      },
-      "trigger": "kafka:commands.weave"
-    },
-    {
-      "mapping": {
-        "input": "gate_input"
-      },
-      "technique": {
-        "$ref": "../../techniques/search_memory.technique.json"
-      },
-      "trigger": "kafka:commands.search"
-    }
-  ],
-  "signature": {
-    "inputs": {
-      "gate_input": {
-        "schema": {
-          "$ref": "../../tools/GateInput.schema.json"
-        },
-        "semantics": "borrow"
+      "trigger": "kafka:commands.weave",
+      "technique": { "$ref": "../../techniques/ingest_weave.technique.json" },
+      "routing_policy": "input.content_length > 10000 ? 'high-memory-pool' : 'standard-pool'",
+      "constraints": {
+        "timeout": "30s",
+        "retries": 3,
+        "priority": "input.user_tier == 'premium' ? 'high' : 'normal'"
       }
     },
-    "output": {
-      "nature": "atomic",
-      "schema": {
-        "$ref": "../../tools/GateOutput.schema.json"
+    {
+      "trigger": "kafka:commands.search",
+      "technique": { "$ref": "../../techniques/search_memory.technique.json" },
+      "routing_policy": "input.complexity > 0.8 ? 'gpu-pool' : 'cpu-pool'",
+      "constraints": {
+        "timeout": "60s",
+        "retries": 2
+      }
+    },
+    {
+      "trigger": "kafka:commands.classify",
+      "technique": { "$ref": "../../techniques/classification/classify-input.technique.json" },
+      "routing_policy": "'ml-pool'",
+      "constraints": {
+        "timeout": "120s",
+        "retries": 1
       }
     }
-  },
-  "title": "FatesGate",
-  "x-familiar-depends": [
-    {
-      "$ref": "../../components/TigerDataStore.component.json"
-    },
-    {
-      "$ref": "../../components/ContractEnforcer.component.json"
-    }
   ],
-  "x-familiar-kind": "system",
-  "x-familiar-meta-schema": {
-    "$ref": "../../architecture/meta/System.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../queues/daemon-queue.queue.json"
-  },
-  "x-familiar-reads": [
-    {
-      "$ref": "../../entities/Moment.schema.json"
+
+  "inputs": {
+    "weave_request": {
+      "schema": { "$ref": "../../domains/windmill/ConciergeInput.schema.json" },
+      "queue": { "$ref": "../queues/daemon-queue.queue.json" }
     },
-    {
-      "$ref": "../../entities/Thread.schema.json"
+    "search_request": {
+      "schema": { "$ref": "../../entities_api/WeaveRequest.schema.json" },
+      "queue": { "$ref": "../queues/daemon-queue.queue.json" }
     },
-    {
-      "$ref": "../../entities/Course.schema.json"
+    "classify_request": {
+      "schema": { "$ref": "../../primitives/Segment.schema.json" },
+      "queue": { "$ref": "../queues/classifier-queue.queue.json" }
     }
-  ],
-  "x-familiar-retries": 3,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
   },
-  "x-familiar-timeout": "30s",
-  "x-familiar-writes": [
-    {
-      "$ref": "../../entities/Shuttle.schema.json"
-    }
-  ]
+
+  "output": {
+    "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+    "queue": { "$ref": "../queues/daemon-queue.queue.json" }
+  },
+
+  "node": { "$ref": "../nodes/familiar-daemon.node.json" },
+  "queue": { "$ref": "../queues/daemon-queue.queue.json" }
 }

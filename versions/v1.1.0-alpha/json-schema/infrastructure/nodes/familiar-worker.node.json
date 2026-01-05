@@ -1,27 +1,24 @@
 {
-  "$id": "https://familiar.dev/schem../infrastructure/nodes/familiar-worker.node.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Batch processing service node for IO-bound operations. Runs non-LLM tasks like database maintenance and exports.",
-  "title": "FamiliarWorker",
-  "x-familiar-components": [
-    {
-      "$ref": "../../components/DatabasePool.component.json"
-    }
-  ],
-  "x-familiar-concurrency": 50,
+  "$schema": "../../architecture/meta/Node.meta.schema.json",
+  "$id": "infrastructure/nodes/familiar-worker.node.json",
+  "id": "familiar-worker",
+  "title": "Familiar Worker",
+  "description": "Batch processing node for IO-bound operations with high concurrency",
   "x-familiar-kind": "node",
-  "x-familiar-memory": "512Mi",
-  "x-familiar-meta-schema": {
-    "$ref": "../../architecture/meta/Node.meta.schema.json"
+
+  "constraints": {
+    "memory": "node.available_memory > 1Gi",
+    "cpu": "node.cpu_usage < 0.9",
+    "io_capacity": "node.active_db_connections < 50"
   },
-  "x-familiar-queue": {
-    "$ref": "../queues/worker-queue.queue.json"
+
+  "resources": {
+    "cpu": "4000m",
+    "memory": "16Gi",
+    "storage": "200Gi"
   },
-  "x-familiar-resource-class": "io",
-  "x-familiar-resources": [
-    {
-      "$ref": "../../resources/postgres-main.resource.json"
-    }
-  ],
-  "x-familiar-systems": []
+
+  "systems": [
+    { "$ref": "../systems/FeatureExtractionSystem.system.json" }
+  ]
 }

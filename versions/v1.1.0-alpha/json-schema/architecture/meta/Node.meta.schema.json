@@ -4,11 +4,11 @@
   "title": "ECS Node Meta-Schema",
   "description": "Schema for defining ECS Nodes - service definitions that compose Systems and Components (e.g., familiar-daemon, familiar-worker)",
   "type": "object",
-  "required": ["title", "x-familiar-kind", "x-familiar-queue", "x-familiar-resource-class"],
+  "required": ["id", "x-familiar-kind"],
   "properties": {
-    "$schema": {
+    "id": {
       "type": "string",
-      "const": "http://json-schema.org/draft-07/schema#"
+      "description": "Unique identifier for this node type"
     },
     "title": {
       "type": "string",
@@ -23,70 +23,57 @@
       "const": "node",
       "description": "Must be 'node' for node schemas"
     },
-    "x-familiar-queue": {
-      "type": "string",
-      "description": "The Temporal task queue this node consumes from"
-    },
-    "x-familiar-resource-class": {
-      "type": "string",
-      "enum": ["llm", "io", "cpu", "batch"],
-      "description": "Resource class for automatic scaling configuration"
-    },
-    "x-familiar-systems": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "pattern": "^(\\.\\./)*(systems/)?[A-Za-z]+\\.system\\.json$",
-            "description": "Reference to a system schema"
-          }
+
+    "constraints": {
+      "type": "object",
+      "description": "CEL expressions evaluated at runtime for scheduling decisions",
+      "properties": {
+        "memory": {
+          "type": "string",
+          "description": "CEL: node.available_memory > 2Gi"
         },
-        "required": ["$ref"]
-      },
-      "description": "List of systems this node executes"
-    },
-    "x-familiar-components": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "pattern": "^(\\.\\./)*(components/)?[A-Za-z]+\\.component\\.json$",
-            "description": "Reference to a component schema"
-          }
+        "cpu": {
+          "type": "string",
+          "description": "CEL: node.cpu_usage < 0.8"
         },
-        "required": ["$ref"]
-      },
-      "description": "List of components this node initializes"
-    },
-    "x-familiar-resources": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "pattern": "^(\\.\\./)*(resources/)?[a-z-]+\\.resource\\.json$",
-            "description": "Reference to a resource schema"
-          }
+        "version": {
+          "type": "string",
+          "description": "CEL: node.schema_version >= '1.2.0'"
         },
-        "required": ["$ref"]
-      },
-      "description": "List of external resources this node connects to"
+        "health": {
+          "type": "string",
+          "description": "CEL: node.queue_depth < 100"
+        },
+        "custom": {
+          "type": "string",
+          "description": "Application-specific CEL constraints"
+        }
+      }
     },
-    "x-familiar-concurrency": {
-      "type": "integer",
-      "minimum": 1,
-      "default": 10,
-      "description": "Default concurrency for this node's worker"
+
+    "resources": {
+      "type": "object",
+      "description": "Resource requirements for infrastructure provisioning",
+      "properties": {
+        "cpu": {
+          "type": "string",
+          "description": "CPU allocation (e.g., '2000m' for 2 cores)"
+        },
+        "memory": {
+          "type": "string",
+          "description": "Memory allocation (e.g., '8Gi')"
+        },
+        "storage": {
+          "type": "string",
+          "description": "Storage allocation (e.g., '100Gi')"
+        }
+      }
     },
-    "x-familiar-memory": {
-      "type": "string",
-      "pattern": "^\\d+(Mi|Gi)$",
-      "description": "Memory allocation (e.g., '2Gi', '512Mi')"
+
+    "systems": {
+      "type": "array",
+      "description": "Systems this node type executes",
+      "items": { "$ref": "../references/SchemaRef.meta.schema.json" }
     }
   },
   "additionalProperties": true,

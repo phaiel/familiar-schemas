@@ -1,27 +1,26 @@
 {
   "$schema": "../../architecture/meta/Node.meta.schema.json",
   "$id": "infrastructure/nodes/classifier.node.json",
-  "id": "classifier-node",
+  "id": "classifier",
   "title": "Classification Node",
   "description": "ML-optimized node for classification and feature extraction workloads",
   "x-familiar-kind": "node",
-  "concurrency": 8,
-  "memory": "16Gi",
-  "resource_class": "ml",
-  "resources": [
-    {
-      "$ref": "../../resources/transformer-models.resource.json"
-    },
-    {
-      "$ref": "../../resources/classification-models.resource.json"
-    }
-  ],
+
+  "constraints": {
+    "memory": "node.available_memory > 4Gi",
+    "ml_ready": "node.has_ml_libraries == true",
+    "load": "node.active_ml_jobs < 8",
+    "gpu": "node.gpu_memory_available > 2Gi"
+  },
+
+  "resources": {
+    "cpu": "8000m",
+    "memory": "32Gi",
+    "gpu": "2"
+  },
+
   "systems": [
-    {
-      "$ref": "../../infrastructure/systems/ClassifierSystem.system.json"
-    },
-    {
-      "$ref": "../../infrastructure/systems/FeatureExtractionSystem.system.json"
-    }
+    { "$ref": "../systems/ClassifierSystem.system.json" },
+    { "$ref": "../systems/FeatureExtractionSystem.system.json" }
   ]
 }
