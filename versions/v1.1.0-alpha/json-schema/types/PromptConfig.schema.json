@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Schema for TypeScript prompt configuration Runtime prompts are in servic../domai../domains/windmill/scripts/*.ts",
+  "description": "Schema for TypeScript prompt configuration Runtime prompts are in servic../domains/windmill/scripts/*.ts",
   "properties": {
     "max_tokens": {
       "format": "uint32",

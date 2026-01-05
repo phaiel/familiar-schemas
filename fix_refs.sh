@@ -15,8 +15,9 @@ echo "Found $BROKEN_REFS potential reference issues"
 # Common fixes for known reorganizations
 echo "🔧 Applying known fixes..."
 
-# Fix corrupted double-replaced paths (domai../domains/ → domains/)
+# Fix corrupted double-replaced paths (domai../domains/ → domains/, domai../infrastructure/ → infrastructure/)
 find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../domai../domains/|../domains/|g' {} \;
+find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../domai../infrastructure/|../infrastructure/|g' {} \;
 
 # Fix domain references (agentic, auth, conversation, windmill moved to domains/)
 find versions/latest/json-schema -name "*.json" -exec sed -i '' 's|../agentic/|../domains/agentic/|g' {} \;

@@ -45,7 +45,7 @@
       ]
     },
     "invite_type": {
-      "$ref": "../domai../domains/auth/InviteType.schema.json"
+      "$ref": "../domains/auth/InviteType.schema.json"
     },
     "invited_by": {
       "anyOf": [

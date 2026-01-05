@@ -11,7 +11,7 @@
               "type": "string"
             },
             "level": {
-              "$ref": "../domai../domains/agentic/LogLevel.schema.json"
+              "$ref": "../domains/agentic/LogLevel.schema.json"
             },
             "message_type": {
               "enum": [
@@ -95,7 +95,7 @@
             },
             "findings": {
               "items": {
-                "$ref": "../domai../domains/agentic/Finding.schema.json"
+                "$ref": "../domains/agentic/Finding.schema.json"
               },
               "type": "array"
             },
@@ -313,7 +313,7 @@
         "message_type": {
           "anyOf": [
             {
-              "$ref": "../domai../domains/agentic/AgentMessageType.schema.json"
+              "$ref": "../domains/agentic/AgentMessageType.schema.json"
             },
             {
               "type": "null"
@@ -455,7 +455,7 @@
         "state": {
           "allOf": [
             {
-              "$ref": "../domai../domains/agentic/AgentState.schema.json"
+              "$ref": "../domains/agentic/AgentState.schema.json"
             }
           ],
           "description": "Updated agent state"
