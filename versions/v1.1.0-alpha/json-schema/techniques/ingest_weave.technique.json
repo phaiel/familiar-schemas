@@ -1,0 +1,31 @@
+{
+  "$schema": "../../ecs/Technique.meta.schema.json",
+  "$id": "techniques/ingest_weave.technique.json",
+  "id": "ingest_weave",
+  "title": "Ingest User Weave",
+  "x-familiar-kind": "technique",
+
+  "input": { "$ref": "../../tools/GateInput.schema.json" },
+
+  "output": { "$ref": "../../entities/Course.schema.json" },
+
+  "steps": [
+    {
+      "id": "classify_weave",
+      "action": { "$ref": "../actions/llm/classify.action.json" },
+      "args": {
+        "text": "${input.content}",
+        "model_hint": "gpt-4o"
+      }
+    },
+    {
+      "id": "create_course",
+      "action": { "$ref": "../actions/entity/spawn_course.action.json" },
+      "args": {
+        "weave_id": "${input.weave_id}",
+        "classification": "${classify_weave}",
+        "content": "${input.content}"
+      }
+    }
+  ]
+}

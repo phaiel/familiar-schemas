@@ -27,6 +27,23 @@
       "nature": "atomic"
     }
   },
+
+  "dispatch": [
+    {
+      "trigger": "kafka:commands.weave",
+      "technique": { "$ref": "../techniques/ingest_weave.technique.json" },
+      "mapping": {
+        "input": "gate_input"
+      }
+    },
+    {
+      "trigger": "kafka:commands.search",
+      "technique": { "$ref": "../techniques/search_memory.technique.json" },
+      "mapping": {
+        "input": "gate_input"
+      }
+    }
+  ],
   "x-familiar-queue": {
     "$ref": "../queues/daemon-queue.queue.json"
   },

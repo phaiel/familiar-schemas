@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../ecs/Action.meta.schema.json",
+  "$id": "actions/entity/spawn_course.action.json",
+  "id": "entity.spawn_course",
+  "title": "Spawn Course Entity",
+  "x-familiar-kind": "action",
+
+  "signature": {
+    "inputs": {
+      "weave_id": {
+        "schema": { "$ref": "../../../primitives/UUID.schema.json" },
+        "semantics": "move"
+      },
+      "classification": {
+        "schema": { "$ref": "../../../entities_api/ClassificationResponse.schema.json" },
+        "semantics": "borrow"
+      },
+      "content": {
+        "schema": { "$ref": "../../../primitives/String.schema.json" },
+        "semantics": "borrow"
+      }
+    },
+    "output": {
+      "schema": { "$ref": "../../../entities/Course.schema.json" },
+      "nature": "atomic"
+    }
+  }
+}

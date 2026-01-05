@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../ecs/Action.meta.schema.json",
+  "$id": "actions/entity/rank_search_results.action.json",
+  "id": "entity.rank_search_results",
+  "title": "Rank Search Results",
+  "x-familiar-kind": "action",
+
+  "signature": {
+    "inputs": {
+      "results": {
+        "schema": {
+          "type": "array",
+          "items": { "$ref": "../../../entities/Entity.schema.json" }
+        },
+        "semantics": "borrow"
+      },
+      "query": {
+        "schema": { "$ref": "../../../primitives/String.schema.json" },
+        "semantics": "borrow"
+      }
+    },
+    "output": {
+      "schema": { "$ref": "../../../entities_api/WeaveUnitResponse.schema.json" },
+      "nature": "atomic"
+    }
+  }
+}
