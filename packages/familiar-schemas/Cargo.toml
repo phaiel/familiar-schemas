@@ -61,9 +61,6 @@ directories = "5.0"
 # General utilities
 anyhow = "1.0"
 
-# CEL evaluation for multi-node constraints
-cel-interpreter = "0.4"
-
 # ========== Graph Infrastructure (NEW) ==========
 
 # Graph data structures and algorithms (SCC, toposort, closure)

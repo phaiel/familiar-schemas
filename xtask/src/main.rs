@@ -23,15 +23,6 @@ enum Commands {
     },
     /// Interactive schema exploration
     Explore,
-    /// Generate infrastructure manifests from schemas
-    Infra {
-        /// Environment config file (e.g., infra/production.env.json)
-        #[arg(short, long)]
-        env: String,
-        /// Output directory for manifests
-        #[arg(short, long, default_value = "manifests")]
-        output: String,
-    },
 }
 
 fn main() {
@@ -61,23 +52,6 @@ fn main() {
         Commands::Explore => {
             println!("🎯 Starting interactive exploration...");
             println!("💡 Exploration not yet implemented - use graph-export for DOT format");
-        }
-
-        Commands::Infra { env, output } => {
-            println!("🏗️  Generating infrastructure manifests...");
-            println!("📋 Environment: {}", env);
-            println!("📁 Output directory: {}", output);
-
-            // Create output directory if it doesn't exist
-            std::fs::create_dir_all(&output).unwrap_or_else(|e| {
-                eprintln!("❌ Failed to create output directory: {}", e);
-                std::process::exit(1);
-            });
-
-            run_command(&[
-                "cargo", "run", "-p", "familiar-schemas", "--bin", "infra-generator",
-                "--", "--env", &env, "--output", &output
-            ]);
         }
     }
 }

@@ -13,9 +13,7 @@
 //! Key principle: Classification (SchemaShape, SCC, TypeKind) is config-free.
 //! Only emission/rendering uses configuration (RenderProfile).
 
-pub mod cel;
 pub mod config;
-pub mod infra;
 pub mod names;
 pub mod rust;
 
