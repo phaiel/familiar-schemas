@@ -17,7 +17,7 @@
       ]
     },
     "id": {
-      "$ref": "../primitives/AuditLogId.schema.json"
+      "$ref": "../../primitives/AuditLogId.schema.json"
     },
     "ip_address": {
       "default": null,
@@ -57,7 +57,7 @@
     "user_email": {
       "anyOf": [
         {
-          "$ref": "../primitives/Email.schema.json"
+          "$ref": "../../primitives/Email.schema.json"
         },
         {
           "type": "null"
@@ -83,10 +83,10 @@
   "type": "object",
   "x-familiar-kind": "auth",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Auth.meta.schema.json"
+    "$ref": "../../architecture/meta/Auth.meta.schema.json"
   },
   "x-familiar-requires-auth": true,
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

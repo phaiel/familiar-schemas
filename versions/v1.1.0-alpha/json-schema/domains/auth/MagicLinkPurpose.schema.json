@@ -11,20 +11,20 @@
   "type": "string",
   "x-familiar-kind": "auth",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Auth.meta.schema.json"
+    "$ref": "../../architecture/meta/Auth.meta.schema.json"
   },
   "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
   "x-familiar-sea-orm": {
-    "rs_type": "String",
     "db_type": "String(StringLen::None)",
+    "rs_type": "String",
     "values": {
       "Login": "login",
+      "PasswordReset": "password_reset",
       "Signup": "signup",
-      "VerifyEmail": "verify_email",
-      "PasswordReset": "password_reset"
+      "VerifyEmail": "verify_email"
     }
+  },
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

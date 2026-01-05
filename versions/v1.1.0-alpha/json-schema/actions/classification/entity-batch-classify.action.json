@@ -1,0 +1,48 @@
+{
+  "$schema": "../../architecture/meta/Action.meta.schema.json",
+  "$id": "actions/classification/entity-batch-classify.action.json",
+  "id": "classification.entity-batch-classify",
+  "title": "Batch Entity Classification",
+  "description": "Classify entity types across multiple segments in batch",
+  "x-familiar-kind": "action",
+  "x-familiar-compute-category": "ai",
+  "x-familiar-execution-model": "async",
+  "x-familiar-side-effects": ["ml-inference"],
+  "x-familiar-reliability": "idempotent",
+  "x-familiar-tooling": [
+    {
+      "category": "ml-classification",
+      "capabilities": ["batch-entity-recognition", "nlp"],
+      "purpose": "Batch ML models for entity type classification"
+    }
+  ],
+  "signature": {
+    "inputs": {
+      "segments": {
+        "schema": {
+          "type": "array",
+          "items": { "$ref": "../../primitives/Segment.schema.json" }
+        },
+        "semantics": "borrow"
+      },
+      "context": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "user_patterns": { "type": "object" },
+            "known_threads": { "type": "array" }
+          }
+        },
+        "semantics": "borrow",
+        "nature": "optional"
+      }
+    },
+    "output": {
+      "schema": {
+        "type": "array",
+        "items": { "$ref": "../../primitives/EntityMention.schema.json" }
+      },
+      "nature": "atomic"
+    }
+  }
+}

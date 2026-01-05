@@ -33,7 +33,7 @@
       "type": "string"
     },
     "entity_type": {
-      "$ref": "../entities/FamiliarEntityType.schema.json"
+      "$ref": "../domains/conversation/FamiliarEntityType.schema.json"
     },
     "id": {
       "$ref": "../primitives/EntityId.schema.json"
@@ -95,7 +95,7 @@
       ]
     },
     "status": {
-      "$ref": "../entities/EntityStatus.schema.json"
+      "$ref": "../domains/conversation/EntityStatus.schema.json"
     },
     "subject": {
       "type": [
@@ -127,18 +127,18 @@
   "x-familiar-meta-schema": {
     "$ref": "../architecture/meta/Database.meta.schema.json"
   },
-  "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "familiar_entities",
   "x-familiar-module": "conversation",
   "x-familiar-primary-key": "id",
   "x-familiar-relations": [
     {
-      "type": "belongs_to",
-      "target": "TenantModel",
       "from": "tenant_id",
-      "to": "id"
+      "target": "TenantModel",
+      "to": "id",
+      "type": "belongs_to"
     }
-  ]
+  ],
+  "x-familiar-service": {
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "familiar_entities"
 }

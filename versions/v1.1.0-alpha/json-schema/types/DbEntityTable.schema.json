@@ -14,5 +14,10 @@
   "title": "DbEntityTable",
   "type": "string",
   "x-familiar-kind": "meta",
-  "x-familiar-service": "familiar-core"
+  "x-familiar-meta-schema": {
+    "$ref": "../architecture/meta/Database.meta.schema.json"
+  },
+  "x-familiar-service": {
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+  }
 }

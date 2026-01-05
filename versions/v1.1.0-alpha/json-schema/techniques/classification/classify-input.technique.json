@@ -1,0 +1,64 @@
+{
+  "$schema": "../../architecture/meta/Technique.meta.schema.json",
+  "$id": "techniques/classification/classify-input.technique.json",
+  "id": "classification.classify-input",
+  "title": "Classify Input Pipeline",
+  "description": "Complete input classification pipeline: segment → classify → extract features",
+  "x-familiar-kind": "technique",
+  "input": {
+    "$ref": "../../architecture/references/SchemaRef.meta.schema.json"
+  },
+  "output": {
+    "$ref": "../../architecture/references/SchemaRef.meta.schema.json"
+  },
+  "steps": [
+    {
+      "id": "segment",
+      "kind": "call",
+      "action": {
+        "$ref": "../../actions/classification/segment-input.action.json"
+      },
+      "args": {
+        "raw_input": "$.input.text",
+        "config": "$.input.config"
+      }
+    },
+    {
+      "id": "classify_purpose",
+      "kind": "call",
+      "action": {
+        "$ref": "../../actions/classification/purpose-classify.action.json"
+      },
+      "args": {
+        "segment": "$.segment[0]"
+      }
+    },
+    {
+      "id": "classify_entities",
+      "kind": "call",
+      "action": {
+        "$ref": "../../actions/classification/entity-classify.action.json"
+      },
+      "args": {
+        "segment": "$.segment[0]",
+        "context": "$.input.context"
+      }
+    },
+    {
+      "id": "extract_features",
+      "kind": "call",
+      "action": {
+        "$ref": "../../actions/classification/extract-features.action.json"
+      },
+      "args": {
+        "segment": "$.segment[0]"
+      }
+    }
+  ],
+  "return": {
+    "segmented_input": "$.segment",
+    "purpose_classification": "$.classify_purpose",
+    "entity_classifications": "$.classify_entities",
+    "features": "$.extract_features"
+  }
+}

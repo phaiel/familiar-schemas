@@ -1,5 +1,5 @@
 {
-  "$schema": "../../architecture/meta/Technique.meta.schema.json",
+  "$schema": "../../ecs/Technique.meta.schema.json",
   "$id": "techniques/ingest_weave.technique.json",
   "id": "ingest_weave",
   "title": "Ingest User Weave",

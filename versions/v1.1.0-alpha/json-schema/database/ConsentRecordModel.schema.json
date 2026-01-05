@@ -15,7 +15,7 @@
   },
   "properties": {
     "consent_type": {
-      "$ref": "../entities/ConsentType.schema.json"
+      "$ref": "../domains/auth/ConsentType.schema.json"
     },
     "created_at": {
       "format": "date-time",
@@ -62,18 +62,18 @@
   "x-familiar-meta-schema": {
     "$ref": "../architecture/meta/Database.meta.schema.json"
   },
-  "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "consent_records",
   "x-familiar-module": "auth",
   "x-familiar-primary-key": "id",
   "x-familiar-relations": [
     {
-      "type": "belongs_to",
-      "target": "UserModel",
       "from": "user_id",
-      "to": "id"
+      "target": "UserModel",
+      "to": "id",
+      "type": "belongs_to"
     }
-  ]
+  ],
+  "x-familiar-service": {
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-table": "consent_records"
 }

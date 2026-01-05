@@ -1,34 +1,42 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MagicLinkConsumeOutput",
   "description": "Output from magic link consume action",
-  "type": "object",
   "properties": {
-    "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
-    },
     "email": {
-      "type": "string",
-      "format": "email"
+      "format": "email",
+      "type": "string"
+    },
+    "invite_code": {
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "is_new_user": {
       "type": "boolean"
     },
-    "session_token": {
-      "type": "string"
-    },
-    "session_expires_at": {
-      "$ref": "../primitives/Timestamp.schema.json"
-    },
     "needs_family": {
       "type": "boolean"
     },
-    "invite_code": {
-      "type": ["string", "null"]
+    "session_expires_at": {
+      "$ref": "../../primitives/Timestamp.schema.json"
+    },
+    "session_token": {
+      "type": "string"
+    },
+    "user_id": {
+      "$ref": "../../primitives/UserId.schema.json"
     }
   },
-  "required": ["user_id", "email", "is_new_user", "session_token", "session_expires_at", "needs_family"],
+  "required": [
+    "user_id",
+    "email",
+    "is_new_user",
+    "session_token",
+    "session_expires_at",
+    "needs_family"
+  ],
+  "title": "MagicLinkConsumeOutput",
+  "type": "object",
   "x-familiar-kind": "response"
 }
-
-

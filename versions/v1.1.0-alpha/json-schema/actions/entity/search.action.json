@@ -1,5 +1,5 @@
 {
-  "$schema": "../../../architecture/meta/Action.meta.schema.json",
+  "$schema": "../../../ecs/Action.meta.schema.json",
   "$id": "actions/entity/search.action.json",
   "id": "entity.search",
   "title": "Search Entities",
@@ -24,18 +24,18 @@
   "signature": {
     "inputs": {
       "query": {
-        "schema": { "$ref": "../../../primitives/String.schema.json" },
+        "schema": { "$ref": "../../primitives/String.schema.json" },
         "semantics": "borrow"
       },
       "user_id": {
-        "schema": { "$ref": "../../../primitives/UUID.schema.json" },
+        "schema": { "$ref": "../../primitives/UUID.schema.json" },
         "semantics": "borrow"
       }
     },
     "output": {
       "schema": {
         "type": "array",
-        "items": { "$ref": "../../../entities/Entity.schema.json" }
+        "items": { "$ref": "../../components/EntityMeta.schema.json" }
       },
       "nature": "atomic"
     }

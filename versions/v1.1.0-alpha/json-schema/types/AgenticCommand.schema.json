@@ -157,7 +157,7 @@
           "default": null,
           "description": "Optional multimodal blocks (images, audio, etc.)",
           "items": {
-            "$ref": "../entities_api/WeaveBlock.schema.json"
+            "$ref": "../multimodal/WeaveBlock.schema.json"
           },
           "type": [
             "array",

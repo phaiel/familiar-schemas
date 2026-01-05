@@ -1,0 +1,39 @@
+{
+  "$schema": "../../architecture/meta/Technique.meta.schema.json",
+  "$id": "techniques/classification/batch-process.technique.json",
+  "id": "classification.batch-process",
+  "title": "Batch Classification Pipeline",
+  "description": "Process multiple segments through the full classification pipeline",
+  "x-familiar-kind": "technique",
+  "input": {
+    "type": "array",
+    "items": { "$ref": "../../primitives/Segment.schema.json" }
+  },
+  "output": {
+    "type": "array",
+    "items": { "$ref": "../../primitives/SegmentFeatures.schema.json" }
+  },
+  "steps": [
+    {
+      "id": "batch_classify",
+      "kind": "call",
+      "action": {
+        "$ref": "../../actions/classification/entity-batch-classify.action.json"
+      },
+      "args": {
+        "segments": "$.input"
+      }
+    },
+    {
+      "id": "batch_features",
+      "kind": "map",
+      "technique": {
+        "$ref": "../../actions/classification/extract-features.action.json"
+      },
+      "args": {
+        "segment": "$.input[*]"
+      }
+    }
+  ],
+  "return": "$.batch_features"
+}

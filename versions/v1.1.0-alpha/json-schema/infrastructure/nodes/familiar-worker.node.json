@@ -1,26 +1,26 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://familiar.dev/schem../infrastructure/nodes/familiar-worker.node.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Batch processing service node for IO-bound operations. Runs non-LLM tasks like database maintenance and exports.",
   "title": "FamiliarWorker",
   "x-familiar-components": [
     {
-      "$ref": "../components/DatabasePool.component.json"
+      "$ref": "../../components/DatabasePool.component.json"
     }
   ],
   "x-familiar-concurrency": 50,
   "x-familiar-kind": "node",
   "x-familiar-memory": "512Mi",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Node.meta.schema.json"
+    "$ref": "../../architecture/meta/Node.meta.schema.json"
   },
   "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
+    "$ref": "../queues/worker-queue.queue.json"
   },
   "x-familiar-resource-class": "io",
   "x-familiar-resources": [
     {
-      "$ref": "../resources/postgres-main.resource.json"
+      "$ref": "../../resources/postgres-main.resource.json"
     }
   ],
   "x-familiar-systems": []

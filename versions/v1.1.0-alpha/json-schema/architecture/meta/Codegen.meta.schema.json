@@ -1,58 +1,56 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://familiar.dev/schemas/architecture/Codegen.meta.schema.json",
-  "title": "Codegen Meta-Schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Extensions for language-agnostic code generation from JSON Schema. These x-familiar-* properties can be added to any schema to control how it is represented in generated code (Rust, TypeScript, Python).",
-  "type": "object",
   "properties": {
-    "x-familiar-enum-repr": {
-      "$ref": "EnumRepr.schema.json",
-      "description": "How to serialize union variants. Required for oneOf schemas."
-    },
-    "x-familiar-discriminator": {
-      "type": "string",
-      "description": "Field name used to distinguish variants (e.g., 'type', 'command_type', 'kind'). Required for internally_tagged and adjacently_tagged enums."
-    },
-    "x-familiar-content": {
-      "type": "string",
-      "description": "Field name for content in adjacently_tagged enums (e.g., 'data', 'value'). Only used with adjacently_tagged repr."
-    },
     "x-familiar-casing": {
-      "$ref": "Casing.schema.json",
+      "$ref": "../enums/Casing.schema.json",
       "description": "Naming convention for fields and variant values in serialized output."
     },
+    "x-familiar-content": {
+      "description": "Field name for content in adjacently_tagged enums (e.g., 'data', 'value'). Only used with adjacently_tagged repr.",
+      "type": "string"
+    },
+    "x-familiar-default": {
+      "default": false,
+      "description": "Use Default::default() for missing fields. Maps to #[serde(default)] in Rust.",
+      "type": "boolean"
+    },
+    "x-familiar-discriminator": {
+      "description": "Field name used to distinguish variants (e.g., 'type', 'command_type', 'kind'). Required for internally_tagged and adjacently_tagged enums.",
+      "type": "string"
+    },
+    "x-familiar-enum-repr": {
+      "$ref": "../enums/EnumRepr.schema.json",
+      "description": "How to serialize union variants. Required for oneOf schemas."
+    },
+    "x-familiar-flatten": {
+      "default": false,
+      "description": "Flatten nested struct fields into parent. Maps to #[serde(flatten)] in Rust, intersection types in TypeScript.",
+      "type": "boolean"
+    },
+    "x-familiar-newtype": {
+      "default": false,
+      "description": "Wrap primitive in a semantic newtype wrapper. Creates a distinct type rather than a type alias.",
+      "type": "boolean"
+    },
+    "x-familiar-skip-none": {
+      "default": false,
+      "description": "Omit null/None fields when serializing. Maps to #[serde(skip_serializing_if = \"Option::is_none\")] in Rust.",
+      "type": "boolean"
+    },
     "x-familiar-variants": {
-      "type": "object",
       "additionalProperties": {
         "type": "string"
       },
-      "description": "Map of JSON serialized value to code identifier name. Keys are the snake_case values in JSON, values are PascalCase identifiers in code."
-    },
-    "x-familiar-flatten": {
-      "type": "boolean",
-      "default": false,
-      "description": "Flatten nested struct fields into parent. Maps to #[serde(flatten)] in Rust, intersection types in TypeScript."
-    },
-    "x-familiar-skip-none": {
-      "type": "boolean",
-      "default": false,
-      "description": "Omit null/None fields when serializing. Maps to #[serde(skip_serializing_if = \"Option::is_none\")] in Rust."
-    },
-    "x-familiar-newtype": {
-      "type": "boolean",
-      "default": false,
-      "description": "Wrap primitive in a semantic newtype wrapper. Creates a distinct type rather than a type alias."
-    },
-    "x-familiar-default": {
-      "type": "boolean",
-      "default": false,
-      "description": "Use Default::default() for missing fields. Maps to #[serde(default)] in Rust."
+      "description": "Map of JSON serialized value to code identifier name. Keys are the snake_case values in JSON, values are PascalCase identifiers in code.",
+      "type": "object"
     }
   },
-  "x-familiar-kind": "codegen",
-  "x-familiar-generated": false
+  "title": "Codegen Meta-Schema",
+  "type": "object",
+  "x-familiar-generated": false,
+  "x-familiar-platform": {
+    "$ref": "../Platform.meta.schema.json"
+  }
 }
-
-
-
-

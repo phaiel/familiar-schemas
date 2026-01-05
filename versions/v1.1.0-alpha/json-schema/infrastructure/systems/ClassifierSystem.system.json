@@ -1,0 +1,46 @@
+{
+  "$schema": "../../architecture/meta/System.meta.schema.json",
+  "$id": "infrastructure/systems/ClassifierSystem.system.json",
+  "id": "classifier-system",
+  "title": "Classification System",
+  "description": "Main classification dispatch system for incoming requests",
+  "x-familiar-kind": "system",
+  "dispatch": {
+    "classification.requests": {
+      "$ref": "../../techniques/classification/classify-input.technique.json"
+    },
+    "segment.ready": {
+      "$ref": "../../techniques/classification/entity-only.technique.json"
+    },
+    "purpose.requests": {
+      "$ref": "../../techniques/classification/purpose-only.technique.json"
+    }
+  },
+  "inputs": {
+    "classification_request": {
+      "schema": { "$ref": "../../primitives/Segment.schema.json" },
+      "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+    },
+    "segment_request": {
+      "schema": { "$ref": "../../primitives/Segment.schema.json" },
+      "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+    },
+    "batch_request": {
+      "schema": {
+        "type": "array",
+        "items": { "$ref": "../../primitives/Segment.schema.json" }
+      },
+      "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+    }
+  },
+  "output": {
+    "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+    "queue": { "$ref": "../../infrastructure/queues/classifier-queue.queue.json" }
+  },
+  "node": {
+    "$ref": "../../infrastructure/nodes/classifier.node.json"
+  },
+  "queue": {
+    "$ref": "../../infrastructure/queues/classifier-queue.queue.json"
+  }
+}

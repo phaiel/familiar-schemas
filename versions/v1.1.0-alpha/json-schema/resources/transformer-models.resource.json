@@ -1,0 +1,16 @@
+{
+  "$schema": "../architecture/meta/Resource.meta.schema.json",
+  "$id": "resources/transformer-models.resource.json",
+  "id": "transformer-models",
+  "title": "Transformer Models",
+  "description": "Hugging Face transformer models for NLP tasks",
+  "x-familiar-kind": "resource",
+  "resource_type": "ml-models",
+  "endpoint": "https://api-inference.huggingface.co",
+  "models": [
+    "bert-base-uncased",
+    "roberta-base",
+    "distilbert"
+  ],
+  "api_key_required": true
+}

@@ -18,7 +18,7 @@
       "type": "string"
     },
     "id": {
-      "$ref": "../primitives/JoinRequestId.schema.json"
+      "$ref": "../../primitives/JoinRequestId.schema.json"
     },
     "message": {
       "default": null,
@@ -51,13 +51,13 @@
       ]
     },
     "status": {
-      "$ref": "../entities/JoinRequestStatus.schema.json"
+      "$ref": "JoinRequestStatus.schema.json"
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../primitives/TenantId.schema.json"
     },
     "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
+      "$ref": "../../primitives/UserId.schema.json"
     }
   },
   "required": [
@@ -71,10 +71,10 @@
   "type": "object",
   "x-familiar-kind": "auth",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Auth.meta.schema.json"
+    "$ref": "../../architecture/meta/Auth.meta.schema.json"
   },
   "x-familiar-requires-auth": true,
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

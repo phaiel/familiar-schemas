@@ -167,7 +167,7 @@
     "blocks": {
       "description": "Multimodal blocks (replaces/augments simple text weave)",
       "items": {
-        "$ref": "WeaveBlock.schema.json"
+        "$ref": "../multimodal/WeaveBlock.schema.json"
       },
       "type": [
         "array",
@@ -184,7 +184,7 @@
     "context_blocks": {
       "description": "Context can also be multimodal",
       "items": {
-        "$ref": "WeaveBlock.schema.json"
+        "$ref": "../multimodal/WeaveBlock.schema.json"
       },
       "type": [
         "array",

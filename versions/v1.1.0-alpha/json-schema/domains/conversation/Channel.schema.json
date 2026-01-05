@@ -31,7 +31,7 @@
   "description": "A channel (conversation space)",
   "properties": {
     "channel_type": {
-      "$ref": "../entities/ChannelType.schema.json"
+      "$ref": "ChannelType.schema.json"
     },
     "created_at": {
       "format": "date-time",
@@ -45,7 +45,7 @@
       ]
     },
     "id": {
-      "$ref": "../primitives/ChannelId.schema.json"
+      "$ref": "../../primitives/ChannelId.schema.json"
     },
     "name": {
       "type": "string"
@@ -63,7 +63,7 @@
       "default": null
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
@@ -82,9 +82,9 @@
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Conversation.meta.schema.json"
+    "$ref": "../../architecture/meta/Conversation.meta.schema.json"
   },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

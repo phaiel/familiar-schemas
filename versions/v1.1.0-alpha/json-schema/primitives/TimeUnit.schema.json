@@ -13,5 +13,8 @@
   ],
   "title": "TimeUnit",
   "type": "string",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "primitive",
+  "x-familiar-platform": {
+    "$ref": "../architecture/meta/Data.meta.schema.json"
+  }
 }

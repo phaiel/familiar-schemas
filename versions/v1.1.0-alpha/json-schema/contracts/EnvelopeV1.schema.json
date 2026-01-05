@@ -350,7 +350,7 @@
             "request_context": {
               "anyOf": [
                 {
-                  "$ref": "RequestContext.schema.json"
+                  "$ref": "../components/RequestContext.schema.json"
                 },
                 {
                   "type": "null"

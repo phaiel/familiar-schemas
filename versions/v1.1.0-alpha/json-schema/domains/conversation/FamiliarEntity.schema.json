@@ -64,7 +64,7 @@
       "type": "string"
     },
     "entity_type": {
-      "$ref": "../entities/FamiliarEntityType.schema.json"
+      "$ref": "FamiliarEntityType.schema.json"
     },
     "id": {
       "format": "uuid",
@@ -133,7 +133,7 @@
       ]
     },
     "status": {
-      "$ref": "../entities/EntityStatus.schema.json"
+      "$ref": "EntityStatus.schema.json"
     },
     "subject": {
       "default": null,
@@ -143,7 +143,7 @@
       ]
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
@@ -163,9 +163,9 @@
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Conversation.meta.schema.json"
+    "$ref": "../../architecture/meta/Conversation.meta.schema.json"
   },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

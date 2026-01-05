@@ -1,24 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "CourseSummary",
   "description": "Summary of a course for list views",
-  "type": "object",
   "properties": {
     "id": {
-      "type": "string",
-      "format": "uuid"
-    },
-    "preview": {
-      "type": "string",
-      "description": "Preview text (truncated first message)"
+      "format": "uuid",
+      "type": "string"
     },
     "message_count": {
-      "type": "integer",
       "format": "uint64",
-      "minimum": 0
+      "minimum": 0,
+      "type": "integer"
+    },
+    "preview": {
+      "description": "Preview text (truncated first message)",
+      "type": "string"
     },
     "status": {
-      "$ref": "../primitives/CourseStatus.schema.json"
+      "$ref": "../types/CourseStatus.schema.json"
     },
     "title": {
       "type": [
@@ -37,6 +35,8 @@
     "status",
     "updated_at"
   ],
+  "title": "CourseSummary",
+  "type": "object",
   "x-familiar-kind": "entity",
   "x-familiar-meta-schema": {
     "$ref": "../architecture/meta/Entity.meta.schema.json"

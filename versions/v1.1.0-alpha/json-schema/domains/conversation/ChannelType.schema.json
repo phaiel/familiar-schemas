@@ -28,10 +28,10 @@
   "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "conversation",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Conversation.meta.schema.json"
+    "$ref": "../../architecture/meta/Conversation.meta.schema.json"
   },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   },
   "x-familiar-variants": {
     "Family": "Family",

@@ -1,51 +1,63 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://familiar.dev/schemas/architecture/Callarchitecture/steps/Step.meta.schema.json",
-  "title": "Call Step Definition",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Execute a Rust Action with retry and timeout semantics",
-  "type": "object",
-  "required": ["id", "kind", "action"],
   "properties": {
+    "action": {
+      "$ref": "../references/SchemaRef.meta.schema.json",
+      "description": "Action to execute"
+    },
+    "args": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Argument mapping using CEL expressions",
+      "type": "object"
+    },
+    "description": {
+      "type": "string"
+    },
     "id": {
-      "type": "string",
+      "description": "Unique identifier for this step variable (snake_case).",
       "pattern": "^[a-z_][a-z0-9_]*$",
-      "description": "Unique identifier for this step variable (snake_case)."
+      "type": "string"
     },
     "kind": {
       "const": "call",
       "description": "Discriminator for call step"
     },
-    "description": { "type": "string" },
-    "action": {
-      "$ref": "architecture/references/SchemaRef.meta.schema.json",
-      "description": "Action to execute"
-    },
-    "args": {
-      "type": "object",
-      "description": "Argument mapping using CEL expressions",
-      "additionalProperties": { "type": "string" }
-    },
     "retry": {
-      "type": "object",
       "properties": {
         "max_attempts": {
-          "type": "integer",
           "default": 3,
-          "minimum": 1
+          "minimum": 1,
+          "type": "integer"
         }
-      }
+      },
+      "type": "object"
     },
     "timeout": {
-      "type": "string",
-      "description": "ISO 8601 duration (e.g., 'PT30S')"
+      "description": "ISO 8601 duration (e.g., 'PT30S')",
+      "type": "string"
     },
     "x-familiar-visual": {
-      "type": "object",
       "description": "Visual layout coordinates for flow diagrams",
       "properties": {
-        "x": {"type": "number"},
-        "y": {"type": "number"}
-      }
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "type": "object"
     }
-  }
+  },
+  "required": [
+    "id",
+    "kind",
+    "action"
+  ],
+  "title": "Call Step Definition",
+  "type": "object"
 }

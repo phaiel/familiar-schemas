@@ -60,7 +60,7 @@
       "type": "string"
     },
     "entity_type": {
-      "$ref": "../entities/FamiliarEntityType.schema.json"
+      "$ref": "FamiliarEntityType.schema.json"
     },
     "metadata": {
       "anyOf": [
@@ -102,7 +102,7 @@
     "status": {
       "anyOf": [
         {
-          "$ref": "../entities/EntityStatus.schema.json"
+          "$ref": "EntityStatus.schema.json"
         },
         {
           "type": "null"
@@ -118,7 +118,7 @@
       ]
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../primitives/TenantId.schema.json"
     }
   },
   "required": [
@@ -130,9 +130,9 @@
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Conversation.meta.schema.json"
+    "$ref": "../../architecture/meta/Conversation.meta.schema.json"
   },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

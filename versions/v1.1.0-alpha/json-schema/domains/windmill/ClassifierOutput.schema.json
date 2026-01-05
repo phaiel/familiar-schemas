@@ -92,7 +92,7 @@
     "physics_hint": {
       "anyOf": [
         {
-          "$ref": "../components/PhysicsHint.schema.json"
+          "$ref": "../../components/PhysicsHint.schema.json"
         },
         {
           "type": "null"

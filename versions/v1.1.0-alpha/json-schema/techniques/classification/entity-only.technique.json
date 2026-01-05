@@ -1,0 +1,28 @@
+{
+  "$schema": "../../architecture/meta/Technique.meta.schema.json",
+  "$id": "techniques/classification/entity-only.technique.json",
+  "id": "classification.entity-only",
+  "title": "Entity Classification Only",
+  "description": "Classify entities in a single segment",
+  "x-familiar-kind": "technique",
+  "input": {
+    "$ref": "../../primitives/Segment.schema.json"
+  },
+  "output": {
+    "type": "array",
+    "items": { "$ref": "../../primitives/EntityMention.schema.json" }
+  },
+  "steps": [
+    {
+      "id": "classify_entities",
+      "kind": "call",
+      "action": {
+        "$ref": "../../actions/classification/entity-classify.action.json"
+      },
+      "args": {
+        "segment": "$.input"
+      }
+    }
+  ],
+  "return": "$.classify_entities"
+}

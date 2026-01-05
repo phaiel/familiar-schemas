@@ -1,0 +1,29 @@
+{
+  "$schema": "../../architecture/meta/System.meta.schema.json",
+  "$id": "infrastructure/systems/FeatureExtractionSystem.system.json",
+  "id": "feature-extraction-system",
+  "title": "Feature Extraction System",
+  "description": "Dedicated system for feature extraction from segments",
+  "x-familiar-kind": "system",
+  "dispatch": {
+    "feature.requests": {
+      "$ref": "../../techniques/classification/extract-features.action.json"
+    }
+  },
+  "inputs": {
+    "segment": {
+      "schema": { "$ref": "../../primitives/Segment.schema.json" },
+      "queue": { "$ref": "../../infrastructure/queues/feature-queue.queue.json" }
+    }
+  },
+  "output": {
+    "schema": { "$ref": "../../primitives/SegmentFeatures.schema.json" },
+    "queue": { "$ref": "../../infrastructure/queues/feature-queue.queue.json" }
+  },
+  "node": {
+    "$ref": "../../infrastructure/nodes/classifier.node.json"
+  },
+  "queue": {
+    "$ref": "../../infrastructure/queues/feature-queue.queue.json"
+  }
+}

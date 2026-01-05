@@ -12,7 +12,7 @@
   },
   "properties": {
     "channel_type": {
-      "$ref": "ChannelType.schema.json"
+      "$ref": "../domains/conversation/ChannelType.schema.json"
     },
     "created_at": {
       "format": "date-time",
@@ -63,12 +63,12 @@
     "$ref": "../architecture/meta/Entity.meta.schema.json"
   },
   "x-familiar-persistence": {
-    "profile": "postgres",
-    "table": "models",
-    "primary_key": "id",
     "indexes": [
       "created_at"
-    ]
+    ],
+    "primary_key": "id",
+    "profile": "postgres",
+    "table": "models"
   },
   "x-familiar-service": {
     "$ref": "../infrastructure/nodes/familiar-daemon.node.json"

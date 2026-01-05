@@ -1,0 +1,11 @@
+{
+  "$schema": "../../architecture/meta/Queue.meta.schema.json",
+  "$id": "infrastructure/queues/feature-queue.queue.json",
+  "id": "feature-queue",
+  "title": "Feature Extraction Queue",
+  "description": "Medium-throughput queue for feature extraction requests",
+  "x-familiar-kind": "queue",
+  "partitions": 4,
+  "retention": "1d",
+  "throughput": "medium"
+}

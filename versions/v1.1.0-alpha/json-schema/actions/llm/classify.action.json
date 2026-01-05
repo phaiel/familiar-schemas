@@ -1,5 +1,5 @@
 {
-  "$schema": "../../architecture/meta/Action.meta.schema.json",
+  "$schema": "../../ecs/Action.meta.schema.json",
   "$id": "actions/llm/classify.action.json",
   "id": "llm.classify",
   "title": "Classify Text",

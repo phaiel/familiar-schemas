@@ -45,7 +45,7 @@
     "position": {
       "allOf": [
         {
-          "$ref": "../tools/VAEPosition.schema.json"
+          "$ref": "../../tools/VAEPosition.schema.json"
         }
       ],
       "description": "Position in VAE space"
@@ -59,7 +59,7 @@
     "velocity": {
       "anyOf": [
         {
-          "$ref": "../tools/VAEPosition.schema.json"
+          "$ref": "../../tools/VAEPosition.schema.json"
         },
         {
           "type": "null"

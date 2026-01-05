@@ -234,7 +234,12 @@
   "x-familiar-discriminator": "type",
   "x-familiar-enum-repr": "adjacently_tagged",
   "x-familiar-kind": "error",
-  "x-familiar-service": "familiar-daemon",
+  "x-familiar-meta-schema": {
+    "$ref": "../architecture/meta/Database.meta.schema.json"
+  },
+  "x-familiar-service": {
+    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+  },
   "x-familiar-variants": {
     "Connection": "Connection",
     "Constraint": "Constraint",

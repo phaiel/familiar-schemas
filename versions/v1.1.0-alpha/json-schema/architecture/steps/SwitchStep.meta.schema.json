@@ -1,56 +1,69 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://familiar.dev/schemas/architecture/Switcharchitecture/steps/Step.meta.schema.json",
-  "title": "Switch Step Definition",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Exclusive branching with CEL condition evaluation",
-  "type": "object",
-  "required": ["id", "kind", "branches"],
   "properties": {
+    "branches": {
+      "description": "Ordered list of branches to evaluate",
+      "items": {
+        "properties": {
+          "condition": {
+            "description": "CEL expression for branching logic",
+            "type": "string"
+          },
+          "steps": {
+            "description": "Steps to execute if condition matches",
+            "items": {
+              "$ref": "Step.meta.schema.json"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "condition",
+          "steps"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "default": {
+      "description": "Steps to execute if no branches match",
+      "items": {
+        "$ref": "Step.meta.schema.json"
+      },
+      "type": "array"
+    },
+    "description": {
+      "type": "string"
+    },
     "id": {
-      "type": "string",
+      "description": "Unique identifier for this step variable (snake_case).",
       "pattern": "^[a-z_][a-z0-9_]*$",
-      "description": "Unique identifier for this step variable (snake_case)."
+      "type": "string"
     },
     "kind": {
       "const": "switch",
       "description": "Discriminator for switch step"
     },
-    "description": { "type": "string" },
-    "branches": {
-      "type": "array",
-      "description": "Ordered list of branches to evaluate",
-      "items": {
-        "type": "object",
-        "required": ["condition", "steps"],
-        "properties": {
-          "condition": {
-            "type": "string",
-            "description": "CEL expression for branching logic"
-          },
-          "steps": {
-            "type": "array",
-            "description": "Steps to execute if condition matches",
-            "items": {
-              "$ref": "architecture/steps/Step.meta.schema.json"
-            }
-          }
-        }
-      }
-    },
-    "default": {
-      "type": "array",
-      "description": "Steps to execute if no branches match",
-      "items": {
-        "$ref": "architecture/steps/Step.meta.schema.json"
-      }
-    },
     "x-familiar-visual": {
-      "type": "object",
       "description": "Visual layout coordinates for flow diagrams",
       "properties": {
-        "x": {"type": "number"},
-        "y": {"type": "number"}
-      }
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "type": "object"
     }
-  }
+  },
+  "required": [
+    "id",
+    "kind",
+    "branches"
+  ],
+  "title": "Switch Step Definition",
+  "type": "object"
 }

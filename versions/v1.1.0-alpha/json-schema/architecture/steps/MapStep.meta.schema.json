@@ -1,50 +1,61 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://familiar.dev/schemas/architecture/Maparchitecture/steps/Step.meta.schema.json",
-  "title": "Map Step Definition",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Bounded iteration with concurrency control over arrays",
-  "type": "object",
-  "required": ["id", "kind", "items", "steps"],
   "properties": {
+    "concurrency": {
+      "default": 5,
+      "description": "Maximum concurrent iterations",
+      "minimum": 1,
+      "type": "integer"
+    },
+    "description": {
+      "type": "string"
+    },
     "id": {
-      "type": "string",
+      "description": "Unique identifier for this step variable (snake_case).",
       "pattern": "^[a-z_][a-z0-9_]*$",
-      "description": "Unique identifier for this step variable (snake_case)."
+      "type": "string"
+    },
+    "items": {
+      "description": "CEL expression evaluating to array to iterate over",
+      "type": "string"
+    },
+    "iterator": {
+      "default": "item",
+      "description": "Variable name for current item in iteration",
+      "type": "string"
     },
     "kind": {
       "const": "map",
       "description": "Discriminator for map step"
     },
-    "description": { "type": "string" },
-    "items": {
-      "type": "string",
-      "description": "CEL expression evaluating to array to iterate over"
-    },
-    "iterator": {
-      "type": "string",
-      "description": "Variable name for current item in iteration",
-      "default": "item"
-    },
-    "concurrency": {
-      "type": "integer",
-      "default": 5,
-      "minimum": 1,
-      "description": "Maximum concurrent iterations"
-    },
     "steps": {
-      "type": "array",
       "description": "Steps to execute for each item",
       "items": {
-        "$ref": "architecture/steps/Step.meta.schema.json"
-      }
+        "$ref": "Step.meta.schema.json"
+      },
+      "type": "array"
     },
     "x-familiar-visual": {
-      "type": "object",
       "description": "Visual layout coordinates for flow diagrams",
       "properties": {
-        "x": {"type": "number"},
-        "y": {"type": "number"}
-      }
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "type": "object"
     }
-  }
+  },
+  "required": [
+    "id",
+    "kind",
+    "items",
+    "steps"
+  ],
+  "title": "Map Step Definition",
+  "type": "object"
 }

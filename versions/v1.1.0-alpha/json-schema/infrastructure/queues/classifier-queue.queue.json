@@ -1,0 +1,11 @@
+{
+  "$schema": "../../architecture/meta/Queue.meta.schema.json",
+  "$id": "infrastructure/queues/classifier-queue.queue.json",
+  "id": "classifier-queue",
+  "title": "Classifier Queue",
+  "description": "High-throughput queue for classification requests",
+  "x-familiar-kind": "queue",
+  "partitions": 8,
+  "retention": "7d",
+  "throughput": "high"
+}

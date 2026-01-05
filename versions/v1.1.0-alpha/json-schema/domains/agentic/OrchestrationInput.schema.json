@@ -8,7 +8,7 @@
           "default": [],
           "description": "Conversation history for context",
           "items": {
-            "$ref": "../primitives/ConversationTurn.schema.json"
+            "$ref": "../../primitives/ConversationTurn.schema.json"
           },
           "type": "array"
         },
@@ -84,9 +84,9 @@
   "type": "object",
   "x-familiar-kind": "agentic",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Agentic.meta.schema.json"
+    "$ref": "../../architecture/meta/Agentic.meta.schema.json"
   },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }

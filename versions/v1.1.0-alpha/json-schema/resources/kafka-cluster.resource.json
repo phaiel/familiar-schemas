@@ -5,7 +5,7 @@
   "title": "KafkaCluster",
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Resource.meta.schema.json"
+    "$ref": "../ecs/Resource.meta.schema.json"
   },
   "x-familiar-resource-type": "kafka_cluster",
   "x-familiar-endpoint": "localhost:9092",

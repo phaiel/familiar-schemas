@@ -1,49 +1,49 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://familiar.dev/schem../infrastructure/nodes/familiar-daemon.node.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "High-performance service node for LLM-connected operations. Runs Fates pipeline systems with low latency.",
   "title": "FamiliarDaemon",
   "x-familiar-components": [
     {
-      "$ref": "../components/TigerDataStore.component.json"
+      "$ref": "../../components/TigerDataStore.component.json"
     },
     {
-      "$ref": "../components/ContractEnforcer.component.json"
+      "$ref": "../../components/ContractEnforcer.component.json"
     }
   ],
   "x-familiar-concurrency": 10,
   "x-familiar-kind": "node",
   "x-familiar-memory": "2Gi",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Node.meta.schema.json"
+    "$ref": "../../architecture/meta/Node.meta.schema.json"
   },
   "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/daemon-queue.queue.json"
+    "$ref": "../queues/daemon-queue.queue.json"
   },
   "x-familiar-resource-class": "llm",
   "x-familiar-resources": [
     {
-      "$ref": "../resources/postgres-tiger.resource.json"
+      "$ref": "../../resources/postgres-tiger.resource.json"
     },
     {
-      "$ref": "../resources/openai-gpt4.resource.json"
+      "$ref": "../../resources/openai-gpt4.resource.json"
     },
     {
-      "$ref": "../resources/anthropic-claude.resource.json"
+      "$ref": "../../resources/anthropic-claude.resource.json"
     }
   ],
   "x-familiar-systems": [
     {
-      "$ref": "../infrastructure/systems/FatesGate.system.json"
+      "$ref": "../systems/FatesGate.system.json"
     },
     {
-      "$ref": "../infrastructure/systems/FatesMorta.system.json"
+      "$ref": "../systems/FatesMorta.system.json"
     },
     {
-      "$ref": "../infrastructure/systems/FatesDecima.system.json"
+      "$ref": "../systems/FatesDecima.system.json"
     },
     {
-      "$ref": "../infrastructure/systems/FatesNona.system.json"
+      "$ref": "../systems/FatesNona.system.json"
     }
   ]
 }

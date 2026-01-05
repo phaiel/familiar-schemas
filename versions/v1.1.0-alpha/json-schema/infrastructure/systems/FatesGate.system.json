@@ -1,71 +1,78 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://familiar.dev/schem../infrastructure/systems/FatesGate.system.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Entry point to the Fates pipeline. Performs initial classification and routing of incoming messages.",
-  "title": "FatesGate",
-  "x-familiar-depends": [
+  "dispatch": [
     {
-      "$ref": "../components/TigerDataStore.component.json"
+      "mapping": {
+        "input": "gate_input"
+      },
+      "technique": {
+        "$ref": "../../techniques/ingest_weave.technique.json"
+      },
+      "trigger": "kafka:commands.weave"
     },
     {
-      "$ref": "../components/ContractEnforcer.component.json"
+      "mapping": {
+        "input": "gate_input"
+      },
+      "technique": {
+        "$ref": "../../techniques/search_memory.technique.json"
+      },
+      "trigger": "kafka:commands.search"
     }
   ],
-  "x-familiar-kind": "system",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/System.meta.schema.json"
-  },
   "signature": {
     "inputs": {
       "gate_input": {
-        "schema": { "$ref": "../tools/GateInput.schema.json" },
+        "schema": {
+          "$ref": "../../tools/GateInput.schema.json"
+        },
         "semantics": "borrow"
       }
     },
     "output": {
-      "schema": { "$ref": "../tools/GateOutput.schema.json" },
-      "nature": "atomic"
+      "nature": "atomic",
+      "schema": {
+        "$ref": "../../tools/GateOutput.schema.json"
+      }
     }
   },
-
-  "dispatch": [
+  "title": "FatesGate",
+  "x-familiar-depends": [
     {
-      "trigger": "kafka:commands.weave",
-      "technique": { "$ref": "../techniques/ingest_weave.technique.json" },
-      "mapping": {
-        "input": "gate_input"
-      }
+      "$ref": "../../components/TigerDataStore.component.json"
     },
     {
-      "trigger": "kafka:commands.search",
-      "technique": { "$ref": "../techniques/search_memory.technique.json" },
-      "mapping": {
-        "input": "gate_input"
-      }
+      "$ref": "../../components/ContractEnforcer.component.json"
     }
   ],
+  "x-familiar-kind": "system",
+  "x-familiar-meta-schema": {
+    "$ref": "../../architecture/meta/System.meta.schema.json"
+  },
   "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/daemon-queue.queue.json"
+    "$ref": "../queues/daemon-queue.queue.json"
   },
   "x-familiar-reads": [
     {
-      "$ref": "../entities/Moment.schema.json"
+      "$ref": "../../entities/Moment.schema.json"
     },
     {
-      "$ref": "../entities/Thread.schema.json"
+      "$ref": "../../entities/Thread.schema.json"
     },
     {
-      "$ref": "../entities/Course.schema.json"
+      "$ref": "../../entities/Course.schema.json"
     }
   ],
   "x-familiar-retries": 3,
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   },
   "x-familiar-timeout": "30s",
   "x-familiar-writes": [
     {
-      "$ref": "../entities/Shuttle.schema.json"
+      "$ref": "../../entities/Shuttle.schema.json"
     }
   ]
 }

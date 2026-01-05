@@ -1,0 +1,42 @@
+{
+  "$schema": "../../architecture/meta/Action.meta.schema.json",
+  "$id": "actions/classification/entity-classify.action.json",
+  "id": "classification.entity-classify",
+  "title": "Classify Entity Types",
+  "description": "Atomic capability for classifying entity types in text segments",
+  "x-familiar-kind": "action",
+  "x-familiar-compute-category": "ai",
+  "x-familiar-execution-model": "async",
+  "x-familiar-side-effects": ["ml-inference"],
+  "x-familiar-reliability": "idempotent",
+  "x-familiar-tooling": [
+    {
+      "category": "ml-classification",
+      "capabilities": ["entity-recognition", "nlp"],
+      "purpose": "ML models for entity type classification"
+    }
+  ],
+  "signature": {
+    "inputs": {
+      "segment": {
+        "schema": { "$ref": "../../primitives/Segment.schema.json" },
+        "semantics": "borrow"
+      },
+      "context": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "user_patterns": { "type": "object" },
+            "known_threads": { "type": "array" }
+          }
+        },
+        "semantics": "borrow",
+        "nature": "optional"
+      }
+    },
+    "output": {
+      "schema": { "$ref": "../../primitives/EntityMention.schema.json" },
+      "nature": "atomic"
+    }
+  }
+}

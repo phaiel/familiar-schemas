@@ -1,0 +1,33 @@
+{
+  "$schema": "../../architecture/meta/Technique.meta.schema.json",
+  "$id": "techniques/classification/purpose-only.technique.json",
+  "id": "classification.purpose-only",
+  "title": "Purpose Classification Only",
+  "description": "Classify the purpose/intent of a single segment",
+  "x-familiar-kind": "technique",
+  "input": {
+    "$ref": "../../primitives/Segment.schema.json"
+  },
+  "output": {
+    "type": "object",
+    "properties": {
+      "purpose": { "type": "string" },
+      "confidence": { "type": "number" },
+      "evidence": { "type": "array", "items": { "type": "string" } }
+    },
+    "required": ["purpose", "confidence"]
+  },
+  "steps": [
+    {
+      "id": "classify_purpose",
+      "kind": "call",
+      "action": {
+        "$ref": "../../actions/classification/purpose-classify.action.json"
+      },
+      "args": {
+        "segment": "$.input"
+      }
+    }
+  ],
+  "return": "$.classify_purpose"
+}

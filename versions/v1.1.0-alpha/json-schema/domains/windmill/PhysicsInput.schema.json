@@ -87,7 +87,7 @@
     "current_position": {
       "anyOf": [
         {
-          "$ref": "../tools/VAEPosition.schema.json"
+          "$ref": "../../tools/VAEPosition.schema.json"
         },
         {
           "type": "null"
@@ -111,7 +111,7 @@
     "physics_hint": {
       "anyOf": [
         {
-          "$ref": "../components/PhysicsHint.schema.json"
+          "$ref": "../../components/PhysicsHint.schema.json"
         },
         {
           "type": "null"
