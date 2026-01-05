@@ -4,6 +4,23 @@
   "id": "entity.rank_search_results",
   "title": "Rank Search Results",
   "x-familiar-kind": "action",
+  "x-familiar-compute-category": "pure",
+  "x-familiar-execution-model": "sync",
+  "x-familiar-side-effects": [],
+  "x-familiar-reliability": "idempotent",
+  "x-familiar-dependencies": [
+    {
+      "name": "rust-bert",
+      "version": "^0.21",
+      "features": ["sentiment-analysis"],
+      "purpose": "ML models for relevance scoring and ranking"
+    },
+    {
+      "name": "ndarray",
+      "version": "^0.15",
+      "purpose": "Numerical computations for ranking algorithms"
+    }
+  ],
 
   "signature": {
     "inputs": {

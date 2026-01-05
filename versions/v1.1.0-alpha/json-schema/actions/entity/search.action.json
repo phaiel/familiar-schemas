@@ -4,6 +4,24 @@
   "id": "entity.search",
   "title": "Search Entities",
   "x-familiar-kind": "action",
+  "x-familiar-compute-category": "state",
+  "x-familiar-execution-model": "async",
+  "x-familiar-side-effects": ["database"],
+  "x-familiar-reliability": "idempotent",
+  "x-familiar-dependencies": [
+    {
+      "name": "sqlx",
+      "version": "^0.7",
+      "features": ["postgres", "runtime-tokio"],
+      "purpose": "PostgreSQL database client for entity search"
+    },
+    {
+      "name": "serde",
+      "version": "^1.0",
+      "features": ["derive"],
+      "purpose": "Serialization for search results"
+    }
+  ],
 
   "signature": {
     "inputs": {
