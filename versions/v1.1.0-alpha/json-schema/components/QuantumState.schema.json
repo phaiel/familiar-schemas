@@ -44,13 +44,8 @@
   ],
   "title": "QuantumState",
   "type": "object",
-  "x-familiar-field-alias": "quantum",
-  "x-familiar-field-order": 30,
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

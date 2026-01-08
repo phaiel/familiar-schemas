@@ -46,24 +46,9 @@
     }
   ],
   "title": "BondIndicatorType",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "contextual_inference": "ContextualInference",
-    "emotional_language": "EmotionalLanguage",
-    "explicit_label": "ExplicitLabel",
-    "frequency_indicator": "FrequencyIndicator",
-    "possessive_language": "PossessiveLanguage",
-    "relational_action": "RelationalAction"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

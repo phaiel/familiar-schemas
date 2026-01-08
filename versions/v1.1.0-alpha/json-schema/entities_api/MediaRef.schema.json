@@ -22,7 +22,7 @@
       "type": "string"
     },
     "media_type": {
-      "$ref": "MediaType.schema.json"
+      "$ref": "#/definitions/MediaType"
     },
     "metadata": true,
     "normalized_text": {
@@ -38,10 +38,7 @@
   "title": "MediaRef",
   "type": "object",
   "x-familiar-kind": "entities_api",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/EntitiesAPI.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

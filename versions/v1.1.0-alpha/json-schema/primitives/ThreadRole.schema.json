@@ -47,15 +47,5 @@
     }
   ],
   "title": "ThreadRole",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "actor": "Actor",
-    "instrument": "Instrument",
-    "observer": "Observer",
-    "setting": "Setting",
-    "subject": "Subject",
-    "target": "Target"
-  }
+  "x-familiar-kind": "primitive"
 }

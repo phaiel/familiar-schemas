@@ -70,13 +70,5 @@
     }
   ],
   "title": "ContextElement",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "type",
-  "x-familiar-enum-repr": "internally_tagged",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "image": "Image",
-    "mrkdwn": "Markdown",
-    "plain_text": "PlainText"
-  }
+  "x-familiar-kind": "primitive"
 }

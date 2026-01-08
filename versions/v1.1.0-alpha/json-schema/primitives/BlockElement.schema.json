@@ -133,14 +133,5 @@
     }
   ],
   "title": "BlockElement",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "type",
-  "x-familiar-enum-repr": "internally_tagged",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "button": "Button",
-    "image": "Image",
-    "overflow": "Overflow",
-    "plain_text_input": "PlainTextInput"
-  }
+  "x-familiar-kind": "primitive"
 }

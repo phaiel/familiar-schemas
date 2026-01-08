@@ -15,13 +15,9 @@
       "type": "string"
     },
     "email": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/Email.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "expires_at": {
@@ -32,29 +28,23 @@
       ]
     },
     "id": {
-      "$ref": "../primitives/InvitationId.schema.json"
+      "format": "uuid",
+      "type": "string"
     },
     "invite_code": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/InviteCode.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "invite_type": {
-      "$ref": "../domains/auth/InviteType.schema.json"
+      "$ref": "#/definitions/InviteType"
     },
     "invited_by": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/UserId.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
       ]
     },
     "max_uses": {
@@ -86,21 +76,7 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "family_invitations",
-  "x-familiar-module": "auth",
-  "x-familiar-primary-key": "id",
-  "x-familiar-relations": [
-    {
-      "type": "belongs_to",
-      "target": "TenantModel",
-      "from": "tenant_id",
-      "to": "id"
-    }
-  ]
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

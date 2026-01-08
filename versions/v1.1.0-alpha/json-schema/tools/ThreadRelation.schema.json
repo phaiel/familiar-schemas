@@ -54,7 +54,7 @@
     "relation_type": {
       "allOf": [
         {
-          "$ref": "ThreadRelationType.schema.json"
+          "$ref": "#/definitions/ThreadRelationType"
         }
       ],
       "description": "Type of relation"
@@ -82,13 +82,8 @@
   "title": "ThreadRelation",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

@@ -71,7 +71,7 @@
   "properties": {
     "classifications": {
       "items": {
-        "$ref": "ClassificationResponse.schema.json"
+        "$ref": "#/definitions/ClassificationResponse"
       },
       "type": "array"
     },
@@ -86,7 +86,7 @@
     "physics_hint": {
       "anyOf": [
         {
-          "$ref": "PhysicsHintResponse.schema.json"
+          "$ref": "#/definitions/PhysicsHintResponse"
         },
         {
           "type": "null"
@@ -139,10 +139,7 @@
   "title": "WeaveUnitResponse",
   "type": "object",
   "x-familiar-kind": "entities_api",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/EntitiesAPI.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

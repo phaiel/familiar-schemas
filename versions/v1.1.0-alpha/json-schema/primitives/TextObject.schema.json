@@ -48,12 +48,5 @@
     }
   ],
   "title": "TextObject",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "type",
-  "x-familiar-enum-repr": "internally_tagged",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "mrkdwn": "Markdown",
-    "plain_text": "Plain"
-  }
+  "x-familiar-kind": "primitive"
 }

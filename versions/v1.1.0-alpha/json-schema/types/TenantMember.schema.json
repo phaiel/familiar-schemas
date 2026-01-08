@@ -1,5 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MemberRole": {
+      "description": "Role of a tenant member",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
   "description": "A member of a tenant (user-tenant association with role)\n\nNote: Uses UserId as the entity ID since this is a join table where the user_id + tenant_id forms the unique key.",
   "properties": {
     "avatar_url": {
@@ -27,7 +38,7 @@
       "type": "string"
     },
     "role": {
-      "$ref": "../types/MemberRole.schema.json"
+      "$ref": "#/definitions/MemberRole"
     },
     "settings": {
       "default": null

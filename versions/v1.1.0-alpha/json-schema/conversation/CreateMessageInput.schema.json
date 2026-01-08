@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for creating a new message",
+  "properties": {
+    "agent_speaker": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "channel_id": {
+      "$ref": "../primitives/ChannelId.schema.json"
+    },
+    "content": {
+      "type": "string"
+    },
+    "metadata": {
+      "default": null
+    },
+    "parent_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "role": {
+      "$ref": "../primitives/MessageRole.schema.json"
+    },
+    "sender_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thinking_steps": {
+      "default": null
+    },
+    "tool_calls": {
+      "default": null
+    },
+    "weave_result": {
+      "default": null
+    }
+  },
+  "required": [
+    "channel_id",
+    "content",
+    "role"
+  ],
+  "title": "CreateMessageInput",
+  "type": "object",
+  "x-familiar-kind": "conversation",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

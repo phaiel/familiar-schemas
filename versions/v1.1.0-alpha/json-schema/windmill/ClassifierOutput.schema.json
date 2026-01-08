@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationResult": {
+      "description": "Result of classification",
+      "properties": {
+        "entity_type": {
+          "description": "Entity type",
+          "type": "string"
+        },
+        "probability": {
+          "description": "Probability score",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "probability"
+      ],
+      "type": "object"
+    },
+    "PhysicsHint": {
+      "description": "Sparse container for physics hints extracted from text by the LLM. All fields are Option<f64>. If None, the system applies Vacuum State defaults. This is the \"raw\" output from classification before collapse.",
+      "properties": {
+        "arousal": {
+          "description": "Energy/Activation: 0.0 (Calm) to 1.0 (Excited) Maps to: VAE Arousal axis",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "description": "Specificity/Coherence: 0.0 (Vague) to 1.0 (Factual) Maps to: QuantumState.coherence and VAE Epistemic axis",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "description": "Intrusiveness: 0.0 (Passive) to 1.0 (Demanding attention) Maps to: CognitiveOptics.emissivity",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "description": "Importance/Mass: 0.0 (Mundane) to 1.0 (Critical) Maps to: FieldExcitation.amplitude",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "description": "Emotional polarity: -1.0 (Negative) to 1.0 (Positive) Maps to: VAE Valence axis",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "description": "Volatility: 0.0 (Stable) to 1.0 (Fluctuating) Maps to: FieldExcitation.temperature",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  "description": "Output from the classifier agent",
+  "properties": {
+    "classifications": {
+      "description": "Classification results",
+      "items": {
+        "$ref": "#/definitions/ClassificationResult"
+      },
+      "type": "array"
+    },
+    "done": {
+      "default": true,
+      "description": "Whether the task is done",
+      "type": "boolean"
+    },
+    "physics_hint": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PhysicsHint"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints"
+    },
+    "primary_thread": {
+      "default": null,
+      "description": "Primary thread reference",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "response_message": {
+      "description": "Response message",
+      "type": "string"
+    },
+    "secondary_threads": {
+      "default": [],
+      "description": "Secondary thread references",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "state": {
+      "description": "Updated state"
+    },
+    "temporal_marker": {
+      "default": null,
+      "description": "Temporal marker (today, yesterday, etc.)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "text": {
+      "description": "Original text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "classifications",
+    "response_message",
+    "state",
+    "text"
+  ],
+  "title": "ClassifierOutput",
+  "type": "object",
+  "x-familiar-deprecated": true,
+  "x-familiar-kind": "windmill"
+}

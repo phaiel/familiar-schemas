@@ -209,7 +209,7 @@
             "initial_state": {
               "allOf": [
                 {
-                  "$ref": "AccordionState.schema.json"
+                  "$ref": "#/definitions/AccordionState"
                 }
               ],
               "default": "collapsed"
@@ -434,7 +434,7 @@
         "initial_state": {
           "allOf": [
             {
-              "$ref": "AccordionState.schema.json"
+              "$ref": "#/definitions/AccordionState"
             }
           ],
           "default": "collapsed"
@@ -458,24 +458,8 @@
     }
   ],
   "title": "Block",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "type",
-  "x-familiar-enum-repr": "internally_tagged",
   "x-familiar-kind": "ui",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/UI.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "accordion": "Accordion",
-    "actions": "Actions",
-    "context": "Context",
-    "divider": "Divider",
-    "header": "Header",
-    "image": "Image",
-    "input": "Input",
-    "section": "Section"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

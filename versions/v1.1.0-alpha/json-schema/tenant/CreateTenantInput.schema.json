@@ -6,14 +6,7 @@
       "type": "string"
     },
     "settings": {
-      "anyOf": [
-        {
-          "default": null
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "default": null
     }
   },
   "required": [
@@ -23,6 +16,6 @@
   "type": "object",
   "x-familiar-kind": "tenant",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

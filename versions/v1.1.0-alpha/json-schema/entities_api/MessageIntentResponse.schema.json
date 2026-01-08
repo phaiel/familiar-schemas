@@ -23,7 +23,8 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "description": "If QUERY: what is being queried"
     },
     "query_type": {
       "anyOf": [
@@ -33,7 +34,8 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "description": "If QUERY: what type of query"
     }
   },
   "required": [
@@ -43,10 +45,7 @@
   "title": "MessageIntentResponse",
   "type": "object",
   "x-familiar-kind": "entities_api",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/EntitiesAPI.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

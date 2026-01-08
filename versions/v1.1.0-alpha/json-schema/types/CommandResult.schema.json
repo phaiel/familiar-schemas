@@ -6,16 +6,6 @@
       "description": "Whether the command was accepted",
       "type": "boolean"
     },
-    "course_id": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/CourseId.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
     "error": {
       "default": null,
       "description": "Error message if not accepted",
@@ -54,6 +44,5 @@
   ],
   "title": "CommandResult",
   "type": "object",
-  "x-familiar-kind": "input",
-  "x-familiar-service": "familiar-daemon"
+  "x-familiar-kind": "type"
 }

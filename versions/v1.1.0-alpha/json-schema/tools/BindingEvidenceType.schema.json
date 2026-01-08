@@ -60,26 +60,9 @@
     }
   ],
   "title": "BindingEvidenceType",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "co_reference": "CoReference",
-    "contextual_inference": "ContextualInference",
-    "emotional_similarity": "EmotionalSimilarity",
-    "explicit_statement": "ExplicitStatement",
-    "linguistic_marker": "LinguisticMarker",
-    "narrative_continuity": "NarrativeContinuity",
-    "semantic_similarity": "SemanticSimilarity",
-    "temporal_proximity": "TemporalProximity"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

@@ -166,7 +166,7 @@
         "transform": {
           "anyOf": [
             {
-              "$ref": "InputTransform.schema.json"
+              "$ref": "#/definitions/InputTransform"
             },
             {
               "type": "null"
@@ -317,7 +317,7 @@
         "trigger_type": {
           "allOf": [
             {
-              "$ref": "TriggerType.schema.json"
+              "$ref": "#/definitions/TriggerType"
             }
           ],
           "description": "Trigger type"
@@ -337,42 +337,42 @@
       "description": "Types of standard pipelines",
       "oneOf": [
         {
-          "description": "Memory recording: Segment \u2192 Classify \u2192 Spawn \u2192 Hints \u2192 Store",
+          "description": "Memory recording: Segment → Classify → Spawn → Hints → Store",
           "enum": [
             "memory_recording"
           ],
           "type": "string"
         },
         {
-          "description": "Query: Parse \u2192 Search \u2192 Format \u2192 Return",
+          "description": "Query: Parse → Search → Format → Return",
           "enum": [
             "query"
           ],
           "type": "string"
         },
         {
-          "description": "Analysis: Parse \u2192 Search \u2192 Analyze \u2192 Synthesize",
+          "description": "Analysis: Parse → Search → Analyze → Synthesize",
           "enum": [
             "analysis"
           ],
           "type": "string"
         },
         {
-          "description": "Command: Parse \u2192 Validate \u2192 Execute \u2192 Confirm",
+          "description": "Command: Parse → Validate → Execute → Confirm",
           "enum": [
             "command"
           ],
           "type": "string"
         },
         {
-          "description": "Conversation: Understand \u2192 Respond",
+          "description": "Conversation: Understand → Respond",
           "enum": [
             "conversation"
           ],
           "type": "string"
         },
         {
-          "description": "Multi-modal: Route \u2192 Process per modality \u2192 Merge",
+          "description": "Multi-modal: Route → Process per modality → Merge",
           "enum": [
             "multi_modal"
           ],
@@ -386,7 +386,7 @@
         "condition_type": {
           "allOf": [
             {
-              "$ref": "ConditionType.schema.json"
+              "$ref": "#/definitions/ConditionType"
             }
           ],
           "description": "Type of condition"
@@ -394,7 +394,7 @@
         "operator": {
           "allOf": [
             {
-              "$ref": "ConditionOperator.schema.json"
+              "$ref": "#/definitions/ConditionOperator"
             }
           ],
           "description": "Operator"
@@ -426,7 +426,7 @@
         "context_strategy": {
           "allOf": [
             {
-              "$ref": "ContextStrategy.schema.json"
+              "$ref": "#/definitions/ContextStrategy"
             }
           ],
           "description": "How context flows between steps"
@@ -438,7 +438,7 @@
         "error_strategy": {
           "allOf": [
             {
-              "$ref": "ErrorStrategy.schema.json"
+              "$ref": "#/definitions/ErrorStrategy"
             }
           ],
           "description": "Error handling strategy"
@@ -454,7 +454,7 @@
         "steps": {
           "description": "Steps in the chain",
           "items": {
-            "$ref": "ToolChainStep.schema.json"
+            "$ref": "#/definitions/ToolChainStep"
           },
           "type": "array"
         }
@@ -475,7 +475,7 @@
         "condition": {
           "anyOf": [
             {
-              "$ref": "StepCondition.schema.json"
+              "$ref": "#/definitions/StepCondition"
             },
             {
               "type": "null"
@@ -487,7 +487,7 @@
         "execution_order": {
           "allOf": [
             {
-              "$ref": "ExecutionOrder.schema.json"
+              "$ref": "#/definitions/ExecutionOrder"
             }
           ],
           "description": "Execution order"
@@ -500,7 +500,7 @@
           "default": [],
           "description": "Input mapping from previous steps",
           "items": {
-            "$ref": "InputMapping.schema.json"
+            "$ref": "#/definitions/InputMapping"
           },
           "type": "array"
         },
@@ -585,7 +585,7 @@
     "chain": {
       "allOf": [
         {
-          "$ref": "ToolChain.schema.json"
+          "$ref": "#/definitions/ToolChain"
         }
       ],
       "description": "The tool chain"
@@ -593,7 +593,7 @@
     "pipeline_type": {
       "allOf": [
         {
-          "$ref": "PipelineType.schema.json"
+          "$ref": "#/definitions/PipelineType"
         }
       ],
       "description": "Pipeline type"
@@ -601,7 +601,7 @@
     "triggers": {
       "description": "When to use this pipeline",
       "items": {
-        "$ref": "PipelineTrigger.schema.json"
+        "$ref": "#/definitions/PipelineTrigger"
       },
       "type": "array"
     }
@@ -614,13 +614,8 @@
   "title": "StandardPipeline",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

@@ -1,11 +1,50 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "RawSegment": {
+      "description": "A raw segment from Phase 1 - NO classification, just text",
+      "properties": {
+        "content": {
+          "description": "The extracted semantic content",
+          "type": "string"
+        },
+        "mentions": {
+          "default": [],
+          "description": "Other entities/things mentioned",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "subject": {
+          "default": null,
+          "description": "Who/what is the primary subject? (for context, not classification)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal": {
+          "default": null,
+          "description": "Any temporal reference found",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object"
+    }
+  },
   "description": "Phase 1 response: Just segments, no classification",
   "properties": {
     "segments": {
       "description": "The semantic segments extracted from the input",
       "items": {
-        "$ref": "RawSegment.schema.json"
+        "$ref": "#/definitions/RawSegment"
       },
       "type": "array"
     }
@@ -15,6 +54,5 @@
   ],
   "title": "SegmentationResponse",
   "type": "object",
-  "x-familiar-kind": "output",
-  "x-familiar-service": "familiar-daemon"
+  "x-familiar-kind": "type"
 }

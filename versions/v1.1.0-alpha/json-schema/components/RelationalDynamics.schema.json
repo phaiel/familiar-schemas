@@ -7,7 +7,6 @@
           "$ref": "../primitives/NormalizedFloat.schema.json"
         }
       ],
-      "default": 0.5,
       "description": "**Formalism (Transactionalism / Spring Stiffness):** 1.0 = Rigid/Brittle (High k). Hard to move, snaps if stretched. 0.0 = Fluid/Elastic (Low k). Easy to stretch, adapts to change."
     },
     "intimacy": {
@@ -51,7 +50,6 @@
           "$ref": "../primitives/NormalizedFloat.schema.json"
         }
       ],
-      "default": 0.5,
       "description": "**Transparency (Refractive Index):** 1.0 = Clear. Looking at the Source reveals the Target (e.g., \"Honest\"). 0.0 = Opaque. The relationship hides the Target (e.g., \"Secretive\")."
     }
   },
@@ -62,14 +60,9 @@
     "transparency"
   ],
   "title": "RelationalDynamics",
-  "x-familiar-field-alias": "dynamics",
-  "x-familiar-field-order": 50,
   "type": "object",
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

@@ -46,12 +46,5 @@
     }
   ],
   "title": "CourseStatus",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "type",
-  "x-familiar-variants": {
-    "active": "Active",
-    "archived": "Archived",
-    "idle": "Idle"
-  }
+  "x-familiar-kind": "type"
 }

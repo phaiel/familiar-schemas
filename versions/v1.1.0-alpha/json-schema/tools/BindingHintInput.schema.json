@@ -76,7 +76,7 @@
     "context_window": {
       "anyOf": [
         {
-          "$ref": "ContextWindow.schema.json"
+          "$ref": "#/definitions/ContextWindow"
         },
         {
           "type": "null"
@@ -88,7 +88,7 @@
     "current_entity": {
       "allOf": [
         {
-          "$ref": "EntityRef.schema.json"
+          "$ref": "#/definitions/EntityRef"
         }
       ],
       "description": "Entity being spawned"
@@ -97,7 +97,7 @@
       "default": [],
       "description": "Recent entities for binding detection",
       "items": {
-        "$ref": "EntityRef.schema.json"
+        "$ref": "#/definitions/EntityRef"
       },
       "type": "array"
     },
@@ -117,14 +117,9 @@
   "title": "BindingHintInput",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-role": "input",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

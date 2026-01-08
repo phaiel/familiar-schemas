@@ -53,21 +53,5 @@
     }
   ],
   "title": "DbComponentTable",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "meta",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
-  "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-variants": {
-    "BondPhysics": "BondPhysics",
-    "CognitiveOptics": "CognitiveOptics",
-    "Content": "Content",
-    "FieldExcitations": "FieldExcitations",
-    "QuantumStates": "QuantumStates",
-    "RelationalDynamics": "RelationalDynamics",
-    "TaskDynamics": "TaskDynamics"
-  }
+  "x-familiar-kind": "type"
 }

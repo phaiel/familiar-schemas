@@ -74,28 +74,9 @@
     }
   ],
   "title": "ToolErrorCode",
-  "x-familiar-casing": "SCREAMING_SNAKE_CASE",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "INTERNAL_ERROR": "InternalError",
-    "INVALID_INPUT": "InvalidInput",
-    "LLM_ERROR": "LlmError",
-    "MISSING_PARAMETER": "MissingParameter",
-    "NOT_FOUND": "NotFound",
-    "PERMISSION_DENIED": "PermissionDenied",
-    "RATE_LIMITED": "RateLimited",
-    "SERVICE_UNAVAILABLE": "ServiceUnavailable",
-    "TIMEOUT": "Timeout",
-    "VALIDATION_FAILED": "ValidationFailed"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

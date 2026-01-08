@@ -7,7 +7,7 @@
         "duration": {
           "anyOf": [
             {
-              "$ref": "RelationshipDuration.schema.json"
+              "$ref": "#/definitions/RelationshipDuration"
             },
             {
               "type": "null"
@@ -19,7 +19,7 @@
         "interaction_frequency": {
           "anyOf": [
             {
-              "$ref": "InteractionFrequency.schema.json"
+              "$ref": "#/definitions/InteractionFrequency"
             },
             {
               "type": "null"
@@ -78,7 +78,7 @@
         "indicator_type": {
           "allOf": [
             {
-              "$ref": "BondIndicatorType.schema.json"
+              "$ref": "#/definitions/BondIndicatorType"
             }
           ],
           "description": "Type of indicator"
@@ -178,7 +178,7 @@
         "category": {
           "allOf": [
             {
-              "$ref": "DurationCategory.schema.json"
+              "$ref": "#/definitions/DurationCategory"
             }
           ],
           "description": "Duration category"
@@ -212,7 +212,7 @@
     "characteristics": {
       "allOf": [
         {
-          "$ref": "BondCharacteristics.schema.json"
+          "$ref": "#/definitions/BondCharacteristics"
         }
       ],
       "description": "Bond characteristics"
@@ -225,7 +225,7 @@
     "evidence": {
       "allOf": [
         {
-          "$ref": "BondEvidence.schema.json"
+          "$ref": "#/definitions/BondEvidence"
         }
       ],
       "description": "Evidence for this bond"
@@ -257,13 +257,8 @@
   "title": "DetectedBond",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

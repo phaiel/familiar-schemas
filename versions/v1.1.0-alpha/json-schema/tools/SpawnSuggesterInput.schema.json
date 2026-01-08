@@ -11,7 +11,7 @@
         "evidence_type": {
           "allOf": [
             {
-              "$ref": "EvidenceType.schema.json"
+              "$ref": "#/definitions/EvidenceType"
             }
           ],
           "description": "Type of evidence"
@@ -86,7 +86,7 @@
           "default": [],
           "description": "Evidence supporting this classification",
           "items": {
-            "$ref": "ClassificationEvidence.schema.json"
+            "$ref": "#/definitions/ClassificationEvidence"
           },
           "type": "array"
         },
@@ -108,7 +108,7 @@
         "classifications": {
           "description": "All classifications with probabilities (sorted by probability)",
           "items": {
-            "$ref": "EntityClassification.schema.json"
+            "$ref": "#/definitions/EntityClassification"
           },
           "type": "array"
         },
@@ -135,7 +135,7 @@
         "reasoning": {
           "allOf": [
             {
-              "$ref": "ClassificationReasoning.schema.json"
+              "$ref": "#/definitions/ClassificationReasoning"
             }
           ],
           "description": "Classification reasoning"
@@ -274,7 +274,7 @@
     "classification": {
       "allOf": [
         {
-          "$ref": "EntityClassifierOutput.schema.json"
+          "$ref": "#/definitions/EntityClassifierOutput"
         }
       ],
       "description": "Entity classification result"
@@ -282,7 +282,7 @@
     "config": {
       "allOf": [
         {
-          "$ref": "SpawnConfig.schema.json"
+          "$ref": "#/definitions/SpawnConfig"
         }
       ],
       "default": {
@@ -311,14 +311,9 @@
   "title": "SpawnSuggesterInput",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-role": "input",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

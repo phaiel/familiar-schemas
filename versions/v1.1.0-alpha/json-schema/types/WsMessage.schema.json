@@ -202,14 +202,14 @@
           "properties": {
             "blocks": {
               "items": {
-                "$ref": "../ui/Block.schema.json"
+                "$ref": "#/definitions/Block"
               },
               "type": "array"
             },
             "initial_state": {
               "allOf": [
                 {
-                  "$ref": "../ui/AccordionState.schema.json"
+                  "$ref": "#/definitions/AccordionState"
                 }
               ],
               "default": "collapsed"
@@ -238,7 +238,7 @@
       "properties": {
         "blocks": {
           "items": {
-            "$ref": "../ui/Block.schema.json"
+            "$ref": "#/definitions/Block"
           },
           "type": "array"
         }
@@ -247,6 +247,17 @@
         "blocks"
       ],
       "type": "object"
+    },
+    "MessageStatusType": {
+      "description": "Message delivery status",
+      "enum": [
+        "sending",
+        "sent",
+        "delivered",
+        "read",
+        "failed"
+      ],
+      "type": "string"
     }
   },
   "description": "A message sent from the server to the client via WebSocket",
@@ -305,7 +316,7 @@
         "blocks": {
           "anyOf": [
             {
-              "$ref": "../ui/BlockMessage.schema.json"
+              "$ref": "#/definitions/BlockMessage"
             },
             {
               "type": "null"
@@ -340,7 +351,7 @@
         "blocks": {
           "anyOf": [
             {
-              "$ref": "../ui/BlockMessage.schema.json"
+              "$ref": "#/definitions/BlockMessage"
             },
             {
               "type": "null"
@@ -370,7 +381,7 @@
         "blocks": {
           "anyOf": [
             {
-              "$ref": "../ui/BlockMessage.schema.json"
+              "$ref": "#/definitions/BlockMessage"
             },
             {
               "type": "null"
@@ -406,7 +417,7 @@
           "type": "string"
         },
         "status": {
-          "$ref": "../types/MessageStatusType.schema.json"
+          "$ref": "#/definitions/MessageStatusType"
         },
         "type": {
           "enum": [
@@ -424,16 +435,5 @@
     }
   ],
   "title": "WsMessage",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "type",
-  "x-familiar-enum-repr": "internally_tagged",
-  "x-familiar-kind": "type",
-  "x-familiar-variants": {
-    "complete": "Complete",
-    "error": "Error",
-    "message_status": "MessageStatus",
-    "progress": "Progress",
-    "status": "Status",
-    "typing": "Typing"
-  }
+  "x-familiar-kind": "type"
 }

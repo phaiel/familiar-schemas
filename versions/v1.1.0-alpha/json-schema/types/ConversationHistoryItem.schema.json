@@ -7,7 +7,8 @@
       "type": "string"
     },
     "role": {
-      "$ref": "../types/MemberRole.schema.json"
+      "description": "Role: \"user\" or \"assistant\"",
+      "type": "string"
     }
   },
   "required": [

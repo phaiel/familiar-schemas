@@ -1,5 +1,158 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "CourseMessage": {
+      "description": "A single message within a Course's history\n\nThis is an immutable record of what was said. The Course history is append-only - messages are never modified or deleted.",
+      "properties": {
+        "agent_speaker": {
+          "default": null,
+          "description": "Which agent sent this message (if role is Assistant)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "default": null,
+          "description": "Text content of the message",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "course_id": {
+          "allOf": [
+            {
+              "$ref": "../primitives/UUID.schema.json"
+            }
+          ],
+          "description": "ID of the course this message belongs to"
+        },
+        "id": {
+          "allOf": [
+            {
+              "$ref": "../primitives/UUID.schema.json"
+            }
+          ],
+          "description": "Unique message ID"
+        },
+        "metadata": {
+          "default": null,
+          "description": "Optional metadata"
+        },
+        "role": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageRole.schema.json"
+            }
+          ],
+          "description": "Role of the message sender"
+        },
+        "shuttle_id": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UUID.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ID of the Shuttle that processed this message (for tracing)"
+        },
+        "timestamp": {
+          "allOf": [
+            {
+              "$ref": "../primitives/Timestamp.schema.json"
+            }
+          ],
+          "description": "When the message was created"
+        }
+      },
+      "required": [
+        "course_id",
+        "id",
+        "role",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "CourseMetadata": {
+      "description": "Session-level metadata for a Course\n\nThis is for persistent, session-scoped information. Processing metadata (provider, model, latency) belongs on the Shuttle.",
+      "properties": {
+        "custom": {
+          "description": "Custom user metadata"
+        },
+        "is_pinned": {
+          "default": false,
+          "description": "Whether this course is pinned/starred",
+          "type": "boolean"
+        },
+        "preferred_language": {
+          "description": "User's preferred language",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for organization",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "tokenizer_hint": {
+          "description": "Model-specific tokenizer hint (e.g., \"cl100k_base\" for Claude/GPT-4) Used to select the appropriate token counter",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "total_history_tokens": {
+          "default": 0,
+          "description": "Total tokens in history (cached for fast pruning decisions) Updated on each commit_message() call",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "ui_theme": {
+          "description": "UI theme preference",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "CourseStatus": {
+      "description": "Session status for a Course\n\nThe Course is a persistent session/history bucket. Processing states (Segmenting, Classifying, etc.) belong on the Shuttle.\n\nCourse status reflects whether the session is: - Idle: No active processing - Active: Currently being processed by a Shuttle - Archived: Closed/completed, read-only",
+      "oneOf": [
+        {
+          "description": "Session is idle, no active processing",
+          "enum": [
+            "idle"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Session is active, a Shuttle is processing",
+          "enum": [
+            "active"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Session is archived/closed",
+          "enum": [
+            "archived"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
   "description": "A Course is a persistent session tracking conversation history\n\nThe Course is the \"history bucket\" in the Loom Pattern. It: - Owns the conversation history (append-only) - Tracks session status (idle, active, archived) - Survives across Shuttle processing cycles - Has a 1:N relationship with Shuttles\n\nThe Course does NOT contain: - Transient processing state (that's on Shuttle) - Current weave/input (that's on Shuttle) - Processing metadata like provider/model (that's on Shuttle)",
   "properties": {
     "created_at": {
@@ -14,17 +167,22 @@
       "default": [],
       "description": "Message history (append-only, immutable during processing)",
       "items": {
-        "$ref": "CourseMessage.schema.json"
+        "$ref": "#/definitions/CourseMessage"
       },
       "type": "array"
     },
     "id": {
-      "$ref": "../primitives/CourseId.schema.json"
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this course"
     },
     "metadata": {
       "allOf": [
         {
-          "$ref": "CourseMetadata.schema.json"
+          "$ref": "#/definitions/CourseMetadata"
         }
       ],
       "default": {
@@ -36,7 +194,7 @@
     "status": {
       "allOf": [
         {
-          "$ref": "../types/CourseStatus.schema.json"
+          "$ref": "#/definitions/CourseStatus"
         }
       ],
       "description": "Session status (Idle, Active, Archived)"
@@ -49,7 +207,12 @@
       ]
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this course belongs to"
     },
     "title": {
       "description": "Optional title for the course",
@@ -77,19 +240,8 @@
   "title": "Course",
   "type": "object",
   "x-familiar-kind": "entity",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Entity.meta.schema.json"
-  },
-  "x-familiar-persistence": {
-    "profile": "postgres",
-    "table": "courses",
-    "primary_key": "id",
-    "indexes": [
-      "tenant_id",
-      "created_at"
-    ]
-  },
+  "x-familiar-persistence": "postgres",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

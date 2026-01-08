@@ -3,30 +3,16 @@
   "description": "A tool call with real-time status updates for UI display",
   "properties": {
     "arguments": {
-      "anyOf": [
-        {
-          "default": null,
-          "description": "Arguments passed to the tool"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "default": null,
+      "description": "Arguments passed to the tool"
     },
     "id": {
       "description": "Unique ID for this tool call",
       "type": "string"
     },
     "result": {
-      "anyOf": [
-        {
-          "default": null,
-          "description": "Result from the tool"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "default": null,
+      "description": "Result from the tool"
     },
     "status": {
       "allOf": [

@@ -26,20 +26,5 @@
     }
   ],
   "title": "MessageRole",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "Assistant": "Assistant",
-    "System": "System",
-    "User": "User"
-  },
-  "x-familiar-sea-orm": {
-    "rs_type": "String",
-    "db_type": "String(StringLen::None)",
-    "values": {
-      "System": "system",
-      "User": "user",
-      "Assistant": "assistant"
-    }
-  }
+  "x-familiar-kind": "primitive"
 }

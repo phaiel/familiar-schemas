@@ -40,14 +40,5 @@
     }
   ],
   "title": "TemporalMarkerType",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "absolute": "Absolute",
-    "duration": "Duration",
-    "frequency": "Frequency",
-    "relative": "Relative",
-    "time_of_day": "TimeOfDay"
-  }
+  "x-familiar-kind": "primitive"
 }

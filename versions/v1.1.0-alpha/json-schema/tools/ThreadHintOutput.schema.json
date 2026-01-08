@@ -12,7 +12,7 @@
         "detection_method": {
           "allOf": [
             {
-              "$ref": "DetectionMethod.schema.json"
+              "$ref": "#/definitions/DetectionMethod"
             }
           ],
           "description": "How it was detected"
@@ -109,7 +109,7 @@
         "subject_type": {
           "allOf": [
             {
-              "$ref": "SubjectType.schema.json"
+              "$ref": "#/definitions/SubjectType"
             }
           ],
           "description": "Type of subject"
@@ -205,7 +205,7 @@
         "category": {
           "allOf": [
             {
-              "$ref": "ThreadCategory.schema.json"
+              "$ref": "#/definitions/ThreadCategory"
             }
           ],
           "description": "Category"
@@ -226,7 +226,7 @@
         "thread_type": {
           "allOf": [
             {
-              "$ref": "SubjectType.schema.json"
+              "$ref": "#/definitions/SubjectType"
             }
           ],
           "description": "Type of thread"
@@ -323,7 +323,7 @@
           "default": [],
           "description": "Thread categories",
           "items": {
-            "$ref": "ThreadCategory.schema.json"
+            "$ref": "#/definitions/ThreadCategory"
           },
           "type": "array"
         },
@@ -343,7 +343,7 @@
         "primary_subject": {
           "allOf": [
             {
-              "$ref": "SubjectReference.schema.json"
+              "$ref": "#/definitions/SubjectReference"
             }
           ],
           "description": "Primary subject/actor (who/what is the main focus)"
@@ -377,14 +377,14 @@
     "detected_threads": {
       "description": "Detected thread references",
       "items": {
-        "$ref": "DetectedThread.schema.json"
+        "$ref": "#/definitions/DetectedThread"
       },
       "type": "array"
     },
     "hints": {
       "allOf": [
         {
-          "$ref": "ThreadHintValues.schema.json"
+          "$ref": "#/definitions/ThreadHintValues"
         }
       ],
       "description": "Thread hints"
@@ -393,7 +393,7 @@
       "default": [],
       "description": "Suggested new threads to create",
       "items": {
-        "$ref": "SuggestedThread.schema.json"
+        "$ref": "#/definitions/SuggestedThread"
       },
       "type": "array"
     }
@@ -405,14 +405,9 @@
   "title": "ThreadHintOutput",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-role": "output",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

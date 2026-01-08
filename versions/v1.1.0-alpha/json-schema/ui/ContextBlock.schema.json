@@ -15,10 +15,7 @@
   "title": "ContextBlock",
   "type": "object",
   "x-familiar-kind": "ui",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/UI.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

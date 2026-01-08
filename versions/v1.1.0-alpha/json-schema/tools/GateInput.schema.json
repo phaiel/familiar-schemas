@@ -22,14 +22,12 @@
   "title": "GateInput",
   "type": "object",
   "x-familiar-kind": "tool-payload",
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/daemon-queue.queue.json"
-  },
+  "x-familiar-queue": "daemon-queue",
   "x-familiar-role": "input",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   },
   "x-familiar-system": {
-    "$ref": "../infrastructure/systems/FatesGate.system.json"
+    "$ref": "../systems/FatesGate.system.json"
   }
 }

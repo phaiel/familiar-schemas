@@ -12,7 +12,7 @@
   },
   "properties": {
     "channel_type": {
-      "$ref": "../domains/conversation/ChannelType.schema.json"
+      "$ref": "#/definitions/ChannelType"
     },
     "created_at": {
       "format": "date-time",
@@ -31,30 +31,19 @@
       "type": "string"
     },
     "owner_id": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/UserId.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
       ]
     },
-    "settings": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "settings": true,
     "tenant_id": {
       "$ref": "../primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
       "type": "string"
-    },
-    "version": {
-      "description": "Optimistic locking version - incremented on each update",
-      "format": "int32",
-      "type": "integer",
-      "x-familiar-default-value": 0
     }
   },
   "required": [
@@ -64,32 +53,12 @@
     "name",
     "settings",
     "tenant_id",
-    "updated_at",
-    "version"
+    "updated_at"
   ],
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
-  "x-familiar-module": "conversation",
-  "x-familiar-primary-key": "id",
-  "x-familiar-relations": [
-    {
-      "from": "tenant_id",
-      "target": "TenantModel",
-      "to": "id",
-      "type": "belongs_to"
-    },
-    {
-      "field": "messages",
-      "target": "MessageModel",
-      "type": "has_many"
-    }
-  ],
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "channels"
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

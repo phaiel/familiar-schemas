@@ -59,13 +59,18 @@
     "detection_method": {
       "allOf": [
         {
-          "$ref": "DetectionMethod.schema.json"
+          "$ref": "#/definitions/DetectionMethod"
         }
       ],
       "description": "How it was detected"
     },
     "role": {
-      "$ref": "../types/MemberRole.schema.json"
+      "allOf": [
+        {
+          "$ref": "../primitives/ThreadRole.schema.json"
+        }
+      ],
+      "description": "Role in this entity"
     },
     "thread": {
       "allOf": [
@@ -90,13 +95,8 @@
   "title": "DetectedThread",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

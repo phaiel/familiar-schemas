@@ -32,22 +32,9 @@
     }
   ],
   "title": "SpawnAction",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "auto_spawn": "AutoSpawn",
-    "clarify": "Clarify",
-    "skip": "Skip",
-    "suggest": "Suggest"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

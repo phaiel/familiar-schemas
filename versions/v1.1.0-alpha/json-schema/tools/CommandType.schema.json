@@ -67,27 +67,9 @@
     }
   ],
   "title": "CommandType",
-  "x-familiar-casing": "SCREAMING_SNAKE_CASE",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "CONFIGURE": "Configure",
-    "CREATE": "Create",
-    "CUSTOM": "Custom",
-    "DELETE": "Delete",
-    "EXPORT": "Export",
-    "IMPORT": "Import",
-    "LINK": "Link",
-    "UNLINK": "Unlink",
-    "UPDATE": "Update"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

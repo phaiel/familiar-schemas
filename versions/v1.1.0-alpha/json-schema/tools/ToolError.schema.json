@@ -82,21 +82,14 @@
     "code": {
       "allOf": [
         {
-          "$ref": "ToolErrorCode.schema.json"
+          "$ref": "#/definitions/ToolErrorCode"
         }
       ],
       "description": "Error code for programmatic handling"
     },
     "details": {
-      "anyOf": [
-        {
-          "default": null,
-          "description": "Additional error details"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "default": null,
+      "description": "Additional error details"
     },
     "message": {
       "description": "Human-readable error message",
@@ -115,13 +108,8 @@
   "title": "ToolError",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

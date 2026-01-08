@@ -44,9 +44,5 @@
   ],
   "title": "RawMessageIntent",
   "type": "object",
-  "x-familiar-kind": "type",
-  "x-familiar-rust-default": "custom",
-  "x-familiar-rust-derive-exclude": [
-    "Default"
-  ]
+  "x-familiar-kind": "type"
 }

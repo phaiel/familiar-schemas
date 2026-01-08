@@ -33,18 +33,8 @@
     }
   ],
   "title": "SystemTrigger",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "externally_tagged",
   "x-familiar-kind": "config",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Config.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "event": "Event",
-    "on_demand": "OnDemand",
-    "schedule": "Schedule"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

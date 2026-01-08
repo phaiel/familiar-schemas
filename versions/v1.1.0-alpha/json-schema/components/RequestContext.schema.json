@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "HTTP request context for audit/logging\n\nCaptures metadata about the HTTP request that triggered an action. Used for security auditing, rate limiting, and debugging.\n\n## Usage\n\nEmbed in types that need request tracking: ```rust,ignore pub struct AuditLogEntry { // ... other fields #[serde(flatten)] pub request_context: RequestContext} ```\n\n## Fields Replaced\n\nThis component replaces the common pattern of: - `pub ip_address: Option<String>` - `pub user_agent: Option<String>`",
+  "description": "HTTP request context for audit/logging\n\nCaptures metadata about the HTTP request that triggered an action. Used for security auditing, rate limiting, and debugging.\n\n## Usage\n\nEmbed in types that need request tracking: ```rust,ignore pub struct AuditLogEntry { // ... other fields #[serde(flatten)] pub request_context: RequestContext, } ```\n\n## Fields Replaced\n\nThis component replaces the common pattern of: - `pub ip_address: Option<String>` - `pub user_agent: Option<String>`",
   "properties": {
     "ip_address": {
       "description": "Client IP address (may be from X-Forwarded-For in proxied environments)",
@@ -20,10 +20,7 @@
   "title": "RequestContext",
   "type": "object",
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

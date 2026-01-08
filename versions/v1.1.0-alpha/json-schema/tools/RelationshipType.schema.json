@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of relationships",
+  "enum": [
+    "family",
+    "friend",
+    "close_friend",
+    "best_friend",
+    "romantic",
+    "ex_romantic",
+    "spouse",
+    "parent",
+    "child",
+    "sibling",
+    "colleague",
+    "manager",
+    "direct_report",
+    "mentor",
+    "mentee",
+    "client",
+    "vendor",
+    "partner",
+    "acquaintance",
+    "neighbor",
+    "classmate",
+    "teammate",
+    "adversary",
+    "rival",
+    "service_provider",
+    "other"
+  ],
+  "title": "RelationshipType",
+  "type": "string",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

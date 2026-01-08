@@ -11,7 +11,7 @@
               "type": "string"
             },
             "level": {
-              "$ref": "../domains/agentic/LogLevel.schema.json"
+              "$ref": "#/definitions/LogLevel"
             },
             "message_type": {
               "enum": [
@@ -95,7 +95,7 @@
             },
             "findings": {
               "items": {
-                "$ref": "../domains/agentic/Finding.schema.json"
+                "$ref": "#/definitions/Finding"
               },
               "type": "array"
             },
@@ -254,7 +254,7 @@
         "message_type": {
           "anyOf": [
             {
-              "$ref": "../domains/agentic/AgentMessageType.schema.json"
+              "$ref": "#/definitions/AgentMessageType"
             },
             {
               "type": "null"
@@ -312,7 +312,7 @@
     "messages": {
       "description": "All messages in the thread (in chronological order)",
       "items": {
-        "$ref": "ThreadMessage.schema.json"
+        "$ref": "#/definitions/ThreadMessage"
       },
       "type": "array"
     },
@@ -354,20 +354,8 @@
   "title": "ConversationThread",
   "type": "object",
   "x-familiar-kind": "entity",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Entity.meta.schema.json"
-  },
-  "x-familiar-persistence": {
-    "profile": "postgres",
-    "table": "conversation_threads",
-    "primary_key": "id",
-    "indexes": [
-      "tenant_id",
-      "user_id",
-      "created_at"
-    ]
-  },
+  "x-familiar-persistence": "postgres",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

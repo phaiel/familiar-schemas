@@ -167,7 +167,7 @@
     "blocks": {
       "description": "Multimodal blocks (replaces/augments simple text weave)",
       "items": {
-        "$ref": "../multimodal/WeaveBlock.schema.json"
+        "$ref": "#/definitions/WeaveBlock"
       },
       "type": [
         "array",
@@ -184,7 +184,7 @@
     "context_blocks": {
       "description": "Context can also be multimodal",
       "items": {
-        "$ref": "../multimodal/WeaveBlock.schema.json"
+        "$ref": "#/definitions/WeaveBlock"
       },
       "type": [
         "array",
@@ -213,12 +213,6 @@
         "null"
       ]
     },
-    "complexity": {
-      "description": "Query complexity score for routing decisions (0.0-1.0)",
-      "type": "number",
-      "minimum": 0.0,
-      "maximum": 1.0
-    },
     "weave": {
       "description": "The raw user input (the \"weave\" of thought)",
       "type": [
@@ -230,10 +224,7 @@
   "title": "WeaveRequest",
   "type": "object",
   "x-familiar-kind": "entities_api",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/EntitiesAPI.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

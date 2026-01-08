@@ -39,14 +39,5 @@
     }
   ],
   "title": "ShuttleStatus",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "type",
-  "x-familiar-variants": {
-    "classifying": "Classifying",
-    "complete": "Complete",
-    "failed": "Failed",
-    "pending": "Pending",
-    "spawning": "Spawning"
-  }
+  "x-familiar-kind": "type"
 }

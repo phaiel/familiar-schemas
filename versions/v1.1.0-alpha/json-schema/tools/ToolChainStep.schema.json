@@ -100,7 +100,7 @@
         "transform": {
           "anyOf": [
             {
-              "$ref": "InputTransform.schema.json"
+              "$ref": "#/definitions/InputTransform"
             },
             {
               "type": "null"
@@ -244,7 +244,7 @@
         "condition_type": {
           "allOf": [
             {
-              "$ref": "ConditionType.schema.json"
+              "$ref": "#/definitions/ConditionType"
             }
           ],
           "description": "Type of condition"
@@ -252,7 +252,7 @@
         "operator": {
           "allOf": [
             {
-              "$ref": "ConditionOperator.schema.json"
+              "$ref": "#/definitions/ConditionOperator"
             }
           ],
           "description": "Operator"
@@ -284,7 +284,7 @@
     "condition": {
       "anyOf": [
         {
-          "$ref": "StepCondition.schema.json"
+          "$ref": "#/definitions/StepCondition"
         },
         {
           "type": "null"
@@ -296,7 +296,7 @@
     "execution_order": {
       "allOf": [
         {
-          "$ref": "ExecutionOrder.schema.json"
+          "$ref": "#/definitions/ExecutionOrder"
         }
       ],
       "description": "Execution order"
@@ -309,7 +309,7 @@
       "default": [],
       "description": "Input mapping from previous steps",
       "items": {
-        "$ref": "InputMapping.schema.json"
+        "$ref": "#/definitions/InputMapping"
       },
       "type": "array"
     },
@@ -349,13 +349,8 @@
   "title": "ToolChainStep",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

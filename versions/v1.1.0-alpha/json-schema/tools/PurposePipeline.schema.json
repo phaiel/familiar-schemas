@@ -3,28 +3,28 @@
   "description": "Processing pipeline category",
   "oneOf": [
     {
-      "description": "Memory recording: Segment \u2192 Classify \u2192 Spawn \u2192 Store",
+      "description": "Memory recording: Segment → Classify → Spawn → Store",
       "enum": [
         "recording"
       ],
       "type": "string"
     },
     {
-      "description": "Data retrieval: Parse \u2192 Search \u2192 Format \u2192 Return",
+      "description": "Data retrieval: Parse → Search → Format → Return",
       "enum": [
         "retrieval"
       ],
       "type": "string"
     },
     {
-      "description": "Analysis: Parse \u2192 Search \u2192 Analyze \u2192 Synthesize",
+      "description": "Analysis: Parse → Search → Analyze → Synthesize",
       "enum": [
         "analysis"
       ],
       "type": "string"
     },
     {
-      "description": "System action: Parse \u2192 Validate \u2192 Execute \u2192 Confirm",
+      "description": "System action: Parse → Validate → Execute → Confirm",
       "enum": [
         "action"
       ],
@@ -39,23 +39,9 @@
     }
   ],
   "title": "PurposePipeline",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "action": "Action",
-    "analysis": "Analysis",
-    "conversational": "Conversational",
-    "recording": "Recording",
-    "retrieval": "Retrieval"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

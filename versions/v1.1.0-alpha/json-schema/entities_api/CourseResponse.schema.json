@@ -33,7 +33,7 @@
         "physics": {
           "anyOf": [
             {
-              "$ref": "PhysicsResponse.schema.json"
+              "$ref": "#/definitions/PhysicsResponse"
             },
             {
               "type": "null"
@@ -82,7 +82,7 @@
           "type": "string"
         },
         "media_type": {
-          "$ref": "MediaType.schema.json"
+          "$ref": "#/definitions/MediaType"
         },
         "metadata": true,
         "normalized_text": {
@@ -269,7 +269,7 @@
       "properties": {
         "classifications": {
           "items": {
-            "$ref": "ClassificationResponse.schema.json"
+            "$ref": "#/definitions/ClassificationResponse"
           },
           "type": "array"
         },
@@ -284,7 +284,7 @@
         "physics_hint": {
           "anyOf": [
             {
-              "$ref": "PhysicsHintResponse.schema.json"
+              "$ref": "#/definitions/PhysicsHintResponse"
             },
             {
               "type": "null"
@@ -346,7 +346,7 @@
     "debug_llm_request": {
       "anyOf": [
         {
-          "$ref": "../components/LlmRequestDebug.schema.json"
+          "$ref": "#/definitions/LlmRequestDebug"
         },
         {
           "type": "null"
@@ -364,7 +364,7 @@
     "entities": {
       "description": "Entities spawned from weave units (by Spawner, not LLM)",
       "items": {
-        "$ref": "EntityResponse.schema.json"
+        "$ref": "#/definitions/EntityResponse"
       },
       "type": [
         "array",
@@ -381,7 +381,7 @@
     "media_refs": {
       "description": "Media references from multimodal input",
       "items": {
-        "$ref": "MediaRef.schema.json"
+        "$ref": "#/definitions/MediaRef"
       },
       "type": [
         "array",
@@ -391,20 +391,13 @@
     "message_intent": {
       "allOf": [
         {
-          "$ref": "../primitives/MessageIntent.schema.json"
+          "$ref": "#/definitions/MessageIntentResponse"
         }
       ],
       "description": "What is the user trying to do with this message?"
     },
     "metadata": {
-      "anyOf": [
-        {
-          "description": "Processing metadata"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "description": "Processing metadata"
     },
     "original_weave": {
       "description": "The original user input (preserved for context)",
@@ -418,7 +411,7 @@
       "default": [],
       "description": "Raw segments before classification (Phase 1 output)",
       "items": {
-        "$ref": "SegmentResponse.schema.json"
+        "$ref": "#/definitions/SegmentResponse"
       },
       "type": "array"
     },
@@ -438,7 +431,7 @@
     "weave_units": {
       "description": "The classified weave units (for LOG intent)",
       "items": {
-        "$ref": "WeaveUnitResponse.schema.json"
+        "$ref": "#/definitions/WeaveUnitResponse"
       },
       "type": "array"
     }
@@ -456,10 +449,7 @@
   "title": "CourseResponse",
   "type": "object",
   "x-familiar-kind": "entities_api",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/EntitiesAPI.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

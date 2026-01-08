@@ -531,668 +531,83 @@
   },
 
   # ============================================================================
-  # X-FAMILIAR EXTENSION SCHEMAS - Comprehensive Governance
+  # EXTENSION REGISTRY - Imports all extension schemas
   # ============================================================================
 
-  # Comprehensive schemas for all permitted x-familiar-* extensions
-  # These define the structure, validation, and permitted usage of each extension
-  extension_schemas = {
-
-    # ============================================================================
-    # CORE METADATA EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-kind" = {
-      type = "string",
-      enum = ["entity", "node", "topology", "domain"],
-      description = "Defines the orthological layer classification",
-      required = true,
-      validation = fun value =>
-        std.array.elem value ["entity", "node", "topology", "domain"]
-    },
-
-    "x-familiar-layer" = {
-      type = "string",
-      enum = ["entity", "node", "topology", "domain"],
-      description = "Defines the architectural layer (alias for x-familiar-kind)",
-      required = false,
-      validation = fun value =>
-        std.array.elem value ["entity", "node", "topology", "domain"]
-    },
-
-    "x-familiar-orthology" = {
-      type = "string",
-      description = "Describes the orthological purity guarantee",
-      examples = ["data_only", "compute_only", "wiring_only", "business_only"],
-      validation = fun value => std.is_string value
-    },
-
-    "x-familiar-description" = {
-      type = "string",
-      description = "Human-readable description of the schema purpose",
-      required = false,
-      validation = fun value => std.is_string value && std.string.length value > 0
-    },
-
-    # ============================================================================
-    # ENTITY LAYER EXTENSIONS (Pure Data)
-    # ============================================================================
-
-    "x-familiar-codegen-targets" = {
-      type = "array",
-      items = { type = "string", enum = ["rust", "typescript", "python", "go"] },
-      description = "Target languages for code generation",
-      default = ["rust", "typescript"],
-      validation = fun value =>
-        std.is_array value &&
-        std.array.all (fun item => std.array.elem item ["rust", "typescript", "python", "go"]) value
-    },
-
-    "x-familiar-component-type" = {
-      type = "string",
-      enum = ["ecs_component", "data_structure", "value_object", "entity"],
-      description = "Type of component in ECS architecture",
-      validation = fun value =>
-        std.array.elem value ["ecs_component", "data_structure", "value_object", "entity"]
-    },
-
-    "x-familiar-type-category" = {
-      type = "string",
-      enum = ["primitive", "composite", "enum", "union", "reference"],
-      description = "Category classification for type definitions",
-      validation = fun value =>
-        std.array.elem value ["primitive", "composite", "enum", "union", "reference"]
-    },
-
-    # ============================================================================
-    # INFRASTRUCTURE LAYER EXTENSIONS (Pure Compute)
-    # ============================================================================
-
-    "x-familiar-node-type" = {
-      type = "string",
-      enum = ["api_service", "worker", "database", "cache", "queue", "tool_execution", "resource_allocation", "action_execution"],
-      description = "Type of compute node in the infrastructure",
-      validation = fun value =>
-        std.array.elem value ["api_service", "worker", "database", "cache", "queue", "tool_execution", "resource_allocation", "action_execution"]
-    },
-
-    "x-familiar-resources" = {
-      type = "object",
-      properties = {
-        cpu = { type = "string", pattern = "^[0-9]+(\\.[0-9]+)?$" },
-        memory = { type = "string", pattern = "^[0-9]+(Gi|Mi|Ki)$" },
-        storage = { type = "string", pattern = "^[0-9]+(Gi|Mi|Ki)$", required = false },
-        replicas = { type = "integer", minimum = 1, required = false }
-      },
-      description = "Compute resource requirements",
-      validation = fun value =>
-        std.is_record value &&
-        std.record.has_field "cpu" value &&
-        std.record.has_field "memory" value
-    },
-
-    "x-familiar-scaling" = {
-      type = "object",
-      properties = {
-        min_replicas = { type = "integer", minimum = 0, default = 1 },
-        max_replicas = { type = "integer", minimum = 1, default = 10 },
-        target_cpu_utilization = { type = "integer", minimum = 1, maximum = 100, default = 70 },
-        enabled = { type = "boolean", default = true }
-      },
-      description = "Auto-scaling configuration",
-      validation = fun value =>
-        std.is_record value &&
-        (std.record.get_or "min_replicas" value 1) <= (std.record.get_or "max_replicas" value 10)
-    },
-
-    "x-familiar-capabilities" = {
-      type = "array",
-      items = { type = "string" },
-      description = "List of capabilities provided by this compute resource",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-execution-mode" = {
-      type = "string",
-      enum = ["sync", "async", "batch", "stream"],
-      description = "Execution mode for compute operations",
-      validation = fun value =>
-        std.array.elem value ["sync", "async", "batch", "stream"]
-    },
-
-    "x-familiar-allocation-strategy" = {
-      type = "string",
-      enum = ["first_fit", "best_fit", "worst_fit", "round_robin"],
-      description = "Resource allocation strategy",
-      validation = fun value =>
-        std.array.elem value ["first_fit", "best_fit", "worst_fit", "round_robin"]
-    },
-
-    "x-familiar-contract" = {
-      type = "object",
-      properties = {
-        inputs = { type = "object", description = "Input specifications" },
-        outputs = { type = "object", description = "Output specifications" },
-        side_effects = { type = "array", items = { type = "string" }, required = false }
-      },
-      description = "Interface contract for tools and services",
-      validation = fun value =>
-        std.is_record value &&
-        std.record.has_field "inputs" value &&
-        std.record.has_field "outputs" value
-    },
-
-    # ============================================================================
-    # ARCHITECTURE LAYER EXTENSIONS (Pure Topology)
-    # ============================================================================
-
-    "x-familiar-topology-type" = {
-      type = "string",
-      enum = ["entity_node_binding", "data_flow", "service_mesh", "runtime_topology"],
-      description = "Type of topology relationship",
-      validation = fun value =>
-        std.array.elem value ["entity_node_binding", "data_flow", "service_mesh", "runtime_topology"]
-    },
-
-    "x-familiar-architectural-pattern" = {
-      type = "string",
-      enum = ["layered", "microservices", "event_driven", "hexagonal", "cqrs", "serverless", "monolithic", "modular", "pipeline"],
-      description = "Architectural pattern classification",
-      validation = fun value =>
-        std.array.elem value ["layered", "microservices", "event_driven", "hexagonal", "cqrs", "serverless", "monolithic", "modular", "pipeline"]
-    },
-
-    "x-familiar-architectural-layer" = {
-      type = "string",
-      enum = ["presentation", "application", "domain", "infrastructure", "data", "integration", "cross_cutting"],
-      description = "Architectural layer within a pattern",
-      validation = fun value =>
-        std.array.elem value ["presentation", "application", "domain", "infrastructure", "data", "integration", "cross_cutting"]
-    },
-
-    "x-familiar-architectural-boundary" = {
-      type = "object",
-      properties = {
-        type = { type = "string", enum = ["service", "module", "layer", "context", "aggregate"] },
-        name = { type = "string" },
-        responsibilities = { type = "array", items = { type = "string" } }
-      },
-      description = "Architectural boundary definition",
-      validation = fun value =>
-        std.is_record value &&
-        std.record.has_field "type" value &&
-        std.record.has_field "name" value
-    },
-
-    "x-familiar-relationships" = {
-      type = "array",
-      items = {
-        type = "object",
-        properties = {
-          from = { type = "string" },
-          to = { type = "string" },
-          type = { type = "string", enum = ["depends", "uses", "implements", "extends", "composes"] },
-          cardinality = { type = "string", pattern = "^[0-9*]+:[0-9*]+$", required = false }
-        }
-      },
-      description = "Topology relationships between components",
-      validation = fun value =>
-        std.is_array value &&
-        std.array.all (fun rel =>
-          std.is_record rel &&
-          std.record.has_field "from" rel &&
-          std.record.has_field "to" rel &&
-          std.record.has_field "type" rel
-        ) value
-    },
-
-    "x-familiar-data-flow" = {
-      type = "array",
-      items = {
-        type = "object",
-        properties = {
-          source = { type = "string" },
-          target = { type = "string" },
-          data_type = { type = "string" },
-          volume = { type = "string", enum = ["low", "medium", "high"], required = false },
-          frequency = { type = "string", enum = ["realtime", "batch", "event"], required = false }
-        }
-      },
-      description = "Data flow topology between nodes",
-      validation = fun value =>
-        std.is_array value &&
-        std.array.all (fun flow =>
-          std.is_record flow &&
-          std.record.has_field "source" flow &&
-          std.record.has_field "target" flow &&
-          std.record.has_field "data_type" flow
-        ) value
-    },
-
-    "x-familiar-composition-type" = {
-      type = "string",
-      enum = ["system_assembly", "service_composition", "module_aggregation"],
-      description = "Type of system composition",
-      validation = fun value =>
-        std.array.elem value ["system_assembly", "service_composition", "module_aggregation"]
-    },
-
-    "x-familiar-assembly-rules" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Rules for component assembly",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    # ============================================================================
-    # DOMAIN LAYER EXTENSIONS (Pure Business Logic)
-    # ============================================================================
-
-    "x-familiar-domain-context" = {
-      type = "string",
-      description = "Bounded context name in Domain-Driven Design",
-      validation = fun value => std.is_string value && std.string.length value > 0
-    },
-
-    "x-familiar-business-rules" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Business rules governing this domain concept",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-domain-events" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Domain events that can be emitted",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-ddd-principles" = {
-      type = "array",
-      items = {
-        type = "string",
-        enum = ["bounded_context", "domain_model", "ubiquitous_language", "aggregate", "entity", "value_object", "domain_service", "application_service", "repository", "factory"]
-      },
-      description = "DDD principles applied to this schema",
-      validation = fun value =>
-        std.is_array value &&
-        std.array.all (fun item =>
-          std.array.elem item ["bounded_context", "domain_model", "ubiquitous_language", "aggregate", "entity", "value_object", "domain_service", "application_service", "repository", "factory"]
-        ) value
-    },
-
-    "x-familiar-aggregates" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Aggregate roots that contain this entity",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-agent-capabilities" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Capabilities available to AI agents",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-ui-behaviors" = {
-      type = "array",
-      items = { type = "string" },
-      description = "User interface behaviors and interactions",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-api-contracts" = {
-      type = "array",
-      items = {
-        type = "object",
-        properties = {
-          name = { type = "string" },
-          method = { type = "string", enum = ["GET", "POST", "PUT", "DELETE", "PATCH"] },
-          path = { type = "string" },
-          input_schema = { type = "object", required = false },
-          output_schema = { type = "object", required = false }
-        }
-      },
-      description = "API contract definitions",
-      validation = fun value =>
-        std.is_array value &&
-        std.array.all (fun contract =>
-          std.is_record contract &&
-          std.record.has_field "name" contract &&
-          std.record.has_field "method" contract &&
-          std.record.has_field "path" contract
-        ) value
-    },
-
-    # ============================================================================
-    # INFRASTRUCTURE INTEGRATION EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-service" = {
-      type = "object",
-      properties = {
-        "$ref" = { type = "string", description = "Reference to service definition" },
-        interface = { type = "string", required = false },
-        protocol = { type = "string", enum = ["http", "grpc", "websocket", "tcp"], required = false }
-      },
-      description = "Service interface definition (deprecated - use topology layer)",
-      deprecated = true,
-      validation = fun value => std.is_record value
-    },
-
-    "x-familiar-deploy-config" = {
-      type = "object",
-      properties = {
-        environment = { type = "string", enum = ["development", "staging", "production"] },
-        replicas = { type = "integer", minimum = 1 },
-        health_check = { type = "object", required = false }
-      },
-      description = "Deployment configuration (belongs in infrastructure layer)",
-      validation = fun value => std.is_record value
-    },
-
-    "x-familiar-monitoring-enabled" = {
-      type = "boolean",
-      description = "Whether monitoring is enabled",
-      default = false,
-      validation = fun value => std.is_bool value
-    },
-
-    # ============================================================================
-    # LEGACY COMPATIBILITY EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-meta-schema" = {
-      type = "string",
-      description = "Legacy meta-schema reference",
-      deprecated = true,
-      validation = fun value => std.is_string value
-    },
-
-    "x-familiar-visual" = {
-      type = "object",
-      description = "Visual presentation metadata",
-      validation = fun value => std.is_record value
-    },
-
-    "x-familiar-layout" = {
-      type = "object",
-      description = "Layout configuration",
-      validation = fun value => std.is_record value
-    },
-
-    "x-familiar-styling" = {
-      type = "object",
-      description = "Styling configuration",
-      validation = fun value => std.is_record value
-    },
-
-    # ============================================================================
-    # CODE GENERATION EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-rust-derives" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Rust derive macros to apply",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-enum-values" = {
-      type = "array",
-      description = "Enum value definitions",
-      validation = fun value => std.is_array value
-    },
-
-    "x-familiar-variants" = {
-      type = "array",
-      items = { type = "object" },
-      description = "Union/enum variant definitions",
-      validation = fun value => std.is_array value
-    },
-
-    # ============================================================================
-    # SCHEMA COMPOSITION EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-dependencies" = {
-      type = "array",
-      items = {
-        type = "object",
-        properties = {
-          name = { type = "string" },
-          version = { type = "string" },
-          optional = { type = "boolean", default = false }
-        }
-      },
-      description = "Schema dependencies",
-      validation = fun value =>
-        std.is_array value &&
-        std.array.all (fun dep =>
-          std.is_record dep && std.record.has_field "name" dep && std.record.has_field "version" dep
-        ) value
-    },
-
-    "x-familiar-depends" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Simple dependency references",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    # ============================================================================
-    # OBSERVABILITY EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-reads" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Read access patterns",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-writes" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Write access patterns",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    # ============================================================================
-    # PERFORMANCE EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-pgo" = {
-      type = "object",
-      properties = {
-        profile_guided_optimization = { type = "boolean", default = false },
-        instrumentation = { type = "boolean", default = false },
-        optimization_level = { type = "string", enum = ["none", "basic", "advanced"], default = "none" }
-      },
-      description = "Profile-guided optimization settings",
-      validation = fun value => std.is_record value
-    },
-
-    # ============================================================================
-    # SCHEMA VALIDATION EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-pattern-category" = {
-      type = "string",
-      enum = ["creational", "structural", "behavioral"],
-      description = "Design pattern category",
-      validation = fun value =>
-        std.array.elem value ["creational", "structural", "behavioral"]
-    },
-
-    "x-familiar-default" = {
-      description = "Default value specification",
-      validation = fun value => true  # Any value is valid
-    },
-
-    "x-familiar-default-value" = {
-      description = "Alternative default value specification",
-      validation = fun value => true  # Any value is valid
-    },
-
-    # ============================================================================
-    # SPECIALIZED EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-persistence" = {
-      type = "object",
-      properties = {
-        strategy = { type = "string", enum = ["database", "file", "memory", "cache"] },
-        table = { type = "string", required = false },
-        key = { type = "string", required = false }
-      },
-      description = "Data persistence configuration",
-      validation = fun value =>
-        std.is_record value && std.record.has_field "strategy" value
-    },
-
-    "x-familiar-policy" = {
-      type = "object",
-      properties = {
-        type = { type = "string", enum = ["security", "access", "retention", "compliance"] },
-        rules = { type = "array", items = { type = "string" } }
-      },
-      description = "Policy configuration",
-      validation = fun value =>
-        std.is_record value &&
-        std.record.has_field "type" value &&
-        std.record.has_field "rules" value
-    },
-
-    "x-familiar-queue" = {
-      type = "object",
-      properties = {
-        type = { type = "string", enum = ["fifo", "priority", "delayed"] },
-        retention = { type = "string", required = false },
-        dead_letter = { type = "boolean", default = false }
-      },
-      description = "Queue configuration",
-      validation = fun value => std.is_record value && std.record.has_field "type" value
-    },
-
-    "x-familiar-api" = {
-      type = "object",
-      properties = {
-        endpoints = { type = "array", items = { type = "string" } },
-        version = { type = "string" },
-        deprecated = { type = "boolean", default = false }
-      },
-      description = "API configuration",
-      validation = fun value => std.is_record value
-    },
-
-    "x-familiar-environment" = {
-      type = "string",
-      enum = ["development", "staging", "production", "testing"],
-      description = "Target environment",
-      validation = fun value =>
-        std.array.elem value ["development", "staging", "production", "testing"]
-    },
-
-    "x-familiar-environment-type" = {
-      type = "string",
-      enum = ["kubernetes", "docker", "serverless", "vm", "bare_metal"],
-      description = "Infrastructure environment type",
-      validation = fun value =>
-        std.array.elem value ["kubernetes", "docker", "serverless", "vm", "bare_metal"]
-    },
-
-    "x-familiar-networking" = {
-      type = "object",
-      properties = {
-        ports = { type = "array", items = { type = "integer" } },
-        protocols = { type = "array", items = { type = "string" } },
-        load_balancer = { type = "boolean", default = false }
-      },
-      description = "Networking configuration",
-      validation = fun value => std.is_record value
-    },
-
-    "x-familiar-retention" = {
-      type = "object",
-      properties = {
-        period = { type = "string", pattern = "^[0-9]+[smhd]$" },
-        strategy = { type = "string", enum = ["delete", "archive", "compress"] }
-      },
-      description = "Data retention policy",
-      validation = fun value =>
-        std.is_record value &&
-        std.record.has_field "period" value &&
-        std.record.has_field "strategy" value
-    },
-
-    "x-familiar-nodes" = {
-      type = "array",
-      items = { type = "string" },
-      description = "List of infrastructure nodes",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-api-endpoints" = {
-      type = "array",
-      items = { type = "string" },
-      description = "API endpoint definitions",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    "x-familiar-connections" = {
-      type = "array",
-      items = { type = "string" },
-      description = "Node connection references",
-      validation = fun value =>
-        std.is_array value && std.array.all (fun item => std.is_string item) value
-    },
-
-    # ============================================================================
-    # METADATA EXTENSIONS
-    # ============================================================================
-
-    "x-familiar-extracted-from" = {
-      type = "string",
-      description = "Source schema that this was extracted from",
-      validation = fun value => std.is_string value
-    },
-
-    "x-familiar-synthesis-timestamp" = {
-      type = "string",
-      description = "Timestamp when this schema was synthesized",
-      validation = fun value => std.is_string value
-    },
-
-    "x-familiar-deprecation-warning" = {
-      type = "string",
-      description = "Deprecation warning message",
-      validation = fun value => std.is_string value
-    },
-
-    "x-familiar-migration-required" = {
-      type = "boolean",
-      description = "Indicates schema requires migration",
-      validation = fun value => std.is_bool value
-    }
+  # Import all permitted extensions from discrete files
+  extension_registry = {
+    # Core identity extensions
+    kind = import "extensions/kind.ncl",
+
+    # Entity layer extensions
+    component_type = import "extensions/component-type.ncl",
+    type_category = import "extensions/type-category.ncl",
+    codegen_targets = import "extensions/codegen-targets.ncl",
+
+    # Infrastructure layer extensions
+    node_type = import "extensions/node-type.ncl",
+    resources = import "extensions/resources.ncl",
+    scaling = import "extensions/scaling.ncl",
+    capabilities = import "extensions/capabilities.ncl",
+    allocation_strategy = import "extensions/allocation-strategy.ncl",
+
+    # Architecture layer extensions
+    architectural_pattern = import "extensions/architectural-pattern.ncl",
+    topology_type = import "extensions/topology-type.ncl",
+    architectural_boundary = import "extensions/architectural-boundary.ncl",
+    composition_type = import "extensions/composition-type.ncl",
+
+    # Domain layer extensions
+    domain_context = import "extensions/domain-context.ncl",
+    business_rules = import "extensions/business-rules.ncl",
+    agent_capabilities = import "extensions/agent-capabilities.ncl",
+
+    # Integration extensions
+    contract = import "extensions/contract.ncl",
+    description = import "extensions/description.ncl"
   },
 
+  # ============================================================================
+  # EXTENSION VALIDATION ENFORCEMENT
+  # ============================================================================
+
+  # Validate extensions against their schemas at global level
+  validate_extension_usage = fun schema =>
+    let extensions_used = std.record.fields_with (fun field_name =>
+      std.string.starts_with "x-familiar-" field_name
+    ) schema in
+
+    let validation_results = std.array.map (fun ext_name =>
+      let ext_key = std.string.replace "x-familiar-" "" ext_name in
+      if std.record.has_field ext_key extension_registry then
+        let extension_def = extension_registry."${ext_key}" in
+        let ext_value = schema."${ext_name}" in
+        try {
+          let _ = extension_def.contract "" ext_value in
+          { extension = ext_name, valid = true, errors = [] }
+        } catch error {
+          { extension = ext_name, valid = false, errors = [std.to_string error] }
+        }
+      else
+        { extension = ext_name, valid = false, errors = ["Unknown extension: ${ext_name}"] }
+    ) extensions_used in
+
+    let all_valid = std.array.all (fun result => result.valid) validation_results in
+    let all_errors = std.array.flat_map (fun result => result.errors) validation_results in
+
+    if all_valid then
+      schema
+    else
+      std.contract.blame_with "schema" "Extension validation failed: ${std.string.join ", " all_errors}",
+
   validation_rules = [
+    # validate_extensions : Schema -> Schema
+    # Global enforcement of all x-familiar extension schemas
+    # Ensures extensions are used correctly according to their contracts
+    (std.contract.custom (fun label schema =>
+      validate_extension_usage schema
+    )),
+
     # validate_kind : Schema -> Schema
     # Type-safe validation using enum types instead of runtime string checks
     # Ensures every schema declares its architectural kind/role

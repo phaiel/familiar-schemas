@@ -75,19 +75,5 @@
     }
   ],
   "title": "QueryType",
-  "x-familiar-casing": "SCREAMING_SNAKE_CASE",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "BOOLEAN": "Boolean",
-    "CAUSAL": "Causal",
-    "COMPARISON": "Comparison",
-    "ENTITY": "Entity",
-    "EXPLORATORY": "Exploratory",
-    "PATTERN": "Pattern",
-    "QUANTITATIVE": "Quantitative",
-    "SPATIAL": "Spatial",
-    "SUMMARY": "Summary",
-    "TEMPORAL": "Temporal"
-  }
+  "x-familiar-kind": "primitive"
 }

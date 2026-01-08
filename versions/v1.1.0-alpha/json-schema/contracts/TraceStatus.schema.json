@@ -39,20 +39,8 @@
     }
   ],
   "title": "TraceStatus",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "contract",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Contract.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "cancelled": "Cancelled",
-    "completed": "Completed",
-    "failed": "Failed",
-    "in_progress": "InProgress",
-    "started": "Started"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

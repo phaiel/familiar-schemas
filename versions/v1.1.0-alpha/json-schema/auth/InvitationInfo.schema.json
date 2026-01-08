@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Public invitation info (for showing what user is joining)",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "is_valid": {
+      "type": "boolean"
+    },
+    "role": {
+      "$ref": "../primitives/InviteRole.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "tenant_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "is_valid",
+    "role",
+    "tenant_id",
+    "tenant_name"
+  ],
+  "title": "InvitationInfo",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

@@ -18,10 +18,7 @@
   "title": "SignupConsents",
   "type": "object",
   "x-familiar-kind": "contract",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Contract.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

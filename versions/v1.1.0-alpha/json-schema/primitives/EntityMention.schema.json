@@ -49,8 +49,5 @@
   ],
   "title": "EntityMention",
   "type": "object",
-  "x-familiar-kind": "primitive",
-  "x-familiar-platform": {
-    "$ref": "../architecture/meta/Data.meta.schema.json"
-  }
+  "x-familiar-kind": "primitive"
 }

@@ -11,7 +11,7 @@
               "type": "string"
             },
             "level": {
-              "$ref": "../domains/agentic/LogLevel.schema.json"
+              "$ref": "#/definitions/LogLevel"
             },
             "message_type": {
               "enum": [
@@ -95,7 +95,7 @@
             },
             "findings": {
               "items": {
-                "$ref": "../domains/agentic/Finding.schema.json"
+                "$ref": "#/definitions/Finding"
               },
               "type": "array"
             },
@@ -313,7 +313,7 @@
         "message_type": {
           "anyOf": [
             {
-              "$ref": "../domains/agentic/AgentMessageType.schema.json"
+              "$ref": "#/definitions/AgentMessageType"
             },
             {
               "type": "null"
@@ -455,7 +455,7 @@
         "state": {
           "allOf": [
             {
-              "$ref": "../domains/agentic/AgentState.schema.json"
+              "$ref": "#/definitions/AgentState"
             }
           ],
           "description": "Updated agent state"
@@ -513,16 +513,5 @@
     }
   ],
   "title": "AgenticEvent",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "event_type",
-  "x-familiar-enum-repr": "internally_tagged",
-  "x-familiar-kind": "type",
-  "x-familiar-variants": {
-    "agent_speaking": "AgentSpeaking",
-    "course_state_changed": "CourseStateChanged",
-    "error": "Error",
-    "message_received": "MessageReceived",
-    "progress": "Progress",
-    "task_completed": "TaskCompleted"
-  }
+  "x-familiar-kind": "type"
 }

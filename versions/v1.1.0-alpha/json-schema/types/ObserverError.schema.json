@@ -239,17 +239,5 @@
     }
   ],
   "title": "ObserverError",
-  "x-familiar-content": "details",
-  "x-familiar-discriminator": "type",
-  "x-familiar-enum-repr": "adjacently_tagged",
-  "x-familiar-kind": "type",
-  "x-familiar-variants": {
-    "Configuration": "Configuration",
-    "ContentFiltered": "ContentFiltered",
-    "InvalidResponse": "InvalidResponse",
-    "Network": "Network",
-    "ParseError": "ParseError",
-    "RateLimited": "RateLimited",
-    "Timeout": "Timeout"
-  }
+  "x-familiar-kind": "type"
 }

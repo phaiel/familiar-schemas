@@ -26,12 +26,5 @@
     }
   ],
   "title": "Directionality",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "bidirectional": "Bidirectional",
-    "undirected": "Undirected",
-    "unidirectional": "Unidirectional"
-  }
+  "x-familiar-kind": "primitive"
 }

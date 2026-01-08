@@ -28,7 +28,7 @@
         "semantic": {
           "anyOf": [
             {
-              "$ref": "SemanticProperties.schema.json"
+              "$ref": "#/definitions/SemanticProperties"
             },
             {
               "type": "null"
@@ -45,7 +45,7 @@
         "temporal": {
           "anyOf": [
             {
-              "$ref": "TemporalProperties.schema.json"
+              "$ref": "#/definitions/TemporalProperties"
             },
             {
               "type": "null"
@@ -69,7 +69,7 @@
         "evidence_type": {
           "allOf": [
             {
-              "$ref": "BindingEvidenceType.schema.json"
+              "$ref": "#/definitions/BindingEvidenceType"
             }
           ],
           "description": "Type of evidence"
@@ -165,7 +165,7 @@
         "binding": {
           "anyOf": [
             {
-              "$ref": "BindingCharacteristics.schema.json"
+              "$ref": "#/definitions/BindingCharacteristics"
             },
             {
               "type": "null"
@@ -189,7 +189,7 @@
         "update_type": {
           "allOf": [
             {
-              "$ref": "GraphUpdateType.schema.json"
+              "$ref": "#/definitions/GraphUpdateType"
             }
           ],
           "description": "Type of update"
@@ -207,7 +207,7 @@
         "binding": {
           "allOf": [
             {
-              "$ref": "BindingCharacteristics.schema.json"
+              "$ref": "#/definitions/BindingCharacteristics"
             }
           ],
           "description": "Binding characteristics"
@@ -220,7 +220,7 @@
         "evidence": {
           "allOf": [
             {
-              "$ref": "BindingEvidence.schema.json"
+              "$ref": "#/definitions/BindingEvidence"
             }
           ],
           "description": "Evidence for the binding"
@@ -228,7 +228,7 @@
         "source": {
           "allOf": [
             {
-              "$ref": "EntityRef.schema.json"
+              "$ref": "#/definitions/EntityRef"
             }
           ],
           "description": "Source entity"
@@ -236,7 +236,7 @@
         "target": {
           "allOf": [
             {
-              "$ref": "EntityRef.schema.json"
+              "$ref": "#/definitions/EntityRef"
             }
           ],
           "description": "Target entity"
@@ -399,7 +399,7 @@
     "bindings": {
       "description": "Detected bindings",
       "items": {
-        "$ref": "DetectedBinding.schema.json"
+        "$ref": "#/definitions/DetectedBinding"
       },
       "type": "array"
     },
@@ -407,7 +407,7 @@
       "default": [],
       "description": "Binding graph additions",
       "items": {
-        "$ref": "BindingGraphUpdate.schema.json"
+        "$ref": "#/definitions/BindingGraphUpdate"
       },
       "type": "array"
     }
@@ -418,14 +418,9 @@
   "title": "BindingHintOutput",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-role": "output",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

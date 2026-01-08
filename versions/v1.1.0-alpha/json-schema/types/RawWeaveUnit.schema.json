@@ -17,37 +17,129 @@
         "weight"
       ],
       "type": "object"
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
     }
   },
-  "description": "Raw weave unit with classifications before entity resolution",
+  "description": "Raw weave unit from LLM output (before validation)",
   "properties": {
     "classifications": {
-      "description": "List of raw classifications",
+      "description": "Classifications in superposition",
       "items": {
         "$ref": "#/definitions/RawClassification"
       },
       "type": "array"
     },
     "content": {
-      "description": "Original text content",
+      "description": "The extracted/cleaned text content for this weave unit",
       "type": "string"
     },
-    "metadata": {
-      "description": "Additional processing metadata",
-      "type": "object"
+    "physics_hint": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/RawPhysicsHint"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
+    },
+    "primary_thread": {
+      "default": null,
+      "description": "Primary thread: the main subject/actor of this unit",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "purpose": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "default": "LOG",
+      "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
+    },
+    "secondary_threads": {
+      "default": null,
+      "description": "Secondary threads: other people/places/things mentioned",
+      "items": {
+        "type": "string"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "temporal_marker": {
+      "default": null,
+      "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "required": [
-    "content",
-    "classifications"
+    "classifications",
+    "content"
   ],
   "title": "RawWeaveUnit",
   "type": "object",
-  "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
-  "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  }
+  "x-familiar-kind": "type"
 }

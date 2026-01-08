@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EntityPatterns": {
+      "description": "User's historical entity patterns",
+      "properties": {
+        "distribution": {
+          "additionalProperties": {
+            "format": "double",
+            "type": "number"
+          },
+          "default": {},
+          "description": "Distribution (entity_type -> frequency)",
+          "type": "object"
+        },
+        "primary_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/EntityType.schema.json"
+            }
+          ],
+          "description": "Most common entity type"
+        }
+      },
+      "required": [
+        "primary_type"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Context for entity classification",
+  "properties": {
+    "following": {
+      "default": null,
+      "description": "Following segment content (for context)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "known_threads": {
+      "default": [],
+      "description": "Known threads for reference",
+      "items": {
+        "$ref": "../primitives/ThreadReference.schema.json"
+      },
+      "type": "array"
+    },
+    "preceding": {
+      "default": null,
+      "description": "Preceding segment content (for context)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_patterns": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EntityPatterns"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "User's entity type distribution"
+    }
+  },
+  "title": "EntityClassificationContext",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+  "properties": {
+    "conversation_context": {
+      "default": [],
+      "description": "Conversation history for context",
+      "items": {
+        "$ref": "../primitives/ConversationTurn.schema.json"
+      },
+      "type": "array"
+    },
+    "current_speaker": {
+      "default": null,
+      "description": "Currently active speaker (None means orchestrator decides)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "is_authenticated": {
+      "default": false,
+      "description": "Whether the user is authenticated",
+      "type": "boolean"
+    },
+    "just_finished": {
+      "default": false,
+      "description": "Whether the current agent just finished its task",
+      "type": "boolean"
+    },
+    "metadata": {
+      "default": null,
+      "description": "Custom metadata for extensibility"
+    },
+    "tenant_id": {
+      "description": "Tenant ID for multi-tenancy",
+      "type": "string"
+    },
+    "thread_id": {
+      "default": null,
+      "description": "Current thread ID (if in a thread)",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "tenant_id"
+  ],
+  "title": "AgentState",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

@@ -25,14 +25,7 @@
   "title": "SchemaInfo",
   "type": "object",
   "x-familiar-kind": "contract",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Contract.meta.schema.json"
-  },
-  "x-familiar-rust-default": "custom",
-  "x-familiar-rust-derive-exclude": [
-    "Default"
-  ],
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

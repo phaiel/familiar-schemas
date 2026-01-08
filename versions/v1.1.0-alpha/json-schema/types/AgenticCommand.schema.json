@@ -1,6 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "ConversationHistoryItem": {
+      "description": "A single item in conversation history",
+      "properties": {
+        "content": {
+          "description": "Content of the message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role: \"user\" or \"assistant\"",
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "role"
+      ],
+      "type": "object"
+    },
     "WeaveBlock": {
       "description": "Input block types for multimodal weave requests",
       "oneOf": [
@@ -157,7 +175,7 @@
           "default": null,
           "description": "Optional multimodal blocks (images, audio, etc.)",
           "items": {
-            "$ref": "../multimodal/WeaveBlock.schema.json"
+            "$ref": "#/definitions/WeaveBlock"
           },
           "type": [
             "array",
@@ -178,7 +196,7 @@
           "default": null,
           "description": "Conversation history for context",
           "items": {
-            "$ref": "ConversationHistoryItem.schema.json"
+            "$ref": "#/definitions/ConversationHistoryItem"
           },
           "type": [
             "array",
@@ -261,8 +279,8 @@
           ]
         },
         "task_id": {
-          "$ref": "../primitives/TaskId.schema.json",
-          "description": "ID of the task to cancel"
+          "description": "ID of the task to cancel",
+          "type": "string"
         }
       },
       "required": [
@@ -303,15 +321,5 @@
     }
   ],
   "title": "AgenticCommand",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "command_type",
-  "x-familiar-enum-repr": "internally_tagged",
-  "x-familiar-kind": "input",
-  "x-familiar-service": "familiar-daemon",
-  "x-familiar-variants": {
-    "cancel_task": "CancelTask",
-    "continue_course": "ContinueCourse",
-    "get_course_history": "GetCourseHistory",
-    "send_message": "SendMessage"
-  }
+  "x-familiar-kind": "type"
 }

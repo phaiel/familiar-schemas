@@ -61,17 +61,5 @@
     }
   ],
   "title": "BindingType",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "analogical": "Analogical",
-    "associative": "Associative",
-    "causal": "Causal",
-    "compositional": "Compositional",
-    "contrastive": "Contrastive",
-    "enabling": "Enabling",
-    "temporal": "Temporal",
-    "thematic": "Thematic"
-  }
+  "x-familiar-kind": "primitive"
 }

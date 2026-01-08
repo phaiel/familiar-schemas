@@ -40,7 +40,7 @@
           "default": [],
           "description": "Detected emotions",
           "items": {
-            "$ref": "DetectedEmotion.schema.json"
+            "$ref": "#/definitions/DetectedEmotion"
           },
           "type": "array"
         },
@@ -138,7 +138,7 @@
     "analysis": {
       "allOf": [
         {
-          "$ref": "PhysicsAnalysis.schema.json"
+          "$ref": "#/definitions/PhysicsAnalysis"
         }
       ],
       "description": "Analysis that led to these values"
@@ -146,7 +146,7 @@
     "hints": {
       "allOf": [
         {
-          "$ref": "PhysicsHintValues.schema.json"
+          "$ref": "#/definitions/PhysicsHintValues"
         }
       ],
       "description": "The computed physics hints"
@@ -154,7 +154,7 @@
     "position": {
       "allOf": [
         {
-          "$ref": "VAEPosition.schema.json"
+          "$ref": "#/definitions/VAEPosition"
         }
       ],
       "description": "Computed VAE position"
@@ -168,14 +168,9 @@
   "title": "PhysicsHintOutput",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-role": "output",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

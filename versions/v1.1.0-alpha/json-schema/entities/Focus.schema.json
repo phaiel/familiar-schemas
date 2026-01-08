@@ -1,14 +1,76 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Focus",
   "description": "A user-declared thematic goal or life chapter. Acts as a \"Attractor Basin\" in the VAE manifold.",
-  "x-familiar-kind": "entity",
-  "allOf": [
-    { "$ref": "../architecture/meta/PhysicalEntity.meta.schema.json" }
-  ],
   "properties": {
     "active_since": {
       "$ref": "../primitives/Timestamp.schema.json"
+    },
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
     },
     "metadata": {
       "additionalProperties": {
@@ -16,39 +78,64 @@
       },
       "type": "object"
     },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
     "text": {
       "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
     }
   },
   "required": [
     "active_since",
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
     "metadata",
-    "text"
+    "position",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
   ],
+  "title": "Focus",
   "type": "object",
-  "x-familiar-persistence": {
-    "profile": "timescaledb",
-    "hypertable": true,
-    "table": "focuses",
-    "primary_key": ["id", "t_coord"],
-    "partition_column": "t_coord",
-    "indexes": [
-      "tenant_id",
-      "t_coord",
-      "active_since"
-    ]
-  },
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-composition": {
-    "physics": [
-      "amplitude",
-      "energy",
-      "position",
-      "temperature",
-      "velocity"
-    ],
-    "note": "identity fields kept direct (typed IDs)"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

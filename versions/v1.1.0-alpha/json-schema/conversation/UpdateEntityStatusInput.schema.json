@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EntityStatus": {
+      "description": "HILT (Human in the Loop) status for entity approval",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "auto_spawned"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for updating entity status (HILT)",
+  "properties": {
+    "reviewed_by": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/definitions/EntityStatus"
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "title": "UpdateEntityStatusInput",
+  "type": "object",
+  "x-familiar-kind": "conversation",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

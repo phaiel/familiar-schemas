@@ -32,7 +32,7 @@
   "properties": {
     "classifications": {
       "items": {
-        "$ref": "WeightedClassification.schema.json"
+        "$ref": "#/definitions/WeightedClassification"
       },
       "type": "array"
     }
@@ -43,10 +43,7 @@
   "title": "ClassificationSuperposition",
   "type": "object",
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

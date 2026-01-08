@@ -60,26 +60,9 @@
     }
   ],
   "title": "SubjectType",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "concept": "Concept",
-    "event": "Event",
-    "object": "Object",
-    "organization": "Organization",
-    "other": "Other",
-    "person": "Person",
-    "place": "Place",
-    "self_": "Self_"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

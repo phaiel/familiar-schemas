@@ -455,7 +455,7 @@
         "consents": {
           "allOf": [
             {
-              "$ref": "SignupConsents.schema.json"
+              "$ref": "#/definitions/SignupConsents"
             }
           ],
           "description": "User consent flags"
@@ -482,7 +482,7 @@
         "request_context": {
           "anyOf": [
             {
-              "$ref": "../components/RequestContext.schema.json"
+              "$ref": "#/definitions/RequestContext"
             },
             {
               "type": "null"
@@ -658,7 +658,7 @@
         "kind": {
           "allOf": [
             {
-              "$ref": "TraceKind.schema.json"
+              "$ref": "#/definitions/TraceKind"
             }
           ],
           "description": "Type of trace"
@@ -687,7 +687,7 @@
         "status": {
           "allOf": [
             {
-              "$ref": "TraceStatus.schema.json"
+              "$ref": "#/definitions/TraceStatus"
             }
           ],
           "description": "Status of this trace unit"
@@ -735,35 +735,8 @@
     }
   ],
   "title": "Payload",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-discriminator": "type",
-  "x-familiar-enum-repr": "internally_tagged",
   "x-familiar-kind": "contract",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Contract.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "accept_invitation": "AcceptInvitation",
-    "course_cancel": "CourseCancel",
-    "course_cancelled": "CourseCancelled",
-    "course_classified": "CourseClassified",
-    "course_completed": "CourseCompleted",
-    "course_continue": "CourseContinue",
-    "course_failed": "CourseFailed",
-    "course_retry": "CourseRetry",
-    "course_retrying": "CourseRetrying",
-    "course_segmented": "CourseSegmented",
-    "course_start": "CourseStart",
-    "course_started": "CourseStarted",
-    "create_family": "CreateFamily",
-    "family_created": "FamilyCreated",
-    "invitation_accepted": "InvitationAccepted",
-    "onboarding_failed": "OnboardingFailed",
-    "signup": "Signup",
-    "signup_completed": "SignupCompleted",
-    "trace": "Trace"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

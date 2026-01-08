@@ -63,13 +63,67 @@
       ],
       "type": "object"
     },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
     "RawWeaveUnit": {
       "description": "Raw weave unit from LLM output (before validation)",
       "properties": {
         "classifications": {
           "description": "Classifications in superposition",
           "items": {
-            "$ref": "RawClassification.schema.json"
+            "$ref": "#/definitions/RawClassification"
           },
           "type": "array"
         },
@@ -80,7 +134,7 @@
         "physics_hint": {
           "anyOf": [
             {
-              "$ref": "../types/RawPhysicsHint.schema.json"
+              "$ref": "#/definitions/RawPhysicsHint"
             },
             {
               "type": "null"
@@ -138,7 +192,7 @@
     "message_intent": {
       "allOf": [
         {
-          "$ref": "RawMessageIntent.schema.json"
+          "$ref": "#/definitions/RawMessageIntent"
         }
       ],
       "default": {
@@ -151,7 +205,7 @@
       "default": [],
       "description": "Array of weave units extracted from the input (for LOG intent) May be empty for QUERY/REFERENCE intents",
       "items": {
-        "$ref": "RawWeaveUnit.schema.json"
+        "$ref": "#/definitions/RawWeaveUnit"
       },
       "type": "array"
     }

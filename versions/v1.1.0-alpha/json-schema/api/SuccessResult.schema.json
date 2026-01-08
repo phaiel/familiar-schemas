@@ -19,6 +19,6 @@
   "type": "object",
   "x-familiar-kind": "api",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

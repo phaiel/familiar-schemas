@@ -32,22 +32,9 @@
     }
   ],
   "title": "ErrorStrategy",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
-  },
-  "x-familiar-variants": {
-    "continue_on_error": "ContinueOnError",
-    "fail_fast": "FailFast",
-    "retry_on_error": "RetryOnError",
-    "use_fallback": "UseFallback"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

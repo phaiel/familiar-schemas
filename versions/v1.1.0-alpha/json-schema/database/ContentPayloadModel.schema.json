@@ -4,9 +4,7 @@
     "entity_id": {
       "$ref": "../primitives/EntityId.schema.json"
     },
-    "metadata": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "metadata": true,
     "text_content": {
       "type": "string"
     }
@@ -19,21 +17,7 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "comp_content",
-  "x-familiar-module": "physics",
-  "x-familiar-primary-key": "entity_id",
-  "x-familiar-relations": [
-    {
-      "type": "belongs_to",
-      "target": "EntityRegistryModel",
-      "from": "entity_id",
-      "to": "id"
-    }
-  ]
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

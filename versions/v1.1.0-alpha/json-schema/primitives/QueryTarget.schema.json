@@ -38,9 +38,5 @@
   },
   "title": "QueryTarget",
   "type": "object",
-  "x-familiar-kind": "primitive",
-  "x-familiar-rust-default": "custom",
-  "x-familiar-rust-derive-exclude": [
-    "Default"
-  ]
+  "x-familiar-kind": "primitive"
 }

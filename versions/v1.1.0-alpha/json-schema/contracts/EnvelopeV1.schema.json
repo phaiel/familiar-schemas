@@ -323,7 +323,7 @@
             "consents": {
               "allOf": [
                 {
-                  "$ref": "SignupConsents.schema.json"
+                  "$ref": "#/definitions/SignupConsents"
                 }
               ],
               "description": "User consent flags"
@@ -350,7 +350,7 @@
             "request_context": {
               "anyOf": [
                 {
-                  "$ref": "../components/RequestContext.schema.json"
+                  "$ref": "#/definitions/RequestContext"
                 },
                 {
                   "type": "null"
@@ -526,7 +526,7 @@
             "kind": {
               "allOf": [
                 {
-                  "$ref": "TraceKind.schema.json"
+                  "$ref": "#/definitions/TraceKind"
                 }
               ],
               "description": "Type of trace"
@@ -555,7 +555,7 @@
             "status": {
               "allOf": [
                 {
-                  "$ref": "TraceStatus.schema.json"
+                  "$ref": "#/definitions/TraceStatus"
                 }
               ],
               "description": "Status of this trace unit"
@@ -823,7 +823,7 @@
     "payload": {
       "allOf": [
         {
-          "$ref": "Payload.schema.json"
+          "$ref": "#/definitions/Payload"
         }
       ],
       "description": "The actual message payload"
@@ -831,7 +831,7 @@
     "producer": {
       "allOf": [
         {
-          "$ref": "ProducerInfo.schema.json"
+          "$ref": "#/definitions/ProducerInfo"
         }
       ],
       "description": "Information about the message producer"
@@ -839,13 +839,10 @@
     "schema": {
       "allOf": [
         {
-          "$ref": "SchemaInfo.schema.json"
+          "$ref": "#/definitions/SchemaInfo"
         }
       ],
       "description": "Schema information for validation"
-    },
-    "shuttle_id": {
-      "$ref": "../primitives/ShuttleId.schema.json"
     },
     "tenant_id": {
       "$ref": "../primitives/TenantId.schema.json"
@@ -876,10 +873,7 @@
   "title": "EnvelopeV1",
   "type": "object",
   "x-familiar-kind": "contract",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Contract.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

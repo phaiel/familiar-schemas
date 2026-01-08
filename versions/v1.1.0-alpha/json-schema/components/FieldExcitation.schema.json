@@ -27,21 +27,6 @@
       "minItems": 3,
       "type": "array"
     },
-    "position_workspace": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "number"
-          },
-          "maxItems": 3,
-          "minItems": 3,
-          "type": "array"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
     "temperature": {
       "allOf": [
         {
@@ -58,21 +43,6 @@
       "maxItems": 3,
       "minItems": 3,
       "type": "array"
-    },
-    "velocity_workspace": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "number"
-          },
-          "maxItems": 3,
-          "minItems": 3,
-          "type": "array"
-        },
-        {
-          "type": "null"
-        }
-      ]
     }
   },
   "required": [
@@ -84,13 +54,8 @@
   ],
   "title": "FieldExcitation",
   "type": "object",
-  "x-familiar-field-alias": "physics",
-  "x-familiar-field-order": 20,
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

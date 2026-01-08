@@ -61,17 +61,5 @@
     }
   ],
   "title": "EntityType",
-  "x-familiar-casing": "SCREAMING_SNAKE_CASE",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "BOND": "Bond",
-    "FILAMENT": "Filament",
-    "FOCUS": "Focus",
-    "INTENT": "Intent",
-    "MOMENT": "Moment",
-    "MOTIF": "Motif",
-    "PULSE": "Pulse",
-    "THREAD": "Thread"
-  }
+  "x-familiar-kind": "primitive"
 }

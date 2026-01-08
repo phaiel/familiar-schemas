@@ -1,6 +1,48 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "ClassificationPhysics": {
+      "description": "Physics hints extracted during classification",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "description": "How significant/important: 0.0 to 1.0",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
     "LlmRequestDebug": {
       "description": "Debug info about the LLM request",
       "properties": {
@@ -60,6 +102,60 @@
       "required": [
         "intent"
       ],
+      "type": "object"
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
       "type": "object"
     },
     "RawSegment": {
@@ -155,7 +251,7 @@
         "physics": {
           "anyOf": [
             {
-              "$ref": "../types/ClassificationPhysics.schema.json"
+              "$ref": "#/definitions/ClassificationPhysics"
             },
             {
               "type": "null"
@@ -199,7 +295,7 @@
           "default": [],
           "description": "Classifications in superposition (determines which entity types to spawn)",
           "items": {
-            "$ref": "WeaveUnitClassification.schema.json"
+            "$ref": "#/definitions/WeaveUnitClassification"
           },
           "type": "array"
         },
@@ -292,14 +388,14 @@
       "default": [],
       "description": "Classifications for each segment (only populated if LOG intent)",
       "items": {
-        "$ref": "../types/SegmentClassification.schema.json"
+        "$ref": "#/definitions/SegmentClassification"
       },
       "type": "array"
     },
     "llm_request": {
       "anyOf": [
         {
-          "$ref": "LlmRequestDebug.schema.json"
+          "$ref": "#/definitions/LlmRequestDebug"
         },
         {
           "type": "null"
@@ -310,13 +406,13 @@
     "message_intent": {
       "allOf": [
         {
-          "$ref": "../primitives/MessageIntent.schema.json"
+          "$ref": "#/definitions/RawMessageIntent"
         }
       ],
       "description": "Classified intent of the message (LOG, QUERY, INFER, etc.)"
     },
     "metadata": {
-      "$ref": "ResponseMetadata.schema.json"
+      "$ref": "#/definitions/ResponseMetadata"
     },
     "physics_hints": {
       "default": [],
@@ -324,7 +420,7 @@
       "items": {
         "anyOf": [
           {
-            "$ref": "../types/RawPhysicsHint.schema.json"
+            "$ref": "#/definitions/RawPhysicsHint"
           },
           {
             "type": "null"
@@ -344,7 +440,7 @@
       "default": [],
       "description": "Raw segments from Phase 1 (no classification)",
       "items": {
-        "$ref": "../types/RawSegment.schema.json"
+        "$ref": "#/definitions/RawSegment"
       },
       "type": "array"
     },
@@ -352,7 +448,7 @@
       "default": [],
       "description": "Hydrated weave units (segments + classifications combined)",
       "items": {
-        "$ref": "WeaveUnit.schema.json"
+        "$ref": "#/definitions/WeaveUnit"
       },
       "type": "array"
     }
@@ -364,10 +460,7 @@
   "title": "ObservationResponse",
   "type": "object",
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

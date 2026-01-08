@@ -68,18 +68,5 @@
     }
   ],
   "title": "ToolPurpose",
-  "x-familiar-casing": "SCREAMING_SNAKE_CASE",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "COMMAND": "Command",
-    "CONTINUATION": "Continuation",
-    "CORRECTION": "Correction",
-    "INFER": "Infer",
-    "LOG": "Log",
-    "QUERY": "Query",
-    "REFERENCE": "Reference",
-    "REFLECT": "Reflect",
-    "SOCIAL": "Social"
-  }
+  "x-familiar-kind": "primitive"
 }

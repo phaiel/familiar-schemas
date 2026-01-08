@@ -47,15 +47,5 @@
     }
   ],
   "title": "VerbCategory",
-  "x-familiar-casing": "snake_case",
-  "x-familiar-enum-repr": "simple_enum",
-  "x-familiar-kind": "primitive",
-  "x-familiar-variants": {
-    "action": "Action",
-    "evaluative": "Evaluative",
-    "habitual": "Habitual",
-    "intentional": "Intentional",
-    "relational": "Relational",
-    "state": "State"
-  }
+  "x-familiar-kind": "primitive"
 }

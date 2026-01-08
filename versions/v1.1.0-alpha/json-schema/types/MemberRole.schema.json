@@ -8,14 +8,5 @@
   ],
   "title": "MemberRole",
   "type": "string",
-  "x-familiar-kind": "type",
-  "x-familiar-sea-orm": {
-    "rs_type": "String",
-    "db_type": "String(StringLen::None)",
-    "values": {
-      "Admin": "admin",
-      "Member": "member",
-      "Guest": "guest"
-    }
-  }
+  "x-familiar-kind": "type"
 }

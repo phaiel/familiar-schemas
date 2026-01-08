@@ -1,12 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Bond",
-  "description": "Connection between threads in the cognitive manifold",
-  "x-familiar-kind": "entity",
-  "allOf": [
-    { "$ref": "../architecture/meta/PhysicalEntity.meta.schema.json" }
-  ],
+  "description": "Core identity component that all entities possess",
   "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
     "bond_strength": {
       "allOf": [
         {
@@ -15,10 +18,26 @@
       ],
       "description": "The overall strength or health of the bond. 0.0 = Broken/Weak, 1.0 = Strong/Healthy"
     },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
     "damping_coefficient": {
       "description": "The 'inertia' of the bond, representing how quickly it returns to equilibrium. Higher values = slower return to rest (lingering effects). Lower values = quick recovery (resilient).",
       "format": "double",
       "type": "number"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
     },
     "formalism": {
       "allOf": [
@@ -30,6 +49,14 @@
     },
     "head_thread_id": {
       "$ref": "../primitives/UUID.schema.json"
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
     },
     "intimacy": {
       "allOf": [
@@ -44,6 +71,15 @@
         "type": "string"
       },
       "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
     },
     "power_dynamic": {
       "allOf": [
@@ -80,6 +116,22 @@
     "tail_thread_id": {
       "$ref": "../primitives/UUID.schema.json"
     },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
     "text": {
       "type": "string"
     },
@@ -90,49 +142,43 @@
         }
       ],
       "description": "**Transparency (Refractive Index):** 1.0 = Clear. Looking at the Source reveals the Target (e.g., \"Honest\"). 0.0 = Opaque. The relationship hides the Target (e.g., \"Secretive\")."
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
     }
   },
   "required": [
+    "amplitude",
     "bond_strength",
+    "created_at",
     "damping_coefficient",
+    "energy",
     "formalism",
     "head_thread_id",
+    "id",
     "intimacy",
     "metadata",
+    "position",
     "power_dynamic",
     "spring_constant",
     "tail_thread_id",
+    "temperature",
+    "tenant_id",
     "text",
-    "transparency"
+    "transparency",
+    "velocity"
   ],
+  "title": "Bond",
   "type": "object",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/PhysicalEntity.meta.schema.json"
-  },
-  "x-familiar-persistence": {
-    "profile": "timescaledb",
-    "hypertable": true,
-    "table": "bonds",
-    "primary_key": ["id", "t_coord"],
-    "partition_column": "t_coord",
-    "indexes": [
-      "tenant_id",
-      "t_coord",
-      "head_thread_id",
-      "tail_thread_id"
-    ]
-  },
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-composition": {
-    "physics": [
-      "amplitude",
-      "energy",
-      "position",
-      "temperature",
-      "velocity"
-    ],
-    "note": "identity fields kept direct (typed IDs)"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

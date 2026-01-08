@@ -33,17 +33,14 @@
       "type": "string"
     },
     "entity_type": {
-      "$ref": "../domains/conversation/FamiliarEntityType.schema.json"
+      "$ref": "#/definitions/FamiliarEntityType"
     },
     "id": {
-      "$ref": "../primitives/EntityId.schema.json"
+      "format": "uuid",
+      "type": "string"
     },
-    "metadata": {
-      "x-familiar-column-type": "JsonBinary"
-    },
-    "physics": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "metadata": true,
+    "physics": true,
     "qdrant_collection": {
       "type": [
         "string",
@@ -65,37 +62,28 @@
       ]
     },
     "reviewed_by": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/UserId.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
       ]
     },
     "source_channel_id": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/ChannelId.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
       ]
     },
     "source_message_id": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/MessageId.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
       ]
     },
     "status": {
-      "$ref": "../domains/conversation/EntityStatus.schema.json"
+      "$ref": "#/definitions/EntityStatus"
     },
     "subject": {
       "type": [
@@ -124,21 +112,7 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
-  "x-familiar-module": "conversation",
-  "x-familiar-primary-key": "id",
-  "x-familiar-relations": [
-    {
-      "from": "tenant_id",
-      "target": "TenantModel",
-      "to": "id",
-      "type": "belongs_to"
-    }
-  ],
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "familiar_entities"
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

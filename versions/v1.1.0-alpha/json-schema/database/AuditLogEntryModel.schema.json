@@ -15,7 +15,8 @@
       ]
     },
     "id": {
-      "$ref": "../primitives/AuditLogId.schema.json"
+      "format": "uuid",
+      "type": "string"
     },
     "ip_address": {
       "type": [
@@ -23,9 +24,7 @@
         "null"
       ]
     },
-    "metadata": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "metadata": true,
     "resource_id": {
       "format": "uuid",
       "type": [
@@ -49,23 +48,16 @@
       ]
     },
     "user_email": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/Email.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "user_id": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/UserId.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
       ]
     }
   },
@@ -79,13 +71,7 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "audit_log",
-  "x-familiar-module": "auth",
-  "x-familiar-primary-key": "id"
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

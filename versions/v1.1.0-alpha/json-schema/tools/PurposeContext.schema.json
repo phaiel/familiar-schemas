@@ -73,14 +73,14 @@
       "default": [],
       "description": "Previous classifications detected",
       "items": {
-        "$ref": "ClassifiedPurpose.schema.json"
+        "$ref": "#/definitions/ClassifiedPurpose"
       },
       "type": "array"
     },
     "user_patterns": {
       "anyOf": [
         {
-          "$ref": "UserPurposePatterns.schema.json"
+          "$ref": "#/definitions/UserPurposePatterns"
         },
         {
           "type": "null"
@@ -93,13 +93,8 @@
   "title": "PurposeContext",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/resources/openai-gpt4.resource.json",
   "description": "Virtual resource representing OpenAI's GPT-4 API. Acts as a proxy contract defining expected capabilities.",
   "title": "OpenAIGPT4",
   "x-familiar-endpoint": "https://api.openai.com/v1/chat/completions",
@@ -10,7 +9,7 @@
   },
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Resource.meta.schema.json"
+    "$ref": "../ecs/Resource.meta.schema.json"
   },
   "x-familiar-models": [
     "gpt-4",

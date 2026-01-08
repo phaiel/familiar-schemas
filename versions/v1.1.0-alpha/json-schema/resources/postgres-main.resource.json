@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/resources/postgres-main.resource.json",
   "description": "Primary PostgreSQL database for core application data including auth, users, and configuration.",
   "title": "PostgresMain",
   "x-familiar-config": {
@@ -16,7 +15,7 @@
   },
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Resource.meta.schema.json"
+    "$ref": "../ecs/Resource.meta.schema.json"
   },
   "x-familiar-resource-type": "database",
   "x-familiar-tables": [

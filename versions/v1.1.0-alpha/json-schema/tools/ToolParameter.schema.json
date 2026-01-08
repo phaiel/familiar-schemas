@@ -80,7 +80,7 @@
     "constraints": {
       "anyOf": [
         {
-          "$ref": "ParameterConstraints.schema.json"
+          "$ref": "#/definitions/ParameterConstraints"
         },
         {
           "type": "null"
@@ -90,15 +90,8 @@
       "description": "Validation constraints"
     },
     "default_value": {
-      "anyOf": [
-        {
-          "default": null,
-          "description": "Default value if not provided"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "default": null,
+      "description": "Default value if not provided"
     },
     "description": {
       "description": "Description of what this parameter does",
@@ -111,7 +104,7 @@
     "param_type": {
       "allOf": [
         {
-          "$ref": "ParameterType.schema.json"
+          "$ref": "#/definitions/ParameterType"
         }
       ],
       "description": "Data type"
@@ -130,13 +123,8 @@
   "title": "ToolParameter",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

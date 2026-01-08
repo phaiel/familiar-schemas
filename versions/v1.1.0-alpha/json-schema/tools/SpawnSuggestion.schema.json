@@ -31,7 +31,7 @@
         "source": {
           "allOf": [
             {
-              "$ref": "EntityReference.schema.json"
+              "$ref": "#/definitions/EntityReference"
             }
           ],
           "description": "Source entity"
@@ -44,7 +44,7 @@
         "target": {
           "allOf": [
             {
-              "$ref": "EntityReference.schema.json"
+              "$ref": "#/definitions/EntityReference"
             }
           ],
           "description": "Target entity"
@@ -52,7 +52,7 @@
         "temporal": {
           "anyOf": [
             {
-              "$ref": "TemporalBinding.schema.json"
+              "$ref": "#/definitions/TemporalBinding"
             },
             {
               "type": "null"
@@ -278,7 +278,7 @@
         "binding": {
           "anyOf": [
             {
-              "$ref": "BindingHints.schema.json"
+              "$ref": "#/definitions/BindingHints"
             },
             {
               "type": "null"
@@ -290,7 +290,7 @@
         "bond": {
           "anyOf": [
             {
-              "$ref": "BondHints.schema.json"
+              "$ref": "#/definitions/BondHints"
             },
             {
               "type": "null"
@@ -302,7 +302,7 @@
         "physics": {
           "allOf": [
             {
-              "$ref": "PhysicsHints.schema.json"
+              "$ref": "#/definitions/PhysicsHints"
             }
           ],
           "description": "Physics hints for VAE space positioning"
@@ -310,7 +310,7 @@
         "thread": {
           "allOf": [
             {
-              "$ref": "ThreadHints.schema.json"
+              "$ref": "#/definitions/ThreadHints"
             }
           ],
           "description": "Thread hints for narrative connections"
@@ -396,7 +396,7 @@
     "action": {
       "allOf": [
         {
-          "$ref": "SpawnAction.schema.json"
+          "$ref": "#/definitions/SpawnAction"
         }
       ],
       "description": "Spawn action"
@@ -409,7 +409,7 @@
     "content": {
       "allOf": [
         {
-          "$ref": "EntityContent.schema.json"
+          "$ref": "#/definitions/EntityContent"
         }
       ],
       "description": "Content to use for entity"
@@ -425,7 +425,7 @@
     "hints": {
       "allOf": [
         {
-          "$ref": "SpawnHints.schema.json"
+          "$ref": "#/definitions/SpawnHints"
         }
       ],
       "description": "All hints for the entity"
@@ -446,13 +446,8 @@
   "title": "SpawnSuggestion",
   "type": "object",
   "x-familiar-kind": "tool",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Tool.meta.schema.json"
-  },
-  "x-familiar-queue": {
-    "$ref": "../infrastructure/queues/worker-queue.queue.json"
-  },
+  "x-familiar-queue": "worker-queue",
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-worker.node.json"
+    "$ref": "../nodes/familiar-worker.node.json"
   }
 }

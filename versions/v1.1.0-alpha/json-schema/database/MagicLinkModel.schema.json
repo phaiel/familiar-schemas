@@ -17,20 +17,19 @@
       "type": "string"
     },
     "email": {
-      "$ref": "../primitives/Email.schema.json"
+      "type": "string"
     },
     "expires_at": {
       "format": "date-time",
       "type": "string"
     },
     "id": {
-      "$ref": "../primitives/MagicLinkId.schema.json"
+      "format": "uuid",
+      "type": "string"
     },
-    "metadata": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "metadata": true,
     "purpose": {
-      "$ref": "../domains/auth/MagicLinkPurpose.schema.json"
+      "$ref": "#/definitions/MagicLinkPurpose"
     },
     "token_hash": {
       "type": "string"
@@ -55,13 +54,7 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "magic_links",
-  "x-familiar-module": "auth",
-  "x-familiar-primary-key": "id"
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

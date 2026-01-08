@@ -19,7 +19,12 @@
       "description": "Unique identifier for this entity"
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
     }
   },
   "required": [
@@ -29,13 +34,8 @@
   ],
   "title": "Identity",
   "type": "object",
-  "x-familiar-field-alias": "identity",
-  "x-familiar-field-order": 10,
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }

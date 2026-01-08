@@ -11,9 +11,7 @@
     "name": {
       "type": "string"
     },
-    "settings": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "settings": true,
     "updated_at": {
       "format": "date-time",
       "type": "string"
@@ -29,25 +27,7 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "tenants",
-  "x-familiar-module": "conversation",
-  "x-familiar-primary-key": "id",
-  "x-familiar-relations": [
-    {
-      "type": "has_many",
-      "target": "TenantMemberModel",
-      "field": "members"
-    },
-    {
-      "type": "has_many",
-      "target": "ChannelModel",
-      "field": "channels"
-    }
-  ]
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ChannelType": {
+      "description": "Type of channel",
+      "oneOf": [
+        {
+          "description": "Personal channel for a single user",
+          "enum": [
+            "personal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Family channel shared by all tenant members",
+          "enum": [
+            "family"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Shared channel for specific members",
+          "enum": [
+            "shared"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Options for listing channels",
+  "properties": {
+    "channel_type": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ChannelType"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "owner_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "ListChannelsOptions",
+  "type": "object",
+  "x-familiar-kind": "conversation",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}

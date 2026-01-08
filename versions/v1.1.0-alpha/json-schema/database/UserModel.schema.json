@@ -19,15 +19,12 @@
       ]
     },
     "email": {
-      "$ref": "../primitives/Email.schema.json",
-      "x-familiar-unique": true
+      "type": "string"
     },
     "email_verified": {
       "type": "boolean"
     },
-    "gdpr_consents": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "gdpr_consents": true,
     "id": {
       "$ref": "../primitives/UserId.schema.json"
     },
@@ -35,28 +32,19 @@
       "type": "string"
     },
     "password_hash": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/PasswordHash.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "primary_tenant_id": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/TenantId.schema.json"
-        },
-        {
-          "type": "null"
-        }
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
       ]
     },
-    "settings": {
-      "x-familiar-column-type": "JsonBinary"
-    },
+    "settings": true,
     "updated_at": {
       "format": "date-time",
       "type": "string"
@@ -75,25 +63,7 @@
   "title": "Model",
   "type": "object",
   "x-familiar-kind": "database",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Database.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  },
-  "x-familiar-table": "users",
-  "x-familiar-module": "auth",
-  "x-familiar-primary-key": "id",
-  "x-familiar-relations": [
-    {
-      "type": "has_many",
-      "target": "AuthSessionModel",
-      "field": "sessions"
-    },
-    {
-      "type": "has_many",
-      "target": "ConsentRecordModel",
-      "field": "consents"
-    }
-  ]
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
 }

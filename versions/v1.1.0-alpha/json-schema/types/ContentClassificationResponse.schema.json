@@ -1,6 +1,48 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "ClassificationPhysics": {
+      "description": "Physics hints extracted during classification",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "description": "How significant/important: 0.0 to 1.0",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
     "SegmentClassification": {
       "description": "Classification for a single segment",
       "properties": {
@@ -15,7 +57,7 @@
         "physics": {
           "anyOf": [
             {
-              "$ref": "../types/ClassificationPhysics.schema.json"
+              "$ref": "#/definitions/ClassificationPhysics"
             },
             {
               "type": "null"
@@ -24,49 +66,49 @@
           "default": null,
           "description": "Physics hints for entity spawning (only for LOG purpose)"
         },
-        "confidence": {
-          "description": "Confidence in classification (0.0 to 1.0)",
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
+        },
+        "segment_index": {
+          "description": "Index of the segment being classified",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "weight": {
+          "default": 1.0,
+          "description": "Confidence weight (0.0 to 1.0)",
           "format": "double",
           "type": "number"
-        },
-        "segment_id": {
-          "description": "ID of the segment this classification applies to",
-          "type": "string"
         }
       },
       "required": [
         "entity_type",
-        "confidence",
-        "segment_id"
+        "segment_index"
       ],
       "type": "object"
     }
   },
-  "description": "Response from content classification service",
+  "description": "Phase 3 response: Classifications for each segment",
   "properties": {
     "classifications": {
-      "description": "List of segment classifications",
+      "description": "Classifications for each segment",
       "items": {
         "$ref": "#/definitions/SegmentClassification"
       },
       "type": "array"
-    },
-    "request_id": {
-      "description": "Request identifier for tracking",
-      "type": "string"
     }
   },
   "required": [
-    "classifications",
-    "request_id"
+    "classifications"
   ],
   "title": "ContentClassificationResponse",
   "type": "object",
-  "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
-  "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
-  }
+  "x-familiar-kind": "type"
 }

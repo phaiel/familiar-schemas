@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Fate of Death - handles completion, termination, and lifecycle endings in the Fates pipeline.",
+  "title": "FatesMorta",
+  "x-familiar-depends": [
+    {
+      "$ref": "../components/TigerDataStore.component.json"
+    }
+  ],
+  "x-familiar-kind": "system",
+  "x-familiar-meta-schema": {
+    "$ref": "../ecs/System.meta.schema.json"
+  },
+  "x-familiar-queue": "daemon-queue",
+  "x-familiar-reads": [
+    {
+      "$ref": "../entities/Shuttle.schema.json"
+    },
+    {
+      "$ref": "../entities/Thread.schema.json"
+    }
+  ],
+  "x-familiar-retries": 2,
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-timeout": "60s",
+  "x-familiar-writes": [
+    {
+      "$ref": "../entities/Pulse.schema.json"
+    }
+  ]
+}

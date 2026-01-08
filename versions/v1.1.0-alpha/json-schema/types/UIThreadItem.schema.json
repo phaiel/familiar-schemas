@@ -43,6 +43,37 @@
       },
       "type": "object"
     },
+    "UIThinkingStep": {
+      "description": "A thinking/reasoning step for chain-of-thought visibility",
+      "properties": {
+        "agent": {
+          "description": "Which agent produced this thought",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "thought": {
+          "description": "The thought/reasoning content",
+          "type": "string"
+        },
+        "timestamp": {
+          "default": null,
+          "description": "Timestamp",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "agent",
+        "id",
+        "thought"
+      ],
+      "type": "object"
+    },
     "UIToolCall": {
       "description": "A tool call with real-time status updates for UI display",
       "properties": {
@@ -104,7 +135,7 @@
     "heddle_result": {
       "anyOf": [
         {
-          "$ref": "UIHeddleResult.schema.json"
+          "$ref": "#/definitions/UIHeddleResult"
         },
         {
           "type": "null"
@@ -146,7 +177,7 @@
       "default": [],
       "description": "Chain of thought steps",
       "items": {
-        "$ref": "../types/UIThinkingStep.schema.json"
+        "$ref": "#/definitions/UIThinkingStep"
       },
       "type": "array"
     },
@@ -158,7 +189,7 @@
       "default": [],
       "description": "Tool calls made",
       "items": {
-        "$ref": "UIToolCall.schema.json"
+        "$ref": "#/definitions/UIToolCall"
       },
       "type": "array"
     }

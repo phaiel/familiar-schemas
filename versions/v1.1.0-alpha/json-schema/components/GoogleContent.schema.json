@@ -18,7 +18,7 @@
   "properties": {
     "parts": {
       "items": {
-        "$ref": "GooglePart.schema.json"
+        "$ref": "#/definitions/GooglePart"
       },
       "type": "array"
     },
@@ -35,10 +35,7 @@
   "title": "GoogleContent",
   "type": "object",
   "x-familiar-kind": "component",
-  "x-familiar-meta-schema": {
-    "$ref": "../architecture/meta/Component.meta.schema.json"
-  },
   "x-familiar-service": {
-    "$ref": "../infrastructure/nodes/familiar-daemon.node.json"
+    "$ref": "../nodes/familiar-daemon.node.json"
   }
 }
