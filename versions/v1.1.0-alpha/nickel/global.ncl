@@ -564,7 +564,8 @@
 
     # Integration extensions
     contract = import "extensions/contract.ncl",
-    description = import "extensions/description.ncl"
+    description = import "extensions/description.ncl",
+    edge_type = import "extensions/edge-type.ncl"
   },
 
   # ============================================================================
