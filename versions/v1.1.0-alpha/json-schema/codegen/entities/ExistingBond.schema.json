@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An existing bond for context",
+  "properties": {
+    "head_thread_id": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "relationship_type": {
+      "$ref": "../../codegen/primitives/RelationshipType.schema.json"
+    },
+    "strength": {
+      "format": "double",
+      "type": "number"
+    },
+    "tail_thread_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "head_thread_id",
+    "id",
+    "relationship_type",
+    "strength",
+    "tail_thread_id"
+  ],
+  "title": "ExistingBond",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

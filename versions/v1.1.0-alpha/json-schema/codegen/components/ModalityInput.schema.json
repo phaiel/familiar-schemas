@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input container for different modalities",
+  "oneOf": [
+    {
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "language": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "modality": {
+          "enum": [
+            "text"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "modality"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "data": {
+          "description": "Base64 encoded audio data",
+          "type": "string"
+        },
+        "duration_seconds": {
+          "default": null,
+          "description": "Duration in seconds",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "format": {
+          "description": "Audio format (mp3, wav, etc.)",
+          "type": "string"
+        },
+        "modality": {
+          "enum": [
+            "audio"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "format",
+        "modality"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "data": {
+          "description": "Base64 encoded image data",
+          "type": "string"
+        },
+        "format": {
+          "description": "Image format (png, jpg, etc.)",
+          "type": "string"
+        },
+        "height": {
+          "default": null,
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "modality": {
+          "enum": [
+            "vision"
+          ],
+          "type": "string"
+        },
+        "width": {
+          "default": null,
+          "description": "Image dimensions",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "data",
+        "format",
+        "modality"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "data": {
+          "description": "Base64 encoded video data or URL",
+          "type": "string"
+        },
+        "duration_seconds": {
+          "default": null,
+          "description": "Duration in seconds",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "format": {
+          "description": "Video format (mp4, webm, etc.)",
+          "type": "string"
+        },
+        "fps": {
+          "default": null,
+          "description": "Frame rate",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "modality": {
+          "enum": [
+            "video"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "format",
+        "modality"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "ModalityInput",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "input",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

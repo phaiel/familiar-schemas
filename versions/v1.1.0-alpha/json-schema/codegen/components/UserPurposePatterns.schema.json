@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "User's historical purpose patterns",
+  "properties": {
+    "primary_purpose": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
+        }
+      ],
+      "description": "Most common purpose"
+    },
+    "purpose_distribution": {
+      "additionalProperties": {
+        "format": "double",
+        "type": "number"
+      },
+      "default": {},
+      "description": "Distribution of purposes (purpose -> frequency)",
+      "type": "object"
+    }
+  },
+  "required": [
+    "primary_purpose"
+  ],
+  "title": "UserPurposePatterns",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

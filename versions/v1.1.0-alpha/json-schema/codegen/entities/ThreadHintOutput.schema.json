@@ -1,0 +1,413 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "DetectedThread": {
+      "description": "A detected thread reference",
+      "properties": {
+        "confidence": {
+          "description": "Confidence in match",
+          "format": "double",
+          "type": "number"
+        },
+        "detection_method": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/DetectionMethod"
+            }
+          ],
+          "description": "How it was detected"
+        },
+        "role": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
+            }
+          ],
+          "description": "Role in this entity"
+        },
+        "thread": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+            }
+          ],
+          "description": "The matched thread"
+        },
+        "trigger_text": {
+          "description": "Text that triggered detection",
+          "type": "string"
+        }
+      },
+      "required": [
+        "confidence",
+        "detection_method",
+        "role",
+        "thread",
+        "trigger_text"
+      ],
+      "type": "object"
+    },
+    "DetectionMethod": {
+      "description": "How a thread was detected",
+      "oneOf": [
+        {
+          "description": "Exact name match",
+          "enum": [
+            "exact_match"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Alias match",
+          "enum": [
+            "alias_match"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Fuzzy/similar match",
+          "enum": [
+            "fuzzy_match"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Pronoun resolution from context",
+          "enum": [
+            "pronoun_resolution"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Keyword match",
+          "enum": [
+            "keyword_match"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Semantic similarity",
+          "enum": [
+            "semantic_match"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "SubjectReference": {
+      "description": "Reference to a subject",
+      "properties": {
+        "confidence": {
+          "description": "Confidence in identification",
+          "format": "double",
+          "type": "number"
+        },
+        "name": {
+          "description": "Name/label of subject",
+          "type": "string"
+        },
+        "subject_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SubjectType"
+            }
+          ],
+          "description": "Type of subject"
+        },
+        "thread_id": {
+          "default": null,
+          "description": "Matched thread ID (if resolved)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "confidence",
+        "name",
+        "subject_type"
+      ],
+      "type": "object"
+    },
+    "SubjectType": {
+      "description": "Types of subjects",
+      "oneOf": [
+        {
+          "description": "The user themselves",
+          "enum": [
+            "self_"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Another person",
+          "enum": [
+            "person"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A place",
+          "enum": [
+            "place"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An organization",
+          "enum": [
+            "organization"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A concept/topic",
+          "enum": [
+            "concept"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An event",
+          "enum": [
+            "event"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An object/thing",
+          "enum": [
+            "object"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Unknown/other",
+          "enum": [
+            "other"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "SuggestedThread": {
+      "description": "A suggested new thread to create",
+      "properties": {
+        "aliases": {
+          "default": [],
+          "description": "Aliases to register",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "category": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadCategory"
+            }
+          ],
+          "description": "Category"
+        },
+        "confidence": {
+          "description": "Confidence in suggestion",
+          "format": "double",
+          "type": "number"
+        },
+        "name": {
+          "description": "Suggested name",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Why this thread should be created",
+          "type": "string"
+        },
+        "thread_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SubjectType"
+            }
+          ],
+          "description": "Type of thread"
+        }
+      },
+      "required": [
+        "category",
+        "confidence",
+        "name",
+        "reason",
+        "thread_type"
+      ],
+      "type": "object"
+    },
+    "ThreadCategory": {
+      "description": "Categories for threads",
+      "oneOf": [
+        {
+          "description": "People (friends, family, colleagues)",
+          "enum": [
+            "people"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Places (home, work, cities)",
+          "enum": [
+            "places"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Activities (hobbies, work tasks)",
+          "enum": [
+            "activities"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Projects (ongoing endeavors)",
+          "enum": [
+            "projects"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Topics (interests, subjects)",
+          "enum": [
+            "topics"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Events (recurring or one-time)",
+          "enum": [
+            "events"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Groups (teams, organizations)",
+          "enum": [
+            "groups"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Health (physical, mental)",
+          "enum": [
+            "health"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Finance (money, investments)",
+          "enum": [
+            "finance"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relationships",
+          "enum": [
+            "relationships"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ThreadHintValues": {
+      "description": "Thread hint values",
+      "properties": {
+        "categories": {
+          "default": [],
+          "description": "Thread categories",
+          "items": {
+            "$ref": "#/definitions/ThreadCategory"
+          },
+          "type": "array"
+        },
+        "create_if_missing": {
+          "default": false,
+          "description": "Whether to create thread if no match found",
+          "type": "boolean"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords for thread matching",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "primary_subject": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/SubjectReference"
+            }
+          ],
+          "description": "Primary subject/actor (who/what is the main focus)"
+        },
+        "related_threads": {
+          "default": [],
+          "description": "Related threads",
+          "items": {
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+          },
+          "type": "array"
+        },
+        "thread_role": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
+            }
+          ],
+          "description": "Role of entity relative to thread"
+        }
+      },
+      "required": [
+        "primary_subject",
+        "thread_role"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Output from thread hint generation",
+  "properties": {
+    "detected_threads": {
+      "description": "Detected thread references",
+      "items": {
+        "$ref": "#/definitions/DetectedThread"
+      },
+      "type": "array"
+    },
+    "hints": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadHintValues"
+        }
+      ],
+      "description": "Thread hints"
+    },
+    "suggested_threads": {
+      "default": [],
+      "description": "Suggested new threads to create",
+      "items": {
+        "$ref": "#/definitions/SuggestedThread"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "detected_threads",
+    "hints"
+  ],
+  "title": "ThreadHintOutput",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "output",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

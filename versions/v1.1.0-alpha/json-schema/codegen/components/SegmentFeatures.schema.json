@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Extracted features from a segment",
+  "properties": {
+    "emotional_tone": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/EmotionalTone.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Emotional tone (if detectable)"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords extracted",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "language": {
+      "default": null,
+      "description": "Language detected",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mentions": {
+      "default": [],
+      "description": "Entity mentions found",
+      "items": {
+        "$ref": "../../codegen/primitives/EntityMention.schema.json"
+      },
+      "type": "array"
+    },
+    "subject": {
+      "default": null,
+      "description": "Primary subject/actor mentioned",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporal_markers": {
+      "default": [],
+      "description": "Temporal markers detected",
+      "items": {
+        "$ref": "../../codegen/primitives/TemporalMarker.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "title": "SegmentFeatures",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

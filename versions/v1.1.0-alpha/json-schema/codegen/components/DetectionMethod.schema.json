@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "How a thread was detected",
+  "oneOf": [
+    {
+      "description": "Exact name match",
+      "enum": [
+        "exact_match"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Alias match",
+      "enum": [
+        "alias_match"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Fuzzy/similar match",
+      "enum": [
+        "fuzzy_match"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Pronoun resolution from context",
+      "enum": [
+        "pronoun_resolution"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Keyword match",
+      "enum": [
+        "keyword_match"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Semantic similarity",
+      "enum": [
+        "semantic_match"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "DetectionMethod",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

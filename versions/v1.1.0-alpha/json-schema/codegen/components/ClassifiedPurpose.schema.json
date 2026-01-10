@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A classified purpose with confidence",
+  "properties": {
+    "confidence": {
+      "description": "Confidence score (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "evidence": {
+      "default": [],
+      "description": "Evidence/reasoning for classification",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "purpose": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
+        }
+      ],
+      "description": "The purpose of the message"
+    }
+  },
+  "required": [
+    "confidence",
+    "purpose"
+  ],
+  "title": "ClassifiedPurpose",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

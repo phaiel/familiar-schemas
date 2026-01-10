@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input schema for the FatesGate system - entry point to the Fates pipeline.",
+  "properties": {
+    "context": {
+      "$ref": "../../codegen/components/RequestContext.schema.json",
+      "description": "Additional request context"
+    },
+    "message": {
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json",
+      "description": "The incoming message to process"
+    },
+    "thread_id": {
+      "$ref": "../../codegen/primitives/UUID.schema.json",
+      "description": "Thread identifier for context"
+    }
+  },
+  "required": [
+    "message",
+    "thread_id"
+  ],
+  "title": "GateInput",
+  "type": "object",
+  "x-familiar-kind": "tool-payload",
+  "x-familiar-queue": "daemon-queue",
+  "x-familiar-role": "input",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  },
+  "x-familiar-system": {
+    "$ref": "../systems/FatesGate.system.json"
+  }
+}

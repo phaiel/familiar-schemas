@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Filter operators",
+  "enum": [
+    "equals",
+    "not_equals",
+    "contains",
+    "starts_with",
+    "ends_with",
+    "greater_than",
+    "less_than",
+    "between",
+    "in",
+    "not_in"
+  ],
+  "title": "FilterOperator",
+  "type": "string",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

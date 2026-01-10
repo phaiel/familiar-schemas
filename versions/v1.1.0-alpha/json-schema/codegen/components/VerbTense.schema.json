@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Verb tenses",
+  "enum": [
+    "past",
+    "present",
+    "future",
+    "habitual"
+  ],
+  "title": "VerbTense",
+  "type": "string",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

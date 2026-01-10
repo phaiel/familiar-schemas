@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Categories of verbs for classification",
+  "oneOf": [
+    {
+      "description": "Action verbs (went, did, called) → MOMENT",
+      "enum": [
+        "action"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "State verbs (was, felt, is) → often PULSE",
+      "enum": [
+        "state"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Stative + evaluative (was nice, felt good) → PULSE",
+      "enum": [
+        "evaluative"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Relational verbs (met, talked with) → may indicate BOND",
+      "enum": [
+        "relational"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Habitual (always, usually does) → may indicate MOTIF/FILAMENT",
+      "enum": [
+        "habitual"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Intentional (want to, plan to) → INTENT",
+      "enum": [
+        "intentional"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "VerbCategory",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

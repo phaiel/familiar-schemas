@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "SegmentationMetadata": {
+      "description": "Metadata about the segmentation",
+      "properties": {
+        "entity_count": {
+          "description": "Total entities mentioned",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "language": {
+          "default": null,
+          "description": "Primary language detected",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "modality": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/Modality.schema.json"
+            }
+          ],
+          "description": "Input modality"
+        },
+        "segment_count": {
+          "description": "Total segments produced",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "speaker_count": {
+          "default": null,
+          "description": "Number of unique speakers (for audio/video)",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "temporal_count": {
+          "description": "Total temporal markers found",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "entity_count",
+        "modality",
+        "segment_count",
+        "temporal_count"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Output from segmentation tools",
+  "properties": {
+    "metadata": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentationMetadata"
+        }
+      ],
+      "description": "Overall segmentation metadata"
+    },
+    "segments": {
+      "description": "The resulting segments",
+      "items": {
+        "$ref": "../../codegen/primitives/Segment.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "segments"
+  ],
+  "title": "SegmentationOutput",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "output",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

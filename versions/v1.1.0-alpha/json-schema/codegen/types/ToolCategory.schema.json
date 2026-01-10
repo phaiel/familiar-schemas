@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Categories of tools",
+  "oneOf": [
+    {
+      "description": "Segmentation tools (break input into units)",
+      "enum": [
+        "segmentation"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Classification tools (label content)",
+      "enum": [
+        "classification"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Spawn tools (create entities)",
+      "enum": [
+        "spawn"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Hint generation tools",
+      "enum": [
+        "hints"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Search and retrieval tools",
+      "enum": [
+        "retrieval"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Orchestration tools",
+      "enum": [
+        "orchestration"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ToolCategory",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

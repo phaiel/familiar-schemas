@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A segmented unit of content",
+  "properties": {
+    "boundaries": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/SegmentBoundaries.schema.json"
+        }
+      ],
+      "description": "Segment boundaries"
+    },
+    "confidence": {
+      "description": "Confidence in segmentation decision",
+      "format": "double",
+      "type": "number"
+    },
+    "content": {
+      "description": "The segmented content",
+      "type": "string"
+    },
+    "features": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/SegmentFeatures.schema.json"
+        }
+      ],
+      "description": "Extracted features"
+    },
+    "id": {
+      "description": "Unique segment ID",
+      "type": "string"
+    },
+    "index": {
+      "description": "Index in the sequence",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "modality": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/Modality.schema.json"
+        }
+      ],
+      "description": "Original modality"
+    }
+  },
+  "required": [
+    "boundaries",
+    "confidence",
+    "content",
+    "features",
+    "id",
+    "index",
+    "modality"
+  ],
+  "title": "Segment",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

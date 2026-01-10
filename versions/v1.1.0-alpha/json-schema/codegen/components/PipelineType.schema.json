@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of standard pipelines",
+  "oneOf": [
+    {
+      "description": "Memory recording: Segment → Classify → Spawn → Hints → Store",
+      "enum": [
+        "memory_recording"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Query: Parse → Search → Format → Return",
+      "enum": [
+        "query"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Analysis: Parse → Search → Analyze → Synthesize",
+      "enum": [
+        "analysis"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Command: Parse → Validate → Execute → Confirm",
+      "enum": [
+        "command"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Conversation: Understand → Respond",
+      "enum": [
+        "conversation"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Multi-modal: Route → Process per modality → Merge",
+      "enum": [
+        "multi_modal"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "PipelineType",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Configuration for segmentation behavior",
+  "properties": {
+    "extract_entities": {
+      "default": true,
+      "description": "Whether to extract entity mentions",
+      "type": "boolean"
+    },
+    "extract_temporal": {
+      "default": true,
+      "description": "Whether to extract temporal markers",
+      "type": "boolean"
+    },
+    "language": {
+      "default": null,
+      "description": "Language hint (ISO 639-1)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "max_segments": {
+      "default": 20,
+      "description": "Maximum number of segments to produce",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "min_segment_length": {
+      "default": null,
+      "description": "Minimum segment length (chars for text, seconds for audio/video)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "title": "SegmentationConfig",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

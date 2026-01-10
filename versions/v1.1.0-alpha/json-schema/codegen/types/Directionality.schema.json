@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Directionality of binding",
+  "oneOf": [
+    {
+      "description": "Only source → target",
+      "enum": [
+        "unidirectional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Both directions",
+      "enum": [
+        "bidirectional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "No inherent direction",
+      "enum": [
+        "undirected"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "Directionality",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

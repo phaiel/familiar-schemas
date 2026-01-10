@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ThreadRelationType": {
+      "description": "Types of thread relations",
+      "oneOf": [
+        {
+          "description": "Part of (belongs to)",
+          "enum": [
+            "part_of"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Contains (has parts)",
+          "enum": [
+            "contains"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Related to (general association)",
+          "enum": [
+            "related_to"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Causes / leads to",
+          "enum": [
+            "causes_of"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Opposite of",
+          "enum": [
+            "opposite_of"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Same as (alias)",
+          "enum": [
+            "same_as"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "Thread relationship in the graph",
+  "properties": {
+    "relation_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadRelationType"
+        }
+      ],
+      "description": "Type of relation"
+    },
+    "source_id": {
+      "description": "Source thread",
+      "type": "string"
+    },
+    "strength": {
+      "description": "Strength (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "target_id": {
+      "description": "Target thread",
+      "type": "string"
+    }
+  },
+  "required": [
+    "relation_type",
+    "source_id",
+    "strength",
+    "target_id"
+  ],
+  "title": "ThreadRelation",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

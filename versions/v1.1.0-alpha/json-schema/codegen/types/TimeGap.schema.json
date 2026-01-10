@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Time gap between entities",
+  "properties": {
+    "approximate": {
+      "description": "Is this approximate?",
+      "type": "boolean"
+    },
+    "unit": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/TimeUnit.schema.json"
+        }
+      ],
+      "description": "Duration unit"
+    },
+    "value": {
+      "description": "Duration value",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "approximate",
+    "unit",
+    "value"
+  ],
+  "title": "TimeGap",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

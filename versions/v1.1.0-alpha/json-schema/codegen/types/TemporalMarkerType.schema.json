@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of temporal markers",
+  "oneOf": [
+    {
+      "description": "Specific date (January 5th)",
+      "enum": [
+        "absolute"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Relative reference (yesterday, last week)",
+      "enum": [
+        "relative"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Duration (for 2 hours)",
+      "enum": [
+        "duration"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Frequency (every day, weekly)",
+      "enum": [
+        "frequency"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Time of day (in the morning)",
+      "enum": [
+        "time_of_day"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "TemporalMarkerType",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

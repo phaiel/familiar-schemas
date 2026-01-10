@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of cognitive binding",
+  "oneOf": [
+    {
+      "description": "Cause leads to effect",
+      "enum": [
+        "causal"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Temporal sequence (before/after)",
+      "enum": [
+        "temporal"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Associated by proximity/context",
+      "enum": [
+        "associative"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Part-whole relationship",
+      "enum": [
+        "compositional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Contrast/opposition",
+      "enum": [
+        "contrastive"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Similarity/analogy",
+      "enum": [
+        "analogical"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Enables/prerequisite",
+      "enum": [
+        "enabling"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Thematic connection",
+      "enum": [
+        "thematic"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "BindingType",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

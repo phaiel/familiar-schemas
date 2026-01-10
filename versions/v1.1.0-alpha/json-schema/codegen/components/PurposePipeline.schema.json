@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Processing pipeline category",
+  "oneOf": [
+    {
+      "description": "Memory recording: Segment → Classify → Spawn → Store",
+      "enum": [
+        "recording"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Data retrieval: Parse → Search → Format → Return",
+      "enum": [
+        "retrieval"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Analysis: Parse → Search → Analyze → Synthesize",
+      "enum": [
+        "analysis"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "System action: Parse → Validate → Execute → Confirm",
+      "enum": [
+        "action"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Conversation: Respond appropriately",
+      "enum": [
+        "conversational"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "PurposePipeline",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

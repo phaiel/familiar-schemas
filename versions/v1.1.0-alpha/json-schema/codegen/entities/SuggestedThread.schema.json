@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "SubjectType": {
+      "description": "Types of subjects",
+      "oneOf": [
+        {
+          "description": "The user themselves",
+          "enum": [
+            "self_"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Another person",
+          "enum": [
+            "person"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A place",
+          "enum": [
+            "place"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An organization",
+          "enum": [
+            "organization"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "A concept/topic",
+          "enum": [
+            "concept"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An event",
+          "enum": [
+            "event"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "An object/thing",
+          "enum": [
+            "object"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Unknown/other",
+          "enum": [
+            "other"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "ThreadCategory": {
+      "description": "Categories for threads",
+      "oneOf": [
+        {
+          "description": "People (friends, family, colleagues)",
+          "enum": [
+            "people"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Places (home, work, cities)",
+          "enum": [
+            "places"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Activities (hobbies, work tasks)",
+          "enum": [
+            "activities"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Projects (ongoing endeavors)",
+          "enum": [
+            "projects"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Topics (interests, subjects)",
+          "enum": [
+            "topics"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Events (recurring or one-time)",
+          "enum": [
+            "events"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Groups (teams, organizations)",
+          "enum": [
+            "groups"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Health (physical, mental)",
+          "enum": [
+            "health"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Finance (money, investments)",
+          "enum": [
+            "finance"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relationships",
+          "enum": [
+            "relationships"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "A suggested new thread to create",
+  "properties": {
+    "aliases": {
+      "default": [],
+      "description": "Aliases to register",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "category": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadCategory"
+        }
+      ],
+      "description": "Category"
+    },
+    "confidence": {
+      "description": "Confidence in suggestion",
+      "format": "double",
+      "type": "number"
+    },
+    "name": {
+      "description": "Suggested name",
+      "type": "string"
+    },
+    "reason": {
+      "description": "Why this thread should be created",
+      "type": "string"
+    },
+    "thread_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubjectType"
+        }
+      ],
+      "description": "Type of thread"
+    }
+  },
+  "required": [
+    "category",
+    "confidence",
+    "name",
+    "reason",
+    "thread_type"
+  ],
+  "title": "SuggestedThread",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

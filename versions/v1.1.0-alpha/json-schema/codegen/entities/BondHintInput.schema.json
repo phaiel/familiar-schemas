@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ExistingBond": {
+      "description": "An existing bond for context",
+      "properties": {
+        "head_thread_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "relationship_type": {
+          "$ref": "../../codegen/primitives/RelationshipType.schema.json"
+        },
+        "strength": {
+          "format": "double",
+          "type": "number"
+        },
+        "tail_thread_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "head_thread_id",
+        "id",
+        "relationship_type",
+        "strength",
+        "tail_thread_id"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Input for bond hint generation",
+  "properties": {
+    "known_bonds": {
+      "default": [],
+      "description": "Known bonds for context",
+      "items": {
+        "$ref": "#/definitions/ExistingBond"
+      },
+      "type": "array"
+    },
+    "segment": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/Segment.schema.json"
+        }
+      ],
+      "description": "The segment containing relationship information"
+    },
+    "threads": {
+      "description": "Detected threads in the segment",
+      "items": {
+        "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "segment",
+    "threads"
+  ],
+  "title": "BondHintInput",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "input",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

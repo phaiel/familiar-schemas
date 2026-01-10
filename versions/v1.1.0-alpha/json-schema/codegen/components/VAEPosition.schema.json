@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "VAE space position (quantized for physics)",
+  "properties": {
+    "x": {
+      "description": "X: Valence (emotional polarity)",
+      "format": "int64",
+      "type": "integer"
+    },
+    "y": {
+      "description": "Y: Arousal (energy/activation)",
+      "format": "int64",
+      "type": "integer"
+    },
+    "z": {
+      "description": "Z: Epistemic (certainty)",
+      "format": "int64",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "x",
+    "y",
+    "z"
+  ],
+  "title": "VAEPosition",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}
