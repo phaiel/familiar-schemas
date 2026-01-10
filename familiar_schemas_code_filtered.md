@@ -72,2712 +72,527 @@ tempfile = "3.0"
 
 ## JSON Schema Files
 
-### versions/v1.1.0-alpha/json-schema/agentic/AgentMessageType.schema.json
+### versions/v1.1.0-alpha/json-schema/architecture/ecs/Component.meta.schema.json
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "Finding": {
-      "description": "A finding from an analysis agent",
-      "properties": {
-        "confidence": {
-          "default": null,
-          "description": "Confidence score (0.0 to 1.0)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "description": {
-          "description": "Detailed description",
-          "type": "string"
-        },
-        "related_entities": {
-          "default": [],
-          "description": "Related entity IDs",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "title": {
-          "description": "Title or label of the finding",
-          "type": "string"
-        }
-      },
-      "required": [
-        "description",
-        "title"
-      ],
-      "type": "object"
-    },
-    "LogLevel": {
-      "description": "Log level for agent log messages",
-      "enum": [
-        "debug",
-        "info",
-        "warning",
-        "error"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
-  "oneOf": [
-    {
-      "description": "A log message from the agent (debugging, status updates)",
-      "properties": {
-        "content": {
-          "type": "string"
-        },
-        "level": {
-          "$ref": "#/definitions/LogLevel"
-        },
-        "message_type": {
-          "enum": [
-            "log"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "content",
-        "level",
-        "message_type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A question the agent is asking the user",
-      "properties": {
-        "message_type": {
-          "enum": [
-            "question"
-          ],
-          "type": "string"
-        },
-        "options": {
-          "default": null,
-          "items": {
-            "type": "string"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        },
-        "prompt": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "message_type",
-        "prompt"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "An insight derived by the agent",
-      "properties": {
-        "confidence": {
-          "format": "double",
-          "type": "number"
-        },
-        "domain": {
-          "default": null,
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "message_type": {
-          "enum": [
-            "insight"
-          ],
-          "type": "string"
-        },
-        "summary": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "confidence",
-        "message_type",
-        "summary"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A detailed analysis result",
-      "properties": {
-        "domain": {
-          "type": "string"
-        },
-        "findings": {
-          "items": {
-            "$ref": "#/definitions/Finding"
-          },
-          "type": "array"
-        },
-        "message_type": {
-          "enum": [
-            "analysis"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "domain",
-        "findings",
-        "message_type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A command/action the agent wants to execute",
-      "properties": {
-        "action": {
-          "type": "string"
-        },
-        "message_type": {
-          "enum": [
-            "command"
-          ],
-          "type": "string"
-        },
-        "parameters": true
-      },
-      "required": [
-        "action",
-        "message_type",
-        "parameters"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A simple text response",
-      "properties": {
-        "content": {
-          "type": "string"
-        },
-        "message_type": {
-          "enum": [
-            "text"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "content",
-        "message_type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Progress update during long-running tasks",
-      "properties": {
-        "message": {
-          "type": "string"
-        },
-        "message_type": {
-          "enum": [
-            "progress"
-          ],
-          "type": "string"
-        },
-        "percent_complete": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "message",
-        "message_type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "AgentMessageType",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/AgentSpeaker.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Speaker/agent identifiers for the orchestration system\n\nEach speaker is a specialized agent that handles specific types of tasks. The orchestrator routes to the appropriate speaker based on user intent.",
-  "oneOf": [
-    {
-      "description": "Main user-facing agent - greets users, explains capabilities",
-      "enum": [
-        "concierge"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Classification agent - determines entity types, message intent",
-      "enum": [
-        "classifier"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Physics simulation agent - handles VAE space calculations",
-      "enum": [
-        "physics"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Retrieval-augmented generation agent (future)",
-      "enum": [
-        "rag"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Memory/context management agent",
-      "enum": [
-        "memory"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Task execution agent",
-      "enum": [
-        "task_executor"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "AgentSpeaker",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/AgentState.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
-  "properties": {
-    "conversation_context": {
-      "default": [],
-      "description": "Conversation history for context",
-      "items": {
-        "$ref": "../primitives/ConversationTurn.schema.json"
-      },
-      "type": "array"
-    },
-    "current_speaker": {
-      "default": null,
-      "description": "Currently active speaker (None means orchestrator decides)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "is_authenticated": {
-      "default": false,
-      "description": "Whether the user is authenticated",
-      "type": "boolean"
-    },
-    "just_finished": {
-      "default": false,
-      "description": "Whether the current agent just finished its task",
-      "type": "boolean"
-    },
-    "metadata": {
-      "default": null,
-      "description": "Custom metadata for extensibility"
-    },
-    "tenant_id": {
-      "description": "Tenant ID for multi-tenancy",
-      "type": "string"
-    },
-    "thread_id": {
-      "default": null,
-      "description": "Current thread ID (if in a thread)",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "tenant_id"
-  ],
-  "title": "AgentState",
+  "$id": "https://familiar.dev/schemas/ecs/Component.meta.schema.json",
+  "title": "ECS Component Meta-Schema",
+  "description": "Schema for defining ECS Components - resources/capabilities that can be composed into Nodes",
   "type": "object",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/ConversationTurn.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A single turn in a conversation (for context tracking)",
+  "required": ["name", "version", "description", "rust_type"],
   "properties": {
-    "content": {
-      "description": "Content of the message",
-      "type": "string"
+    "$schema": {
+      "type": "string",
+      "const": "ecs/Component.meta.schema.json"
     },
-    "role": {
-      "description": "Role of the speaker (user, assistant, system)",
-      "type": "string"
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Unique identifier for the component (snake_case)"
     },
-    "speaker": {
-      "default": null,
-      "description": "Optional speaker identifier (for multi-agent)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "timestamp": {
-      "default": null,
-      "description": "Timestamp of the turn",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "content",
-    "role"
-  ],
-  "title": "ConversationTurn",
-  "type": "object",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/Finding.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A finding from an analysis agent",
-  "properties": {
-    "confidence": {
-      "default": null,
-      "description": "Confidence score (0.0 to 1.0)",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the component"
     },
     "description": {
-      "description": "Detailed description",
-      "type": "string"
+      "type": "string",
+      "description": "Human-readable description of the component's purpose"
     },
-    "related_entities": {
-      "default": [],
-      "description": "Related entity IDs",
+    "depends_on": {
+      "type": "array",
       "items": {
         "type": "string"
       },
-      "type": "array"
+      "default": [],
+      "description": "List of component names this component depends on (must be initialized first)"
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["string", "integer", "number", "boolean", "array", "object"]
+          },
+          "default": {},
+          "description": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean",
+            "default": true
+          },
+          "env_var": {
+            "type": "string",
+            "description": "Environment variable to read this config from"
+          }
+        },
+        "required": ["type"]
+      },
+      "description": "Configuration options for initializing the component"
+    },
+    "rust_type": {
+      "type": "string",
+      "description": "The Rust type this component resolves to (e.g., Arc<DatabasePool>)"
+    },
+    "requires_llm": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this component requires LLM connectivity"
+    },
+    "singleton": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether only one instance of this component can exist per Node"
+    }
+  },
+  "additionalProperties": false
+}
+
+
+```
+
+### versions/v1.1.0-alpha/json-schema/architecture/ecs/Node.meta.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Node.meta.schema.json",
+  "title": "ECS Node Meta-Schema",
+  "description": "Schema for defining ECS Nodes - service definitions that compose Systems and Components (e.g., familiar-daemon, familiar-worker)",
+  "type": "object",
+  "required": ["title", "x-familiar-kind", "x-familiar-queue", "x-familiar-resource-class"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "http://json-schema.org/draft-07/schema#"
     },
     "title": {
-      "description": "Title or label of the finding",
-      "type": "string"
-    }
-  },
-  "required": [
-    "description",
-    "title"
-  ],
-  "title": "Finding",
-  "type": "object",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/LogLevel.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Log level for agent log messages",
-  "enum": [
-    "debug",
-    "info",
-    "warning",
-    "error"
-  ],
-  "title": "LogLevel",
-  "type": "string",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/OrchestrationInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AgentState": {
-      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
-      "properties": {
-        "conversation_context": {
-          "default": [],
-          "description": "Conversation history for context",
-          "items": {
-            "$ref": "../primitives/ConversationTurn.schema.json"
-          },
-          "type": "array"
-        },
-        "current_speaker": {
-          "default": null,
-          "description": "Currently active speaker (None means orchestrator decides)",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "is_authenticated": {
-          "default": false,
-          "description": "Whether the user is authenticated",
-          "type": "boolean"
-        },
-        "just_finished": {
-          "default": false,
-          "description": "Whether the current agent just finished its task",
-          "type": "boolean"
-        },
-        "metadata": {
-          "default": null,
-          "description": "Custom metadata for extensibility"
-        },
-        "tenant_id": {
-          "description": "Tenant ID for multi-tenancy",
-          "type": "string"
-        },
-        "thread_id": {
-          "default": null,
-          "description": "Current thread ID (if in a thread)",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "tenant_id"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Input payload for the orchestration agent",
-  "properties": {
-    "request_id": {
-      "description": "Request ID for tracing",
-      "type": "string"
+      "type": "string",
+      "description": "Human-readable name for the node (e.g., FamiliarDaemon)"
     },
-    "state": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/AgentState"
-        }
-      ],
-      "description": "Current agent state"
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the node's purpose"
     },
-    "user_message": {
-      "default": null,
-      "description": "User's message content",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "request_id",
-    "state"
-  ],
-  "title": "OrchestrationInput",
-  "type": "object",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/OrchestrationOutput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AgentState": {
-      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
-      "properties": {
-        "conversation_context": {
-          "default": [],
-          "description": "Conversation history for context",
-          "items": {
-            "$ref": "../primitives/ConversationTurn.schema.json"
-          },
-          "type": "array"
-        },
-        "current_speaker": {
-          "default": null,
-          "description": "Currently active speaker (None means orchestrator decides)",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "is_authenticated": {
-          "default": false,
-          "description": "Whether the user is authenticated",
-          "type": "boolean"
-        },
-        "just_finished": {
-          "default": false,
-          "description": "Whether the current agent just finished its task",
-          "type": "boolean"
-        },
-        "metadata": {
-          "default": null,
-          "description": "Custom metadata for extensibility"
-        },
-        "tenant_id": {
-          "description": "Tenant ID for multi-tenancy",
-          "type": "string"
-        },
-        "thread_id": {
-          "default": null,
-          "description": "Current thread ID (if in a thread)",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "tenant_id"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Output from the orchestration agent",
-  "properties": {
-    "forwarded_message": {
-      "default": null,
-      "description": "Optional message to pass to next agent",
-      "type": [
-        "string",
-        "null"
-      ]
+    "x-familiar-kind": {
+      "type": "string",
+      "const": "node",
+      "description": "Must be 'node' for node schemas"
     },
-    "next_speaker": {
-      "description": "Which agent should speak next",
-      "type": "string"
+    "x-familiar-queue": {
+      "type": "string",
+      "description": "The Temporal task queue this node consumes from"
     },
-    "should_continue": {
-      "description": "Whether the orchestration loop should continue",
-      "type": "boolean"
+    "x-familiar-resource-class": {
+      "type": "string",
+      "enum": ["llm", "io", "cpu", "batch"],
+      "description": "Resource class for automatic scaling configuration"
     },
-    "state": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/AgentState"
-        }
-      ],
-      "description": "Updated state"
-    }
-  },
-  "required": [
-    "next_speaker",
-    "should_continue",
-    "state"
-  ],
-  "title": "OrchestrationOutput",
-  "type": "object",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/ToolCallRequest.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A request to invoke a tool",
-  "properties": {
-    "arguments": {
-      "description": "Arguments to pass to the tool"
-    },
-    "call_id": {
-      "description": "Unique ID for this tool call",
-      "type": "string"
-    },
-    "tool_name": {
-      "description": "Name of the tool to invoke",
-      "type": "string"
-    }
-  },
-  "required": [
-    "arguments",
-    "call_id",
-    "tool_name"
-  ],
-  "title": "ToolCallRequest",
-  "type": "object",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/agentic/ToolCallResult.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Result from a tool invocation",
-  "properties": {
-    "call_id": {
-      "description": "ID of the original call",
-      "type": "string"
-    },
-    "error": {
-      "default": null,
-      "description": "Error message (if failed)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "result": {
-      "default": null,
-      "description": "Result data (if successful)"
-    },
-    "success": {
-      "description": "Whether the call succeeded",
-      "type": "boolean"
-    }
-  },
-  "required": [
-    "call_id",
-    "success"
-  ],
-  "title": "ToolCallResult",
-  "type": "object",
-  "x-familiar-kind": "agentic",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/api/ApiError.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "API error details",
-  "properties": {
-    "code": {
-      "description": "Error code (e.g., \"NOT_FOUND\", \"VALIDATION_FAILED\")",
-      "type": "string"
-    },
-    "details": {
-      "description": "Optional structured details"
-    },
-    "message": {
-      "description": "Human-readable error message",
-      "type": "string"
-    }
-  },
-  "required": [
-    "code",
-    "message"
-  ],
-  "title": "ApiError",
-  "type": "object",
-  "x-familiar-kind": "api",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/api/SuccessResult.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Simple success response (no data)\n\nUsed for operations that succeed but don't return data: - DELETE operations - Fire-and-forget operations",
-  "properties": {
-    "message": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "success": {
-      "type": "boolean"
-    }
-  },
-  "required": [
-    "success"
-  ],
-  "title": "SuccessResult",
-  "type": "object",
-  "x-familiar-kind": "api",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/AuditLogEntry.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "An audit log entry",
-  "properties": {
-    "action": {
-      "type": "string"
-    },
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "error_message": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "ip_address": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "metadata": {
-      "default": null
-    },
-    "resource_id": {
-      "default": null,
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "resource_type": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "success": {
-      "type": "boolean"
-    },
-    "user_agent": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "user_email": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "user_id": {
-      "default": null,
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "action",
-    "created_at",
-    "id",
-    "success"
-  ],
-  "title": "AuditLogEntry",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/AuthResponse.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "SessionCreated": {
-      "description": "Result of creating a session (includes the raw token)",
-      "properties": {
-        "expires_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "session_id": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "token": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "expires_at",
-        "session_id",
-        "token"
-      ],
-      "type": "object"
-    },
-    "User": {
-      "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
-      "properties": {
-        "avatar_url": {
-          "default": null,
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "created_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "deletion_requested_at": {
-          "default": null,
-          "format": "date-time",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "email": {
-          "type": "string"
-        },
-        "email_verified": {
-          "type": "boolean"
-        },
-        "gdpr_consents": {
-          "default": null
-        },
-        "id": {
-          "description": "Unique identifier for this entity",
-          "format": "uuid",
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "primary_tenant_id": {
-          "default": null,
-          "description": "The user's primary family (can be changed)",
-          "format": "uuid",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "settings": {
-          "default": null
-        },
-        "updated_at": {
-          "format": "date-time",
-          "type": "string"
-        }
-      },
-      "required": [
-        "created_at",
-        "email",
-        "email_verified",
-        "id",
-        "name",
-        "updated_at"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Response after successful authentication",
-  "properties": {
-    "is_new_user": {
-      "description": "True if this is a new user (just signed up)",
-      "type": "boolean"
-    },
-    "needs_family": {
-      "description": "True if user needs to create/join a family",
-      "type": "boolean"
-    },
-    "session": {
-      "$ref": "#/definitions/SessionCreated"
-    },
-    "user": {
-      "$ref": "#/definitions/User"
-    }
-  },
-  "required": [
-    "is_new_user",
-    "needs_family",
-    "session",
-    "user"
-  ],
-  "title": "AuthResponse",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/AuthSession.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "An authenticated session",
-  "properties": {
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "expires_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "id": {
-      "$ref": "../primitives/SessionId.schema.json"
-    },
-    "ip_address": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "token_hash": {
-      "description": "Token hash (the actual token is only returned once on creation)",
-      "type": "string"
-    },
-    "user_agent": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
-    }
-  },
-  "required": [
-    "created_at",
-    "expires_at",
-    "id",
-    "token_hash",
-    "user_id"
-  ],
-  "title": "AuthSession",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/ConsentRecord.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ConsentType": {
-      "description": "Type of consent",
-      "enum": [
-        "terms_of_service",
-        "privacy_policy",
-        "marketing_emails",
-        "ai_processing",
-        "data_sharing",
-        "analytics"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A consent record",
-  "properties": {
-    "consent_type": {
-      "$ref": "#/definitions/ConsentType"
-    },
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "granted": {
-      "type": "boolean"
-    },
-    "id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "ip_address": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "user_agent": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
-    },
-    "version": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "consent_type",
-    "created_at",
-    "granted",
-    "id",
-    "user_id"
-  ],
-  "title": "ConsentRecord",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/ConsentStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "User's current consent status",
-  "properties": {
-    "ai_processing": {
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "analytics": {
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "data_sharing": {
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "marketing_emails": {
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "privacy_policy": {
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "terms_of_service": {
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "title": "ConsentStatus",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/ConsentType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Type of consent",
-  "enum": [
-    "terms_of_service",
-    "privacy_policy",
-    "marketing_emails",
-    "ai_processing",
-    "data_sharing",
-    "analytics"
-  ],
-  "title": "ConsentType",
-  "type": "string",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/CreateCodeInviteInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "definitions": {
-    "InviteRole": {
-      "description": "Role to assign when invitation is accepted",
-      "enum": [
-        "admin",
-        "member",
-        "guest"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Input for creating a code invitation",
-  "properties": {
-    "expires_in_days": {
-      "default": null,
-      "description": "Expiry in days (None = never)",
-      "format": "int64",
-      "type": [
-        "integer",
-        "null"
-      ]
-    },
-    "max_uses": {
-      "default": 1,
-      "description": "Max number of uses (default 1, 0 = unlimited)",
-      "format": "int32",
-      "type": "integer"
-    },
-    "role": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/InviteRole"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
-    },
-    "tenant_id": {
-      "format": "uuid",
-      "type": "string"
-    }
-  },
-  "required": [
-    "tenant_id"
-  ],
-  "title": "CreateCodeInviteInput",
-  "type": "object"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/CreateEmailInviteInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "definitions": {
-    "InviteRole": {
-      "description": "Role to assign when invitation is accepted",
-      "enum": [
-        "admin",
-        "member",
-        "guest"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Input for creating an email invitation",
-  "properties": {
-    "email": {
-      "type": "string"
-    },
-    "expires_in_days": {
-      "default": 7,
-      "description": "Expiry in days (default 7)",
-      "format": "int64",
-      "type": "integer"
-    },
-    "role": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/InviteRole"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
-    },
-    "tenant_id": {
-      "format": "uuid",
-      "type": "string"
-    }
-  },
-  "required": [
-    "email",
-    "tenant_id"
-  ],
-  "title": "CreateEmailInviteInput",
-  "type": "object"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/CreateJoinRequestInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input for creating a join request",
-  "properties": {
-    "message": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    }
-  },
-  "required": [
-    "tenant_id"
-  ],
-  "title": "CreateJoinRequestInput",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/CreateMagicLinkInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "MagicLinkPurpose": {
-      "description": "Purpose of a magic link",
-      "enum": [
-        "login",
-        "signup",
-        "verify_email",
-        "password_reset"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Input for creating a magic link",
-  "properties": {
-    "email": {
-      "type": "string"
-    },
-    "expires_in_minutes": {
-      "default": 15,
-      "description": "Link duration in minutes (default 15)",
-      "format": "int64",
-      "type": "integer"
-    },
-    "metadata": {
-      "default": null
-    },
-    "purpose": {
-      "$ref": "#/definitions/MagicLinkPurpose"
-    }
-  },
-  "required": [
-    "email",
-    "purpose"
-  ],
-  "title": "CreateMagicLinkInput",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/CreateUserInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input for creating a new user",
-  "properties": {
-    "avatar_url": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "email": {
-      "type": "string"
-    },
-    "name": {
-      "type": "string"
-    },
-    "password_hash": {
-      "default": null,
-      "description": "Password hash (already hashed by API layer)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "primary_tenant_id": {
-      "default": null,
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "email",
-    "name"
-  ],
-  "title": "CreateUserInput",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/CurrentUser.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "User": {
-      "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
-      "properties": {
-        "avatar_url": {
-          "default": null,
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "created_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "deletion_requested_at": {
-          "default": null,
-          "format": "date-time",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "email": {
-          "type": "string"
-        },
-        "email_verified": {
-          "type": "boolean"
-        },
-        "gdpr_consents": {
-          "default": null
-        },
-        "id": {
-          "description": "Unique identifier for this entity",
-          "format": "uuid",
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "primary_tenant_id": {
-          "default": null,
-          "description": "The user's primary family (can be changed)",
-          "format": "uuid",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "settings": {
-          "default": null
-        },
-        "updated_at": {
-          "format": "date-time",
-          "type": "string"
-        }
-      },
-      "required": [
-        "created_at",
-        "email",
-        "email_verified",
-        "id",
-        "name",
-        "updated_at"
-      ],
-      "type": "object"
-    },
-    "UserMembership": {
-      "description": "A user's membership in a family",
-      "properties": {
-        "is_primary": {
-          "type": "boolean"
-        },
-        "joined_at": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "role": {
-          "$ref": "../primitives/InviteRole.schema.json"
-        },
-        "tenant_id": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "tenant_name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "is_primary",
-        "joined_at",
-        "role",
-        "tenant_id",
-        "tenant_name"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Current user info (for /api/auth/me)",
-  "properties": {
-    "memberships": {
-      "description": "User's family memberships",
+    "x-familiar-systems": {
+      "type": "array",
       "items": {
-        "$ref": "#/definitions/UserMembership"
-      },
-      "type": "array"
-    },
-    "user": {
-      "$ref": "#/definitions/User"
-    }
-  },
-  "required": [
-    "memberships",
-    "user"
-  ],
-  "title": "CurrentUser",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/DataExportRequest.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ExportStatus": {
-      "description": "Status of a data export request",
-      "enum": [
-        "pending",
-        "processing",
-        "ready",
-        "expired",
-        "failed"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A data export request",
-  "properties": {
-    "completed_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "error_message": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "expires_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "export_format": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "export_url": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "file_size_bytes": {
-      "default": null,
-      "format": "int64",
-      "type": [
-        "integer",
-        "null"
-      ]
-    },
-    "id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "started_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "status": {
-      "$ref": "#/definitions/ExportStatus"
-    },
-    "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "status",
-    "user_id"
-  ],
-  "title": "DataExportRequest",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/DeletionRequest.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "DeletionStatus": {
-      "description": "Status of a deletion request",
-      "enum": [
-        "pending",
-        "cancelled",
-        "processing",
-        "completed"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A deletion request",
-  "properties": {
-    "completed_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "email": {
-      "type": "string"
-    },
-    "id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "reason": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "scheduled_for": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "status": {
-      "$ref": "#/definitions/DeletionStatus"
-    },
-    "user_id": {
-      "default": null,
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "created_at",
-    "email",
-    "id",
-    "status"
-  ],
-  "title": "DeletionRequest",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/DeletionStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Status of a deletion request",
-  "enum": [
-    "pending",
-    "cancelled",
-    "processing",
-    "completed"
-  ],
-  "title": "DeletionStatus",
-  "type": "string",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/ExportStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Status of a data export request",
-  "enum": [
-    "pending",
-    "processing",
-    "ready",
-    "expired",
-    "failed"
-  ],
-  "title": "ExportStatus",
-  "type": "string",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/FamilyInvitation.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "InviteType": {
-      "description": "Type of family invitation",
-      "oneOf": [
-        {
-          "description": "Sent to a specific email address",
-          "enum": [
-            "email"
-          ],
-          "type": "string"
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "pattern": "^(\\.\\./)*(systems/)?[A-Za-z]+\\.system\\.json$",
+            "description": "Reference to a system schema"
+          }
         },
-        {
-          "description": "Shareable code (like Discord)",
-          "enum": [
-            "code"
-          ],
-          "type": "string"
+        "required": ["$ref"]
+      },
+      "description": "List of systems this node executes"
+    },
+    "x-familiar-components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "pattern": "^(\\.\\./)*(components/)?[A-Za-z]+\\.component\\.json$",
+            "description": "Reference to a component schema"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of components this node initializes"
+    },
+    "x-familiar-resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "pattern": "^(\\.\\./)*(resources/)?[a-z-]+\\.resource\\.json$",
+            "description": "Reference to a resource schema"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of external resources this node connects to"
+    },
+    "x-familiar-concurrency": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 10,
+      "description": "Default concurrency for this node's worker"
+    },
+    "x-familiar-memory": {
+      "type": "string",
+      "pattern": "^\\d+(Mi|Gi)$",
+      "description": "Memory allocation (e.g., '2Gi', '512Mi')"
+    }
+  },
+  "additionalProperties": true
+}
+
+
+```
+
+### versions/v1.1.0-alpha/json-schema/architecture/ecs/Queue.meta.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Queue.meta.schema.json",
+  "title": "ECS Queue Meta-Schema",
+  "description": "Schema for defining ECS Queues - Temporal task queues or Kafka topics that route work to nodes",
+  "type": "object",
+  "required": ["title", "x-familiar-kind", "x-familiar-queue-type"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "http://json-schema.org/draft-07/schema#"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable name for the queue (e.g., DaemonQueue)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the queue's purpose"
+    },
+    "x-familiar-kind": {
+      "type": "string",
+      "const": "queue",
+      "description": "Must be 'queue' for queue schemas"
+    },
+    "x-familiar-queue-type": {
+      "type": "string",
+      "enum": ["temporal", "kafka", "redis", "sqs"],
+      "description": "The underlying queue technology"
+    },
+    "x-familiar-resource-class": {
+      "type": "string",
+      "enum": ["llm", "io", "cpu", "batch"],
+      "description": "Resource class for work routed through this queue"
+    },
+    "x-familiar-concurrency": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 10,
+      "description": "Default worker concurrency for this queue"
+    },
+    "x-familiar-consumers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "pattern": "^(\\.\\./)*(nodes/)?[a-z-]+\\.node\\.json$",
+            "description": "Reference to a node that consumes from this queue"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of nodes that consume work from this queue"
+    },
+    "x-familiar-producers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "description": "Reference to a system or workflow that produces to this queue"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of systems/workflows that produce work to this queue"
+    },
+    "x-familiar-dlq": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "type": "string",
+          "description": "Reference to dead letter queue"
         }
-      ]
+      },
+      "description": "Dead letter queue for failed messages"
+    },
+    "x-familiar-retention": {
+      "type": "string",
+      "pattern": "^\\d+(h|d)$",
+      "description": "Message retention period (e.g., '24h', '7d')"
+    },
+    "x-familiar-visibility-timeout": {
+      "type": "string",
+      "pattern": "^\\d+(s|m)$",
+      "description": "Message visibility timeout"
     }
   },
-  "description": "A family invitation",
-  "properties": {
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "email": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "expires_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "invite_code": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "invite_type": {
-      "$ref": "#/definitions/InviteType"
-    },
-    "invited_by": {
-      "default": null,
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "max_uses": {
-      "format": "int32",
-      "type": "integer"
-    },
-    "role": {
-      "$ref": "../primitives/InviteRole.schema.json"
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "use_count": {
-      "format": "int32",
-      "type": "integer"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "invite_type",
-    "max_uses",
-    "role",
-    "tenant_id",
-    "use_count"
-  ],
-  "title": "FamilyInvitation",
+  "additionalProperties": true
+}
+
+
+```
+
+### versions/v1.1.0-alpha/json-schema/architecture/ecs/Resource.meta.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/Resource.meta.schema.json",
+  "title": "ECS Resource Meta-Schema",
+  "description": "Schema for defining ECS Resources - external dependencies like databases and APIs. Resources can be internal (owned) or virtual (external APIs acting as proxy contracts)",
   "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/InvitationInfo.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Public invitation info (for showing what user is joining)",
+  "required": ["title", "x-familiar-kind", "x-familiar-resource-type"],
   "properties": {
-    "id": {
-      "format": "uuid",
-      "type": "string"
+    "$schema": {
+      "type": "string",
+      "const": "http://json-schema.org/draft-07/schema#"
     },
-    "is_valid": {
-      "type": "boolean"
+    "title": {
+      "type": "string",
+      "description": "Human-readable name for the resource (e.g., PostgresMain)"
     },
-    "role": {
-      "$ref": "../primitives/InviteRole.schema.json"
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the resource's purpose"
     },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+    "x-familiar-kind": {
+      "type": "string",
+      "const": "resource",
+      "description": "Must be 'resource' for resource schemas"
     },
-    "tenant_name": {
-      "type": "string"
+    "x-familiar-resource-type": {
+      "type": "string",
+      "enum": ["database", "cache", "llm-api", "http-api", "message-queue", "storage"],
+      "description": "The type of external resource"
+    },
+    "x-familiar-virtual": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this is a proxy schema for an external API you don't own (e.g., OpenAI)"
+    },
+    "x-familiar-config": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "type": "string",
+          "description": "Reference to the configuration schema for this resource"
+        }
+      },
+      "description": "Reference to configuration schema (e.g., DbPoolConfig)"
+    },
+    "x-familiar-tables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "For databases: list of tables/collections this resource manages"
+    },
+    "x-familiar-endpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "For APIs: the base endpoint URL"
+    },
+    "x-familiar-rate-limit": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Requests per minute limit"
+    },
+    "x-familiar-models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "For LLM APIs: available model identifiers"
+    },
+    "x-familiar-connection-pool": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 10
+        }
+      },
+      "description": "Connection pool configuration"
+    },
+    "x-familiar-health-check": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "description": "Health check endpoint path"
+        },
+        "interval": {
+          "type": "string",
+          "pattern": "^\\d+(s|m)$",
+          "description": "Health check interval"
+        }
+      },
+      "description": "Health check configuration"
     }
   },
-  "required": [
-    "id",
-    "is_valid",
-    "role",
-    "tenant_id",
-    "tenant_name"
-  ],
-  "title": "InvitationInfo",
+  "additionalProperties": true
+}
+
+
+```
+
+### versions/v1.1.0-alpha/json-schema/architecture/ecs/System.meta.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://familiar.dev/schemas/ecs/System.meta.schema.json",
+  "title": "ECS System Meta-Schema",
+  "description": "Schema for defining ECS Systems - Temporal activities / business logic units that read and write entities",
   "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/InviteRole.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Role to assign when invitation is accepted",
-  "enum": [
-    "admin",
-    "member",
-    "guest"
-  ],
-  "title": "InviteRole",
-  "type": "string",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/InviteType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Type of family invitation",
-  "oneOf": [
-    {
-      "description": "Sent to a specific email address",
-      "enum": [
-        "email"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Shareable code (like Discord)",
-      "enum": [
-        "code"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "InviteType",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/JoinRequest.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "JoinRequestStatus": {
-      "description": "Status of a join request",
-      "enum": [
-        "pending",
-        "approved",
-        "rejected"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A request to join a family",
+  "required": ["title", "x-familiar-kind"],
   "properties": {
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
+    "$schema": {
+      "type": "string",
+      "const": "http://json-schema.org/draft-07/schema#"
     },
-    "id": {
-      "format": "uuid",
-      "type": "string"
+    "title": {
+      "type": "string",
+      "description": "Human-readable name for the system (e.g., FatesGate)"
     },
-    "message": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the system's purpose"
     },
-    "review_note": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
+    "x-familiar-kind": {
+      "type": "string",
+      "const": "system",
+      "description": "Must be 'system' for system schemas"
     },
-    "reviewed_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
+    "x-familiar-input": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "type": "string",
+          "description": "Reference to the input schema for this system"
+        }
+      },
+      "required": ["$ref"],
+      "description": "The input type this system accepts"
     },
-    "reviewed_by": {
-      "default": null,
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
+    "x-familiar-output": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "type": "string",
+          "description": "Reference to the output schema for this system"
+        }
+      },
+      "required": ["$ref"],
+      "description": "The output type this system produces"
     },
-    "status": {
-      "$ref": "#/definitions/JoinRequestStatus"
+    "x-familiar-reads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "description": "Reference to an entity schema this system reads"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of entity types this system reads from"
     },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+    "x-familiar-writes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "description": "Reference to an entity schema this system writes"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of entity types this system writes to"
     },
-    "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
+    "x-familiar-depends": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "$ref": {
+            "type": "string",
+            "description": "Reference to a component this system depends on"
+          }
+        },
+        "required": ["$ref"]
+      },
+      "description": "List of components this system requires"
+    },
+    "x-familiar-service": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "type": "string",
+          "pattern": "^(\\.\\./)*(nodes/)?[a-z-]+\\.node\\.json$",
+          "description": "Reference to the node that runs this system"
+        }
+      },
+      "required": ["$ref"],
+      "description": "The node/service this system runs on"
+    },
+    "x-familiar-queue": {
+      "type": "string",
+      "description": "Override queue for this system (defaults to node's queue)"
+    },
+    "x-familiar-timeout": {
+      "type": "string",
+      "pattern": "^\\d+(s|m|h)$",
+      "description": "Activity timeout (e.g., '30s', '5m')"
+    },
+    "x-familiar-retries": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 3,
+      "description": "Number of retry attempts on failure"
     }
   },
-  "required": [
-    "created_at",
-    "id",
-    "status",
-    "tenant_id",
-    "user_id"
-  ],
-  "title": "JoinRequest",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
+  "additionalProperties": true
 }
+
+
 ```
 
-### versions/v1.1.0-alpha/json-schema/auth/JoinRequestStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Status of a join request",
-  "enum": [
-    "pending",
-    "approved",
-    "rejected"
-  ],
-  "title": "JoinRequestStatus",
-  "type": "string",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/LoginRequest.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Request for email+password login",
-  "properties": {
-    "email": {
-      "type": "string"
-    },
-    "password": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "email",
-    "password"
-  ],
-  "title": "LoginRequest",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/MagicLink.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "MagicLinkPurpose": {
-      "description": "Purpose of a magic link",
-      "enum": [
-        "login",
-        "signup",
-        "verify_email",
-        "password_reset"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A magic link for passwordless auth",
-  "properties": {
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "email": {
-      "type": "string"
-    },
-    "expires_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "metadata": {
-      "default": null
-    },
-    "purpose": {
-      "$ref": "#/definitions/MagicLinkPurpose"
-    },
-    "used_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "created_at",
-    "email",
-    "expires_at",
-    "id",
-    "purpose"
-  ],
-  "title": "MagicLink",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/MagicLinkCreated.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Result of creating a magic link (includes raw token)",
-  "properties": {
-    "expires_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "link_id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "token": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "expires_at",
-    "link_id",
-    "token"
-  ],
-  "title": "MagicLinkCreated",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/MagicLinkPurpose.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Purpose of a magic link",
-  "enum": [
-    "login",
-    "signup",
-    "verify_email",
-    "password_reset"
-  ],
-  "title": "MagicLinkPurpose",
-  "type": "string",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/MagicLinkRequest.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Request for magic link",
-  "properties": {
-    "email": {
-      "type": "string"
-    },
-    "invite_code": {
-      "default": null,
-      "description": "Optional invite code for signup flow",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "email"
-  ],
-  "title": "MagicLinkRequest",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/PublicUser.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Public user info (safe to expose to other users)",
-  "properties": {
-    "avatar_url": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "id": {
-      "$ref": "../primitives/UserId.schema.json"
-    },
-    "name": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "id",
-    "name"
-  ],
-  "title": "PublicUser",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/RecordConsentInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ConsentType": {
-      "description": "Type of consent",
-      "enum": [
-        "terms_of_service",
-        "privacy_policy",
-        "marketing_emails",
-        "ai_processing",
-        "data_sharing",
-        "analytics"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Input for recording consent",
-  "properties": {
-    "consent_type": {
-      "$ref": "#/definitions/ConsentType"
-    },
-    "granted": {
-      "type": "boolean"
-    },
-    "version": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "consent_type",
-    "granted"
-  ],
-  "title": "RecordConsentInput",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/RequestDeletionInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input for requesting deletion",
-  "properties": {
-    "reason": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "title": "RequestDeletionInput",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/ReviewJoinRequestInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input for reviewing a join request",
-  "properties": {
-    "approved": {
-      "type": "boolean"
-    },
-    "note": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "approved"
-  ],
-  "title": "ReviewJoinRequestInput",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/SessionCreated.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Result of creating a session (includes the raw token)",
-  "properties": {
-    "expires_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "session_id": {
-      "$ref": "../primitives/SessionId.schema.json"
-    },
-    "token": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "expires_at",
-    "session_id",
-    "token"
-  ],
-  "title": "SessionCreated",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/SignupRequest.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Request for email+password signup",
-  "properties": {
-    "accept_privacy": {
-      "type": "boolean"
-    },
-    "accept_terms": {
-      "description": "Consent to required terms",
-      "type": "boolean"
-    },
-    "email": {
-      "type": "string"
-    },
-    "invite_code": {
-      "default": null,
-      "description": "Optional invite code to join a family",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "name": {
-      "type": "string"
-    },
-    "password": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "accept_privacy",
-    "accept_terms",
-    "email",
-    "name",
-    "password"
-  ],
-  "title": "SignupRequest",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/UpdateUserInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input for updating user profile",
-  "properties": {
-    "avatar_url": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "name": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "primary_tenant_id": {
-      "default": null,
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "settings": {
-      "default": null
-    }
-  },
-  "title": "UpdateUserInput",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/User.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
-  "properties": {
-    "avatar_url": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "deletion_requested_at": {
-      "default": null,
-      "format": "date-time",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "email": {
-      "type": "string"
-    },
-    "email_verified": {
-      "type": "boolean"
-    },
-    "gdpr_consents": {
-      "default": null
-    },
-    "id": {
-      "$ref": "../primitives/UserId.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "primary_tenant_id": {
-      "default": null,
-      "description": "The user's primary family (can be changed)",
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "settings": {
-      "default": null
-    },
-    "updated_at": {
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "created_at",
-    "email",
-    "email_verified",
-    "id",
-    "name",
-    "updated_at"
-  ],
-  "title": "User",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/auth/UserMembership.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A user's membership in a family",
-  "properties": {
-    "is_primary": {
-      "type": "boolean"
-    },
-    "joined_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "role": {
-      "$ref": "../primitives/InviteRole.schema.json"
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "tenant_name": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "is_primary",
-    "joined_at",
-    "role",
-    "tenant_id",
-    "tenant_name"
-  ],
-  "title": "UserMembership",
-  "type": "object",
-  "x-familiar-kind": "auth",
-  "x-familiar-requires-auth": true,
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/components/AnthropicMessage.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/AnthropicMessage.schema.json
 
 ```json
 {
@@ -2804,7 +619,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/BondPhysics.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/BondPhysics.schema.json
 
 ```json
 {
@@ -2844,7 +659,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ChatMessage.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ChatMessage.schema.json
 
 ```json
 {
@@ -2877,7 +692,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ClassificationSuperposition.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ClassificationSuperposition.schema.json
 
 ```json
 {
@@ -2931,7 +746,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/CognitiveDimensions.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/CognitiveDimensions.schema.json
 
 ```json
 {
@@ -2995,7 +810,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/CognitiveOptics.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/CognitiveOptics.schema.json
 
 ```json
 {
@@ -3049,7 +864,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ContentPayload.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ContentPayload.schema.json
 
 ```json
 {
@@ -3078,7 +893,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ContractEnforcer.component.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ContractEnforcer.component.json
 
 ```json
 {
@@ -3103,7 +918,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/Conversation.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/Conversation.schema.json
 
 ```json
 {
@@ -3153,7 +968,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/CourseDetails.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/CourseDetails.schema.json
 
 ```json
 {
@@ -3205,7 +1020,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/DatabasePool.component.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/DatabasePool.component.json
 
 ```json
 {
@@ -3242,7 +1057,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/DbPoolConfig.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/DbPoolConfig.schema.json
 
 ```json
 {
@@ -3302,7 +1117,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/EmotionalState.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/EmotionalState.schema.json
 
 ```json
 {
@@ -3348,7 +1163,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/FieldExcitation.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/FieldExcitation.schema.json
 
 ```json
 {
@@ -3414,7 +1229,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/GoogleContent.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/GoogleContent.schema.json
 
 ```json
 {
@@ -3460,7 +1275,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/GooglePart.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/GooglePart.schema.json
 
 ```json
 {
@@ -3483,7 +1298,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/Identity.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/Identity.schema.json
 
 ```json
 {
@@ -3529,7 +1344,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/LlmRequestDebug.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/LlmRequestDebug.schema.json
 
 ```json
 {
@@ -3556,7 +1371,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/Metadata.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/Metadata.schema.json
 
 ```json
 {
@@ -3569,7 +1384,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ObservationRequest.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ObservationRequest.schema.json
 
 ```json
 {
@@ -3693,7 +1508,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ObservationResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ObservationResponse.schema.json
 
 ```json
 {
@@ -4164,7 +1979,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/OpenAIMessage.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/OpenAIMessage.schema.json
 
 ```json
 {
@@ -4191,7 +2006,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/PhysicsHint.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/PhysicsHint.schema.json
 
 ```json
 {
@@ -4256,7 +2071,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ProviderConfig.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ProviderConfig.schema.json
 
 ```json
 {
@@ -4308,7 +2123,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/QuantumState.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/QuantumState.schema.json
 
 ```json
 {
@@ -4364,7 +2179,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/RelationalDynamics.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/RelationalDynamics.schema.json
 
 ```json
 {
@@ -4437,7 +2252,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/RequestConfig.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/RequestConfig.schema.json
 
 ```json
 {
@@ -4541,7 +2356,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/RequestContext.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/RequestContext.schema.json
 
 ```json
 {
@@ -4572,7 +2387,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/ResponseMetadata.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/ResponseMetadata.schema.json
 
 ```json
 {
@@ -4625,7 +2440,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/SimLOD.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/SimLOD.schema.json
 
 ```json
 {
@@ -4663,7 +2478,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/SimulationTier.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/SimulationTier.schema.json
 
 ```json
 {
@@ -4682,7 +2497,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/TaskDynamics.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/TaskDynamics.schema.json
 
 ```json
 {
@@ -4734,7 +2549,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/TigerDataStore.component.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/TigerDataStore.component.json
 
 ```json
 {
@@ -4767,7 +2582,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/Timestamps.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/Timestamps.schema.json
 
 ```json
 {
@@ -4796,7 +2611,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/Weave.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/Weave.schema.json
 
 ```json
 {
@@ -4827,7 +2642,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/WeaveUnit.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/WeaveUnit.schema.json
 
 ```json
 {
@@ -4932,7 +2747,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/WeaveUnitClassification.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/WeaveUnitClassification.schema.json
 
 ```json
 {
@@ -4969,7 +2784,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/components/WeightedClassification.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/components/WeightedClassification.schema.json
 
 ```json
 {
@@ -5006,7 +2821,12682 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/config/AIProvider.schema.json
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Bond.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Core identity component that all entities possess",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "bond_strength": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "The overall strength or health of the bond. 0.0 = Broken/Weak, 1.0 = Strong/Healthy"
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "damping_coefficient": {
+      "description": "The 'inertia' of the bond, representing how quickly it returns to equilibrium. Higher values = slower return to rest (lingering effects). Lower values = quick recovery (resilient).",
+      "format": "double",
+      "type": "number"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "formalism": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Formalism (Transactionalism / Spring Stiffness):** 1.0 = Rigid/Brittle (High k). Hard to move, snaps if stretched. 0.0 = Fluid/Elastic (Low k). Easy to stretch, adapts to change."
+    },
+    "head_thread_id": {
+      "$ref": "../primitives/UUID.schema.json"
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "intimacy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Intimacy (Communal Strength / Rest Length):** 1.0 = Fusion (Rest Length 0). The entities want to occupy the same space. 0.0 = Estrangement (Max Rest Length)."
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "power_dynamic": {
+      "allOf": [
+        {
+          "$ref": "../primitives/SignedNormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Power Dynamic (Authority Gradient / Mass Bias):** -1.0 = Target is the Anchor (Infinite Mass relative to Source). 0.0 = Equal Mass (Both move equally). +1.0 = Source is the Anchor."
+    },
+    "primary_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spectral_signature": {
+      "description": "**Color Filter (Spectral Gating):** If set, this bond only \"lights up\" under specific emotional light. e.g., A \"Work Friend\" bond might only reflect \"Professional\" (Blue) light. Stored as a hex code or vector for the shader.",
+      "items": {
+        "format": "float",
+        "type": "number"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "spring_constant": {
+      "description": "The 'stiffness' of the bond, representing its resistance to change. Higher values = more rigid relationship (breaks under stress). Lower values = more flexible relationship (stretches without breaking).",
+      "format": "double",
+      "type": "number"
+    },
+    "tail_thread_id": {
+      "$ref": "../primitives/UUID.schema.json"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "transparency": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Transparency (Refractive Index):** 1.0 = Clear. Looking at the Source reveals the Target (e.g., \"Honest\"). 0.0 = Opaque. The relationship hides the Target (e.g., \"Secretive\")."
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "bond_strength",
+    "created_at",
+    "damping_coefficient",
+    "energy",
+    "formalism",
+    "head_thread_id",
+    "id",
+    "intimacy",
+    "metadata",
+    "position",
+    "power_dynamic",
+    "spring_constant",
+    "tail_thread_id",
+    "temperature",
+    "tenant_id",
+    "text",
+    "transparency",
+    "velocity"
+  ],
+  "title": "Bond",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/ChannelType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Personal",
+    "Family",
+    "Shared"
+  ],
+  "title": "ChannelType",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/ConsentType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "TermsOfService",
+    "PrivacyPolicy",
+    "MarketingEmails",
+    "AiProcessing",
+    "DataSharing",
+    "Analytics"
+  ],
+  "title": "ConsentType",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/ConversationThread.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AgentMessageType": {
+      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+      "oneOf": [
+        {
+          "description": "A log message from the agent (debugging, status updates)",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/definitions/LogLevel"
+            },
+            "message_type": {
+              "enum": [
+                "log"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "level",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A question the agent is asking the user",
+          "properties": {
+            "message_type": {
+              "enum": [
+                "question"
+              ],
+              "type": "string"
+            },
+            "options": {
+              "default": null,
+              "items": {
+                "type": "string"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "prompt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_type",
+            "prompt"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An insight derived by the agent",
+          "properties": {
+            "confidence": {
+              "format": "double",
+              "type": "number"
+            },
+            "domain": {
+              "default": null,
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "message_type": {
+              "enum": [
+                "insight"
+              ],
+              "type": "string"
+            },
+            "summary": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "confidence",
+            "message_type",
+            "summary"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A detailed analysis result",
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "findings": {
+              "items": {
+                "$ref": "#/definitions/Finding"
+              },
+              "type": "array"
+            },
+            "message_type": {
+              "enum": [
+                "analysis"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain",
+            "findings",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A command/action the agent wants to execute",
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "command"
+              ],
+              "type": "string"
+            },
+            "parameters": true
+          },
+          "required": [
+            "action",
+            "message_type",
+            "parameters"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A simple text response",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "text"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Progress update during long-running tasks",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "progress"
+              ],
+              "type": "string"
+            },
+            "percent_complete": {
+              "default": null,
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "message_type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Finding": {
+      "description": "A finding from an analysis agent",
+      "properties": {
+        "confidence": {
+          "default": null,
+          "description": "Confidence score (0.0 to 1.0)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "description": {
+          "description": "Detailed description",
+          "type": "string"
+        },
+        "related_entities": {
+          "default": [],
+          "description": "Related entity IDs",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "title": {
+          "description": "Title or label of the finding",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "title"
+      ],
+      "type": "object"
+    },
+    "LogLevel": {
+      "description": "Log level for agent log messages",
+      "enum": [
+        "debug",
+        "info",
+        "warning",
+        "error"
+      ],
+      "type": "string"
+    },
+    "ThreadMessage": {
+      "description": "A single message within a conversation thread",
+      "properties": {
+        "agent_speaker": {
+          "default": null,
+          "description": "Which agent sent this message (if role is Assistant)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "default": null,
+          "description": "Text content of the message",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "description": "Unique message ID",
+          "format": "uuid",
+          "type": "string"
+        },
+        "message_type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AgentMessageType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Structured message type (for agent messages)"
+        },
+        "metadata": {
+          "default": null,
+          "description": "Optional metadata"
+        },
+        "role": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageRole.schema.json"
+            }
+          ],
+          "description": "Role of the message sender"
+        },
+        "thread_id": {
+          "description": "ID of the thread this message belongs to",
+          "format": "uuid",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "When the message was created",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "thread_id",
+        "timestamp"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A conversation thread (Slack-like linear threading)\n\nEach thread starts with a user message and contains all responses and follow-up messages in a linear sequence.",
+  "properties": {
+    "created_at": {
+      "description": "When the thread was created",
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../primitives/ThreadId.schema.json"
+    },
+    "is_open": {
+      "description": "Whether the thread is still active/open",
+      "type": "boolean"
+    },
+    "messages": {
+      "description": "All messages in the thread (in chronological order)",
+      "items": {
+        "$ref": "#/definitions/ThreadMessage"
+      },
+      "type": "array"
+    },
+    "metadata": {
+      "default": null,
+      "description": "Optional metadata"
+    },
+    "parent_message_id": {
+      "description": "ID of the original user message that started the thread",
+      "format": "uuid",
+      "type": "string"
+    },
+    "summary": {
+      "default": null,
+      "description": "Summary of the thread (for display in lists)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "description": "When the thread was last updated",
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "is_open",
+    "messages",
+    "parent_message_id",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "ConversationThread",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Course.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "CourseMessage": {
+      "description": "A single message within a Course's history\n\nThis is an immutable record of what was said. The Course history is append-only - messages are never modified or deleted.",
+      "properties": {
+        "agent_speaker": {
+          "default": null,
+          "description": "Which agent sent this message (if role is Assistant)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "default": null,
+          "description": "Text content of the message",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "course_id": {
+          "allOf": [
+            {
+              "$ref": "../primitives/UUID.schema.json"
+            }
+          ],
+          "description": "ID of the course this message belongs to"
+        },
+        "id": {
+          "allOf": [
+            {
+              "$ref": "../primitives/UUID.schema.json"
+            }
+          ],
+          "description": "Unique message ID"
+        },
+        "metadata": {
+          "default": null,
+          "description": "Optional metadata"
+        },
+        "role": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageRole.schema.json"
+            }
+          ],
+          "description": "Role of the message sender"
+        },
+        "shuttle_id": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UUID.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ID of the Shuttle that processed this message (for tracing)"
+        },
+        "timestamp": {
+          "allOf": [
+            {
+              "$ref": "../primitives/Timestamp.schema.json"
+            }
+          ],
+          "description": "When the message was created"
+        }
+      },
+      "required": [
+        "course_id",
+        "id",
+        "role",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "CourseMetadata": {
+      "description": "Session-level metadata for a Course\n\nThis is for persistent, session-scoped information. Processing metadata (provider, model, latency) belongs on the Shuttle.",
+      "properties": {
+        "custom": {
+          "description": "Custom user metadata"
+        },
+        "is_pinned": {
+          "default": false,
+          "description": "Whether this course is pinned/starred",
+          "type": "boolean"
+        },
+        "preferred_language": {
+          "description": "User's preferred language",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "description": "Tags for organization",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "tokenizer_hint": {
+          "description": "Model-specific tokenizer hint (e.g., \"cl100k_base\" for Claude/GPT-4) Used to select the appropriate token counter",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "total_history_tokens": {
+          "default": 0,
+          "description": "Total tokens in history (cached for fast pruning decisions) Updated on each commit_message() call",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "ui_theme": {
+          "description": "UI theme preference",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "CourseStatus": {
+      "description": "Session status for a Course\n\nThe Course is a persistent session/history bucket. Processing states (Segmenting, Classifying, etc.) belong on the Shuttle.\n\nCourse status reflects whether the session is: - Idle: No active processing - Active: Currently being processed by a Shuttle - Archived: Closed/completed, read-only",
+      "oneOf": [
+        {
+          "description": "Session is idle, no active processing",
+          "enum": [
+            "idle"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Session is active, a Shuttle is processing",
+          "enum": [
+            "active"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Session is archived/closed",
+          "enum": [
+            "archived"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "A Course is a persistent session tracking conversation history\n\nThe Course is the \"history bucket\" in the Loom Pattern. It: - Owns the conversation history (append-only) - Tracks session status (idle, active, archived) - Survives across Shuttle processing cycles - Has a 1:N relationship with Shuttles\n\nThe Course does NOT contain: - Transient processing state (that's on Shuttle) - Current weave/input (that's on Shuttle) - Processing metadata like provider/model (that's on Shuttle)",
+  "properties": {
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this course was created"
+    },
+    "history": {
+      "default": [],
+      "description": "Message history (append-only, immutable during processing)",
+      "items": {
+        "$ref": "#/definitions/CourseMessage"
+      },
+      "type": "array"
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this course"
+    },
+    "metadata": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CourseMetadata"
+        }
+      ],
+      "default": {
+        "is_pinned": false,
+        "total_history_tokens": 0
+      },
+      "description": "Session-level metadata"
+    },
+    "status": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CourseStatus"
+        }
+      ],
+      "description": "Session status (Idle, Active, Archived)"
+    },
+    "summary": {
+      "description": "AI-generated summary",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this course belongs to"
+    },
+    "title": {
+      "description": "Optional title for the course",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "updated_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this course was last updated (message added)"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "status",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "Course",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/EntityStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Pending",
+    "Approved",
+    "Rejected",
+    "AutoSpawned"
+  ],
+  "title": "EntityStatus",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/FamiliarEntityType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Moment",
+    "Pulse",
+    "Intent",
+    "Thread",
+    "Bond",
+    "Motif",
+    "Filament",
+    "Focus"
+  ],
+  "title": "FamiliarEntityType",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Filament.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A recurring internal pattern (Self/Identity). The continuous phase trajectory of the user through the manifold.",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "source_pulses": {
+      "description": "The source pulses (internal states) that form this strand.",
+      "items": {
+        "$ref": "../primitives/UUID.schema.json"
+      },
+      "type": "array"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "source_pulses",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Filament",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Focus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A user-declared thematic goal or life chapter. Acts as a \"Attractor Basin\" in the VAE manifold.",
+  "properties": {
+    "active_since": {
+      "$ref": "../primitives/Timestamp.schema.json"
+    },
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "active_since",
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Focus",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Intent.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A specific, bounded future action with potential energy.",
+  "properties": {
+    "activation_energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Activation Energy (Invested Work)** Thermodynamics: The cumulative work performed on the system. Used to calculate \"Sunk Cost\" gravity."
+    },
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "completion": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Completion (Inverse Discrepancy)** Cybernetics: 1.0 - Error Signal. How close the system is to the Goal State."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "entropy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Entropy (Disorder)** Information Theory: The uncertainty or \"noise\" in the process. High Entropy: Exploring, Brainstorming, Chaotic. Low Entropy: Executing, Refined, Linear."
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "primary_status_label": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_date": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "activation_energy",
+    "amplitude",
+    "completion",
+    "created_at",
+    "energy",
+    "entropy",
+    "id",
+    "metadata",
+    "position",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Intent",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/InviteRole.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Admin",
+    "Member",
+    "Guest"
+  ],
+  "title": "InviteRole",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/InviteType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Email",
+    "Code"
+  ],
+  "title": "InviteType",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/JoinRequestStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Pending",
+    "Approved",
+    "Rejected"
+  ],
+  "title": "JoinRequestStatus",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/MagicLinkPurpose.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Login",
+    "Signup",
+    "VerifyEmail",
+    "PasswordReset"
+  ],
+  "title": "MagicLinkPurpose",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/MemberRole.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Admin",
+    "Member",
+    "Guest"
+  ],
+  "title": "MemberRole",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/MessageRole.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "User",
+    "Assistant",
+    "System"
+  ],
+  "title": "MessageRole",
+  "type": "string",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Model.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ChannelType": {
+      "enum": [
+        "Personal",
+        "Family",
+        "Shared"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "channel_type": {
+      "$ref": "#/definitions/ChannelType"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "owner_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "settings": true,
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "channel_type",
+    "created_at",
+    "id",
+    "name",
+    "settings",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Moment.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MomentType": {
+      "enum": [
+        "Event",
+        "Realization",
+        "Interaction",
+        "Observation"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A classical entity representing a specific, objective event in the past. This is the atomic unit of episodic memory (The Particle).",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "moment_type": {
+      "$ref": "#/definitions/MomentType"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "moment_type",
+    "position",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Moment",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Motif.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A recurring pattern of subjective experiences (External Wave). Formed by the constructive interference of many Moments.",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "source_moments": {
+      "description": "The source moments that collapsed into this pattern.",
+      "items": {
+        "$ref": "../primitives/UUID.schema.json"
+      },
+      "type": "array"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "source_moments",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Motif",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Pulse.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InternalStateType": {
+      "enum": [
+        "emotional_shift",
+        "realization",
+        "reflection",
+        "observation",
+        "reaction"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Core identity component that all entities possess",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "state_type": {
+      "$ref": "#/definitions/InternalStateType"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "state_type",
+    "temperature",
+    "tenant_id",
+    "text",
+    "velocity"
+  ],
+  "title": "Pulse",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Shuttle.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ShuttleDetails": {
+      "description": "Processing metadata for a Shuttle\n\nThese are transient concerns - each Shuttle may use different providers, models, or have different latencies. This info belongs on the Shuttle, not the Course.",
+      "properties": {
+        "latency_ms": {
+          "description": "Latency in milliseconds",
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "model": {
+          "description": "Model used (e.g., \"claude-sonnet-4\", \"gpt-4o\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "provider": {
+          "description": "LLM provider (e.g., \"anthropic\", \"openai\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "spawn_count": {
+          "default": 0,
+          "description": "Number of entities spawned",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "tokens_used": {
+          "description": "Token usage",
+          "format": "uint32",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "unit_count": {
+          "default": 0,
+          "description": "Number of weave units processed",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ShuttleStatus": {
+      "description": "Processing status for a Shuttle",
+      "oneOf": [
+        {
+          "description": "Segment received, not yet processed",
+          "enum": [
+            "pending"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Currently being classified by LLM",
+          "enum": [
+            "classifying"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Classification complete, spawning entities",
+          "enum": [
+            "spawning"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "All processing complete",
+          "enum": [
+            "complete"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Processing failed",
+          "enum": [
+            "failed"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "Weave": {
+      "description": "A Weave is the raw user input - their message to Familiar",
+      "properties": {
+        "context": {
+          "description": "Optional context provided with the message",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw_content": {
+          "description": "The raw text content from the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "raw_content"
+      ],
+      "type": "object"
+    },
+    "WeaveUnit": {
+      "description": "A WeaveUnit is a single segment extracted from a Weave. It's a transient container used for classification routing. Physics are extracted by the LLM but passed directly to spawned entities, not stored on the WeaveUnit itself.",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classifications in superposition (determines which entity types to spawn)",
+          "items": {
+            "$ref": "#/definitions/WeaveUnitClassification"
+          },
+          "type": "array"
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this segment",
+          "type": "string"
+        },
+        "index": {
+          "description": "Index of this unit within the shuttle (0-based)",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "primary_thread": {
+          "description": "Primary thread: the main subject/actor of this unit Used for entity resolution (Stitch) downstream",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, INFER, REFERENCE) Determines how this unit is processed - only LOG units spawn entities"
+        },
+        "secondary_threads": {
+          "description": "Secondary threads: other people/places/things mentioned Allows capturing companions, locations, etc.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "spawned_entity_ids": {
+          "default": [],
+          "description": "IDs of entities spawned from this unit (the actual simulation objects)",
+          "items": {
+            "$ref": "../primitives/UUID.schema.json"
+          },
+          "type": "array"
+        },
+        "temporal_marker": {
+          "description": "Temporal marker: when this event/state occurred Can be absolute (\"6pm\"), relative (\"today\"), or frequency (\"once per hour\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content",
+        "index"
+      ],
+      "type": "object"
+    },
+    "WeaveUnitClassification": {
+      "description": "Classification result for a weave unit (determines which entity type to spawn)",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/HeddleEntityType.schema.json"
+            }
+          ],
+          "description": "The entity type this unit may become"
+        },
+        "weight": {
+          "allOf": [
+            {
+              "$ref": "../primitives/NormalizedFloat.schema.json"
+            }
+          ],
+          "description": "Confidence weight (0.0 to 1.0)"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A Shuttle is the transient unit of work in the Loom Pattern\n\nEach user message creates a new Shuttle: 1. Shuttle receives the Weave (user input) 2. Shuttle segments the Weave into WeaveUnits 3. Shuttle processes through the Fates pipeline 4. Shuttle commits results to Course history 5. Shuttle is marked complete (persisted only for debugging)\n\nThe Course (history) is immutable during processing. Only the Shuttle state changes as work progresses.",
+  "properties": {
+    "completed_at": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "When processing completed (or failed)"
+    },
+    "course_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Reference to the parent Course (the tether to history)"
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this shuttle was created"
+    },
+    "details": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShuttleDetails"
+        }
+      ],
+      "description": "Processing metadata (provider, model, latency)"
+    },
+    "error": {
+      "description": "Error message if shuttle failed",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this shuttle"
+    },
+    "response": {
+      "description": "The final response (before committing to Course)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "started_at": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "When this shuttle started processing"
+    },
+    "status": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShuttleStatus"
+        }
+      ],
+      "description": "Processing status"
+    },
+    "units": {
+      "default": [],
+      "description": "The weave units (segments) being carried",
+      "items": {
+        "$ref": "#/definitions/WeaveUnit"
+      },
+      "type": "array"
+    },
+    "weave": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Weave"
+        }
+      ],
+      "description": "The specific message being processed (the \"cargo\")"
+    }
+  },
+  "required": [
+    "course_id",
+    "created_at",
+    "details",
+    "id",
+    "status",
+    "weave"
+  ],
+  "title": "Shuttle",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/Thread.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ThreadType": {
+      "enum": [
+        "Person",
+        "Place",
+        "Concept",
+        "GenericObject"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Core identity component that all entities possess",
+  "properties": {
+    "amplitude": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
+    },
+    "amplitudes": {
+      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
+      "items": {
+        "items": [
+          {
+            "format": "double",
+            "type": "number"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "coherence": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
+    },
+    "created_at": {
+      "allOf": [
+        {
+          "$ref": "../primitives/Timestamp.schema.json"
+        }
+      ],
+      "description": "When this entity was created"
+    },
+    "energy": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
+    },
+    "frequency": {
+      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Unique identifier for this entity"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "position": {
+      "description": "The location in the 3D VAE Manifold where the field is excited",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "temperature": {
+      "allOf": [
+        {
+          "$ref": "../primitives/NormalizedFloat.schema.json"
+        }
+      ],
+      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
+    },
+    "tenant_id": {
+      "allOf": [
+        {
+          "$ref": "../primitives/UUID.schema.json"
+        }
+      ],
+      "description": "Tenant (family/user) this entity belongs to"
+    },
+    "text": {
+      "type": "string"
+    },
+    "thread_type": {
+      "$ref": "#/definitions/ThreadType"
+    },
+    "velocity": {
+      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
+      "items": {
+        "$ref": "../primitives/QuantizedCoord.schema.json"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "required": [
+    "amplitude",
+    "amplitudes",
+    "coherence",
+    "created_at",
+    "energy",
+    "id",
+    "metadata",
+    "position",
+    "temperature",
+    "tenant_id",
+    "text",
+    "thread_type",
+    "velocity"
+  ],
+  "title": "Thread",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/ThreadMessage.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AgentMessageType": {
+      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+      "oneOf": [
+        {
+          "description": "A log message from the agent (debugging, status updates)",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/definitions/LogLevel"
+            },
+            "message_type": {
+              "enum": [
+                "log"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "level",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A question the agent is asking the user",
+          "properties": {
+            "message_type": {
+              "enum": [
+                "question"
+              ],
+              "type": "string"
+            },
+            "options": {
+              "default": null,
+              "items": {
+                "type": "string"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "prompt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_type",
+            "prompt"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An insight derived by the agent",
+          "properties": {
+            "confidence": {
+              "format": "double",
+              "type": "number"
+            },
+            "domain": {
+              "default": null,
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "message_type": {
+              "enum": [
+                "insight"
+              ],
+              "type": "string"
+            },
+            "summary": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "confidence",
+            "message_type",
+            "summary"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A detailed analysis result",
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "findings": {
+              "items": {
+                "$ref": "#/definitions/Finding"
+              },
+              "type": "array"
+            },
+            "message_type": {
+              "enum": [
+                "analysis"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain",
+            "findings",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A command/action the agent wants to execute",
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "command"
+              ],
+              "type": "string"
+            },
+            "parameters": true
+          },
+          "required": [
+            "action",
+            "message_type",
+            "parameters"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A simple text response",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "text"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Progress update during long-running tasks",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "progress"
+              ],
+              "type": "string"
+            },
+            "percent_complete": {
+              "default": null,
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "message_type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Finding": {
+      "description": "A finding from an analysis agent",
+      "properties": {
+        "confidence": {
+          "default": null,
+          "description": "Confidence score (0.0 to 1.0)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "description": {
+          "description": "Detailed description",
+          "type": "string"
+        },
+        "related_entities": {
+          "default": [],
+          "description": "Related entity IDs",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "title": {
+          "description": "Title or label of the finding",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "title"
+      ],
+      "type": "object"
+    },
+    "LogLevel": {
+      "description": "Log level for agent log messages",
+      "enum": [
+        "debug",
+        "info",
+        "warning",
+        "error"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A single message within a conversation thread",
+  "properties": {
+    "agent_speaker": {
+      "default": null,
+      "description": "Which agent sent this message (if role is Assistant)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content": {
+      "default": null,
+      "description": "Text content of the message",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../primitives/ThreadId.schema.json"
+    },
+    "message_type": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/AgentMessageType"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Structured message type (for agent messages)"
+    },
+    "metadata": {
+      "default": null,
+      "description": "Optional metadata"
+    },
+    "role": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageRole.schema.json"
+        }
+      ],
+      "description": "Role of the message sender"
+    },
+    "thread_id": {
+      "$ref": "../primitives/ThreadId.schema.json"
+    },
+    "timestamp": {
+      "description": "When the message was created",
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "role",
+    "thread_id",
+    "timestamp"
+  ],
+  "title": "ThreadMessage",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/entities/ThreadSummary.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Summary of a thread for list views",
+  "properties": {
+    "id": {
+      "$ref": "../primitives/ThreadId.schema.json"
+    },
+    "is_open": {
+      "description": "Whether thread is open",
+      "type": "boolean"
+    },
+    "message_count": {
+      "description": "Number of messages",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "preview": {
+      "description": "Preview text (truncated first message)",
+      "type": "string"
+    },
+    "updated_at": {
+      "description": "Last updated timestamp",
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "is_open",
+    "message_count",
+    "preview",
+    "updated_at"
+  ],
+  "title": "ThreadSummary",
+  "type": "object",
+  "x-familiar-kind": "entity",
+  "x-familiar-persistence": "postgres",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/AIProvider.schema.json
+
+```json
+{
+  "$id": "primitives/AIProvider.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "AI Provider enumeration",
+  "enum": [
+    "openai",
+    "anthropic",
+    "google",
+    "mock"
+  ],
+  "title": "AIProvider",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ApiKey.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A secure wrapper for API keys that prevents accidental logging.",
+  "title": "ApiKey",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/AuditLogId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for audit log entries",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "AuditLogId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/BindingType.schema.json
+
+```json
+{
+  "$id": "primitives/BindingType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of cognitive binding",
+  "oneOf": [
+    {
+      "description": "Cause leads to effect",
+      "enum": [
+        "causal"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Temporal sequence (before/after)",
+      "enum": [
+        "temporal"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Associated by proximity/context",
+      "enum": [
+        "associative"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Part-whole relationship",
+      "enum": [
+        "compositional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Contrast/opposition",
+      "enum": [
+        "contrastive"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Similarity/analogy",
+      "enum": [
+        "analogical"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Enables/prerequisite",
+      "enum": [
+        "enabling"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Thematic connection",
+      "enum": [
+        "thematic"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "BindingType",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/BlockElement.schema.json
+
+```json
+{
+  "$id": "primitives/BlockElement.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "oneOf": [
+    {
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ButtonStyle"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "$ref": "#/definitions/PlainTextObject"
+        },
+        "type": {
+          "enum": [
+            "button"
+          ],
+          "type": "string"
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "action_id",
+        "text",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "alt_text": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "image"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "alt_text",
+        "image_url",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/definitions/OptionObject"
+          },
+          "type": "array"
+        },
+        "type": {
+          "enum": [
+            "overflow"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "options",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "initial_value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "multiline": {
+          "default": false,
+          "type": "boolean"
+        },
+        "placeholder": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PlainTextObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "enum": [
+            "plain_text_input"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "BlockElement",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ButtonStyle.schema.json
+
+```json
+{
+  "$id": "primitives/ButtonStyle.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "primary",
+    "danger"
+  ],
+  "title": "ButtonStyle",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ChannelId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A channel's unique identifier",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "ChannelId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ConsentRecordId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for consent records",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "ConsentRecordId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ContextElement.schema.json
+
+```json
+{
+  "$id": "primitives/ContextElement.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "oneOf": [
+    {
+      "properties": {
+        "alt_text": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "image"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "alt_text",
+        "image_url",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "mrkdwn"
+          ],
+          "type": "string"
+        },
+        "verbatim": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "text",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "plain_text"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "ContextElement",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ConversationTurn.schema.json
+
+```json
+{
+  "$id": "primitives/ConversationTurn.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A single turn in a conversation (for context tracking)",
+  "properties": {
+    "content": {
+      "description": "Content of the message",
+      "type": "string"
+    },
+    "role": {
+      "description": "Role of the speaker (user, assistant, system)",
+      "type": "string"
+    },
+    "speaker": {
+      "default": null,
+      "description": "Optional speaker identifier (for multi-agent)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "timestamp": {
+      "default": null,
+      "description": "Timestamp of the turn",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content",
+    "role"
+  ],
+  "title": "ConversationTurn",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/CourseId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A course (workflow instance) unique identifier",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "CourseId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/DbConnectionString.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A validated PostgreSQL/TimescaleDB connection string",
+  "title": "DbConnectionString",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/DbPoolSize.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Connection pool size configuration",
+  "format": "uint32",
+  "minimum": 0.0,
+  "title": "DbPoolSize",
+  "type": "integer",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/DeletionRequestId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for data deletion requests",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "DeletionRequestId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/Directionality.schema.json
+
+```json
+{
+  "$id": "primitives/Directionality.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Directionality of binding",
+  "oneOf": [
+    {
+      "description": "Only source → target",
+      "enum": [
+        "unidirectional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Both directions",
+      "enum": [
+        "bidirectional"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "No inherent direction",
+      "enum": [
+        "undirected"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "Directionality",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/Email.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "String",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/EmotionalTone.schema.json
+
+```json
+{
+  "$id": "primitives/EmotionalTone.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Emotional tone detected in segment",
+  "properties": {
+    "arousal": {
+      "description": "Arousal (0.0 calm to 1.0 excited)",
+      "format": "double",
+      "type": "number"
+    },
+    "confidence": {
+      "description": "Confidence in detection",
+      "format": "double",
+      "type": "number"
+    },
+    "primary": {
+      "description": "Primary emotion",
+      "type": "string"
+    },
+    "valence": {
+      "description": "Valence (-1.0 negative to 1.0 positive)",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "arousal",
+    "confidence",
+    "primary",
+    "valence"
+  ],
+  "title": "EmotionalTone",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/EntityId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for entities",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "EntityId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/EntityMention.schema.json
+
+```json
+{
+  "$id": "primitives/EntityMention.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An entity mention within a segment",
+  "properties": {
+    "confidence": {
+      "description": "Confidence in detection",
+      "format": "double",
+      "type": "number"
+    },
+    "end": {
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityMentionType"
+        }
+      ],
+      "description": "Type of entity mentioned"
+    },
+    "resolved_id": {
+      "default": null,
+      "description": "Resolved entity ID (if matched to known entity)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "start": {
+      "description": "Position in segment",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "text": {
+      "description": "The text of the mention",
+      "type": "string"
+    }
+  },
+  "required": [
+    "confidence",
+    "end",
+    "entity_type",
+    "start",
+    "text"
+  ],
+  "title": "EntityMention",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/EntityMentionType.schema.json
+
+```json
+{
+  "$id": "primitives/EntityMentionType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of entity mentions",
+  "enum": [
+    "PERSON",
+    "PLACE",
+    "ORGANIZATION",
+    "DATE_TIME",
+    "EVENT",
+    "CONCEPT",
+    "OBJECT",
+    "ACTIVITY"
+  ],
+  "title": "EntityMentionType",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/EntityType.schema.json
+
+```json
+{
+  "$id": "primitives/EntityType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Entity types from the Symmetric Seven ontology",
+  "oneOf": [
+    {
+      "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
+      "enum": [
+        "MOMENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
+      "enum": [
+        "PULSE"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Definition of person, place, or concept (Definitional/Object)",
+      "enum": [
+        "THREAD"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Relationship between entities (Relational/Connection)",
+      "enum": [
+        "BOND"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A recurring external pattern (External Wave)",
+      "enum": [
+        "MOTIF"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A recurring internal pattern (Internal Wave)",
+      "enum": [
+        "FILAMENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An active thematic goal (Intentional Wave)",
+      "enum": [
+        "FOCUS"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A task or goal for the future (Operational/Intentional Particle)",
+      "enum": [
+        "INTENT"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "EntityType",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ExportRequestId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for data export requests",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "ExportRequestId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/HeddleEntityType.schema.json
+
+```json
+{
+  "$id": "primitives/HeddleEntityType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+  "oneOf": [
+    {
+      "description": "A specific event that happened in the past (Narrative/External Particle)",
+      "enum": [
+        "MOMENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A task or goal for the future (Operational/Intentional Particle)",
+      "enum": [
+        "INTENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A definition of a person, place, or concept (Definitional/Object)",
+      "enum": [
+        "THREAD"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A statement about the quality of a relationship (Relational/Connection)",
+      "enum": [
+        "BOND"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A recurring external pattern (External Wave)",
+      "enum": [
+        "MOTIF"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A recurring internal pattern (Internal Wave)",
+      "enum": [
+        "FILAMENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An active thematic goal (Intentional Wave)",
+      "enum": [
+        "FOCUS"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An internal state snapshot (Internal Particle)",
+      "enum": [
+        "PULSE"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "HeddleEntityType",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/InvitationId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for family invitations",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "InvitationId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/InviteCode.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "String",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/InviteRole.schema.json
+
+```json
+{
+  "$id": "primitives/InviteRole.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role to assign when invitation is accepted",
+  "enum": [
+    "admin",
+    "member",
+    "guest"
+  ],
+  "title": "InviteRole",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/JoinRequestId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for join requests",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "JoinRequestId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/MagicLinkId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for magic links",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "MagicLinkId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/MaxTokens.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Maximum number of tokens for input/output",
+  "format": "uint32",
+  "minimum": 0.0,
+  "title": "MaxTokens",
+  "type": "integer",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/MessageId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A message's unique identifier",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "MessageId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/MessageIntent.schema.json
+
+```json
+{
+  "$id": "primitives/MessageIntent.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The primary intent of the user's message",
+  "oneOf": [
+    {
+      "description": "Recording something - events, states, observations (current default)",
+      "enum": [
+        "LOG"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Asking a question - wants information back",
+      "enum": [
+        "QUERY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Requesting system to make connections or derive insights",
+      "enum": [
+        "INFER"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Looking up specific entities, threads, or past entries",
+      "enum": [
+        "REFERENCE"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Requesting analysis, patterns, or reflection on data",
+      "enum": [
+        "REFLECT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Giving a command/instruction to the system",
+      "enum": [
+        "COMMAND"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Conversational/social - greetings, acknowledgments",
+      "enum": [
+        "SOCIAL"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "MessageIntent",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/MessageRole.schema.json
+
+```json
+{
+  "$id": "primitives/MessageRole.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role in a chat conversation",
+  "oneOf": [
+    {
+      "description": "System instructions",
+      "enum": [
+        "system"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "User input",
+      "enum": [
+        "user"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Assistant response",
+      "enum": [
+        "assistant"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "MessageRole",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/Modality.schema.json
+
+```json
+{
+  "$id": "primitives/Modality.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Supported input modalities",
+  "enum": [
+    "text",
+    "audio",
+    "vision",
+    "video"
+  ],
+  "title": "Modality",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/NormalizedFloat.schema.json
+
+```json
+{
+  "$id": "primitives/NormalizedFloat.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A float value normalized to [0.0, 1.0]",
+  "format": "double",
+  "title": "NormalizedFloat",
+  "type": "number",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/OptionObject.schema.json
+
+```json
+{
+  "$id": "primitives/OptionObject.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "description": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PlainTextObject"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "text": {
+      "$ref": "#/definitions/PlainTextObject"
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "text",
+    "value"
+  ],
+  "title": "OptionObject",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ParsedTemporal.schema.json
+
+```json
+{
+  "$id": "primitives/ParsedTemporal.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Parsed temporal information",
+  "properties": {
+    "date": {
+      "default": null,
+      "description": "ISO 8601 date if specific",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relative_days": {
+      "default": null,
+      "description": "Relative offset (e.g., -1 for \"yesterday\")",
+      "format": "int32",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "time_of_day": {
+      "default": null,
+      "description": "Time of day if mentioned",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "ParsedTemporal",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/PasswordHash.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "String",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/PlainTextObject.schema.json
+
+```json
+{
+  "$id": "primitives/PlainTextObject.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "emoji": {
+      "default": false,
+      "type": "boolean"
+    },
+    "text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "PlainTextObject",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/QuantizedCoord.schema.json
+
+```json
+{
+  "$id": "primitives/QuantizedCoord.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A quantized coordinate in the 3D VAE Manifold Uses i64 for precision in physics calculations",
+  "format": "int64",
+  "title": "QuantizedCoord",
+  "type": "integer",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/QueryTarget.schema.json
+
+```json
+{
+  "$id": "primitives/QueryTarget.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Query target - what data is the query looking for?",
+  "properties": {
+    "entity_types": {
+      "default": [],
+      "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords extracted from the query",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "temporal_scope": {
+      "default": null,
+      "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thread_hints": {
+      "default": [],
+      "description": "Specific thread hints (names, concepts) to search for",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "title": "QueryTarget",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/QueryType.schema.json
+
+```json
+{
+  "$id": "primitives/QueryType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The type of query (when MessageIntent is QUERY)",
+  "oneOf": [
+    {
+      "description": "When did X happen? Time-based lookup",
+      "enum": [
+        "TEMPORAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Who/what questions - entity lookup",
+      "enum": [
+        "ENTITY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "How often? Pattern/frequency questions",
+      "enum": [
+        "PATTERN"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Compare X and Y",
+      "enum": [
+        "COMPARISON"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Give me a summary/overview",
+      "enum": [
+        "SUMMARY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Count/quantity questions (how many?)",
+      "enum": [
+        "QUANTITATIVE"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Yes/no questions (did X happen?)",
+      "enum": [
+        "BOOLEAN"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Why questions - causation",
+      "enum": [
+        "CAUSAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Location-based questions",
+      "enum": [
+        "SPATIAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Open-ended/exploratory",
+      "enum": [
+        "EXPLORATORY"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "QueryType",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/RelationshipType.schema.json
+
+```json
+{
+  "$id": "primitives/RelationshipType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of relationships",
+  "enum": [
+    "family",
+    "friend",
+    "close_friend",
+    "best_friend",
+    "romantic",
+    "ex_romantic",
+    "spouse",
+    "parent",
+    "child",
+    "sibling",
+    "colleague",
+    "manager",
+    "direct_report",
+    "mentor",
+    "mentee",
+    "client",
+    "vendor",
+    "partner",
+    "acquaintance",
+    "neighbor",
+    "classmate",
+    "teammate",
+    "adversary",
+    "rival",
+    "service_provider",
+    "other"
+  ],
+  "title": "RelationshipType",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/RetryConfig.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Configuration for retry behavior on transient failures",
+  "properties": {
+    "backoff_factor": {
+      "format": "double",
+      "type": "number"
+    },
+    "initial_delay_ms": {
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "max_delay_ms": {
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "max_retries": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "backoff_factor",
+    "initial_delay_ms",
+    "max_delay_ms",
+    "max_retries"
+  ],
+  "title": "RetryConfig",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/Segment.schema.json
+
+```json
+{
+  "$id": "primitives/Segment.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A segmented unit of content",
+  "properties": {
+    "boundaries": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentBoundaries"
+        }
+      ],
+      "description": "Segment boundaries"
+    },
+    "confidence": {
+      "description": "Confidence in segmentation decision",
+      "format": "double",
+      "type": "number"
+    },
+    "content": {
+      "description": "The segmented content",
+      "type": "string"
+    },
+    "features": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SegmentFeatures"
+        }
+      ],
+      "description": "Extracted features"
+    },
+    "id": {
+      "description": "Unique segment ID",
+      "type": "string"
+    },
+    "index": {
+      "description": "Index in the sequence",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "modality": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Modality"
+        }
+      ],
+      "description": "Original modality"
+    }
+  },
+  "required": [
+    "boundaries",
+    "confidence",
+    "content",
+    "features",
+    "id",
+    "index",
+    "modality"
+  ],
+  "title": "Segment",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/SegmentBoundaries.schema.json
+
+```json
+{
+  "$id": "primitives/SegmentBoundaries.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Boundaries of a segment within the original input",
+  "properties": {
+    "end": {
+      "description": "End position",
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "speaker_id": {
+      "default": null,
+      "description": "For audio/video: speaker ID if detected",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "start": {
+      "description": "Start position (char index for text, milliseconds for audio/video)",
+      "format": "uint64",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "end",
+    "start"
+  ],
+  "title": "SegmentBoundaries",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/SegmentFeatures.schema.json
+
+```json
+{
+  "$id": "primitives/SegmentFeatures.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Extracted features from a segment",
+  "properties": {
+    "emotional_tone": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EmotionalTone"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Emotional tone (if detectable)"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords extracted",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "language": {
+      "default": null,
+      "description": "Language detected",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mentions": {
+      "default": [],
+      "description": "Entity mentions found",
+      "items": {
+        "$ref": "#/definitions/EntityMention"
+      },
+      "type": "array"
+    },
+    "subject": {
+      "default": null,
+      "description": "Primary subject/actor mentioned",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporal_markers": {
+      "default": [],
+      "description": "Temporal markers detected",
+      "items": {
+        "$ref": "#/definitions/TemporalMarker"
+      },
+      "type": "array"
+    }
+  },
+  "title": "SegmentFeatures",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/SessionId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A session's unique identifier",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "SessionId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/SessionToken.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "String",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ShuttleId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for shuttles (response containers)",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "ShuttleId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/SignedNormalizedFloat.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A floating-point value normalized between -1.0 and 1.0. Used for polarity (Valence), alignment (Phase), and gradients.",
+  "format": "double",
+  "title": "SignedNormalizedFloat",
+  "type": "number",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TaskId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A unique identifier for async tasks",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "TaskId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/Temperature.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Temperature controls randomness in LLM outputs. Range: 0.0 (deterministic) to 2.0 (very random)",
+  "format": "float",
+  "title": "Temperature",
+  "type": "number",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TemporalMarker.schema.json
+
+```json
+{
+  "$id": "primitives/TemporalMarker.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A temporal marker in the segment",
+  "properties": {
+    "marker_type": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TemporalMarkerType"
+        }
+      ],
+      "description": "Type of temporal reference"
+    },
+    "parsed": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ParsedTemporal"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Parsed temporal value (if parseable)"
+    },
+    "text": {
+      "description": "The text of the marker",
+      "type": "string"
+    }
+  },
+  "required": [
+    "marker_type",
+    "text"
+  ],
+  "title": "TemporalMarker",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TemporalMarkerType.schema.json
+
+```json
+{
+  "$id": "primitives/TemporalMarkerType.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Types of temporal markers",
+  "oneOf": [
+    {
+      "description": "Specific date (January 5th)",
+      "enum": [
+        "absolute"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Relative reference (yesterday, last week)",
+      "enum": [
+        "relative"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Duration (for 2 hours)",
+      "enum": [
+        "duration"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Frequency (every day, weekly)",
+      "enum": [
+        "frequency"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Time of day (in the morning)",
+      "enum": [
+        "time_of_day"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "TemporalMarkerType",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TemporalRelation.schema.json
+
+```json
+{
+  "$id": "primitives/TemporalRelation.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Temporal relationships",
+  "enum": [
+    "before",
+    "after",
+    "during",
+    "simultaneous",
+    "overlapping"
+  ],
+  "title": "TemporalRelation",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TenantId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A tenant (family) unique identifier",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "TenantId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TextObject.schema.json
+
+```json
+{
+  "$id": "primitives/TextObject.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "oneOf": [
+    {
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "plain_text"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "mrkdwn"
+          ],
+          "type": "string"
+        },
+        "verbatim": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "text",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "TextObject",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ThreadId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A conversation thread's unique identifier",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "ThreadId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ThreadReference.schema.json
+
+```json
+{
+  "$id": "primitives/ThreadReference.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Reference to an existing thread",
+  "properties": {
+    "aliases": {
+      "default": [],
+      "description": "Aliases for matching",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "id": {
+      "description": "Thread ID",
+      "type": "string"
+    },
+    "name": {
+      "description": "Thread name/label",
+      "type": "string"
+    },
+    "thread_type": {
+      "description": "Thread type (person, place, concept, etc.)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "thread_type"
+  ],
+  "title": "ThreadReference",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ThreadRole.schema.json
+
+```json
+{
+  "$id": "primitives/ThreadRole.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role of entity relative to threads",
+  "oneOf": [
+    {
+      "description": "Entity is the actor/doer",
+      "enum": [
+        "actor"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is the subject being discussed",
+      "enum": [
+        "subject"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is observing/witnessing",
+      "enum": [
+        "observer"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is the target of action",
+      "enum": [
+        "target"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is setting/location",
+      "enum": [
+        "setting"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Entity is an instrument/tool",
+      "enum": [
+        "instrument"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ThreadRole",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TimeGap.schema.json
+
+```json
+{
+  "$id": "primitives/TimeGap.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Time gap between entities",
+  "properties": {
+    "approximate": {
+      "description": "Is this approximate?",
+      "type": "boolean"
+    },
+    "unit": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TimeUnit"
+        }
+      ],
+      "description": "Duration unit"
+    },
+    "value": {
+      "description": "Duration value",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "approximate",
+    "unit",
+    "value"
+  ],
+  "title": "TimeGap",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TimeUnit.schema.json
+
+```json
+{
+  "$id": "primitives/TimeUnit.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Time units",
+  "enum": [
+    "seconds",
+    "minutes",
+    "hours",
+    "days",
+    "weeks",
+    "months",
+    "years"
+  ],
+  "title": "TimeUnit",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/Timestamp.schema.json
+
+```json
+{
+  "$id": "primitives/Timestamp.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An ISO 8601 timestamp (serialized as string)",
+  "format": "date-time",
+  "title": "Timestamp",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/TokenUsage.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Token usage statistics from a completion",
+  "properties": {
+    "completion_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "prompt_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "total_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "completion_tokens",
+    "prompt_tokens",
+    "total_tokens"
+  ],
+  "title": "TokenUsage",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ToolCallStatus.schema.json
+
+```json
+{
+  "$id": "primitives/ToolCallStatus.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Status of a tool call during execution",
+  "enum": [
+    "pending",
+    "running",
+    "complete",
+    "error"
+  ],
+  "title": "ToolCallStatus",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/ToolPurpose.schema.json
+
+```json
+{
+  "$id": "primitives/ToolPurpose.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Primary purpose of user's message",
+  "oneOf": [
+    {
+      "description": "Recording memories, events, observations - wants to store",
+      "enum": [
+        "LOG"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Asking a question - wants information returned",
+      "enum": [
+        "QUERY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Making connections, deriving insights - wants system to infer",
+      "enum": [
+        "INFER"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Looking up specific entities - wants existing data",
+      "enum": [
+        "REFERENCE"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Requesting analysis or reflection - wants patterns identified",
+      "enum": [
+        "REFLECT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "System command/instruction - wants action taken",
+      "enum": [
+        "COMMAND"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Social/conversational - greeting, acknowledgment",
+      "enum": [
+        "SOCIAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Clarifying or continuing previous message",
+      "enum": [
+        "CONTINUATION"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Editing or correcting previous input",
+      "enum": [
+        "CORRECTION"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ToolPurpose",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/UIClassification.schema.json
+
+```json
+{
+  "$id": "primitives/UIClassification.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A classification result",
+  "properties": {
+    "confidence": {
+      "format": "double",
+      "type": "number"
+    },
+    "entity_type": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "confidence",
+    "entity_type"
+  ],
+  "title": "UIClassification",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/UIHeddleSegment.schema.json
+
+```json
+{
+  "$id": "primitives/UIHeddleSegment.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A segment from Heddle",
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "subject": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content"
+  ],
+  "title": "UIHeddleSegment",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/UIPhysicsResult.schema.json
+
+```json
+{
+  "$id": "primitives/UIPhysicsResult.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Physics simulation result",
+  "properties": {
+    "energy": {
+      "format": "double",
+      "type": "number"
+    },
+    "position": {
+      "items": {
+        "format": "double",
+        "type": "number"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "temperature": {
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "energy",
+    "position",
+    "temperature"
+  ],
+  "title": "UIPhysicsResult",
+  "type": "object",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/UUID.schema.json
+
+```json
+{
+  "$id": "primitives/UUID.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A UUID (serialized as string)",
+  "format": "uuid",
+  "title": "UUID",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/UserId.schema.json
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A user's unique identifier",
+  "examples": [
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "format": "uuid",
+  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+  "title": "UserId",
+  "type": "string",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/primitives/VerbCategory.schema.json
+
+```json
+{
+  "$id": "primitives/VerbCategory.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Categories of verbs for classification",
+  "oneOf": [
+    {
+      "description": "Action verbs (went, did, called) → MOMENT",
+      "enum": [
+        "action"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "State verbs (was, felt, is) → often PULSE",
+      "enum": [
+        "state"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Stative + evaluative (was nice, felt good) → PULSE",
+      "enum": [
+        "evaluative"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Relational verbs (met, talked with) → may indicate BOND",
+      "enum": [
+        "relational"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Habitual (always, usually does) → may indicate MOTIF/FILAMENT",
+      "enum": [
+        "habitual"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Intentional (want to, plan to) → INTENT",
+      "enum": [
+        "intentional"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "VerbCategory",
+  "x-familiar-kind": "primitive"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/AgenticCommand.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ConversationHistoryItem": {
+      "description": "A single item in conversation history",
+      "properties": {
+        "content": {
+          "description": "Content of the message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role: \"user\" or \"assistant\"",
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "role"
+      ],
+      "type": "object"
+    },
+    "WeaveBlock": {
+      "description": "Input block types for multimodal weave requests",
+      "oneOf": [
+        {
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "text"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "alt_text": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "analyze": {
+              "default": true,
+              "description": "Request vision analysis",
+              "type": "boolean"
+            },
+            "source": {
+              "description": "base64 data URI or URL",
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "image"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "duration_secs": {
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "transcript": {
+              "description": "Pre-transcribed (skip Whisper)",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "enum": [
+                "audio"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "filename": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "mime_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "document"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "extract_images": {
+              "default": false,
+              "description": "Whether to extract images from the page",
+              "type": "boolean"
+            },
+            "selector": {
+              "description": "Optional CSS selector to extract specific content",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "enum": [
+                "webpage"
+              ],
+              "type": "string"
+            },
+            "url": {
+              "description": "URL to scrape",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "url"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "description": "Commands that can be sent to the agentic system\n\nThese commands are the primary interface for interacting with the multi-agent orchestration system. They can be sent directly via HTTP or published to a message broker.",
+  "oneOf": [
+    {
+      "description": "Send a new message to the agentic system",
+      "properties": {
+        "blocks": {
+          "default": null,
+          "description": "Optional multimodal blocks (images, audio, etc.)",
+          "items": {
+            "$ref": "#/definitions/WeaveBlock"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "command_type": {
+          "enum": [
+            "send_message"
+          ],
+          "type": "string"
+        },
+        "content": {
+          "description": "Text content of the message",
+          "type": "string"
+        },
+        "conversation_history": {
+          "default": null,
+          "description": "Conversation history for context",
+          "items": {
+            "$ref": "#/definitions/ConversationHistoryItem"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "flow_path": {
+          "default": null,
+          "description": "Override the default flow path (e.g., \"u/phaiel/loom\")",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "request_id": {
+          "description": "Request ID for tracing",
+          "type": "string"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string"
+        },
+        "thread_id": {
+          "default": null,
+          "description": "Thread ID (None = start new thread)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "command_type",
+        "content",
+        "request_id",
+        "tenant_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Continue processing in an existing thread",
+      "properties": {
+        "command_type": {
+          "enum": [
+            "continue_thread"
+          ],
+          "type": "string"
+        },
+        "request_id": {
+          "description": "Request ID for tracing",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "ID of the thread to continue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_type",
+        "request_id",
+        "thread_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Cancel a running task",
+      "properties": {
+        "command_type": {
+          "enum": [
+            "cancel_task"
+          ],
+          "type": "string"
+        },
+        "reason": {
+          "default": null,
+          "description": "Reason for cancellation",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "task_id": {
+          "description": "ID of the task to cancel",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_type",
+        "task_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Request thread history",
+      "properties": {
+        "command_type": {
+          "enum": [
+            "get_thread_history"
+          ],
+          "type": "string"
+        },
+        "limit": {
+          "default": null,
+          "description": "Maximum number of messages to return",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "thread_id": {
+          "description": "ID of the thread",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_type",
+        "thread_id"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "AgenticCommand",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/AgenticEvent.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AgentMessageType": {
+      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+      "oneOf": [
+        {
+          "description": "A log message from the agent (debugging, status updates)",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/definitions/LogLevel"
+            },
+            "message_type": {
+              "enum": [
+                "log"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "level",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A question the agent is asking the user",
+          "properties": {
+            "message_type": {
+              "enum": [
+                "question"
+              ],
+              "type": "string"
+            },
+            "options": {
+              "default": null,
+              "items": {
+                "type": "string"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "prompt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_type",
+            "prompt"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An insight derived by the agent",
+          "properties": {
+            "confidence": {
+              "format": "double",
+              "type": "number"
+            },
+            "domain": {
+              "default": null,
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "message_type": {
+              "enum": [
+                "insight"
+              ],
+              "type": "string"
+            },
+            "summary": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "confidence",
+            "message_type",
+            "summary"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A detailed analysis result",
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "findings": {
+              "items": {
+                "$ref": "#/definitions/Finding"
+              },
+              "type": "array"
+            },
+            "message_type": {
+              "enum": [
+                "analysis"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain",
+            "findings",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A command/action the agent wants to execute",
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "command"
+              ],
+              "type": "string"
+            },
+            "parameters": true
+          },
+          "required": [
+            "action",
+            "message_type",
+            "parameters"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A simple text response",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "text"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "message_type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Progress update during long-running tasks",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "message_type": {
+              "enum": [
+                "progress"
+              ],
+              "type": "string"
+            },
+            "percent_complete": {
+              "default": null,
+              "format": "double",
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "message_type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "AgentState": {
+      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+      "properties": {
+        "conversation_context": {
+          "default": [],
+          "description": "Conversation history for context",
+          "items": {
+            "$ref": "../primitives/ConversationTurn.schema.json"
+          },
+          "type": "array"
+        },
+        "current_speaker": {
+          "default": null,
+          "description": "Currently active speaker (None means orchestrator decides)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_authenticated": {
+          "default": false,
+          "description": "Whether the user is authenticated",
+          "type": "boolean"
+        },
+        "just_finished": {
+          "default": false,
+          "description": "Whether the current agent just finished its task",
+          "type": "boolean"
+        },
+        "metadata": {
+          "default": null,
+          "description": "Custom metadata for extensibility"
+        },
+        "tenant_id": {
+          "description": "Tenant ID for multi-tenancy",
+          "type": "string"
+        },
+        "thread_id": {
+          "default": null,
+          "description": "Current thread ID (if in a thread)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "tenant_id"
+      ],
+      "type": "object"
+    },
+    "Finding": {
+      "description": "A finding from an analysis agent",
+      "properties": {
+        "confidence": {
+          "default": null,
+          "description": "Confidence score (0.0 to 1.0)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "description": {
+          "description": "Detailed description",
+          "type": "string"
+        },
+        "related_entities": {
+          "default": [],
+          "description": "Related entity IDs",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "title": {
+          "description": "Title or label of the finding",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "title"
+      ],
+      "type": "object"
+    },
+    "LogLevel": {
+      "description": "Log level for agent log messages",
+      "enum": [
+        "debug",
+        "info",
+        "warning",
+        "error"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Events emitted by the agentic system\n\nThese events notify clients about state changes and results from the multi-agent system. They can be delivered via WebSocket, SSE, or consumed from a message broker.",
+  "oneOf": [
+    {
+      "description": "A new message was received/generated",
+      "properties": {
+        "agent": {
+          "default": null,
+          "description": "Which agent sent this",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "default": null,
+          "description": "Message content",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_type": {
+          "enum": [
+            "message_received"
+          ],
+          "type": "string"
+        },
+        "message_id": {
+          "description": "Message ID",
+          "type": "string"
+        },
+        "message_type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AgentMessageType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Structured message type"
+        },
+        "role": {
+          "description": "Role (user, assistant, system)",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_type",
+        "message_id",
+        "role",
+        "thread_id",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "An agent is now speaking/processing",
+      "properties": {
+        "agent": {
+          "description": "Which agent is speaking",
+          "type": "string"
+        },
+        "event_type": {
+          "enum": [
+            "agent_speaking"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "default": null,
+          "description": "Optional status message",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent",
+        "event_type",
+        "thread_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "A task was completed successfully",
+      "properties": {
+        "event_type": {
+          "enum": [
+            "task_completed"
+          ],
+          "type": "string"
+        },
+        "result": {
+          "description": "Result data"
+        },
+        "task_id": {
+          "description": "Task ID (same as request_id)",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_type",
+        "result",
+        "task_id",
+        "thread_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "An error occurred",
+      "properties": {
+        "code": {
+          "description": "Error code",
+          "type": "string"
+        },
+        "details": {
+          "default": null,
+          "description": "Additional details"
+        },
+        "error": {
+          "description": "Error message",
+          "type": "string"
+        },
+        "event_type": {
+          "enum": [
+            "error"
+          ],
+          "type": "string"
+        },
+        "thread_id": {
+          "default": null,
+          "description": "Thread ID (if applicable)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "error",
+        "event_type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Thread state was updated",
+      "properties": {
+        "event_type": {
+          "enum": [
+            "thread_state_changed"
+          ],
+          "type": "string"
+        },
+        "state": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/AgentState"
+            }
+          ],
+          "description": "Updated agent state"
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_type",
+        "state",
+        "thread_id"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Progress update for long-running operations",
+      "properties": {
+        "event_type": {
+          "enum": [
+            "progress"
+          ],
+          "type": "string"
+        },
+        "message": {
+          "description": "Progress message",
+          "type": "string"
+        },
+        "percent": {
+          "default": null,
+          "description": "Percent complete (0-100)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "task_id": {
+          "description": "Task ID",
+          "type": "string"
+        },
+        "thread_id": {
+          "description": "Thread ID",
+          "type": "string"
+        }
+      },
+      "required": [
+        "event_type",
+        "message",
+        "task_id",
+        "thread_id"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "AgenticEvent",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/AgenticFlowResponse.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classification results",
+          "items": {
+            "$ref": "../primitives/UIClassification.schema.json"
+          },
+          "type": "array"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UIPhysicsResult.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints"
+        },
+        "purpose": {
+          "default": null,
+          "description": "Detected purpose/intent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "default": [],
+          "description": "Segmented content",
+          "items": {
+            "$ref": "../primitives/UIHeddleSegment.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UIThinkingStep": {
+      "description": "A thinking/reasoning step for chain-of-thought visibility",
+      "properties": {
+        "agent": {
+          "description": "Which agent produced this thought",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "thought": {
+          "description": "The thought/reasoning content",
+          "type": "string"
+        },
+        "timestamp": {
+          "default": null,
+          "description": "Timestamp",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "agent",
+        "id",
+        "thought"
+      ],
+      "type": "object"
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "properties": {
+        "arguments": {
+          "default": null,
+          "description": "Arguments passed to the tool"
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "default": null,
+          "description": "Result from the tool"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolCallStatus.schema.json"
+            }
+          ],
+          "description": "Current status"
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Full response from the agentic Windmill flow This is what the API returns to the UI",
+  "properties": {
+    "agent": {
+      "description": "Which agent responded",
+      "type": "string"
+    },
+    "has_more_tasks": {
+      "default": false,
+      "description": "Whether there are more tasks",
+      "type": "boolean"
+    },
+    "heddle_result": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/UIHeddleResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Heddle classification result (if applicable)"
+    },
+    "next_request": {
+      "default": null,
+      "description": "Next request (if continuation needed)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "request_id": {
+      "description": "Request ID for tracing",
+      "type": "string"
+    },
+    "response": {
+      "description": "The conversational response text",
+      "type": "string"
+    },
+    "state": {
+      "default": null,
+      "description": "Updated agent state"
+    },
+    "thinking_steps": {
+      "default": [],
+      "description": "Thinking steps (for chain-of-thought visibility)",
+      "items": {
+        "$ref": "#/definitions/UIThinkingStep"
+      },
+      "type": "array"
+    },
+    "thread_id": {
+      "description": "Thread ID",
+      "type": "string"
+    },
+    "tool_calls": {
+      "default": [],
+      "description": "Tool calls made",
+      "items": {
+        "$ref": "#/definitions/UIToolCall"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "agent",
+    "request_id",
+    "response",
+    "thread_id"
+  ],
+  "title": "AgenticFlowResponse",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/ClassificationPhysics.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Physics hints extracted during classification",
+  "properties": {
+    "arousal": {
+      "default": null,
+      "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "clarity": {
+      "default": null,
+      "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "significance": {
+      "default": null,
+      "description": "How significant/important: 0.0 to 1.0",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "valence": {
+      "default": null,
+      "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "title": "ClassificationPhysics",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/CommandResult.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Result of processing a command",
+  "properties": {
+    "accepted": {
+      "description": "Whether the command was accepted",
+      "type": "boolean"
+    },
+    "error": {
+      "default": null,
+      "description": "Error message if not accepted",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "job_id": {
+      "default": null,
+      "description": "Job ID for async tracking",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thread_id": {
+      "default": null,
+      "description": "Thread ID (for SendMessage commands)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ws_url": {
+      "default": null,
+      "description": "WebSocket URL for streaming events",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "accepted"
+  ],
+  "title": "CommandResult",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/ContentClassificationResponse.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationPhysics": {
+      "description": "Physics hints extracted during classification",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "description": "How significant/important: 0.0 to 1.0",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "SegmentClassification": {
+      "description": "Classification for a single segment",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../primitives/HeddleEntityType.schema.json"
+            }
+          ],
+          "description": "The entity type (MOMENT, PULSE, INTENT) - relevant for LOG purpose"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ClassificationPhysics"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints for entity spawning (only for LOG purpose)"
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
+        },
+        "segment_index": {
+          "description": "Index of the segment being classified",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "weight": {
+          "default": 1.0,
+          "description": "Confidence weight (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "segment_index"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Phase 3 response: Classifications for each segment",
+  "properties": {
+    "classifications": {
+      "description": "Classifications for each segment",
+      "items": {
+        "$ref": "#/definitions/SegmentClassification"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "classifications"
+  ],
+  "title": "ContentClassificationResponse",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/ConversationHistoryItem.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A single item in conversation history",
+  "properties": {
+    "content": {
+      "description": "Content of the message",
+      "type": "string"
+    },
+    "role": {
+      "description": "Role: \"user\" or \"assistant\"",
+      "type": "string"
+    }
+  },
+  "required": [
+    "content",
+    "role"
+  ],
+  "title": "ConversationHistoryItem",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/CourseStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Processing status for a Course",
+  "oneOf": [
+    {
+      "description": "User input received, not yet segmented",
+      "enum": [
+        "received"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Segmenting the input via Heddle",
+      "enum": [
+        "segmenting"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "All shuttles are processing segments",
+      "enum": [
+        "processing"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "All shuttles complete, generating response",
+      "enum": [
+        "responding"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Course complete with response",
+      "enum": [
+        "complete"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Course failed",
+      "enum": [
+        "failed"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "CourseStatus",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/CreateMemberInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MemberRole": {
+      "description": "Role of a tenant member",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for creating a new tenant member",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/MemberRole"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    }
+  },
+  "required": [
+    "name",
+    "tenant_id"
+  ],
+  "title": "CreateMemberInput",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/CreateTenantInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for creating a new tenant",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "settings": {
+      "default": null
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "title": "CreateTenantInput",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/DbComponentTable.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Component tables (hypertables for time-series, regular for static)",
+  "oneOf": [
+    {
+      "description": "Field excitations (hypertable - time-series physics state)",
+      "enum": [
+        "FieldExcitations"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Quantum states (vector table for embeddings)",
+      "enum": [
+        "QuantumStates"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Content payloads",
+      "enum": [
+        "Content"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Cognitive optics",
+      "enum": [
+        "CognitiveOptics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Relational dynamics",
+      "enum": [
+        "RelationalDynamics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Bond physics",
+      "enum": [
+        "BondPhysics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Task dynamics",
+      "enum": [
+        "TaskDynamics"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "DbComponentTable",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/DbEntityTable.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Entity types stored in the database",
+  "enum": [
+    "Pulse",
+    "Thread",
+    "Bond",
+    "Moment",
+    "Intent",
+    "Focus",
+    "Motif",
+    "Filament"
+  ],
+  "title": "DbEntityTable",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/DbStoreError.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Errors that can occur during database operations",
+  "oneOf": [
+    {
+      "description": "Connection failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Connection"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Query execution failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "query": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Query"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Entity not found",
+      "properties": {
+        "details": {
+          "properties": {
+            "entity_type": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "entity_type",
+            "id"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "NotFound"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Constraint violation (unique, foreign key, etc.)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Constraint"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Serialization/deserialization error",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Serialization"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Transaction failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Transaction"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Migration error",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Migration"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Operation failed (e.g. S3/MinIO)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Operation"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "DbStoreError",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/HeddleEntityType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
+  "oneOf": [
+    {
+      "description": "A specific event that happened in the past (Narrative/External Particle)",
+      "enum": [
+        "MOMENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A task or goal for the future (Operational/Intentional Particle)",
+      "enum": [
+        "INTENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A definition of a person, place, or concept (Definitional/Object)",
+      "enum": [
+        "THREAD"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A statement about the quality of a relationship (Relational/Connection)",
+      "enum": [
+        "BOND"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A recurring external pattern (External Wave)",
+      "enum": [
+        "MOTIF"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "A recurring internal pattern (Internal Wave)",
+      "enum": [
+        "FILAMENT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An active thematic goal (Intentional Wave)",
+      "enum": [
+        "FOCUS"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "An internal state snapshot (Internal Particle)",
+      "enum": [
+        "PULSE"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "HeddleEntityType",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/HeddleResponse.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "RawClassification": {
+      "description": "Raw classification from LLM output",
+      "properties": {
+        "entity_type": {
+          "$ref": "../primitives/HeddleEntityType.schema.json"
+        },
+        "weight": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "RawMessageIntent": {
+      "description": "Raw message intent classification from LLM",
+      "properties": {
+        "confidence": {
+          "default": 1.0,
+          "description": "Confidence in classification (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "intent": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)"
+        },
+        "query_target": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/QueryTarget.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what entities/threads are being queried"
+        },
+        "query_type": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/QueryType.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "If QUERY: what type of query"
+        }
+      },
+      "required": [
+        "intent"
+      ],
+      "type": "object"
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "RawWeaveUnit": {
+      "description": "Raw weave unit from LLM output (before validation)",
+      "properties": {
+        "classifications": {
+          "description": "Classifications in superposition",
+          "items": {
+            "$ref": "#/definitions/RawClassification"
+          },
+          "type": "array"
+        },
+        "content": {
+          "description": "The extracted/cleaned text content for this weave unit",
+          "type": "string"
+        },
+        "physics_hint": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RawPhysicsHint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
+        },
+        "primary_thread": {
+          "default": null,
+          "description": "Primary thread: the main subject/actor of this unit",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "allOf": [
+            {
+              "$ref": "../primitives/MessageIntent.schema.json"
+            }
+          ],
+          "default": "LOG",
+          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
+        },
+        "secondary_threads": {
+          "default": null,
+          "description": "Secondary threads: other people/places/things mentioned",
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "temporal_marker": {
+          "default": null,
+          "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "classifications",
+        "content"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "The full response from the Heddle LLM",
+  "properties": {
+    "message_intent": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RawMessageIntent"
+        }
+      ],
+      "default": {
+        "confidence": 1.0,
+        "intent": "LOG"
+      },
+      "description": "Message intent classification (WHAT is user trying to do?)"
+    },
+    "weave_units": {
+      "default": [],
+      "description": "Array of weave units extracted from the input (for LOG intent) May be empty for QUERY/REFERENCE intents",
+      "items": {
+        "$ref": "#/definitions/RawWeaveUnit"
+      },
+      "type": "array"
+    }
+  },
+  "title": "HeddleResponse",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/InternalStateType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "emotional_shift",
+    "realization",
+    "reflection",
+    "observation",
+    "reaction"
+  ],
+  "title": "InternalStateType",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/MemberRole.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role of a tenant member",
+  "enum": [
+    "admin",
+    "member",
+    "guest"
+  ],
+  "title": "MemberRole",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/MessageClassification.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Complete message classification (intent + optional details)",
+  "properties": {
+    "confidence": {
+      "description": "Confidence in the classification (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "intent": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "description": "Primary intent of the message"
+    },
+    "query_target": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/QueryTarget.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY, what data is being requested"
+    },
+    "query_type": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/QueryType.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY, what type of query"
+    },
+    "secondary_intents": {
+      "description": "Alternative intents that might also apply",
+      "items": {
+        "items": [
+          {
+            "$ref": "../primitives/MessageIntent.schema.json"
+          },
+          {
+            "format": "double",
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "confidence",
+    "intent"
+  ],
+  "title": "MessageClassification",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/MessageIntent.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The primary intent of the user's message",
+  "oneOf": [
+    {
+      "description": "Recording something - events, states, observations (current default)",
+      "enum": [
+        "LOG"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Asking a question - wants information back",
+      "enum": [
+        "QUERY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Requesting system to make connections or derive insights",
+      "enum": [
+        "INFER"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Looking up specific entities, threads, or past entries",
+      "enum": [
+        "REFERENCE"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Requesting analysis, patterns, or reflection on data",
+      "enum": [
+        "REFLECT"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Giving a command/instruction to the system",
+      "enum": [
+        "COMMAND"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Conversational/social - greetings, acknowledgments",
+      "enum": [
+        "SOCIAL"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "MessageIntent",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/MessageRole.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role in a chat conversation",
+  "oneOf": [
+    {
+      "description": "System instructions",
+      "enum": [
+        "system"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "User input",
+      "enum": [
+        "user"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Assistant response",
+      "enum": [
+        "assistant"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "MessageRole",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/MessageStatusType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Message delivery status",
+  "enum": [
+    "sending",
+    "sent",
+    "delivered",
+    "read",
+    "failed"
+  ],
+  "title": "MessageStatusType",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/MomentType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Event",
+    "Realization",
+    "Interaction",
+    "Observation"
+  ],
+  "title": "MomentType",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/ObserverError.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Errors that can occur during AI observation",
+  "oneOf": [
+    {
+      "description": "Configuration error (missing API key, invalid model, etc.)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Configuration"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "The AI provider returned an invalid response",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "raw_response": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "InvalidResponse"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Network or API error",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "status_code": {
+              "format": "uint16",
+              "minimum": 0.0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Network"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Rate limit exceeded",
+      "properties": {
+        "details": {
+          "properties": {
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "retry_after_ms": {
+              "format": "uint64",
+              "minimum": 0.0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "RateLimited"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "The AI refused to process (content policy)",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            }
+          },
+          "required": [
+            "message",
+            "provider"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "ContentFiltered"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Deserialization failed",
+      "properties": {
+        "details": {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "raw_content": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "ParseError"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Timeout",
+      "properties": {
+        "details": {
+          "properties": {
+            "provider": {
+              "$ref": "../primitives/AIProvider.schema.json"
+            },
+            "timeout_ms": {
+              "format": "uint64",
+              "minimum": 0.0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "provider",
+            "timeout_ms"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Timeout"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "details",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "ObserverError",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/PromptConfig.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "PromptPhase": {
+      "enum": [
+        "Segmentation",
+        "Purpose",
+        "Classification"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Schema for TypeScript prompt configuration Runtime prompts are in services/windmill/scripts/*.ts",
+  "properties": {
+    "max_tokens": {
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "model": {
+      "type": "string"
+    },
+    "phase": {
+      "$ref": "#/definitions/PromptPhase"
+    },
+    "temperature": {
+      "format": "float",
+      "type": "number"
+    }
+  },
+  "required": [
+    "max_tokens",
+    "model",
+    "phase",
+    "temperature"
+  ],
+  "title": "PromptConfig",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/PromptPhase.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Segmentation",
+    "Purpose",
+    "Classification"
+  ],
+  "title": "PromptPhase",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/QueryTarget.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Query target - what data is the query looking for?",
+  "properties": {
+    "entity_types": {
+      "default": [],
+      "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keywords extracted from the query",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "temporal_scope": {
+      "default": null,
+      "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thread_hints": {
+      "default": [],
+      "description": "Specific thread hints (names, concepts) to search for",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "title": "QueryTarget",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/QueryType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "The type of query (when MessageIntent is QUERY)",
+  "oneOf": [
+    {
+      "description": "When did X happen? Time-based lookup",
+      "enum": [
+        "TEMPORAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Who/what questions - entity lookup",
+      "enum": [
+        "ENTITY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "How often? Pattern/frequency questions",
+      "enum": [
+        "PATTERN"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Compare X and Y",
+      "enum": [
+        "COMPARISON"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Give me a summary/overview",
+      "enum": [
+        "SUMMARY"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Count/quantity questions (how many?)",
+      "enum": [
+        "QUANTITATIVE"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Yes/no questions (did X happen?)",
+      "enum": [
+        "BOOLEAN"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Why questions - causation",
+      "enum": [
+        "CAUSAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Location-based questions",
+      "enum": [
+        "SPATIAL"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Open-ended/exploratory",
+      "enum": [
+        "EXPLORATORY"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "QueryType",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/RawClassification.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Raw classification from LLM output",
+  "properties": {
+    "entity_type": {
+      "$ref": "../primitives/HeddleEntityType.schema.json"
+    },
+    "weight": {
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "entity_type",
+    "weight"
+  ],
+  "title": "RawClassification",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/RawMessageIntent.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Raw message intent classification from LLM",
+  "properties": {
+    "confidence": {
+      "default": 1.0,
+      "description": "Confidence in classification (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "intent": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)"
+    },
+    "query_target": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/QueryTarget.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY: what entities/threads are being queried"
+    },
+    "query_type": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/QueryType.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY: what type of query"
+    }
+  },
+  "required": [
+    "intent"
+  ],
+  "title": "RawMessageIntent",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/RawPhysicsHint.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+  "properties": {
+    "arousal": {
+      "default": null,
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "clarity": {
+      "default": null,
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "intrusiveness": {
+      "default": null,
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "significance": {
+      "default": null,
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "valence": {
+      "default": null,
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "volatility": {
+      "default": null,
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  },
+  "title": "RawPhysicsHint",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/RawSegment.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A raw segment from Phase 1 - NO classification, just text",
+  "properties": {
+    "content": {
+      "description": "The extracted semantic content",
+      "type": "string"
+    },
+    "mentions": {
+      "default": [],
+      "description": "Other entities/things mentioned",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "subject": {
+      "default": null,
+      "description": "Who/what is the primary subject? (for context, not classification)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporal": {
+      "default": null,
+      "description": "Any temporal reference found",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content"
+  ],
+  "title": "RawSegment",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/RawWeaveUnit.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "RawClassification": {
+      "description": "Raw classification from LLM output",
+      "properties": {
+        "entity_type": {
+          "$ref": "../primitives/HeddleEntityType.schema.json"
+        },
+        "weight": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "RawPhysicsHint": {
+      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "intrusiveness": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "volatility": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  "description": "Raw weave unit from LLM output (before validation)",
+  "properties": {
+    "classifications": {
+      "description": "Classifications in superposition",
+      "items": {
+        "$ref": "#/definitions/RawClassification"
+      },
+      "type": "array"
+    },
+    "content": {
+      "description": "The extracted/cleaned text content for this weave unit",
+      "type": "string"
+    },
+    "physics_hint": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/RawPhysicsHint"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
+    },
+    "primary_thread": {
+      "default": null,
+      "description": "Primary thread: the main subject/actor of this unit",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "purpose": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "default": "LOG",
+      "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
+    },
+    "secondary_threads": {
+      "default": null,
+      "description": "Secondary threads: other people/places/things mentioned",
+      "items": {
+        "type": "string"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "temporal_marker": {
+      "default": null,
+      "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "classifications",
+    "content"
+  ],
+  "title": "RawWeaveUnit",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/SegmentClassification.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationPhysics": {
+      "description": "Physics hints extracted during classification",
+      "properties": {
+        "arousal": {
+          "default": null,
+          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "clarity": {
+          "default": null,
+          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "significance": {
+          "default": null,
+          "description": "How significant/important: 0.0 to 1.0",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "valence": {
+          "default": null,
+          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  "description": "Classification for a single segment",
+  "properties": {
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "../primitives/HeddleEntityType.schema.json"
+        }
+      ],
+      "description": "The entity type (MOMENT, PULSE, INTENT) - relevant for LOG purpose"
+    },
+    "physics": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ClassificationPhysics"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints for entity spawning (only for LOG purpose)"
+    },
+    "purpose": {
+      "allOf": [
+        {
+          "$ref": "../primitives/MessageIntent.schema.json"
+        }
+      ],
+      "default": "LOG",
+      "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
+    },
+    "segment_index": {
+      "description": "Index of the segment being classified",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "weight": {
+      "default": 1.0,
+      "description": "Confidence weight (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "entity_type",
+    "segment_index"
+  ],
+  "title": "SegmentClassification",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/SegmentationResponse.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "RawSegment": {
+      "description": "A raw segment from Phase 1 - NO classification, just text",
+      "properties": {
+        "content": {
+          "description": "The extracted semantic content",
+          "type": "string"
+        },
+        "mentions": {
+          "default": [],
+          "description": "Other entities/things mentioned",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "subject": {
+          "default": null,
+          "description": "Who/what is the primary subject? (for context, not classification)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temporal": {
+          "default": null,
+          "description": "Any temporal reference found",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Phase 1 response: Just segments, no classification",
+  "properties": {
+    "segments": {
+      "description": "The semantic segments extracted from the input",
+      "items": {
+        "$ref": "#/definitions/RawSegment"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "segments"
+  ],
+  "title": "SegmentationResponse",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/ShuttleStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Processing status for a Shuttle",
+  "oneOf": [
+    {
+      "description": "Segment received, not yet processed",
+      "enum": [
+        "pending"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Currently being classified by LLM",
+      "enum": [
+        "classifying"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Classification complete, spawning entities",
+      "enum": [
+        "spawning"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "All processing complete",
+      "enum": [
+        "complete"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Processing failed",
+      "enum": [
+        "failed"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "ShuttleStatus",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/Tenant.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A tenant (family) in the system\n\nUses `SystemEntityMeta` because tenants are top-level entities that don't belong to another tenant.",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "settings": {
+      "default": null
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "name",
+    "updated_at"
+  ],
+  "title": "Tenant",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/TenantMember.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MemberRole": {
+      "description": "Role of a tenant member",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A member of a tenant (user-tenant association with role)\n\nNote: Uses UserId as the entity ID since this is a join table where the user_id + tenant_id forms the unique key.",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "$ref": "#/definitions/MemberRole"
+    },
+    "settings": {
+      "default": null
+    },
+    "tenant_id": {
+      "$ref": "../primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "name",
+    "role",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "TenantMember",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/ThreadType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "enum": [
+    "Person",
+    "Place",
+    "Concept",
+    "GenericObject"
+  ],
+  "title": "ThreadType",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/ToolCallStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Status of a tool call during execution",
+  "enum": [
+    "pending",
+    "running",
+    "complete",
+    "error"
+  ],
+  "title": "ToolCallStatus",
+  "type": "string",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIChannel.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "UIChannelMessage": {
+      "description": "A user message that starts a thread in a channel",
+      "properties": {
+        "content": {
+          "description": "Original user message content",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "is_active": {
+          "default": false,
+          "description": "Is this the active/latest message?",
+          "type": "boolean"
+        },
+        "is_expanded": {
+          "default": false,
+          "description": "Is thread expanded in UI?",
+          "type": "boolean"
+        },
+        "thread": {
+          "description": "Thread of responses and follow-ups",
+          "items": {
+            "$ref": "#/definitions/UIThreadItem"
+          },
+          "type": "array"
+        },
+        "timestamp": {
+          "description": "When posted",
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "id",
+        "thread",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classification results",
+          "items": {
+            "$ref": "../primitives/UIClassification.schema.json"
+          },
+          "type": "array"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UIPhysicsResult.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints"
+        },
+        "purpose": {
+          "default": null,
+          "description": "Detected purpose/intent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "default": [],
+          "description": "Segmented content",
+          "items": {
+            "$ref": "../primitives/UIHeddleSegment.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UIThinkingStep": {
+      "description": "A thinking/reasoning step for chain-of-thought visibility",
+      "properties": {
+        "agent": {
+          "description": "Which agent produced this thought",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "thought": {
+          "description": "The thought/reasoning content",
+          "type": "string"
+        },
+        "timestamp": {
+          "default": null,
+          "description": "Timestamp",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "agent",
+        "id",
+        "thought"
+      ],
+      "type": "object"
+    },
+    "UIThreadItem": {
+      "description": "An item in a conversation thread (user message or AI response)",
+      "properties": {
+        "agent_speaker": {
+          "default": null,
+          "description": "For assistant messages: which agent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "description": "Text content",
+          "type": "string"
+        },
+        "current_activity": {
+          "default": null,
+          "description": "Activity description for typing state",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "heddle_result": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UIHeddleResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Heddle classification result"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "is_typing": {
+          "default": false,
+          "description": "Is this message still being generated?",
+          "type": "boolean"
+        },
+        "role": {
+          "description": "Role: \"user\" or \"assistant\"",
+          "type": "string"
+        },
+        "status": {
+          "default": null,
+          "description": "Current status",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "default": null,
+          "description": "Summary for collapsed display",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thinking_steps": {
+          "default": [],
+          "description": "Chain of thought steps",
+          "items": {
+            "$ref": "#/definitions/UIThinkingStep"
+          },
+          "type": "array"
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "type": "string"
+        },
+        "tool_calls": {
+          "default": [],
+          "description": "Tool calls made",
+          "items": {
+            "$ref": "#/definitions/UIToolCall"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "content",
+        "id",
+        "role",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "properties": {
+        "arguments": {
+          "default": null,
+          "description": "Arguments passed to the tool"
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "default": null,
+          "description": "Result from the tool"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolCallStatus.schema.json"
+            }
+          ],
+          "description": "Current status"
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A channel (persistent conversation space)",
+  "properties": {
+    "created_at": {
+      "description": "When created",
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique ID",
+      "type": "string"
+    },
+    "messages": {
+      "description": "Messages in this channel",
+      "items": {
+        "$ref": "#/definitions/UIChannelMessage"
+      },
+      "type": "array"
+    },
+    "name": {
+      "description": "Display name",
+      "type": "string"
+    },
+    "updated_at": {
+      "description": "When last updated",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "messages",
+    "name",
+    "updated_at"
+  ],
+  "title": "UIChannel",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIChannelMessage.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classification results",
+          "items": {
+            "$ref": "../primitives/UIClassification.schema.json"
+          },
+          "type": "array"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UIPhysicsResult.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints"
+        },
+        "purpose": {
+          "default": null,
+          "description": "Detected purpose/intent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "default": [],
+          "description": "Segmented content",
+          "items": {
+            "$ref": "../primitives/UIHeddleSegment.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UIThinkingStep": {
+      "description": "A thinking/reasoning step for chain-of-thought visibility",
+      "properties": {
+        "agent": {
+          "description": "Which agent produced this thought",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "thought": {
+          "description": "The thought/reasoning content",
+          "type": "string"
+        },
+        "timestamp": {
+          "default": null,
+          "description": "Timestamp",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "agent",
+        "id",
+        "thought"
+      ],
+      "type": "object"
+    },
+    "UIThreadItem": {
+      "description": "An item in a conversation thread (user message or AI response)",
+      "properties": {
+        "agent_speaker": {
+          "default": null,
+          "description": "For assistant messages: which agent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content": {
+          "description": "Text content",
+          "type": "string"
+        },
+        "current_activity": {
+          "default": null,
+          "description": "Activity description for typing state",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "heddle_result": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UIHeddleResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Heddle classification result"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "is_typing": {
+          "default": false,
+          "description": "Is this message still being generated?",
+          "type": "boolean"
+        },
+        "role": {
+          "description": "Role: \"user\" or \"assistant\"",
+          "type": "string"
+        },
+        "status": {
+          "default": null,
+          "description": "Current status",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "default": null,
+          "description": "Summary for collapsed display",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thinking_steps": {
+          "default": [],
+          "description": "Chain of thought steps",
+          "items": {
+            "$ref": "#/definitions/UIThinkingStep"
+          },
+          "type": "array"
+        },
+        "timestamp": {
+          "description": "Timestamp",
+          "type": "string"
+        },
+        "tool_calls": {
+          "default": [],
+          "description": "Tool calls made",
+          "items": {
+            "$ref": "#/definitions/UIToolCall"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "content",
+        "id",
+        "role",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "properties": {
+        "arguments": {
+          "default": null,
+          "description": "Arguments passed to the tool"
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "default": null,
+          "description": "Result from the tool"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolCallStatus.schema.json"
+            }
+          ],
+          "description": "Current status"
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A user message that starts a thread in a channel",
+  "properties": {
+    "content": {
+      "description": "Original user message content",
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique ID",
+      "type": "string"
+    },
+    "is_active": {
+      "default": false,
+      "description": "Is this the active/latest message?",
+      "type": "boolean"
+    },
+    "is_expanded": {
+      "default": false,
+      "description": "Is thread expanded in UI?",
+      "type": "boolean"
+    },
+    "thread": {
+      "description": "Thread of responses and follow-ups",
+      "items": {
+        "$ref": "#/definitions/UIThreadItem"
+      },
+      "type": "array"
+    },
+    "timestamp": {
+      "description": "When posted",
+      "type": "string"
+    }
+  },
+  "required": [
+    "content",
+    "id",
+    "thread",
+    "timestamp"
+  ],
+  "title": "UIChannelMessage",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIClassification.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A classification result",
+  "properties": {
+    "confidence": {
+      "format": "double",
+      "type": "number"
+    },
+    "entity_type": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "confidence",
+    "entity_type"
+  ],
+  "title": "UIClassification",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIHeddleResult.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Structured result from the Heddle classification pipeline",
+  "properties": {
+    "classifications": {
+      "default": [],
+      "description": "Classification results",
+      "items": {
+        "$ref": "../primitives/UIClassification.schema.json"
+      },
+      "type": "array"
+    },
+    "physics": {
+      "anyOf": [
+        {
+          "$ref": "../primitives/UIPhysicsResult.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Physics hints"
+    },
+    "purpose": {
+      "default": null,
+      "description": "Detected purpose/intent",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "segments": {
+      "default": [],
+      "description": "Segmented content",
+      "items": {
+        "$ref": "../primitives/UIHeddleSegment.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "title": "UIHeddleResult",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIHeddleSegment.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A segment from Heddle",
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "subject": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content"
+  ],
+  "title": "UIHeddleSegment",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIPhysicsResult.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Physics simulation result",
+  "properties": {
+    "energy": {
+      "format": "double",
+      "type": "number"
+    },
+    "position": {
+      "items": {
+        "format": "double",
+        "type": "number"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "temperature": {
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "energy",
+    "position",
+    "temperature"
+  ],
+  "title": "UIPhysicsResult",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIThinkingStep.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A thinking/reasoning step for chain-of-thought visibility",
+  "properties": {
+    "agent": {
+      "description": "Which agent produced this thought",
+      "type": "string"
+    },
+    "id": {
+      "description": "Unique ID",
+      "type": "string"
+    },
+    "thought": {
+      "description": "The thought/reasoning content",
+      "type": "string"
+    },
+    "timestamp": {
+      "default": null,
+      "description": "Timestamp",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "agent",
+    "id",
+    "thought"
+  ],
+  "title": "UIThinkingStep",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIThreadItem.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "UIHeddleResult": {
+      "description": "Structured result from the Heddle classification pipeline",
+      "properties": {
+        "classifications": {
+          "default": [],
+          "description": "Classification results",
+          "items": {
+            "$ref": "../primitives/UIClassification.schema.json"
+          },
+          "type": "array"
+        },
+        "physics": {
+          "anyOf": [
+            {
+              "$ref": "../primitives/UIPhysicsResult.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Physics hints"
+        },
+        "purpose": {
+          "default": null,
+          "description": "Detected purpose/intent",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "segments": {
+          "default": [],
+          "description": "Segmented content",
+          "items": {
+            "$ref": "../primitives/UIHeddleSegment.schema.json"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UIThinkingStep": {
+      "description": "A thinking/reasoning step for chain-of-thought visibility",
+      "properties": {
+        "agent": {
+          "description": "Which agent produced this thought",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique ID",
+          "type": "string"
+        },
+        "thought": {
+          "description": "The thought/reasoning content",
+          "type": "string"
+        },
+        "timestamp": {
+          "default": null,
+          "description": "Timestamp",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "agent",
+        "id",
+        "thought"
+      ],
+      "type": "object"
+    },
+    "UIToolCall": {
+      "description": "A tool call with real-time status updates for UI display",
+      "properties": {
+        "arguments": {
+          "default": null,
+          "description": "Arguments passed to the tool"
+        },
+        "id": {
+          "description": "Unique ID for this tool call",
+          "type": "string"
+        },
+        "result": {
+          "default": null,
+          "description": "Result from the tool"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "../primitives/ToolCallStatus.schema.json"
+            }
+          ],
+          "description": "Current status"
+        },
+        "tool": {
+          "description": "Name of the tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "tool"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "An item in a conversation thread (user message or AI response)",
+  "properties": {
+    "agent_speaker": {
+      "default": null,
+      "description": "For assistant messages: which agent",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content": {
+      "description": "Text content",
+      "type": "string"
+    },
+    "current_activity": {
+      "default": null,
+      "description": "Activity description for typing state",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "heddle_result": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/UIHeddleResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Heddle classification result"
+    },
+    "id": {
+      "description": "Unique ID",
+      "type": "string"
+    },
+    "is_typing": {
+      "default": false,
+      "description": "Is this message still being generated?",
+      "type": "boolean"
+    },
+    "role": {
+      "description": "Role: \"user\" or \"assistant\"",
+      "type": "string"
+    },
+    "status": {
+      "default": null,
+      "description": "Current status",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "summary": {
+      "default": null,
+      "description": "Summary for collapsed display",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thinking_steps": {
+      "default": [],
+      "description": "Chain of thought steps",
+      "items": {
+        "$ref": "#/definitions/UIThinkingStep"
+      },
+      "type": "array"
+    },
+    "timestamp": {
+      "description": "Timestamp",
+      "type": "string"
+    },
+    "tool_calls": {
+      "default": [],
+      "description": "Tool calls made",
+      "items": {
+        "$ref": "#/definitions/UIToolCall"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "content",
+    "id",
+    "role",
+    "timestamp"
+  ],
+  "title": "UIThreadItem",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/UIToolCall.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A tool call with real-time status updates for UI display",
+  "properties": {
+    "arguments": {
+      "default": null,
+      "description": "Arguments passed to the tool"
+    },
+    "id": {
+      "description": "Unique ID for this tool call",
+      "type": "string"
+    },
+    "result": {
+      "default": null,
+      "description": "Result from the tool"
+    },
+    "status": {
+      "allOf": [
+        {
+          "$ref": "../primitives/ToolCallStatus.schema.json"
+        }
+      ],
+      "description": "Current status"
+    },
+    "tool": {
+      "description": "Name of the tool",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "status",
+    "tool"
+  ],
+  "title": "UIToolCall",
+  "type": "object",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/codegen/types/WsMessage.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AccordionState": {
+      "enum": [
+        "collapsed",
+        "expanded"
+      ],
+      "type": "string"
+    },
+    "Block": {
+      "description": "A single visual block in a message",
+      "oneOf": [
+        {
+          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
+          "properties": {
+            "accessory": {
+              "anyOf": [
+                {
+                  "$ref": "../primitives/BlockElement.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fields": {
+              "items": {
+                "$ref": "../primitives/TextObject.schema.json"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "text": {
+              "$ref": "../primitives/TextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "section"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A visual separator",
+          "properties": {
+            "type": {
+              "enum": [
+                "divider"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays an image with optional title",
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "$ref": "../primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": {
+              "enum": [
+                "image"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A container for interactive elements (buttons, selects, etc.)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../primitives/BlockElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "actions"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays contextual info (small grey text, images)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../primitives/ContextElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "context"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A header with large, bold text",
+          "properties": {
+            "text": {
+              "$ref": "../primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "header"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An input field",
+          "properties": {
+            "element": {
+              "$ref": "../primitives/BlockElement.schema.json"
+            },
+            "hint": {
+              "anyOf": [
+                {
+                  "$ref": "../primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "label": {
+              "$ref": "../primitives/PlainTextObject.schema.json"
+            },
+            "optional": {
+              "default": false,
+              "type": "boolean"
+            },
+            "type": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "element",
+            "label",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A collapsible container",
+          "properties": {
+            "blocks": {
+              "items": {
+                "$ref": "#/definitions/Block"
+              },
+              "type": "array"
+            },
+            "initial_state": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AccordionState"
+                }
+              ],
+              "default": "collapsed"
+            },
+            "summary": {
+              "$ref": "../primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "accordion"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "blocks",
+            "summary",
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "BlockMessage": {
+      "description": "The root container for a Block Kit message",
+      "properties": {
+        "blocks": {
+          "items": {
+            "$ref": "#/definitions/Block"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "blocks"
+      ],
+      "type": "object"
+    },
+    "MessageStatusType": {
+      "description": "Message delivery status",
+      "enum": [
+        "sending",
+        "sent",
+        "delivered",
+        "read",
+        "failed"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A message sent from the server to the client via WebSocket",
+  "oneOf": [
+    {
+      "description": "Connection status / Handshake",
+      "properties": {
+        "job_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "status"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "status",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Typing indicator (agent is processing)",
+      "properties": {
+        "job_id": {
+          "type": "string"
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "enum": [
+            "typing"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Job progress update (with optional Block Kit content)",
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BlockMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "details": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "progress"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Job completed successfully (with Block Kit content)",
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BlockMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "job_id": {
+          "type": "string"
+        },
+        "result": true,
+        "type": {
+          "enum": [
+            "complete"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Error occurred (with Block Kit content)",
+      "properties": {
+        "blocks": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BlockMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "job_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "error"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "message",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Message status update (sent, delivered, read)",
+      "properties": {
+        "message_id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/MessageStatusType"
+        },
+        "type": {
+          "enum": [
+            "message_status"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "status",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "WsMessage",
+  "x-familiar-kind": "type"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/AgentMessageType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Finding": {
+      "description": "A finding from an analysis agent",
+      "properties": {
+        "confidence": {
+          "default": null,
+          "description": "Confidence score (0.0 to 1.0)",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "description": {
+          "description": "Detailed description",
+          "type": "string"
+        },
+        "related_entities": {
+          "default": [],
+          "description": "Related entity IDs",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "title": {
+          "description": "Title or label of the finding",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "title"
+      ],
+      "type": "object"
+    },
+    "LogLevel": {
+      "description": "Log level for agent log messages",
+      "enum": [
+        "debug",
+        "info",
+        "warning",
+        "error"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
+  "oneOf": [
+    {
+      "description": "A log message from the agent (debugging, status updates)",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "level": {
+          "$ref": "#/definitions/LogLevel"
+        },
+        "message_type": {
+          "enum": [
+            "log"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "level",
+        "message_type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "A question the agent is asking the user",
+      "properties": {
+        "message_type": {
+          "enum": [
+            "question"
+          ],
+          "type": "string"
+        },
+        "options": {
+          "default": null,
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "prompt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_type",
+        "prompt"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "An insight derived by the agent",
+      "properties": {
+        "confidence": {
+          "format": "double",
+          "type": "number"
+        },
+        "domain": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message_type": {
+          "enum": [
+            "insight"
+          ],
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "confidence",
+        "message_type",
+        "summary"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "A detailed analysis result",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "findings": {
+          "items": {
+            "$ref": "#/definitions/Finding"
+          },
+          "type": "array"
+        },
+        "message_type": {
+          "enum": [
+            "analysis"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain",
+        "findings",
+        "message_type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "A command/action the agent wants to execute",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "message_type": {
+          "enum": [
+            "command"
+          ],
+          "type": "string"
+        },
+        "parameters": true
+      },
+      "required": [
+        "action",
+        "message_type",
+        "parameters"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "A simple text response",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "message_type": {
+          "enum": [
+            "text"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "message_type"
+      ],
+      "type": "object"
+    },
+    {
+      "description": "Progress update during long-running tasks",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "message_type": {
+          "enum": [
+            "progress"
+          ],
+          "type": "string"
+        },
+        "percent_complete": {
+          "default": null,
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "message",
+        "message_type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "AgentMessageType",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/AgentSpeaker.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Speaker/agent identifiers for the orchestration system\n\nEach speaker is a specialized agent that handles specific types of tasks. The orchestrator routes to the appropriate speaker based on user intent.",
+  "oneOf": [
+    {
+      "description": "Main user-facing agent - greets users, explains capabilities",
+      "enum": [
+        "concierge"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Classification agent - determines entity types, message intent",
+      "enum": [
+        "classifier"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Physics simulation agent - handles VAE space calculations",
+      "enum": [
+        "physics"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Retrieval-augmented generation agent (future)",
+      "enum": [
+        "rag"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Memory/context management agent",
+      "enum": [
+        "memory"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Task execution agent",
+      "enum": [
+        "task_executor"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "AgentSpeaker",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/AgentState.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+  "properties": {
+    "conversation_context": {
+      "default": [],
+      "description": "Conversation history for context",
+      "items": {
+        "$ref": "../../codegen/primitives/ConversationTurn.schema.json"
+      },
+      "type": "array"
+    },
+    "current_speaker": {
+      "default": null,
+      "description": "Currently active speaker (None means orchestrator decides)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "is_authenticated": {
+      "default": false,
+      "description": "Whether the user is authenticated",
+      "type": "boolean"
+    },
+    "just_finished": {
+      "default": false,
+      "description": "Whether the current agent just finished its task",
+      "type": "boolean"
+    },
+    "metadata": {
+      "default": null,
+      "description": "Custom metadata for extensibility"
+    },
+    "tenant_id": {
+      "description": "Tenant ID for multi-tenancy",
+      "type": "string"
+    },
+    "thread_id": {
+      "default": null,
+      "description": "Current thread ID (if in a thread)",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "tenant_id"
+  ],
+  "title": "AgentState",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/ConversationTurn.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A single turn in a conversation (for context tracking)",
+  "properties": {
+    "content": {
+      "description": "Content of the message",
+      "type": "string"
+    },
+    "role": {
+      "description": "Role of the speaker (user, assistant, system)",
+      "type": "string"
+    },
+    "speaker": {
+      "default": null,
+      "description": "Optional speaker identifier (for multi-agent)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "timestamp": {
+      "default": null,
+      "description": "Timestamp of the turn",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "content",
+    "role"
+  ],
+  "title": "ConversationTurn",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/Finding.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A finding from an analysis agent",
+  "properties": {
+    "confidence": {
+      "default": null,
+      "description": "Confidence score (0.0 to 1.0)",
+      "format": "double",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "description": {
+      "description": "Detailed description",
+      "type": "string"
+    },
+    "related_entities": {
+      "default": [],
+      "description": "Related entity IDs",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "title": {
+      "description": "Title or label of the finding",
+      "type": "string"
+    }
+  },
+  "required": [
+    "description",
+    "title"
+  ],
+  "title": "Finding",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/LogLevel.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Log level for agent log messages",
+  "enum": [
+    "debug",
+    "info",
+    "warning",
+    "error"
+  ],
+  "title": "LogLevel",
+  "type": "string",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/OrchestrationInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AgentState": {
+      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+      "properties": {
+        "conversation_context": {
+          "default": [],
+          "description": "Conversation history for context",
+          "items": {
+            "$ref": "../../codegen/primitives/ConversationTurn.schema.json"
+          },
+          "type": "array"
+        },
+        "current_speaker": {
+          "default": null,
+          "description": "Currently active speaker (None means orchestrator decides)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_authenticated": {
+          "default": false,
+          "description": "Whether the user is authenticated",
+          "type": "boolean"
+        },
+        "just_finished": {
+          "default": false,
+          "description": "Whether the current agent just finished its task",
+          "type": "boolean"
+        },
+        "metadata": {
+          "default": null,
+          "description": "Custom metadata for extensibility"
+        },
+        "tenant_id": {
+          "description": "Tenant ID for multi-tenancy",
+          "type": "string"
+        },
+        "thread_id": {
+          "default": null,
+          "description": "Current thread ID (if in a thread)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "tenant_id"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Input payload for the orchestration agent",
+  "properties": {
+    "request_id": {
+      "description": "Request ID for tracing",
+      "type": "string"
+    },
+    "state": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AgentState"
+        }
+      ],
+      "description": "Current agent state"
+    },
+    "user_message": {
+      "default": null,
+      "description": "User's message content",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "request_id",
+    "state"
+  ],
+  "title": "OrchestrationInput",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/OrchestrationOutput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AgentState": {
+      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
+      "properties": {
+        "conversation_context": {
+          "default": [],
+          "description": "Conversation history for context",
+          "items": {
+            "$ref": "../../codegen/primitives/ConversationTurn.schema.json"
+          },
+          "type": "array"
+        },
+        "current_speaker": {
+          "default": null,
+          "description": "Currently active speaker (None means orchestrator decides)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_authenticated": {
+          "default": false,
+          "description": "Whether the user is authenticated",
+          "type": "boolean"
+        },
+        "just_finished": {
+          "default": false,
+          "description": "Whether the current agent just finished its task",
+          "type": "boolean"
+        },
+        "metadata": {
+          "default": null,
+          "description": "Custom metadata for extensibility"
+        },
+        "tenant_id": {
+          "description": "Tenant ID for multi-tenancy",
+          "type": "string"
+        },
+        "thread_id": {
+          "default": null,
+          "description": "Current thread ID (if in a thread)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "tenant_id"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Output from the orchestration agent",
+  "properties": {
+    "forwarded_message": {
+      "default": null,
+      "description": "Optional message to pass to next agent",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "next_speaker": {
+      "description": "Which agent should speak next",
+      "type": "string"
+    },
+    "should_continue": {
+      "description": "Whether the orchestration loop should continue",
+      "type": "boolean"
+    },
+    "state": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AgentState"
+        }
+      ],
+      "description": "Updated state"
+    }
+  },
+  "required": [
+    "next_speaker",
+    "should_continue",
+    "state"
+  ],
+  "title": "OrchestrationOutput",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/ToolCallRequest.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A request to invoke a tool",
+  "properties": {
+    "arguments": {
+      "description": "Arguments to pass to the tool"
+    },
+    "call_id": {
+      "description": "Unique ID for this tool call",
+      "type": "string"
+    },
+    "tool_name": {
+      "description": "Name of the tool to invoke",
+      "type": "string"
+    }
+  },
+  "required": [
+    "arguments",
+    "call_id",
+    "tool_name"
+  ],
+  "title": "ToolCallRequest",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/agentic/ToolCallResult.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Result from a tool invocation",
+  "properties": {
+    "call_id": {
+      "description": "ID of the original call",
+      "type": "string"
+    },
+    "error": {
+      "default": null,
+      "description": "Error message (if failed)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result": {
+      "default": null,
+      "description": "Result data (if successful)"
+    },
+    "success": {
+      "description": "Whether the call succeeded",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "call_id",
+    "success"
+  ],
+  "title": "ToolCallResult",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/api/ApiError.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "API error details",
+  "properties": {
+    "code": {
+      "description": "Error code (e.g., \"NOT_FOUND\", \"VALIDATION_FAILED\")",
+      "type": "string"
+    },
+    "details": {
+      "description": "Optional structured details"
+    },
+    "message": {
+      "description": "Human-readable error message",
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "message"
+  ],
+  "title": "ApiError",
+  "type": "object",
+  "x-familiar-kind": "api",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/api/SuccessResult.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Simple success response (no data)\n\nUsed for operations that succeed but don't return data: - DELETE operations - Fire-and-forget operations",
+  "properties": {
+    "message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "success"
+  ],
+  "title": "SuccessResult",
+  "type": "object",
+  "x-familiar-kind": "api",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/AuditLogEntry.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An audit log entry",
+  "properties": {
+    "action": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "error_message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "ip_address": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "default": null
+    },
+    "resource_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resource_type": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "user_agent": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "action",
+    "created_at",
+    "id",
+    "success"
+  ],
+  "title": "AuditLogEntry",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/AuthResponse.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "SessionCreated": {
+      "description": "Result of creating a session (includes the raw token)",
+      "properties": {
+        "expires_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "session_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "expires_at",
+        "session_id",
+        "token"
+      ],
+      "type": "object"
+    },
+    "User": {
+      "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
+      "properties": {
+        "avatar_url": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "deletion_requested_at": {
+          "default": null,
+          "format": "date-time",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "email": {
+          "type": "string"
+        },
+        "email_verified": {
+          "type": "boolean"
+        },
+        "gdpr_consents": {
+          "default": null
+        },
+        "id": {
+          "description": "Unique identifier for this entity",
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "primary_tenant_id": {
+          "default": null,
+          "description": "The user's primary family (can be changed)",
+          "format": "uuid",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "settings": {
+          "default": null
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "created_at",
+        "email",
+        "email_verified",
+        "id",
+        "name",
+        "updated_at"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Response after successful authentication",
+  "properties": {
+    "is_new_user": {
+      "description": "True if this is a new user (just signed up)",
+      "type": "boolean"
+    },
+    "needs_family": {
+      "description": "True if user needs to create/join a family",
+      "type": "boolean"
+    },
+    "session": {
+      "$ref": "#/definitions/SessionCreated"
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    }
+  },
+  "required": [
+    "is_new_user",
+    "needs_family",
+    "session",
+    "user"
+  ],
+  "title": "AuthResponse",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/AuthSession.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An authenticated session",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "$ref": "../../codegen/primitives/SessionId.schema.json"
+    },
+    "ip_address": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "token_hash": {
+      "description": "Token hash (the actual token is only returned once on creation)",
+      "type": "string"
+    },
+    "user_agent": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    }
+  },
+  "required": [
+    "created_at",
+    "expires_at",
+    "id",
+    "token_hash",
+    "user_id"
+  ],
+  "title": "AuthSession",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/ConsentRecord.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ConsentType": {
+      "description": "Type of consent",
+      "enum": [
+        "terms_of_service",
+        "privacy_policy",
+        "marketing_emails",
+        "ai_processing",
+        "data_sharing",
+        "analytics"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A consent record",
+  "properties": {
+    "consent_type": {
+      "$ref": "#/definitions/ConsentType"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "granted": {
+      "type": "boolean"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "ip_address": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_agent": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    },
+    "version": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "consent_type",
+    "created_at",
+    "granted",
+    "id",
+    "user_id"
+  ],
+  "title": "ConsentRecord",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/ConsentStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "User's current consent status",
+  "properties": {
+    "ai_processing": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "analytics": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "data_sharing": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "marketing_emails": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "privacy_policy": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "terms_of_service": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "ConsentStatus",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/ConsentType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Type of consent",
+  "enum": [
+    "terms_of_service",
+    "privacy_policy",
+    "marketing_emails",
+    "ai_processing",
+    "data_sharing",
+    "analytics"
+  ],
+  "title": "ConsentType",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/CreateCodeInviteInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "definitions": {
+    "InviteRole": {
+      "description": "Role to assign when invitation is accepted",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for creating a code invitation",
+  "properties": {
+    "expires_in_days": {
+      "default": null,
+      "description": "Expiry in days (None = never)",
+      "format": "int64",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "max_uses": {
+      "default": 1,
+      "description": "Max number of uses (default 1, 0 = unlimited)",
+      "format": "int32",
+      "type": "integer"
+    },
+    "role": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/InviteRole"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id"
+  ],
+  "title": "CreateCodeInviteInput",
+  "type": "object"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/CreateEmailInviteInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "definitions": {
+    "InviteRole": {
+      "description": "Role to assign when invitation is accepted",
+      "enum": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for creating an email invitation",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "expires_in_days": {
+      "default": 7,
+      "description": "Expiry in days (default 7)",
+      "format": "int64",
+      "type": "integer"
+    },
+    "role": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/InviteRole"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "email",
+    "tenant_id"
+  ],
+  "title": "CreateEmailInviteInput",
+  "type": "object"
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/CreateJoinRequestInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for creating a join request",
+  "properties": {
+    "message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    }
+  },
+  "required": [
+    "tenant_id"
+  ],
+  "title": "CreateJoinRequestInput",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/CreateMagicLinkInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MagicLinkPurpose": {
+      "description": "Purpose of a magic link",
+      "enum": [
+        "login",
+        "signup",
+        "verify_email",
+        "password_reset"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for creating a magic link",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "expires_in_minutes": {
+      "default": 15,
+      "description": "Link duration in minutes (default 15)",
+      "format": "int64",
+      "type": "integer"
+    },
+    "metadata": {
+      "default": null
+    },
+    "purpose": {
+      "$ref": "#/definitions/MagicLinkPurpose"
+    }
+  },
+  "required": [
+    "email",
+    "purpose"
+  ],
+  "title": "CreateMagicLinkInput",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/CreateUserInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for creating a new user",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "password_hash": {
+      "default": null,
+      "description": "Password hash (already hashed by API layer)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "primary_tenant_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "email",
+    "name"
+  ],
+  "title": "CreateUserInput",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/CurrentUser.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
+      "properties": {
+        "avatar_url": {
+          "default": null,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "deletion_requested_at": {
+          "default": null,
+          "format": "date-time",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "email": {
+          "type": "string"
+        },
+        "email_verified": {
+          "type": "boolean"
+        },
+        "gdpr_consents": {
+          "default": null
+        },
+        "id": {
+          "description": "Unique identifier for this entity",
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "primary_tenant_id": {
+          "default": null,
+          "description": "The user's primary family (can be changed)",
+          "format": "uuid",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "settings": {
+          "default": null
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "created_at",
+        "email",
+        "email_verified",
+        "id",
+        "name",
+        "updated_at"
+      ],
+      "type": "object"
+    },
+    "UserMembership": {
+      "description": "A user's membership in a family",
+      "properties": {
+        "is_primary": {
+          "type": "boolean"
+        },
+        "joined_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "../../codegen/primitives/InviteRole.schema.json"
+        },
+        "tenant_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "tenant_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "is_primary",
+        "joined_at",
+        "role",
+        "tenant_id",
+        "tenant_name"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Current user info (for /api/auth/me)",
+  "properties": {
+    "memberships": {
+      "description": "User's family memberships",
+      "items": {
+        "$ref": "#/definitions/UserMembership"
+      },
+      "type": "array"
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    }
+  },
+  "required": [
+    "memberships",
+    "user"
+  ],
+  "title": "CurrentUser",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/DataExportRequest.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ExportStatus": {
+      "description": "Status of a data export request",
+      "enum": [
+        "pending",
+        "processing",
+        "ready",
+        "expired",
+        "failed"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A data export request",
+  "properties": {
+    "completed_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "error_message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expires_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "export_format": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "export_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "file_size_bytes": {
+      "default": null,
+      "format": "int64",
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "started_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/definitions/ExportStatus"
+    },
+    "user_id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "status",
+    "user_id"
+  ],
+  "title": "DataExportRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/DeletionRequest.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "DeletionStatus": {
+      "description": "Status of a deletion request",
+      "enum": [
+        "pending",
+        "cancelled",
+        "processing",
+        "completed"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A deletion request",
+  "properties": {
+    "completed_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "reason": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scheduled_for": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/definitions/DeletionStatus"
+    },
+    "user_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "id",
+    "status"
+  ],
+  "title": "DeletionRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/DeletionStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Status of a deletion request",
+  "enum": [
+    "pending",
+    "cancelled",
+    "processing",
+    "completed"
+  ],
+  "title": "DeletionStatus",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/ExportStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Status of a data export request",
+  "enum": [
+    "pending",
+    "processing",
+    "ready",
+    "expired",
+    "failed"
+  ],
+  "title": "ExportStatus",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/FamilyInvitation.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InviteType": {
+      "description": "Type of family invitation",
+      "oneOf": [
+        {
+          "description": "Sent to a specific email address",
+          "enum": [
+            "email"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Shareable code (like Discord)",
+          "enum": [
+            "code"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "A family invitation",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expires_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "invite_code": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "invite_type": {
+      "$ref": "#/definitions/InviteType"
+    },
+    "invited_by": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "max_uses": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "role": {
+      "$ref": "../../codegen/primitives/InviteRole.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "use_count": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "invite_type",
+    "max_uses",
+    "role",
+    "tenant_id",
+    "use_count"
+  ],
+  "title": "FamilyInvitation",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/InvitationInfo.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Public invitation info (for showing what user is joining)",
+  "properties": {
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "is_valid": {
+      "type": "boolean"
+    },
+    "role": {
+      "$ref": "../../codegen/primitives/InviteRole.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "tenant_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "is_valid",
+    "role",
+    "tenant_id",
+    "tenant_name"
+  ],
+  "title": "InvitationInfo",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/InviteRole.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Role to assign when invitation is accepted",
+  "enum": [
+    "admin",
+    "member",
+    "guest"
+  ],
+  "title": "InviteRole",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/InviteType.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Type of family invitation",
+  "oneOf": [
+    {
+      "description": "Sent to a specific email address",
+      "enum": [
+        "email"
+      ],
+      "type": "string"
+    },
+    {
+      "description": "Shareable code (like Discord)",
+      "enum": [
+        "code"
+      ],
+      "type": "string"
+    }
+  ],
+  "title": "InviteType",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/JoinRequest.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "JoinRequestStatus": {
+      "description": "Status of a join request",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A request to join a family",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "message": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_note": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_by": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/definitions/JoinRequestStatus"
+    },
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "user_id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "status",
+    "tenant_id",
+    "user_id"
+  ],
+  "title": "JoinRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/JoinRequestStatus.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Status of a join request",
+  "enum": [
+    "pending",
+    "approved",
+    "rejected"
+  ],
+  "title": "JoinRequestStatus",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/LoginRequest.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Request for email+password login",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "email",
+    "password"
+  ],
+  "title": "LoginRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/MagicLink.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MagicLinkPurpose": {
+      "description": "Purpose of a magic link",
+      "enum": [
+        "login",
+        "signup",
+        "verify_email",
+        "password_reset"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A magic link for passwordless auth",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "metadata": {
+      "default": null
+    },
+    "purpose": {
+      "$ref": "#/definitions/MagicLinkPurpose"
+    },
+    "used_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "expires_at",
+    "id",
+    "purpose"
+  ],
+  "title": "MagicLink",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/MagicLinkCreated.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Result of creating a magic link (includes raw token)",
+  "properties": {
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "link_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "token": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "expires_at",
+    "link_id",
+    "token"
+  ],
+  "title": "MagicLinkCreated",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/MagicLinkPurpose.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Purpose of a magic link",
+  "enum": [
+    "login",
+    "signup",
+    "verify_email",
+    "password_reset"
+  ],
+  "title": "MagicLinkPurpose",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/MagicLinkRequest.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Request for magic link",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "invite_code": {
+      "default": null,
+      "description": "Optional invite code for signup flow",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "email"
+  ],
+  "title": "MagicLinkRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/PublicUser.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Public user info (safe to expose to other users)",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ],
+  "title": "PublicUser",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/RecordConsentInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ConsentType": {
+      "description": "Type of consent",
+      "enum": [
+        "terms_of_service",
+        "privacy_policy",
+        "marketing_emails",
+        "ai_processing",
+        "data_sharing",
+        "analytics"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "Input for recording consent",
+  "properties": {
+    "consent_type": {
+      "$ref": "#/definitions/ConsentType"
+    },
+    "granted": {
+      "type": "boolean"
+    },
+    "version": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "consent_type",
+    "granted"
+  ],
+  "title": "RecordConsentInput",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/RequestDeletionInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for requesting deletion",
+  "properties": {
+    "reason": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "title": "RequestDeletionInput",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/ReviewJoinRequestInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for reviewing a join request",
+  "properties": {
+    "approved": {
+      "type": "boolean"
+    },
+    "note": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "approved"
+  ],
+  "title": "ReviewJoinRequestInput",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/SessionCreated.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Result of creating a session (includes the raw token)",
+  "properties": {
+    "expires_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "session_id": {
+      "$ref": "../../codegen/primitives/SessionId.schema.json"
+    },
+    "token": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "expires_at",
+    "session_id",
+    "token"
+  ],
+  "title": "SessionCreated",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/SignupRequest.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Request for email+password signup",
+  "properties": {
+    "accept_privacy": {
+      "type": "boolean"
+    },
+    "accept_terms": {
+      "description": "Consent to required terms",
+      "type": "boolean"
+    },
+    "email": {
+      "type": "string"
+    },
+    "invite_code": {
+      "default": null,
+      "description": "Optional invite code to join a family",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "accept_privacy",
+    "accept_terms",
+    "email",
+    "name",
+    "password"
+  ],
+  "title": "SignupRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/UpdateUserInput.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for updating user profile",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "primary_tenant_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "settings": {
+      "default": null
+    }
+  },
+  "title": "UpdateUserInput",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/User.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A user's identity that can belong to multiple families\n\nUses `SystemEntityMeta` because users are not tenant-scoped - a single user can belong to multiple families.",
+  "properties": {
+    "avatar_url": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "deletion_requested_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "type": "string"
+    },
+    "email_verified": {
+      "type": "boolean"
+    },
+    "gdpr_consents": {
+      "default": null
+    },
+    "id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "primary_tenant_id": {
+      "default": null,
+      "description": "The user's primary family (can be changed)",
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "settings": {
+      "default": null
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "email_verified",
+    "id",
+    "name",
+    "updated_at"
+  ],
+  "title": "User",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/auth/UserMembership.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "A user's membership in a family",
+  "properties": {
+    "is_primary": {
+      "type": "boolean"
+    },
+    "joined_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "role": {
+      "$ref": "../../codegen/primitives/InviteRole.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "tenant_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "is_primary",
+    "joined_at",
+    "role",
+    "tenant_id",
+    "tenant_name"
+  ],
+  "title": "UserMembership",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/config/AIProvider.schema.json
 
 ```json
 {
@@ -5022,12 +15512,12 @@ tempfile = "3.0"
   "type": "string",
   "x-familiar-kind": "config",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/config/ModelConfig.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/config/ModelConfig.schema.json
 
 ```json
 {
@@ -5068,7 +15558,7 @@ tempfile = "3.0"
     "provider": {
       "allOf": [
         {
-          "$ref": "../primitives/AIProvider.schema.json"
+          "$ref": "../../codegen/primitives/AIProvider.schema.json"
         }
       ],
       "description": "The provider"
@@ -5090,12 +15580,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "config",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/config/SystemDomain.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/config/SystemDomain.schema.json
 
 ```json
 {
@@ -5110,12 +15600,12 @@ tempfile = "3.0"
   "type": "string",
   "x-familiar-kind": "config",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/config/SystemManifest.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/config/SystemManifest.schema.json
 
 ```json
 {
@@ -5203,12 +15693,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "config",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/config/SystemTrigger.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/config/SystemTrigger.schema.json
 
 ```json
 {
@@ -5248,12 +15738,12 @@ tempfile = "3.0"
   "title": "SystemTrigger",
   "x-familiar-kind": "config",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/EnvelopeV1.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/EnvelopeV1.schema.json
 
 ```json
 {
@@ -6103,7 +16593,7 @@ tempfile = "3.0"
       "description": "Schema information for validation"
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "thread_id": {
       "description": "Thread context (conversation) - optional for non-conversation messages",
@@ -6114,7 +16604,7 @@ tempfile = "3.0"
       ]
     },
     "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
+      "$ref": "../../codegen/primitives/UserId.schema.json"
     }
   },
   "required": [
@@ -6132,12 +16622,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/Payload.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/Payload.schema.json
 
 ```json
 {
@@ -6879,12 +17369,12 @@ tempfile = "3.0"
   "title": "Payload",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/ProducerInfo.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/ProducerInfo.schema.json
 
 ```json
 {
@@ -6915,12 +17405,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/RequestContext.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/RequestContext.schema.json
 
 ```json
 {
@@ -6953,12 +17443,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/SchemaInfo.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/SchemaInfo.schema.json
 
 ```json
 {
@@ -6989,12 +17479,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/SignupConsents.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/SignupConsents.schema.json
 
 ```json
 {
@@ -7018,12 +17508,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/TraceKind.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/TraceKind.schema.json
 
 ```json
 {
@@ -7076,12 +17566,12 @@ tempfile = "3.0"
   "title": "TraceKind",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/contracts/TraceStatus.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/contracts/TraceStatus.schema.json
 
 ```json
 {
@@ -7127,12 +17617,12 @@ tempfile = "3.0"
   "title": "TraceStatus",
   "x-familiar-kind": "contract",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/Channel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/Channel.schema.json
 
 ```json
 {
@@ -7182,7 +17672,7 @@ tempfile = "3.0"
       ]
     },
     "id": {
-      "$ref": "../primitives/ChannelId.schema.json"
+      "$ref": "../../codegen/primitives/ChannelId.schema.json"
     },
     "name": {
       "type": "string"
@@ -7200,7 +17690,7 @@ tempfile = "3.0"
       "default": null
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
@@ -7219,12 +17709,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/ChannelType.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/ChannelType.schema.json
 
 ```json
 {
@@ -7256,12 +17746,12 @@ tempfile = "3.0"
   "title": "ChannelType",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/ConversationMessage.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/ConversationMessage.schema.json
 
 ```json
 {
@@ -7283,12 +17773,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/CreateChannelInput.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/CreateChannelInput.schema.json
 
 ```json
 {
@@ -7353,7 +17843,7 @@ tempfile = "3.0"
       ]
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     }
   },
   "required": [
@@ -7364,12 +17854,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/CreateEntityInput.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/CreateEntityInput.schema.json
 
 ```json
 {
@@ -7485,7 +17975,7 @@ tempfile = "3.0"
       ]
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     }
   },
   "required": [
@@ -7497,12 +17987,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/CreateMessageInput.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/CreateMessageInput.schema.json
 
 ```json
 {
@@ -7517,7 +18007,7 @@ tempfile = "3.0"
       ]
     },
     "channel_id": {
-      "$ref": "../primitives/ChannelId.schema.json"
+      "$ref": "../../codegen/primitives/ChannelId.schema.json"
     },
     "content": {
       "type": "string"
@@ -7534,7 +18024,7 @@ tempfile = "3.0"
       ]
     },
     "role": {
-      "$ref": "../primitives/MessageRole.schema.json"
+      "$ref": "../../codegen/primitives/MessageRole.schema.json"
     },
     "sender_id": {
       "default": null,
@@ -7563,12 +18053,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/EntityPhysics.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/EntityPhysics.schema.json
 
 ```json
 {
@@ -7602,12 +18092,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/EntityStatus.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/EntityStatus.schema.json
 
 ```json
 {
@@ -7623,12 +18113,12 @@ tempfile = "3.0"
   "type": "string",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/FamiliarEntity.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/FamiliarEntity.schema.json
 
 ```json
 {
@@ -7776,7 +18266,7 @@ tempfile = "3.0"
       ]
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
@@ -7796,12 +18286,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/FamiliarEntityType.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/FamiliarEntityType.schema.json
 
 ```json
 {
@@ -7821,12 +18311,12 @@ tempfile = "3.0"
   "type": "string",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/ListChannelsOptions.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/ListChannelsOptions.schema.json
 
 ```json
 {
@@ -7885,12 +18375,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/ListEntitiesOptions.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/ListEntitiesOptions.schema.json
 
 ```json
 {
@@ -7958,12 +18448,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/ListMessagesOptions.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/ListMessagesOptions.schema.json
 
 ```json
 {
@@ -7999,12 +18489,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/Message.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/Message.schema.json
 
 ```json
 {
@@ -8020,7 +18510,7 @@ tempfile = "3.0"
       ]
     },
     "channel_id": {
-      "$ref": "../primitives/ChannelId.schema.json"
+      "$ref": "../../codegen/primitives/ChannelId.schema.json"
     },
     "content": {
       "type": "string"
@@ -8030,7 +18520,7 @@ tempfile = "3.0"
       "type": "string"
     },
     "id": {
-      "$ref": "../primitives/MessageId.schema.json"
+      "$ref": "../../codegen/primitives/MessageId.schema.json"
     },
     "metadata": {
       "default": null
@@ -8045,7 +18535,7 @@ tempfile = "3.0"
       ]
     },
     "role": {
-      "$ref": "../primitives/MessageRole.schema.json"
+      "$ref": "../../codegen/primitives/MessageRole.schema.json"
     },
     "sender_id": {
       "default": null,
@@ -8080,12 +18570,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/conversation/UpdateEntityStatusInput.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/conversation/UpdateEntityStatusInput.schema.json
 
 ```json
 {
@@ -8123,12 +18613,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "conversation",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/AuditLogEntryModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/AuditLogEntryModel.schema.json
 
 ```json
 {
@@ -8205,12 +18695,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/AuthSessionModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/AuthSessionModel.schema.json
 
 ```json
 {
@@ -8225,7 +18715,7 @@ tempfile = "3.0"
       "type": "string"
     },
     "id": {
-      "$ref": "../primitives/SessionId.schema.json"
+      "$ref": "../../codegen/primitives/SessionId.schema.json"
     },
     "ip_address": {
       "type": [
@@ -8243,7 +18733,7 @@ tempfile = "3.0"
       ]
     },
     "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
+      "$ref": "../../codegen/primitives/UserId.schema.json"
     }
   },
   "required": [
@@ -8257,12 +18747,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/ChannelModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/ChannelModel.schema.json
 
 ```json
 {
@@ -8292,7 +18782,7 @@ tempfile = "3.0"
       ]
     },
     "id": {
-      "$ref": "../primitives/ChannelId.schema.json"
+      "$ref": "../../codegen/primitives/ChannelId.schema.json"
     },
     "name": {
       "type": "string"
@@ -8306,7 +18796,7 @@ tempfile = "3.0"
     },
     "settings": true,
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
@@ -8326,12 +18816,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/ConsentRecordModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/ConsentRecordModel.schema.json
 
 ```json
 {
@@ -8377,7 +18867,7 @@ tempfile = "3.0"
       ]
     },
     "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
+      "$ref": "../../codegen/primitives/UserId.schema.json"
     },
     "version": {
       "type": [
@@ -8397,19 +18887,19 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/ContentPayloadModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/ContentPayloadModel.schema.json
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "entity_id": {
-      "$ref": "../primitives/EntityId.schema.json"
+      "$ref": "../../codegen/primitives/EntityId.schema.json"
     },
     "metadata": true,
     "text_content": {
@@ -8425,12 +18915,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/EntityRegistryModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/EntityRegistryModel.schema.json
 
 ```json
 {
@@ -8448,7 +18938,7 @@ tempfile = "3.0"
       "type": "string"
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     }
   },
   "required": [
@@ -8461,12 +18951,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/FamiliarEntityModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/FamiliarEntityModel.schema.json
 
 ```json
 {
@@ -8563,7 +19053,7 @@ tempfile = "3.0"
       ]
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
@@ -8584,12 +19074,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/FamilyInvitationModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/FamilyInvitationModel.schema.json
 
 ```json
 {
@@ -8649,10 +19139,10 @@ tempfile = "3.0"
       ]
     },
     "role": {
-      "$ref": "../primitives/InviteRole.schema.json"
+      "$ref": "../../codegen/primitives/InviteRole.schema.json"
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "use_count": {
       "format": "int32",
@@ -8671,12 +19161,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/FieldExcitationModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/FieldExcitationModel.schema.json
 
 ```json
 {
@@ -8691,7 +19181,7 @@ tempfile = "3.0"
       "type": "number"
     },
     "entity_id": {
-      "$ref": "../primitives/EntityId.schema.json"
+      "$ref": "../../codegen/primitives/EntityId.schema.json"
     },
     "pos_arousal": {
       "format": "int64",
@@ -8743,12 +19233,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/JoinRequestModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/JoinRequestModel.schema.json
 
 ```json
 {
@@ -8802,10 +19292,10 @@ tempfile = "3.0"
       "$ref": "#/definitions/JoinRequestStatus"
     },
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "user_id": {
-      "$ref": "../primitives/UserId.schema.json"
+      "$ref": "../../codegen/primitives/UserId.schema.json"
     }
   },
   "required": [
@@ -8819,12 +19309,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/MagicLinkModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/MagicLinkModel.schema.json
 
 ```json
 {
@@ -8884,12 +19374,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/MessageModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/MessageModel.schema.json
 
 ```json
 {
@@ -8902,7 +19392,7 @@ tempfile = "3.0"
       ]
     },
     "channel_id": {
-      "$ref": "../primitives/ChannelId.schema.json"
+      "$ref": "../../codegen/primitives/ChannelId.schema.json"
     },
     "content": {
       "type": "string"
@@ -8912,7 +19402,7 @@ tempfile = "3.0"
       "type": "string"
     },
     "id": {
-      "$ref": "../primitives/MessageId.schema.json"
+      "$ref": "../../codegen/primitives/MessageId.schema.json"
     },
     "metadata": true,
     "parent_id": {
@@ -8923,7 +19413,7 @@ tempfile = "3.0"
       ]
     },
     "role": {
-      "$ref": "../primitives/MessageRole.schema.json"
+      "$ref": "../../codegen/primitives/MessageRole.schema.json"
     },
     "sender_id": {
       "format": "uuid",
@@ -8950,12 +19440,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/QuantumStateModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/QuantumStateModel.schema.json
 
 ```json
 {
@@ -8967,7 +19457,7 @@ tempfile = "3.0"
       "type": "number"
     },
     "entity_id": {
-      "$ref": "../primitives/EntityId.schema.json"
+      "$ref": "../../codegen/primitives/EntityId.schema.json"
     },
     "frequency": {
       "format": "double",
@@ -8985,12 +19475,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/TenantMemberModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/TenantMemberModel.schema.json
 
 ```json
 {
@@ -9023,7 +19513,7 @@ tempfile = "3.0"
       ]
     },
     "id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "name": {
       "type": "string"
@@ -9033,7 +19523,7 @@ tempfile = "3.0"
     },
     "settings": true,
     "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "updated_at": {
       "format": "date-time",
@@ -9053,12 +19543,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/TenantModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/TenantModel.schema.json
 
 ```json
 {
@@ -9069,7 +19559,7 @@ tempfile = "3.0"
       "type": "string"
     },
     "id": {
-      "$ref": "../primitives/TenantId.schema.json"
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
     },
     "name": {
       "type": "string"
@@ -9091,12 +19581,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/database/UserModel.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/database/UserModel.schema.json
 
 ```json
 {
@@ -9127,7 +19617,7 @@ tempfile = "3.0"
     },
     "gdpr_consents": true,
     "id": {
-      "$ref": "../primitives/UserId.schema.json"
+      "$ref": "../../codegen/primitives/UserId.schema.json"
     },
     "name": {
       "type": "string"
@@ -9165,3322 +19655,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "database",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/ecs/Component.meta.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/ecs/Component.meta.schema.json",
-  "title": "ECS Component Meta-Schema",
-  "description": "Schema for defining ECS Components - resources/capabilities that can be composed into Nodes",
-  "type": "object",
-  "required": ["name", "version", "description", "rust_type"],
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "const": "ecs/Component.meta.schema.json"
-    },
-    "name": {
-      "type": "string",
-      "pattern": "^[a-z][a-z0-9_]*$",
-      "description": "Unique identifier for the component (snake_case)"
-    },
-    "version": {
-      "type": "string",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "description": "Semantic version of the component"
-    },
-    "description": {
-      "type": "string",
-      "description": "Human-readable description of the component's purpose"
-    },
-    "depends_on": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "default": [],
-      "description": "List of component names this component depends on (must be initialized first)"
-    },
-    "config": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["string", "integer", "number", "boolean", "array", "object"]
-          },
-          "default": {},
-          "description": {
-            "type": "string"
-          },
-          "required": {
-            "type": "boolean",
-            "default": true
-          },
-          "env_var": {
-            "type": "string",
-            "description": "Environment variable to read this config from"
-          }
-        },
-        "required": ["type"]
-      },
-      "description": "Configuration options for initializing the component"
-    },
-    "rust_type": {
-      "type": "string",
-      "description": "The Rust type this component resolves to (e.g., Arc<DatabasePool>)"
-    },
-    "requires_llm": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether this component requires LLM connectivity"
-    },
-    "singleton": {
-      "type": "boolean",
-      "default": true,
-      "description": "Whether only one instance of this component can exist per Node"
-    }
-  },
-  "additionalProperties": false
-}
-
-
-```
-
-### versions/v1.1.0-alpha/json-schema/ecs/Node.meta.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/ecs/Node.meta.schema.json",
-  "title": "ECS Node Meta-Schema",
-  "description": "Schema for defining ECS Nodes - service definitions that compose Systems and Components (e.g., familiar-daemon, familiar-worker)",
-  "type": "object",
-  "required": ["title", "x-familiar-kind", "x-familiar-queue", "x-familiar-resource-class"],
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "const": "http://json-schema.org/draft-07/schema#"
-    },
-    "title": {
-      "type": "string",
-      "description": "Human-readable name for the node (e.g., FamiliarDaemon)"
-    },
-    "description": {
-      "type": "string",
-      "description": "Human-readable description of the node's purpose"
-    },
-    "x-familiar-kind": {
-      "type": "string",
-      "const": "node",
-      "description": "Must be 'node' for node schemas"
-    },
-    "x-familiar-queue": {
-      "type": "string",
-      "description": "The Temporal task queue this node consumes from"
-    },
-    "x-familiar-resource-class": {
-      "type": "string",
-      "enum": ["llm", "io", "cpu", "batch"],
-      "description": "Resource class for automatic scaling configuration"
-    },
-    "x-familiar-systems": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "pattern": "^(\\.\\./)*(systems/)?[A-Za-z]+\\.system\\.json$",
-            "description": "Reference to a system schema"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of systems this node executes"
-    },
-    "x-familiar-components": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "pattern": "^(\\.\\./)*(components/)?[A-Za-z]+\\.component\\.json$",
-            "description": "Reference to a component schema"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of components this node initializes"
-    },
-    "x-familiar-resources": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "pattern": "^(\\.\\./)*(resources/)?[a-z-]+\\.resource\\.json$",
-            "description": "Reference to a resource schema"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of external resources this node connects to"
-    },
-    "x-familiar-concurrency": {
-      "type": "integer",
-      "minimum": 1,
-      "default": 10,
-      "description": "Default concurrency for this node's worker"
-    },
-    "x-familiar-memory": {
-      "type": "string",
-      "pattern": "^\\d+(Mi|Gi)$",
-      "description": "Memory allocation (e.g., '2Gi', '512Mi')"
-    }
-  },
-  "additionalProperties": true
-}
-
-
-```
-
-### versions/v1.1.0-alpha/json-schema/ecs/Queue.meta.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/ecs/Queue.meta.schema.json",
-  "title": "ECS Queue Meta-Schema",
-  "description": "Schema for defining ECS Queues - Temporal task queues or Kafka topics that route work to nodes",
-  "type": "object",
-  "required": ["title", "x-familiar-kind", "x-familiar-queue-type"],
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "const": "http://json-schema.org/draft-07/schema#"
-    },
-    "title": {
-      "type": "string",
-      "description": "Human-readable name for the queue (e.g., DaemonQueue)"
-    },
-    "description": {
-      "type": "string",
-      "description": "Human-readable description of the queue's purpose"
-    },
-    "x-familiar-kind": {
-      "type": "string",
-      "const": "queue",
-      "description": "Must be 'queue' for queue schemas"
-    },
-    "x-familiar-queue-type": {
-      "type": "string",
-      "enum": ["temporal", "kafka", "redis", "sqs"],
-      "description": "The underlying queue technology"
-    },
-    "x-familiar-resource-class": {
-      "type": "string",
-      "enum": ["llm", "io", "cpu", "batch"],
-      "description": "Resource class for work routed through this queue"
-    },
-    "x-familiar-concurrency": {
-      "type": "integer",
-      "minimum": 1,
-      "default": 10,
-      "description": "Default worker concurrency for this queue"
-    },
-    "x-familiar-consumers": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "pattern": "^(\\.\\./)*(nodes/)?[a-z-]+\\.node\\.json$",
-            "description": "Reference to a node that consumes from this queue"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of nodes that consume work from this queue"
-    },
-    "x-familiar-producers": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "description": "Reference to a system or workflow that produces to this queue"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of systems/workflows that produce work to this queue"
-    },
-    "x-familiar-dlq": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "description": "Reference to dead letter queue"
-        }
-      },
-      "description": "Dead letter queue for failed messages"
-    },
-    "x-familiar-retention": {
-      "type": "string",
-      "pattern": "^\\d+(h|d)$",
-      "description": "Message retention period (e.g., '24h', '7d')"
-    },
-    "x-familiar-visibility-timeout": {
-      "type": "string",
-      "pattern": "^\\d+(s|m)$",
-      "description": "Message visibility timeout"
-    }
-  },
-  "additionalProperties": true
-}
-
-
-```
-
-### versions/v1.1.0-alpha/json-schema/ecs/Resource.meta.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/ecs/Resource.meta.schema.json",
-  "title": "ECS Resource Meta-Schema",
-  "description": "Schema for defining ECS Resources - external dependencies like databases and APIs. Resources can be internal (owned) or virtual (external APIs acting as proxy contracts)",
-  "type": "object",
-  "required": ["title", "x-familiar-kind", "x-familiar-resource-type"],
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "const": "http://json-schema.org/draft-07/schema#"
-    },
-    "title": {
-      "type": "string",
-      "description": "Human-readable name for the resource (e.g., PostgresMain)"
-    },
-    "description": {
-      "type": "string",
-      "description": "Human-readable description of the resource's purpose"
-    },
-    "x-familiar-kind": {
-      "type": "string",
-      "const": "resource",
-      "description": "Must be 'resource' for resource schemas"
-    },
-    "x-familiar-resource-type": {
-      "type": "string",
-      "enum": ["database", "cache", "llm-api", "http-api", "message-queue", "storage"],
-      "description": "The type of external resource"
-    },
-    "x-familiar-virtual": {
-      "type": "boolean",
-      "default": false,
-      "description": "True if this is a proxy schema for an external API you don't own (e.g., OpenAI)"
-    },
-    "x-familiar-config": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "description": "Reference to the configuration schema for this resource"
-        }
-      },
-      "description": "Reference to configuration schema (e.g., DbPoolConfig)"
-    },
-    "x-familiar-tables": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "For databases: list of tables/collections this resource manages"
-    },
-    "x-familiar-endpoint": {
-      "type": "string",
-      "format": "uri",
-      "description": "For APIs: the base endpoint URL"
-    },
-    "x-familiar-rate-limit": {
-      "type": "integer",
-      "minimum": 0,
-      "description": "Requests per minute limit"
-    },
-    "x-familiar-models": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "For LLM APIs: available model identifiers"
-    },
-    "x-familiar-connection-pool": {
-      "type": "object",
-      "properties": {
-        "min": {
-          "type": "integer",
-          "minimum": 0,
-          "default": 1
-        },
-        "max": {
-          "type": "integer",
-          "minimum": 1,
-          "default": 10
-        }
-      },
-      "description": "Connection pool configuration"
-    },
-    "x-familiar-health-check": {
-      "type": "object",
-      "properties": {
-        "endpoint": {
-          "type": "string",
-          "description": "Health check endpoint path"
-        },
-        "interval": {
-          "type": "string",
-          "pattern": "^\\d+(s|m)$",
-          "description": "Health check interval"
-        }
-      },
-      "description": "Health check configuration"
-    }
-  },
-  "additionalProperties": true
-}
-
-
-```
-
-### versions/v1.1.0-alpha/json-schema/ecs/System.meta.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://familiar.dev/schemas/ecs/System.meta.schema.json",
-  "title": "ECS System Meta-Schema",
-  "description": "Schema for defining ECS Systems - Temporal activities / business logic units that read and write entities",
-  "type": "object",
-  "required": ["title", "x-familiar-kind"],
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "const": "http://json-schema.org/draft-07/schema#"
-    },
-    "title": {
-      "type": "string",
-      "description": "Human-readable name for the system (e.g., FatesGate)"
-    },
-    "description": {
-      "type": "string",
-      "description": "Human-readable description of the system's purpose"
-    },
-    "x-familiar-kind": {
-      "type": "string",
-      "const": "system",
-      "description": "Must be 'system' for system schemas"
-    },
-    "x-familiar-input": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "description": "Reference to the input schema for this system"
-        }
-      },
-      "required": ["$ref"],
-      "description": "The input type this system accepts"
-    },
-    "x-familiar-output": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "description": "Reference to the output schema for this system"
-        }
-      },
-      "required": ["$ref"],
-      "description": "The output type this system produces"
-    },
-    "x-familiar-reads": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "description": "Reference to an entity schema this system reads"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of entity types this system reads from"
-    },
-    "x-familiar-writes": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "description": "Reference to an entity schema this system writes"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of entity types this system writes to"
-    },
-    "x-familiar-depends": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "$ref": {
-            "type": "string",
-            "description": "Reference to a component this system depends on"
-          }
-        },
-        "required": ["$ref"]
-      },
-      "description": "List of components this system requires"
-    },
-    "x-familiar-service": {
-      "type": "object",
-      "properties": {
-        "$ref": {
-          "type": "string",
-          "pattern": "^(\\.\\./)*(nodes/)?[a-z-]+\\.node\\.json$",
-          "description": "Reference to the node that runs this system"
-        }
-      },
-      "required": ["$ref"],
-      "description": "The node/service this system runs on"
-    },
-    "x-familiar-queue": {
-      "type": "string",
-      "description": "Override queue for this system (defaults to node's queue)"
-    },
-    "x-familiar-timeout": {
-      "type": "string",
-      "pattern": "^\\d+(s|m|h)$",
-      "description": "Activity timeout (e.g., '30s', '5m')"
-    },
-    "x-familiar-retries": {
-      "type": "integer",
-      "minimum": 0,
-      "default": 3,
-      "description": "Number of retry attempts on failure"
-    }
-  },
-  "additionalProperties": true
-}
-
-
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Bond.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Core identity component that all entities possess",
-  "properties": {
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "bond_strength": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "The overall strength or health of the bond. 0.0 = Broken/Weak, 1.0 = Strong/Healthy"
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "damping_coefficient": {
-      "description": "The 'inertia' of the bond, representing how quickly it returns to equilibrium. Higher values = slower return to rest (lingering effects). Lower values = quick recovery (resilient).",
-      "format": "double",
-      "type": "number"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "formalism": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Formalism (Transactionalism / Spring Stiffness):** 1.0 = Rigid/Brittle (High k). Hard to move, snaps if stretched. 0.0 = Fluid/Elastic (Low k). Easy to stretch, adapts to change."
-    },
-    "head_thread_id": {
-      "$ref": "../primitives/UUID.schema.json"
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "intimacy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Intimacy (Communal Strength / Rest Length):** 1.0 = Fusion (Rest Length 0). The entities want to occupy the same space. 0.0 = Estrangement (Max Rest Length)."
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "power_dynamic": {
-      "allOf": [
-        {
-          "$ref": "../primitives/SignedNormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Power Dynamic (Authority Gradient / Mass Bias):** -1.0 = Target is the Anchor (Infinite Mass relative to Source). 0.0 = Equal Mass (Both move equally). +1.0 = Source is the Anchor."
-    },
-    "primary_label": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "spectral_signature": {
-      "description": "**Color Filter (Spectral Gating):** If set, this bond only \"lights up\" under specific emotional light. e.g., A \"Work Friend\" bond might only reflect \"Professional\" (Blue) light. Stored as a hex code or vector for the shader.",
-      "items": {
-        "format": "float",
-        "type": "number"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": [
-        "array",
-        "null"
-      ]
-    },
-    "spring_constant": {
-      "description": "The 'stiffness' of the bond, representing its resistance to change. Higher values = more rigid relationship (breaks under stress). Lower values = more flexible relationship (stretches without breaking).",
-      "format": "double",
-      "type": "number"
-    },
-    "tail_thread_id": {
-      "$ref": "../primitives/UUID.schema.json"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "transparency": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Transparency (Refractive Index):** 1.0 = Clear. Looking at the Source reveals the Target (e.g., \"Honest\"). 0.0 = Opaque. The relationship hides the Target (e.g., \"Secretive\")."
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "amplitude",
-    "bond_strength",
-    "created_at",
-    "damping_coefficient",
-    "energy",
-    "formalism",
-    "head_thread_id",
-    "id",
-    "intimacy",
-    "metadata",
-    "position",
-    "power_dynamic",
-    "spring_constant",
-    "tail_thread_id",
-    "temperature",
-    "tenant_id",
-    "text",
-    "transparency",
-    "velocity"
-  ],
-  "title": "Bond",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/ChannelType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Personal",
-    "Family",
-    "Shared"
-  ],
-  "title": "ChannelType",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/ConsentType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "TermsOfService",
-    "PrivacyPolicy",
-    "MarketingEmails",
-    "AiProcessing",
-    "DataSharing",
-    "Analytics"
-  ],
-  "title": "ConsentType",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/ConversationThread.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AgentMessageType": {
-      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
-      "oneOf": [
-        {
-          "description": "A log message from the agent (debugging, status updates)",
-          "properties": {
-            "content": {
-              "type": "string"
-            },
-            "level": {
-              "$ref": "#/definitions/LogLevel"
-            },
-            "message_type": {
-              "enum": [
-                "log"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "content",
-            "level",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A question the agent is asking the user",
-          "properties": {
-            "message_type": {
-              "enum": [
-                "question"
-              ],
-              "type": "string"
-            },
-            "options": {
-              "default": null,
-              "items": {
-                "type": "string"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
-            "prompt": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message_type",
-            "prompt"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "An insight derived by the agent",
-          "properties": {
-            "confidence": {
-              "format": "double",
-              "type": "number"
-            },
-            "domain": {
-              "default": null,
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "message_type": {
-              "enum": [
-                "insight"
-              ],
-              "type": "string"
-            },
-            "summary": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "confidence",
-            "message_type",
-            "summary"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A detailed analysis result",
-          "properties": {
-            "domain": {
-              "type": "string"
-            },
-            "findings": {
-              "items": {
-                "$ref": "#/definitions/Finding"
-              },
-              "type": "array"
-            },
-            "message_type": {
-              "enum": [
-                "analysis"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "domain",
-            "findings",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A command/action the agent wants to execute",
-          "properties": {
-            "action": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "command"
-              ],
-              "type": "string"
-            },
-            "parameters": true
-          },
-          "required": [
-            "action",
-            "message_type",
-            "parameters"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A simple text response",
-          "properties": {
-            "content": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "text"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "content",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Progress update during long-running tasks",
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "progress"
-              ],
-              "type": "string"
-            },
-            "percent_complete": {
-              "default": null,
-              "format": "double",
-              "type": [
-                "number",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "message",
-            "message_type"
-          ],
-          "type": "object"
-        }
-      ]
-    },
-    "Finding": {
-      "description": "A finding from an analysis agent",
-      "properties": {
-        "confidence": {
-          "default": null,
-          "description": "Confidence score (0.0 to 1.0)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "description": {
-          "description": "Detailed description",
-          "type": "string"
-        },
-        "related_entities": {
-          "default": [],
-          "description": "Related entity IDs",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "title": {
-          "description": "Title or label of the finding",
-          "type": "string"
-        }
-      },
-      "required": [
-        "description",
-        "title"
-      ],
-      "type": "object"
-    },
-    "LogLevel": {
-      "description": "Log level for agent log messages",
-      "enum": [
-        "debug",
-        "info",
-        "warning",
-        "error"
-      ],
-      "type": "string"
-    },
-    "ThreadMessage": {
-      "description": "A single message within a conversation thread",
-      "properties": {
-        "agent_speaker": {
-          "default": null,
-          "description": "Which agent sent this message (if role is Assistant)",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "content": {
-          "default": null,
-          "description": "Text content of the message",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "id": {
-          "description": "Unique message ID",
-          "format": "uuid",
-          "type": "string"
-        },
-        "message_type": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/AgentMessageType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Structured message type (for agent messages)"
-        },
-        "metadata": {
-          "default": null,
-          "description": "Optional metadata"
-        },
-        "role": {
-          "allOf": [
-            {
-              "$ref": "../primitives/MessageRole.schema.json"
-            }
-          ],
-          "description": "Role of the message sender"
-        },
-        "thread_id": {
-          "description": "ID of the thread this message belongs to",
-          "format": "uuid",
-          "type": "string"
-        },
-        "timestamp": {
-          "description": "When the message was created",
-          "format": "date-time",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "role",
-        "thread_id",
-        "timestamp"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "A conversation thread (Slack-like linear threading)\n\nEach thread starts with a user message and contains all responses and follow-up messages in a linear sequence.",
-  "properties": {
-    "created_at": {
-      "description": "When the thread was created",
-      "format": "date-time",
-      "type": "string"
-    },
-    "id": {
-      "$ref": "../primitives/ThreadId.schema.json"
-    },
-    "is_open": {
-      "description": "Whether the thread is still active/open",
-      "type": "boolean"
-    },
-    "messages": {
-      "description": "All messages in the thread (in chronological order)",
-      "items": {
-        "$ref": "#/definitions/ThreadMessage"
-      },
-      "type": "array"
-    },
-    "metadata": {
-      "default": null,
-      "description": "Optional metadata"
-    },
-    "parent_message_id": {
-      "description": "ID of the original user message that started the thread",
-      "format": "uuid",
-      "type": "string"
-    },
-    "summary": {
-      "default": null,
-      "description": "Summary of the thread (for display in lists)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "updated_at": {
-      "description": "When the thread was last updated",
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "is_open",
-    "messages",
-    "parent_message_id",
-    "tenant_id",
-    "updated_at"
-  ],
-  "title": "ConversationThread",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Course.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "CourseMessage": {
-      "description": "A single message within a Course's history\n\nThis is an immutable record of what was said. The Course history is append-only - messages are never modified or deleted.",
-      "properties": {
-        "agent_speaker": {
-          "default": null,
-          "description": "Which agent sent this message (if role is Assistant)",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "content": {
-          "default": null,
-          "description": "Text content of the message",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "course_id": {
-          "allOf": [
-            {
-              "$ref": "../primitives/UUID.schema.json"
-            }
-          ],
-          "description": "ID of the course this message belongs to"
-        },
-        "id": {
-          "allOf": [
-            {
-              "$ref": "../primitives/UUID.schema.json"
-            }
-          ],
-          "description": "Unique message ID"
-        },
-        "metadata": {
-          "default": null,
-          "description": "Optional metadata"
-        },
-        "role": {
-          "allOf": [
-            {
-              "$ref": "../primitives/MessageRole.schema.json"
-            }
-          ],
-          "description": "Role of the message sender"
-        },
-        "shuttle_id": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/UUID.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "ID of the Shuttle that processed this message (for tracing)"
-        },
-        "timestamp": {
-          "allOf": [
-            {
-              "$ref": "../primitives/Timestamp.schema.json"
-            }
-          ],
-          "description": "When the message was created"
-        }
-      },
-      "required": [
-        "course_id",
-        "id",
-        "role",
-        "timestamp"
-      ],
-      "type": "object"
-    },
-    "CourseMetadata": {
-      "description": "Session-level metadata for a Course\n\nThis is for persistent, session-scoped information. Processing metadata (provider, model, latency) belongs on the Shuttle.",
-      "properties": {
-        "custom": {
-          "description": "Custom user metadata"
-        },
-        "is_pinned": {
-          "default": false,
-          "description": "Whether this course is pinned/starred",
-          "type": "boolean"
-        },
-        "preferred_language": {
-          "description": "User's preferred language",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "tags": {
-          "description": "Tags for organization",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "tokenizer_hint": {
-          "description": "Model-specific tokenizer hint (e.g., \"cl100k_base\" for Claude/GPT-4) Used to select the appropriate token counter",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "total_history_tokens": {
-          "default": 0,
-          "description": "Total tokens in history (cached for fast pruning decisions) Updated on each commit_message() call",
-          "format": "uint",
-          "minimum": 0.0,
-          "type": "integer"
-        },
-        "ui_theme": {
-          "description": "UI theme preference",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "type": "object"
-    },
-    "CourseStatus": {
-      "description": "Session status for a Course\n\nThe Course is a persistent session/history bucket. Processing states (Segmenting, Classifying, etc.) belong on the Shuttle.\n\nCourse status reflects whether the session is: - Idle: No active processing - Active: Currently being processed by a Shuttle - Archived: Closed/completed, read-only",
-      "oneOf": [
-        {
-          "description": "Session is idle, no active processing",
-          "enum": [
-            "idle"
-          ],
-          "type": "string"
-        },
-        {
-          "description": "Session is active, a Shuttle is processing",
-          "enum": [
-            "active"
-          ],
-          "type": "string"
-        },
-        {
-          "description": "Session is archived/closed",
-          "enum": [
-            "archived"
-          ],
-          "type": "string"
-        }
-      ]
-    }
-  },
-  "description": "A Course is a persistent session tracking conversation history\n\nThe Course is the \"history bucket\" in the Loom Pattern. It: - Owns the conversation history (append-only) - Tracks session status (idle, active, archived) - Survives across Shuttle processing cycles - Has a 1:N relationship with Shuttles\n\nThe Course does NOT contain: - Transient processing state (that's on Shuttle) - Current weave/input (that's on Shuttle) - Processing metadata like provider/model (that's on Shuttle)",
-  "properties": {
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this course was created"
-    },
-    "history": {
-      "default": [],
-      "description": "Message history (append-only, immutable during processing)",
-      "items": {
-        "$ref": "#/definitions/CourseMessage"
-      },
-      "type": "array"
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this course"
-    },
-    "metadata": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/CourseMetadata"
-        }
-      ],
-      "default": {
-        "is_pinned": false,
-        "total_history_tokens": 0
-      },
-      "description": "Session-level metadata"
-    },
-    "status": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/CourseStatus"
-        }
-      ],
-      "description": "Session status (Idle, Active, Archived)"
-    },
-    "summary": {
-      "description": "AI-generated summary",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this course belongs to"
-    },
-    "title": {
-      "description": "Optional title for the course",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "updated_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this course was last updated (message added)"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "status",
-    "tenant_id",
-    "updated_at"
-  ],
-  "title": "Course",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/EntityStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Pending",
-    "Approved",
-    "Rejected",
-    "AutoSpawned"
-  ],
-  "title": "EntityStatus",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/FamiliarEntityType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Moment",
-    "Pulse",
-    "Intent",
-    "Thread",
-    "Bond",
-    "Motif",
-    "Filament",
-    "Focus"
-  ],
-  "title": "FamiliarEntityType",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Filament.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A recurring internal pattern (Self/Identity). The continuous phase trajectory of the user through the manifold.",
-  "properties": {
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "amplitudes": {
-      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
-      "items": {
-        "items": [
-          {
-            "format": "double",
-            "type": "number"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
-    },
-    "coherence": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "frequency": {
-      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "source_pulses": {
-      "description": "The source pulses (internal states) that form this strand.",
-      "items": {
-        "$ref": "../primitives/UUID.schema.json"
-      },
-      "type": "array"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "amplitude",
-    "amplitudes",
-    "coherence",
-    "created_at",
-    "energy",
-    "id",
-    "metadata",
-    "position",
-    "source_pulses",
-    "temperature",
-    "tenant_id",
-    "text",
-    "velocity"
-  ],
-  "title": "Filament",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Focus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A user-declared thematic goal or life chapter. Acts as a \"Attractor Basin\" in the VAE manifold.",
-  "properties": {
-    "active_since": {
-      "$ref": "../primitives/Timestamp.schema.json"
-    },
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "amplitudes": {
-      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
-      "items": {
-        "items": [
-          {
-            "format": "double",
-            "type": "number"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
-    },
-    "coherence": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "frequency": {
-      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "active_since",
-    "amplitude",
-    "amplitudes",
-    "coherence",
-    "created_at",
-    "energy",
-    "id",
-    "metadata",
-    "position",
-    "temperature",
-    "tenant_id",
-    "text",
-    "velocity"
-  ],
-  "title": "Focus",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Intent.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A specific, bounded future action with potential energy.",
-  "properties": {
-    "activation_energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Activation Energy (Invested Work)** Thermodynamics: The cumulative work performed on the system. Used to calculate \"Sunk Cost\" gravity."
-    },
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "completion": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Completion (Inverse Discrepancy)** Cybernetics: 1.0 - Error Signal. How close the system is to the Goal State."
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "entropy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Entropy (Disorder)** Information Theory: The uncertainty or \"noise\" in the process. High Entropy: Exploring, Brainstorming, Chaotic. Low Entropy: Executing, Refined, Linear."
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "primary_status_label": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "target_date": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "activation_energy",
-    "amplitude",
-    "completion",
-    "created_at",
-    "energy",
-    "entropy",
-    "id",
-    "metadata",
-    "position",
-    "temperature",
-    "tenant_id",
-    "text",
-    "velocity"
-  ],
-  "title": "Intent",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/InviteRole.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Admin",
-    "Member",
-    "Guest"
-  ],
-  "title": "InviteRole",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/InviteType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Email",
-    "Code"
-  ],
-  "title": "InviteType",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/JoinRequestStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Pending",
-    "Approved",
-    "Rejected"
-  ],
-  "title": "JoinRequestStatus",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/MagicLinkPurpose.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Login",
-    "Signup",
-    "VerifyEmail",
-    "PasswordReset"
-  ],
-  "title": "MagicLinkPurpose",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/MemberRole.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Admin",
-    "Member",
-    "Guest"
-  ],
-  "title": "MemberRole",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/MessageRole.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "User",
-    "Assistant",
-    "System"
-  ],
-  "title": "MessageRole",
-  "type": "string",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Model.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ChannelType": {
-      "enum": [
-        "Personal",
-        "Family",
-        "Shared"
-      ],
-      "type": "string"
-    }
-  },
-  "properties": {
-    "channel_type": {
-      "$ref": "#/definitions/ChannelType"
-    },
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "description": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "id": {
-      "format": "uuid",
-      "type": "string"
-    },
-    "name": {
-      "type": "string"
-    },
-    "owner_id": {
-      "format": "uuid",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "settings": true,
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "updated_at": {
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "channel_type",
-    "created_at",
-    "id",
-    "name",
-    "settings",
-    "tenant_id",
-    "updated_at"
-  ],
-  "title": "Model",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Moment.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "MomentType": {
-      "enum": [
-        "Event",
-        "Realization",
-        "Interaction",
-        "Observation"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A classical entity representing a specific, objective event in the past. This is the atomic unit of episodic memory (The Particle).",
-  "properties": {
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "amplitudes": {
-      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
-      "items": {
-        "items": [
-          {
-            "format": "double",
-            "type": "number"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
-    },
-    "coherence": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "frequency": {
-      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "moment_type": {
-      "$ref": "#/definitions/MomentType"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "amplitude",
-    "amplitudes",
-    "coherence",
-    "created_at",
-    "energy",
-    "id",
-    "metadata",
-    "moment_type",
-    "position",
-    "temperature",
-    "tenant_id",
-    "text",
-    "velocity"
-  ],
-  "title": "Moment",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Motif.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A recurring pattern of subjective experiences (External Wave). Formed by the constructive interference of many Moments.",
-  "properties": {
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "amplitudes": {
-      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
-      "items": {
-        "items": [
-          {
-            "format": "double",
-            "type": "number"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
-    },
-    "coherence": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "frequency": {
-      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "source_moments": {
-      "description": "The source moments that collapsed into this pattern.",
-      "items": {
-        "$ref": "../primitives/UUID.schema.json"
-      },
-      "type": "array"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "amplitude",
-    "amplitudes",
-    "coherence",
-    "created_at",
-    "energy",
-    "id",
-    "metadata",
-    "position",
-    "source_moments",
-    "temperature",
-    "tenant_id",
-    "text",
-    "velocity"
-  ],
-  "title": "Motif",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Pulse.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "InternalStateType": {
-      "enum": [
-        "emotional_shift",
-        "realization",
-        "reflection",
-        "observation",
-        "reaction"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Core identity component that all entities possess",
-  "properties": {
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "state_type": {
-      "$ref": "#/definitions/InternalStateType"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "amplitude",
-    "created_at",
-    "energy",
-    "id",
-    "metadata",
-    "position",
-    "state_type",
-    "temperature",
-    "tenant_id",
-    "text",
-    "velocity"
-  ],
-  "title": "Pulse",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Shuttle.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ShuttleDetails": {
-      "description": "Processing metadata for a Shuttle\n\nThese are transient concerns - each Shuttle may use different providers, models, or have different latencies. This info belongs on the Shuttle, not the Course.",
-      "properties": {
-        "latency_ms": {
-          "description": "Latency in milliseconds",
-          "format": "uint64",
-          "minimum": 0.0,
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "model": {
-          "description": "Model used (e.g., \"claude-sonnet-4\", \"gpt-4o\")",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "provider": {
-          "description": "LLM provider (e.g., \"anthropic\", \"openai\")",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "spawn_count": {
-          "default": 0,
-          "description": "Number of entities spawned",
-          "format": "uint",
-          "minimum": 0.0,
-          "type": "integer"
-        },
-        "tokens_used": {
-          "description": "Token usage",
-          "format": "uint32",
-          "minimum": 0.0,
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "unit_count": {
-          "default": 0,
-          "description": "Number of weave units processed",
-          "format": "uint",
-          "minimum": 0.0,
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "ShuttleStatus": {
-      "description": "Processing status for a Shuttle",
-      "oneOf": [
-        {
-          "description": "Segment received, not yet processed",
-          "enum": [
-            "pending"
-          ],
-          "type": "string"
-        },
-        {
-          "description": "Currently being classified by LLM",
-          "enum": [
-            "classifying"
-          ],
-          "type": "string"
-        },
-        {
-          "description": "Classification complete, spawning entities",
-          "enum": [
-            "spawning"
-          ],
-          "type": "string"
-        },
-        {
-          "description": "All processing complete",
-          "enum": [
-            "complete"
-          ],
-          "type": "string"
-        },
-        {
-          "description": "Processing failed",
-          "enum": [
-            "failed"
-          ],
-          "type": "string"
-        }
-      ]
-    },
-    "Weave": {
-      "description": "A Weave is the raw user input - their message to Familiar",
-      "properties": {
-        "context": {
-          "description": "Optional context provided with the message",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "raw_content": {
-          "description": "The raw text content from the user",
-          "type": "string"
-        }
-      },
-      "required": [
-        "raw_content"
-      ],
-      "type": "object"
-    },
-    "WeaveUnit": {
-      "description": "A WeaveUnit is a single segment extracted from a Weave. It's a transient container used for classification routing. Physics are extracted by the LLM but passed directly to spawned entities, not stored on the WeaveUnit itself.",
-      "properties": {
-        "classifications": {
-          "default": [],
-          "description": "Classifications in superposition (determines which entity types to spawn)",
-          "items": {
-            "$ref": "#/definitions/WeaveUnitClassification"
-          },
-          "type": "array"
-        },
-        "content": {
-          "description": "The extracted/cleaned text content for this segment",
-          "type": "string"
-        },
-        "index": {
-          "description": "Index of this unit within the shuttle (0-based)",
-          "format": "uint",
-          "minimum": 0.0,
-          "type": "integer"
-        },
-        "primary_thread": {
-          "description": "Primary thread: the main subject/actor of this unit Used for entity resolution (Stitch) downstream",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "purpose": {
-          "allOf": [
-            {
-              "$ref": "../primitives/MessageIntent.schema.json"
-            }
-          ],
-          "default": "LOG",
-          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, INFER, REFERENCE) Determines how this unit is processed - only LOG units spawn entities"
-        },
-        "secondary_threads": {
-          "description": "Secondary threads: other people/places/things mentioned Allows capturing companions, locations, etc.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "spawned_entity_ids": {
-          "default": [],
-          "description": "IDs of entities spawned from this unit (the actual simulation objects)",
-          "items": {
-            "$ref": "../primitives/UUID.schema.json"
-          },
-          "type": "array"
-        },
-        "temporal_marker": {
-          "description": "Temporal marker: when this event/state occurred Can be absolute (\"6pm\"), relative (\"today\"), or frequency (\"once per hour\")",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "content",
-        "index"
-      ],
-      "type": "object"
-    },
-    "WeaveUnitClassification": {
-      "description": "Classification result for a weave unit (determines which entity type to spawn)",
-      "properties": {
-        "entity_type": {
-          "allOf": [
-            {
-              "$ref": "../primitives/HeddleEntityType.schema.json"
-            }
-          ],
-          "description": "The entity type this unit may become"
-        },
-        "weight": {
-          "allOf": [
-            {
-              "$ref": "../primitives/NormalizedFloat.schema.json"
-            }
-          ],
-          "description": "Confidence weight (0.0 to 1.0)"
-        }
-      },
-      "required": [
-        "entity_type",
-        "weight"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "A Shuttle is the transient unit of work in the Loom Pattern\n\nEach user message creates a new Shuttle: 1. Shuttle receives the Weave (user input) 2. Shuttle segments the Weave into WeaveUnits 3. Shuttle processes through the Fates pipeline 4. Shuttle commits results to Course history 5. Shuttle is marked complete (persisted only for debugging)\n\nThe Course (history) is immutable during processing. Only the Shuttle state changes as work progresses.",
-  "properties": {
-    "completed_at": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "When processing completed (or failed)"
-    },
-    "course_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Reference to the parent Course (the tether to history)"
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this shuttle was created"
-    },
-    "details": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/ShuttleDetails"
-        }
-      ],
-      "description": "Processing metadata (provider, model, latency)"
-    },
-    "error": {
-      "description": "Error message if shuttle failed",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this shuttle"
-    },
-    "response": {
-      "description": "The final response (before committing to Course)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "started_at": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "When this shuttle started processing"
-    },
-    "status": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/ShuttleStatus"
-        }
-      ],
-      "description": "Processing status"
-    },
-    "units": {
-      "default": [],
-      "description": "The weave units (segments) being carried",
-      "items": {
-        "$ref": "#/definitions/WeaveUnit"
-      },
-      "type": "array"
-    },
-    "weave": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/Weave"
-        }
-      ],
-      "description": "The specific message being processed (the \"cargo\")"
-    }
-  },
-  "required": [
-    "course_id",
-    "created_at",
-    "details",
-    "id",
-    "status",
-    "weave"
-  ],
-  "title": "Shuttle",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/Thread.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ThreadType": {
-      "enum": [
-        "Person",
-        "Place",
-        "Concept",
-        "GenericObject"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Core identity component that all entities possess",
-  "properties": {
-    "amplitude": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Amplitude (Mass):** The strength of the field excitation. High Amplitude: Core Beliefs, Long-term Memories. Hard to annihilate. Low Amplitude: Fleeting thoughts. Easily absorbed back into the vacuum."
-    },
-    "amplitudes": {
-      "description": "The \"Wavefunction\" or \"Hologram\" of the entity. Stored as a list of (Real, Imaginary) tuples. This represents Amplitude (Magnitude) and Phase (Angle).\n\nIn a Vector DB, this is flattened to [Re1, Im1, Re2, Im2...].",
-      "items": {
-        "items": [
-          {
-            "format": "double",
-            "type": "number"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
-    },
-    "coherence": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "How \"sharp\" the wave is (0.0 = Cloud/Vague, 1.0 = Particle/Fact). Low coherence allows for \"Tunneling\" (associative leaps)."
-    },
-    "created_at": {
-      "allOf": [
-        {
-          "$ref": "../primitives/Timestamp.schema.json"
-        }
-      ],
-      "description": "When this entity was created"
-    },
-    "energy": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Energy (Activation):** The current potential/kinetic energy of the excitation."
-    },
-    "frequency": {
-      "description": "The dominant frequency of the pattern (for Holonomic resonance).",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Unique identifier for this entity"
-    },
-    "metadata": {
-      "additionalProperties": {
-        "type": "string"
-      },
-      "type": "object"
-    },
-    "position": {
-      "description": "The location in the 3D VAE Manifold where the field is excited",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "temperature": {
-      "allOf": [
-        {
-          "$ref": "../primitives/NormalizedFloat.schema.json"
-        }
-      ],
-      "description": "**Temperature (Volatility):** Internal kinetic energy of the field at this point. High Temp: The field vibrates (High uncertainty/plasticity). Low Temp: The field is frozen (Crystallized/Immutable)."
-    },
-    "tenant_id": {
-      "allOf": [
-        {
-          "$ref": "../primitives/UUID.schema.json"
-        }
-      ],
-      "description": "Tenant (family/user) this entity belongs to"
-    },
-    "text": {
-      "type": "string"
-    },
-    "thread_type": {
-      "$ref": "#/definitions/ThreadType"
-    },
-    "velocity": {
-      "description": "The rate of change of the field amplitude at this location (Cognitive Drift)",
-      "items": {
-        "$ref": "../primitives/QuantizedCoord.schema.json"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    }
-  },
-  "required": [
-    "amplitude",
-    "amplitudes",
-    "coherence",
-    "created_at",
-    "energy",
-    "id",
-    "metadata",
-    "position",
-    "temperature",
-    "tenant_id",
-    "text",
-    "thread_type",
-    "velocity"
-  ],
-  "title": "Thread",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/ThreadMessage.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AgentMessageType": {
-      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
-      "oneOf": [
-        {
-          "description": "A log message from the agent (debugging, status updates)",
-          "properties": {
-            "content": {
-              "type": "string"
-            },
-            "level": {
-              "$ref": "#/definitions/LogLevel"
-            },
-            "message_type": {
-              "enum": [
-                "log"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "content",
-            "level",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A question the agent is asking the user",
-          "properties": {
-            "message_type": {
-              "enum": [
-                "question"
-              ],
-              "type": "string"
-            },
-            "options": {
-              "default": null,
-              "items": {
-                "type": "string"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
-            "prompt": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message_type",
-            "prompt"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "An insight derived by the agent",
-          "properties": {
-            "confidence": {
-              "format": "double",
-              "type": "number"
-            },
-            "domain": {
-              "default": null,
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "message_type": {
-              "enum": [
-                "insight"
-              ],
-              "type": "string"
-            },
-            "summary": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "confidence",
-            "message_type",
-            "summary"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A detailed analysis result",
-          "properties": {
-            "domain": {
-              "type": "string"
-            },
-            "findings": {
-              "items": {
-                "$ref": "#/definitions/Finding"
-              },
-              "type": "array"
-            },
-            "message_type": {
-              "enum": [
-                "analysis"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "domain",
-            "findings",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A command/action the agent wants to execute",
-          "properties": {
-            "action": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "command"
-              ],
-              "type": "string"
-            },
-            "parameters": true
-          },
-          "required": [
-            "action",
-            "message_type",
-            "parameters"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A simple text response",
-          "properties": {
-            "content": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "text"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "content",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Progress update during long-running tasks",
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "progress"
-              ],
-              "type": "string"
-            },
-            "percent_complete": {
-              "default": null,
-              "format": "double",
-              "type": [
-                "number",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "message",
-            "message_type"
-          ],
-          "type": "object"
-        }
-      ]
-    },
-    "Finding": {
-      "description": "A finding from an analysis agent",
-      "properties": {
-        "confidence": {
-          "default": null,
-          "description": "Confidence score (0.0 to 1.0)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "description": {
-          "description": "Detailed description",
-          "type": "string"
-        },
-        "related_entities": {
-          "default": [],
-          "description": "Related entity IDs",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "title": {
-          "description": "Title or label of the finding",
-          "type": "string"
-        }
-      },
-      "required": [
-        "description",
-        "title"
-      ],
-      "type": "object"
-    },
-    "LogLevel": {
-      "description": "Log level for agent log messages",
-      "enum": [
-        "debug",
-        "info",
-        "warning",
-        "error"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A single message within a conversation thread",
-  "properties": {
-    "agent_speaker": {
-      "default": null,
-      "description": "Which agent sent this message (if role is Assistant)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "content": {
-      "default": null,
-      "description": "Text content of the message",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "id": {
-      "$ref": "../primitives/ThreadId.schema.json"
-    },
-    "message_type": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/AgentMessageType"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Structured message type (for agent messages)"
-    },
-    "metadata": {
-      "default": null,
-      "description": "Optional metadata"
-    },
-    "role": {
-      "allOf": [
-        {
-          "$ref": "../primitives/MessageRole.schema.json"
-        }
-      ],
-      "description": "Role of the message sender"
-    },
-    "thread_id": {
-      "$ref": "../primitives/ThreadId.schema.json"
-    },
-    "timestamp": {
-      "description": "When the message was created",
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "id",
-    "role",
-    "thread_id",
-    "timestamp"
-  ],
-  "title": "ThreadMessage",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities/ThreadSummary.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Summary of a thread for list views",
-  "properties": {
-    "id": {
-      "$ref": "../primitives/ThreadId.schema.json"
-    },
-    "is_open": {
-      "description": "Whether thread is open",
-      "type": "boolean"
-    },
-    "message_count": {
-      "description": "Number of messages",
-      "format": "uint",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "preview": {
-      "description": "Preview text (truncated first message)",
-      "type": "string"
-    },
-    "updated_at": {
-      "description": "Last updated timestamp",
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "id",
-    "is_open",
-    "message_count",
-    "preview",
-    "updated_at"
-  ],
-  "title": "ThreadSummary",
-  "type": "object",
-  "x-familiar-kind": "entity",
-  "x-familiar-persistence": "postgres",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/entities_api/AudioBlock.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/AudioBlock.schema.json
 
 ```json
 {
@@ -12511,12 +19691,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/ClassificationResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/ClassificationResponse.schema.json
 
 ```json
 {
@@ -12539,12 +19719,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/CourseResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/CourseResponse.schema.json
 
 ```json
 {
@@ -12666,7 +19846,7 @@ tempfile = "3.0"
         "intent": {
           "allOf": [
             {
-              "$ref": "../primitives/MessageIntent.schema.json"
+              "$ref": "../../codegen/primitives/MessageIntent.schema.json"
             }
           ],
           "description": "Primary intent: LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL"
@@ -12674,7 +19854,7 @@ tempfile = "3.0"
         "query_target": {
           "anyOf": [
             {
-              "$ref": "../primitives/QueryTarget.schema.json"
+              "$ref": "../../codegen/primitives/QueryTarget.schema.json"
             },
             {
               "type": "null"
@@ -12685,7 +19865,7 @@ tempfile = "3.0"
         "query_type": {
           "anyOf": [
             {
-              "$ref": "../primitives/QueryType.schema.json"
+              "$ref": "../../codegen/primitives/QueryType.schema.json"
             },
             {
               "type": "null"
@@ -12999,12 +20179,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/DocumentBlock.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/DocumentBlock.schema.json
 
 ```json
 {
@@ -13033,12 +20213,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/EntityResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/EntityResponse.schema.json
 
 ```json
 {
@@ -13116,12 +20296,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/HealthResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/HealthResponse.schema.json
 
 ```json
 {
@@ -13147,12 +20327,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/ImageBlock.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/ImageBlock.schema.json
 
 ```json
 {
@@ -13181,12 +20361,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/MediaRef.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/MediaRef.schema.json
 
 ```json
 {
@@ -13230,12 +20410,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/MediaType.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/MediaType.schema.json
 
 ```json
 {
@@ -13250,12 +20430,12 @@ tempfile = "3.0"
   "type": "string",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/MessageIntentResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/MessageIntentResponse.schema.json
 
 ```json
 {
@@ -13270,7 +20450,7 @@ tempfile = "3.0"
     "intent": {
       "allOf": [
         {
-          "$ref": "../primitives/MessageIntent.schema.json"
+          "$ref": "../../codegen/primitives/MessageIntent.schema.json"
         }
       ],
       "description": "Primary intent: LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL"
@@ -13278,7 +20458,7 @@ tempfile = "3.0"
     "query_target": {
       "anyOf": [
         {
-          "$ref": "../primitives/QueryTarget.schema.json"
+          "$ref": "../../codegen/primitives/QueryTarget.schema.json"
         },
         {
           "type": "null"
@@ -13289,7 +20469,7 @@ tempfile = "3.0"
     "query_type": {
       "anyOf": [
         {
-          "$ref": "../primitives/QueryType.schema.json"
+          "$ref": "../../codegen/primitives/QueryType.schema.json"
         },
         {
           "type": "null"
@@ -13306,12 +20486,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/ModelInfo.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/ModelInfo.schema.json
 
 ```json
 {
@@ -13341,12 +20521,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/PhysicsHintResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/PhysicsHintResponse.schema.json
 
 ```json
 {
@@ -13400,12 +20580,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/PhysicsResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/PhysicsResponse.schema.json
 
 ```json
 {
@@ -13445,12 +20625,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/SegmentResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/SegmentResponse.schema.json
 
 ```json
 {
@@ -13487,12 +20667,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/TextBlock.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/TextBlock.schema.json
 
 ```json
 {
@@ -13509,12 +20689,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/WeaveBlock.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/WeaveBlock.schema.json
 
 ```json
 {
@@ -13666,12 +20846,12 @@ tempfile = "3.0"
   "title": "WeaveBlock",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/WeaveRequest.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/WeaveRequest.schema.json
 
 ```json
 {
@@ -13901,12 +21081,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/WeaveUnitResponse.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/WeaveUnitResponse.schema.json
 
 ```json
 {
@@ -14051,12 +21231,12 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/entities_api/WebpageBlock.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/entities_api/WebpageBlock.schema.json
 
 ```json
 {
@@ -14086,248 +21266,867 @@ tempfile = "3.0"
   "type": "object",
   "x-familiar-kind": "entities_api",
   "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/infrastructure/actions/classification/extract-features.action.json
+### versions/v1.1.0-alpha/json-schema/domain/tenant/CreateTenantInput.schema.json
 
 ```json
 {
-  "$schema": "../../../architecture/meta/Action.meta.schema.json",
-  "$id": "infrastructure/actions/classification/extract-features.action.json",
-  "id": "classification.extract-features",
-  "title": "Extract Segment Features",
-  "description": "Extract semantic and temporal features from text segments",
-  "x-familiar-kind": "action",
-  "x-familiar-compute-category": "ai",
-  "x-familiar-execution-model": "async",
-  "x-familiar-side-effects": ["ml-inference"],
-  "x-familiar-reliability": "idempotent",
-  "signature": {
-    "inputs": {
-      "segment": {
-        "schema": { "$ref": "../../../primitives/Segment.schema.json" },
-        "semantics": "borrow"
-      }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Input for creating a new tenant",
+  "properties": {
+    "name": {
+      "type": "string"
     },
-    "output": {
-      "schema": { "$ref": "../../../primitives/SegmentFeatures.schema.json" },
-      "nature": "atomic"
-    },
-    "capabilities": {
-      "category": "feature-extraction",
-      "provides": ["semantic-features", "temporal-features"],
-      "description": "Feature extraction models for semantic understanding"
+    "settings": {
+      "default": null
     }
+  },
+  "required": [
+    "name"
+  ],
+  "title": "CreateTenantInput",
+  "type": "object",
+  "x-familiar-kind": "tenant",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
   }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/nodes/familiar-daemon.node.json
+### versions/v1.1.0-alpha/json-schema/domain/tenant/Tenant.schema.json
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "High-performance service node for LLM-connected operations. Runs Fates pipeline systems with low latency.",
-  "title": "FamiliarDaemon",
-  "x-familiar-components": [
-    {
-      "$ref": "../components/TigerDataStore.component.json"
+  "description": "A tenant (family) in the system\n\nUses `SystemEntityMeta` because tenants are top-level entities that don't belong to another tenant.",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
     },
-    {
-      "$ref": "../components/ContractEnforcer.component.json"
+    "id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "settings": {
+      "default": null
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
     }
-  ],
-  "x-familiar-concurrency": 10,
-  "x-familiar-kind": "node",
-  "x-familiar-memory": "2Gi",
-  "x-familiar-meta-schema": {
-    "$ref": "../ecs/Node.meta.schema.json"
   },
-  "x-familiar-queue": "daemon-queue",
-  "x-familiar-resource-class": "llm",
-  "x-familiar-resources": [
-    {
-      "$ref": "../resources/postgres-tiger.resource.json"
-    },
-    {
-      "$ref": "../resources/openai-gpt4.resource.json"
-    },
-    {
-      "$ref": "../resources/anthropic-claude.resource.json"
-    }
+  "required": [
+    "created_at",
+    "id",
+    "name",
+    "updated_at"
   ],
-  "x-familiar-systems": [
-    {
-      "$ref": "../systems/FatesGate.system.json"
-    },
-    {
-      "$ref": "../systems/FatesMorta.system.json"
-    },
-    {
-      "$ref": "../systems/FatesDecima.system.json"
-    },
-    {
-      "$ref": "../systems/FatesNona.system.json"
-    }
-  ]
+  "title": "Tenant",
+  "type": "object",
+  "x-familiar-kind": "tenant",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/nodes/familiar-worker.node.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/AccordionBlock.schema.json
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Batch processing service node for IO-bound operations. Runs non-LLM tasks like database maintenance and exports.",
-  "title": "FamiliarWorker",
-  "x-familiar-components": [
-    {
-      "$ref": "../components/DatabasePool.component.json"
+  "definitions": {
+    "AccordionState": {
+      "enum": [
+        "collapsed",
+        "expanded"
+      ],
+      "type": "string"
+    },
+    "Block": {
+      "description": "A single visual block in a message",
+      "oneOf": [
+        {
+          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
+          "properties": {
+            "accessory": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/BlockElement.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fields": {
+              "items": {
+                "$ref": "../../codegen/primitives/TextObject.schema.json"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "text": {
+              "$ref": "../../codegen/primitives/TextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "section"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A visual separator",
+          "properties": {
+            "type": {
+              "enum": [
+                "divider"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays an image with optional title",
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": {
+              "enum": [
+                "image"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A container for interactive elements (buttons, selects, etc.)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../../codegen/primitives/BlockElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "actions"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays contextual info (small grey text, images)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../../codegen/primitives/ContextElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "context"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A header with large, bold text",
+          "properties": {
+            "text": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "header"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An input field",
+          "properties": {
+            "element": {
+              "$ref": "../../codegen/primitives/BlockElement.schema.json"
+            },
+            "hint": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "label": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "optional": {
+              "default": false,
+              "type": "boolean"
+            },
+            "type": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "element",
+            "label",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A collapsible container",
+          "properties": {
+            "blocks": {
+              "items": {
+                "$ref": "#/definitions/Block"
+              },
+              "type": "array"
+            },
+            "initial_state": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AccordionState"
+                }
+              ],
+              "default": "collapsed"
+            },
+            "summary": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "accordion"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "blocks",
+            "summary",
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
     }
-  ],
-  "x-familiar-concurrency": 50,
-  "x-familiar-kind": "node",
-  "x-familiar-memory": "512Mi",
-  "x-familiar-meta-schema": {
-    "$ref": "../ecs/Node.meta.schema.json"
   },
-  "x-familiar-queue": "worker-queue",
-  "x-familiar-resource-class": "io",
-  "x-familiar-resources": [
-    {
-      "$ref": "../resources/postgres-main.resource.json"
+  "description": "A collapsible container",
+  "properties": {
+    "blocks": {
+      "items": {
+        "$ref": "#/definitions/Block"
+      },
+      "type": "array"
+    },
+    "initial_state": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AccordionState"
+        }
+      ],
+      "default": "collapsed"
+    },
+    "summary": {
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
     }
+  },
+  "required": [
+    "blocks",
+    "summary"
   ],
-  "x-familiar-systems": []
+  "title": "AccordionBlock",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/AIProvider.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/AccordionState.schema.json
 
 ```json
 {
-  "$id": "primitives/AIProvider.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "AI Provider enumeration",
   "enum": [
-    "openai",
-    "anthropic",
-    "google",
-    "mock"
+    "collapsed",
+    "expanded"
   ],
-  "title": "AIProvider",
+  "title": "AccordionState",
   "type": "string",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ApiKey.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/ActionsBlock.schema.json
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A secure wrapper for API keys that prevents accidental logging.",
-  "title": "ApiKey",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/AuditLogId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for audit log entries",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
+  "description": "A container for interactive elements (buttons, selects, etc.)",
+  "properties": {
+    "elements": {
+      "items": {
+        "$ref": "../../codegen/primitives/BlockElement.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "elements"
   ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "AuditLogId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
+  "title": "ActionsBlock",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/BindingType.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/Block.schema.json
 
 ```json
 {
-  "$id": "primitives/BindingType.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Types of cognitive binding",
+  "definitions": {
+    "AccordionState": {
+      "enum": [
+        "collapsed",
+        "expanded"
+      ],
+      "type": "string"
+    },
+    "Block": {
+      "description": "A single visual block in a message",
+      "oneOf": [
+        {
+          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
+          "properties": {
+            "accessory": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/BlockElement.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fields": {
+              "items": {
+                "$ref": "../../codegen/primitives/TextObject.schema.json"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "text": {
+              "$ref": "../../codegen/primitives/TextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "section"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A visual separator",
+          "properties": {
+            "type": {
+              "enum": [
+                "divider"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays an image with optional title",
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": {
+              "enum": [
+                "image"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A container for interactive elements (buttons, selects, etc.)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../../codegen/primitives/BlockElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "actions"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays contextual info (small grey text, images)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../../codegen/primitives/ContextElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "context"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A header with large, bold text",
+          "properties": {
+            "text": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "header"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An input field",
+          "properties": {
+            "element": {
+              "$ref": "../../codegen/primitives/BlockElement.schema.json"
+            },
+            "hint": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "label": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "optional": {
+              "default": false,
+              "type": "boolean"
+            },
+            "type": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "element",
+            "label",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A collapsible container",
+          "properties": {
+            "blocks": {
+              "items": {
+                "$ref": "#/definitions/Block"
+              },
+              "type": "array"
+            },
+            "initial_state": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AccordionState"
+                }
+              ],
+              "default": "collapsed"
+            },
+            "summary": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "accordion"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "blocks",
+            "summary",
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "description": "A single visual block in a message",
   "oneOf": [
     {
-      "description": "Cause leads to effect",
-      "enum": [
-        "causal"
+      "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
+      "properties": {
+        "accessory": {
+          "anyOf": [
+            {
+              "$ref": "../../codegen/primitives/BlockElement.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fields": {
+          "items": {
+            "$ref": "../../codegen/primitives/TextObject.schema.json"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "text": {
+          "$ref": "../../codegen/primitives/TextObject.schema.json"
+        },
+        "type": {
+          "enum": [
+            "section"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     },
     {
-      "description": "Temporal sequence (before/after)",
-      "enum": [
-        "temporal"
+      "description": "A visual separator",
+      "properties": {
+        "type": {
+          "enum": [
+            "divider"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     },
     {
-      "description": "Associated by proximity/context",
-      "enum": [
-        "associative"
+      "description": "Displays an image with optional title",
+      "properties": {
+        "alt_text": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "enum": [
+            "image"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "alt_text",
+        "image_url",
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     },
     {
-      "description": "Part-whole relationship",
-      "enum": [
-        "compositional"
+      "description": "A container for interactive elements (buttons, selects, etc.)",
+      "properties": {
+        "elements": {
+          "items": {
+            "$ref": "../../codegen/primitives/BlockElement.schema.json"
+          },
+          "type": "array"
+        },
+        "type": {
+          "enum": [
+            "actions"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "elements",
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     },
     {
-      "description": "Contrast/opposition",
-      "enum": [
-        "contrastive"
+      "description": "Displays contextual info (small grey text, images)",
+      "properties": {
+        "elements": {
+          "items": {
+            "$ref": "../../codegen/primitives/ContextElement.schema.json"
+          },
+          "type": "array"
+        },
+        "type": {
+          "enum": [
+            "context"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "elements",
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     },
     {
-      "description": "Similarity/analogy",
-      "enum": [
-        "analogical"
+      "description": "A header with large, bold text",
+      "properties": {
+        "text": {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        "type": {
+          "enum": [
+            "header"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     },
     {
-      "description": "Enables/prerequisite",
-      "enum": [
-        "enabling"
+      "description": "An input field",
+      "properties": {
+        "element": {
+          "$ref": "../../codegen/primitives/BlockElement.schema.json"
+        },
+        "hint": {
+          "anyOf": [
+            {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "label": {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        "optional": {
+          "default": false,
+          "type": "boolean"
+        },
+        "type": {
+          "enum": [
+            "input"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "element",
+        "label",
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     },
     {
-      "description": "Thematic connection",
-      "enum": [
-        "thematic"
+      "description": "A collapsible container",
+      "properties": {
+        "blocks": {
+          "items": {
+            "$ref": "#/definitions/Block"
+          },
+          "type": "array"
+        },
+        "initial_state": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/AccordionState"
+            }
+          ],
+          "default": "collapsed"
+        },
+        "summary": {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        "type": {
+          "enum": [
+            "accordion"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "blocks",
+        "summary",
+        "type"
       ],
-      "type": "string"
+      "type": "object"
     }
   ],
-  "title": "BindingType",
-  "x-familiar-kind": "primitive"
+  "title": "Block",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/BlockElement.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/BlockElement.schema.json
 
 ```json
 {
-  "$id": "primitives/BlockElement.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "oneOf": [
     {
@@ -14338,7 +22137,7 @@ tempfile = "3.0"
         "style": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ButtonStyle"
+              "$ref": "../../codegen/primitives/ButtonStyle.schema.json"
             },
             {
               "type": "null"
@@ -14346,7 +22145,7 @@ tempfile = "3.0"
           ]
         },
         "text": {
-          "$ref": "#/definitions/PlainTextObject"
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
         },
         "type": {
           "enum": [
@@ -14403,7 +22202,7 @@ tempfile = "3.0"
         },
         "options": {
           "items": {
-            "$ref": "#/definitions/OptionObject"
+            "$ref": "../../codegen/primitives/OptionObject.schema.json"
           },
           "type": "array"
         },
@@ -14439,7 +22238,7 @@ tempfile = "3.0"
         "placeholder": {
           "anyOf": [
             {
-              "$ref": "#/definitions/PlainTextObject"
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
             },
             {
               "type": "null"
@@ -14461,15 +22260,325 @@ tempfile = "3.0"
     }
   ],
   "title": "BlockElement",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ButtonStyle.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/BlockMessage.schema.json
 
 ```json
 {
-  "$id": "primitives/ButtonStyle.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AccordionState": {
+      "enum": [
+        "collapsed",
+        "expanded"
+      ],
+      "type": "string"
+    },
+    "Block": {
+      "description": "A single visual block in a message",
+      "oneOf": [
+        {
+          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
+          "properties": {
+            "accessory": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/BlockElement.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fields": {
+              "items": {
+                "$ref": "../../codegen/primitives/TextObject.schema.json"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "text": {
+              "$ref": "../../codegen/primitives/TextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "section"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A visual separator",
+          "properties": {
+            "type": {
+              "enum": [
+                "divider"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays an image with optional title",
+          "properties": {
+            "alt_text": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": {
+              "enum": [
+                "image"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "alt_text",
+            "image_url",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A container for interactive elements (buttons, selects, etc.)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../../codegen/primitives/BlockElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "actions"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Displays contextual info (small grey text, images)",
+          "properties": {
+            "elements": {
+              "items": {
+                "$ref": "../../codegen/primitives/ContextElement.schema.json"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "context"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "elements",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A header with large, bold text",
+          "properties": {
+            "text": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "header"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "text",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "An input field",
+          "properties": {
+            "element": {
+              "$ref": "../../codegen/primitives/BlockElement.schema.json"
+            },
+            "hint": {
+              "anyOf": [
+                {
+                  "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "label": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "optional": {
+              "default": false,
+              "type": "boolean"
+            },
+            "type": {
+              "enum": [
+                "input"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "element",
+            "label",
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "A collapsible container",
+          "properties": {
+            "blocks": {
+              "items": {
+                "$ref": "#/definitions/Block"
+              },
+              "type": "array"
+            },
+            "initial_state": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/AccordionState"
+                }
+              ],
+              "default": "collapsed"
+            },
+            "summary": {
+              "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+            },
+            "type": {
+              "enum": [
+                "accordion"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "blocks",
+            "summary",
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "description": "The root container for a Block Kit message",
+  "properties": {
+    "blocks": {
+      "items": {
+        "$ref": "#/definitions/Block"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "blocks"
+  ],
+  "title": "BlockMessage",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/ui/ButtonElement.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "action_id": {
+      "type": "string"
+    },
+    "style": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/ButtonStyle.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "text": {
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "action_id",
+    "text"
+  ],
+  "title": "ButtonElement",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/ui/ButtonStyle.schema.json
+
+```json
+{
   "$schema": "http://json-schema.org/draft-07/schema#",
   "enum": [
     "primary",
@@ -14477,49 +22586,43 @@ tempfile = "3.0"
   ],
   "title": "ButtonStyle",
   "type": "string",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ChannelId.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/ContextBlock.schema.json
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A channel's unique identifier",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Displays contextual info (small grey text, images)",
+  "properties": {
+    "elements": {
+      "items": {
+        "$ref": "../../codegen/primitives/ContextElement.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "elements"
   ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "ChannelId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
+  "title": "ContextBlock",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ConsentRecordId.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/ContextElement.schema.json
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for consent records",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "ConsentRecordId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/ContextElement.schema.json
-
-```json
-{
-  "$id": "primitives/ContextElement.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "oneOf": [
     {
@@ -14590,707 +22693,191 @@ tempfile = "3.0"
     }
   ],
   "title": "ContextElement",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ConversationTurn.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/DividerBlock.schema.json
 
 ```json
 {
-  "$id": "primitives/ConversationTurn.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A single turn in a conversation (for context tracking)",
-  "properties": {
-    "content": {
-      "description": "Content of the message",
-      "type": "string"
-    },
-    "role": {
-      "description": "Role of the speaker (user, assistant, system)",
-      "type": "string"
-    },
-    "speaker": {
-      "default": null,
-      "description": "Optional speaker identifier (for multi-agent)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "timestamp": {
-      "default": null,
-      "description": "Timestamp of the turn",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "content",
-    "role"
-  ],
-  "title": "ConversationTurn",
+  "description": "A visual separator",
+  "title": "DividerBlock",
   "type": "object",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/CourseId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A course (workflow instance) unique identifier",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "CourseId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/DbConnectionString.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/HeaderBlock.schema.json
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A validated PostgreSQL/TimescaleDB connection string",
-  "title": "DbConnectionString",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/DbPoolSize.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Connection pool size configuration",
-  "format": "uint32",
-  "minimum": 0.0,
-  "title": "DbPoolSize",
-  "type": "integer",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/DeletionRequestId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for data deletion requests",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "DeletionRequestId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/Directionality.schema.json
-
-```json
-{
-  "$id": "primitives/Directionality.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Directionality of binding",
-  "oneOf": [
-    {
-      "description": "Only source → target",
-      "enum": [
-        "unidirectional"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Both directions",
-      "enum": [
-        "bidirectional"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "No inherent direction",
-      "enum": [
-        "undirected"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "Directionality",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/Email.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "String",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/EmotionalTone.schema.json
-
-```json
-{
-  "$id": "primitives/EmotionalTone.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Emotional tone detected in segment",
+  "description": "A header with large, bold text",
   "properties": {
-    "arousal": {
-      "description": "Arousal (0.0 calm to 1.0 excited)",
-      "format": "double",
-      "type": "number"
-    },
-    "confidence": {
-      "description": "Confidence in detection",
-      "format": "double",
-      "type": "number"
-    },
-    "primary": {
-      "description": "Primary emotion",
-      "type": "string"
-    },
-    "valence": {
-      "description": "Valence (-1.0 negative to 1.0 positive)",
-      "format": "double",
-      "type": "number"
-    }
-  },
-  "required": [
-    "arousal",
-    "confidence",
-    "primary",
-    "valence"
-  ],
-  "title": "EmotionalTone",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/EntityId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for entities",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "EntityId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/EntityMention.schema.json
-
-```json
-{
-  "$id": "primitives/EntityMention.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "An entity mention within a segment",
-  "properties": {
-    "confidence": {
-      "description": "Confidence in detection",
-      "format": "double",
-      "type": "number"
-    },
-    "end": {
-      "format": "uint",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "entity_type": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/EntityMentionType"
-        }
-      ],
-      "description": "Type of entity mentioned"
-    },
-    "resolved_id": {
-      "default": null,
-      "description": "Resolved entity ID (if matched to known entity)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "start": {
-      "description": "Position in segment",
-      "format": "uint",
-      "minimum": 0.0,
-      "type": "integer"
-    },
     "text": {
-      "description": "The text of the mention",
-      "type": "string"
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
     }
   },
   "required": [
-    "confidence",
-    "end",
-    "entity_type",
-    "start",
     "text"
   ],
-  "title": "EntityMention",
+  "title": "HeaderBlock",
   "type": "object",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/EntityMentionType.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/ImageBlock.schema.json
 
 ```json
 {
-  "$id": "primitives/EntityMentionType.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Types of entity mentions",
-  "enum": [
-    "PERSON",
-    "PLACE",
-    "ORGANIZATION",
-    "DATE_TIME",
-    "EVENT",
-    "CONCEPT",
-    "OBJECT",
-    "ACTIVITY"
+  "description": "Displays an image with optional title",
+  "properties": {
+    "alt_text": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "title": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "alt_text",
+    "image_url"
   ],
-  "title": "EntityMentionType",
-  "type": "string",
-  "x-familiar-kind": "primitive"
+  "title": "ImageBlock",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/EntityType.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/ImageElement.schema.json
 
 ```json
 {
-  "$id": "primitives/EntityType.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Entity types from the Symmetric Seven ontology",
-  "oneOf": [
-    {
-      "description": "A specific event/action that happened (Narrative/External Particle) Linguistic marker: Action verbs (went, did, met, called)",
-      "enum": [
-        "MOMENT"
-      ],
+  "properties": {
+    "alt_text": {
       "type": "string"
     },
-    {
-      "description": "Internal state/feeling/emotion (Internal Particle) Linguistic marker: State verbs + evaluative language (felt, was nice)",
-      "enum": [
-        "PULSE"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Definition of person, place, or concept (Definitional/Object)",
-      "enum": [
-        "THREAD"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Relationship between entities (Relational/Connection)",
-      "enum": [
-        "BOND"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A recurring external pattern (External Wave)",
-      "enum": [
-        "MOTIF"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A recurring internal pattern (Internal Wave)",
-      "enum": [
-        "FILAMENT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "An active thematic goal (Intentional Wave)",
-      "enum": [
-        "FOCUS"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A task or goal for the future (Operational/Intentional Particle)",
-      "enum": [
-        "INTENT"
-      ],
+    "image_url": {
       "type": "string"
     }
+  },
+  "required": [
+    "alt_text",
+    "image_url"
   ],
-  "title": "EntityType",
-  "x-familiar-kind": "primitive"
+  "title": "ImageElement",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ExportRequestId.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/InputBlock.schema.json
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for data export requests",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "ExportRequestId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/HeddleEntityType.schema.json
-
-```json
-{
-  "$id": "primitives/HeddleEntityType.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
-  "oneOf": [
-    {
-      "description": "A specific event that happened in the past (Narrative/External Particle)",
-      "enum": [
-        "MOMENT"
-      ],
-      "type": "string"
+  "description": "An input field",
+  "properties": {
+    "element": {
+      "$ref": "../../codegen/primitives/BlockElement.schema.json"
     },
-    {
-      "description": "A task or goal for the future (Operational/Intentional Particle)",
-      "enum": [
-        "INTENT"
-      ],
-      "type": "string"
+    "hint": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
-    {
-      "description": "A definition of a person, place, or concept (Definitional/Object)",
-      "enum": [
-        "THREAD"
-      ],
-      "type": "string"
+    "label": {
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
     },
-    {
-      "description": "A statement about the quality of a relationship (Relational/Connection)",
-      "enum": [
-        "BOND"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A recurring external pattern (External Wave)",
-      "enum": [
-        "MOTIF"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A recurring internal pattern (Internal Wave)",
-      "enum": [
-        "FILAMENT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "An active thematic goal (Intentional Wave)",
-      "enum": [
-        "FOCUS"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "An internal state snapshot (Internal Particle)",
-      "enum": [
-        "PULSE"
-      ],
-      "type": "string"
+    "optional": {
+      "default": false,
+      "type": "boolean"
     }
+  },
+  "required": [
+    "element",
+    "label"
   ],
-  "title": "HeddleEntityType",
-  "x-familiar-kind": "primitive"
+  "title": "InputBlock",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/InvitationId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for family invitations",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "InvitationId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/InviteCode.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/MarkdownTextObject.schema.json
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "String",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/InviteRole.schema.json
-
-```json
-{
-  "$id": "primitives/InviteRole.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Role to assign when invitation is accepted",
-  "enum": [
-    "admin",
-    "member",
-    "guest"
-  ],
-  "title": "InviteRole",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/JoinRequestId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for join requests",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "JoinRequestId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/MagicLinkId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for magic links",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "MagicLinkId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/MaxTokens.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Maximum number of tokens for input/output",
-  "format": "uint32",
-  "minimum": 0.0,
-  "title": "MaxTokens",
-  "type": "integer",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/MessageId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A message's unique identifier",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "MessageId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/MessageIntent.schema.json
-
-```json
-{
-  "$id": "primitives/MessageIntent.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "The primary intent of the user's message",
-  "oneOf": [
-    {
-      "description": "Recording something - events, states, observations (current default)",
-      "enum": [
-        "LOG"
-      ],
+  "properties": {
+    "text": {
       "type": "string"
     },
-    {
-      "description": "Asking a question - wants information back",
-      "enum": [
-        "QUERY"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Requesting system to make connections or derive insights",
-      "enum": [
-        "INFER"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Looking up specific entities, threads, or past entries",
-      "enum": [
-        "REFERENCE"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Requesting analysis, patterns, or reflection on data",
-      "enum": [
-        "REFLECT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Giving a command/instruction to the system",
-      "enum": [
-        "COMMAND"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Conversational/social - greetings, acknowledgments",
-      "enum": [
-        "SOCIAL"
-      ],
-      "type": "string"
+    "verbatim": {
+      "default": false,
+      "type": "boolean"
     }
+  },
+  "required": [
+    "text"
   ],
-  "title": "MessageIntent",
-  "x-familiar-kind": "primitive"
+  "title": "MarkdownTextObject",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/MessageRole.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/OptionObject.schema.json
 
 ```json
 {
-  "$id": "primitives/MessageRole.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Role in a chat conversation",
-  "oneOf": [
-    {
-      "description": "System instructions",
-      "enum": [
-        "system"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "User input",
-      "enum": [
-        "user"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Assistant response",
-      "enum": [
-        "assistant"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "MessageRole",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/Modality.schema.json
-
-```json
-{
-  "$id": "primitives/Modality.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Supported input modalities",
-  "enum": [
-    "text",
-    "audio",
-    "vision",
-    "video"
-  ],
-  "title": "Modality",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/NormalizedFloat.schema.json
-
-```json
-{
-  "$id": "primitives/NormalizedFloat.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A float value normalized to [0.0, 1.0]",
-  "format": "double",
-  "title": "NormalizedFloat",
-  "type": "number",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/OptionObject.schema.json
-
-```json
-{
-  "$id": "primitives/OptionObject.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "description": {
       "anyOf": [
         {
-          "$ref": "#/definitions/PlainTextObject"
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
         },
         {
           "type": "null"
@@ -15298,7 +22885,7 @@ tempfile = "3.0"
       ]
     },
     "text": {
-      "$ref": "#/definitions/PlainTextObject"
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
     },
     "url": {
       "type": [
@@ -15316,66 +22903,88 @@ tempfile = "3.0"
   ],
   "title": "OptionObject",
   "type": "object",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ParsedTemporal.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/OverflowElement.schema.json
 
 ```json
 {
-  "$id": "primitives/ParsedTemporal.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Parsed temporal information",
   "properties": {
-    "date": {
-      "default": null,
-      "description": "ISO 8601 date if specific",
+    "action_id": {
+      "type": "string"
+    },
+    "options": {
+      "items": {
+        "$ref": "../../codegen/primitives/OptionObject.schema.json"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "action_id",
+    "options"
+  ],
+  "title": "OverflowElement",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/domain/ui/PlainTextInputElement.schema.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "action_id": {
+      "type": "string"
+    },
+    "initial_value": {
       "type": [
         "string",
         "null"
       ]
     },
-    "relative_days": {
-      "default": null,
-      "description": "Relative offset (e.g., -1 for \"yesterday\")",
-      "format": "int32",
-      "type": [
-        "integer",
-        "null"
-      ]
+    "multiline": {
+      "default": false,
+      "type": "boolean"
     },
-    "time_of_day": {
-      "default": null,
-      "description": "Time of day if mentioned",
-      "type": [
-        "string",
-        "null"
+    "placeholder": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        {
+          "type": "null"
+        }
       ]
     }
   },
-  "title": "ParsedTemporal",
+  "required": [
+    "action_id"
+  ],
+  "title": "PlainTextInputElement",
   "type": "object",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/PasswordHash.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/PlainTextObject.schema.json
 
 ```json
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "String",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/PlainTextObject.schema.json
-
-```json
-{
-  "$id": "primitives/PlainTextObject.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "emoji": {
@@ -15391,630 +23000,59 @@ tempfile = "3.0"
   ],
   "title": "PlainTextObject",
   "type": "object",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/QuantizedCoord.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/SectionBlock.schema.json
 
 ```json
 {
-  "$id": "primitives/QuantizedCoord.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A quantized coordinate in the 3D VAE Manifold Uses i64 for precision in physics calculations",
-  "format": "int64",
-  "title": "QuantizedCoord",
-  "type": "integer",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/QueryTarget.schema.json
-
-```json
-{
-  "$id": "primitives/QueryTarget.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Query target - what data is the query looking for?",
+  "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
   "properties": {
-    "entity_types": {
-      "default": [],
-      "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "keywords": {
-      "default": [],
-      "description": "Keywords extracted from the query",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "temporal_scope": {
-      "default": null,
-      "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "thread_hints": {
-      "default": [],
-      "description": "Specific thread hints (names, concepts) to search for",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    }
-  },
-  "title": "QueryTarget",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/QueryType.schema.json
-
-```json
-{
-  "$id": "primitives/QueryType.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "The type of query (when MessageIntent is QUERY)",
-  "oneOf": [
-    {
-      "description": "When did X happen? Time-based lookup",
-      "enum": [
-        "TEMPORAL"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Who/what questions - entity lookup",
-      "enum": [
-        "ENTITY"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "How often? Pattern/frequency questions",
-      "enum": [
-        "PATTERN"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Compare X and Y",
-      "enum": [
-        "COMPARISON"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Give me a summary/overview",
-      "enum": [
-        "SUMMARY"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Count/quantity questions (how many?)",
-      "enum": [
-        "QUANTITATIVE"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Yes/no questions (did X happen?)",
-      "enum": [
-        "BOOLEAN"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Why questions - causation",
-      "enum": [
-        "CAUSAL"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Location-based questions",
-      "enum": [
-        "SPATIAL"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Open-ended/exploratory",
-      "enum": [
-        "EXPLORATORY"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "QueryType",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/RelationshipType.schema.json
-
-```json
-{
-  "$id": "primitives/RelationshipType.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Types of relationships",
-  "enum": [
-    "family",
-    "friend",
-    "close_friend",
-    "best_friend",
-    "romantic",
-    "ex_romantic",
-    "spouse",
-    "parent",
-    "child",
-    "sibling",
-    "colleague",
-    "manager",
-    "direct_report",
-    "mentor",
-    "mentee",
-    "client",
-    "vendor",
-    "partner",
-    "acquaintance",
-    "neighbor",
-    "classmate",
-    "teammate",
-    "adversary",
-    "rival",
-    "service_provider",
-    "other"
-  ],
-  "title": "RelationshipType",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/RetryConfig.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Configuration for retry behavior on transient failures",
-  "properties": {
-    "backoff_factor": {
-      "format": "double",
-      "type": "number"
-    },
-    "initial_delay_ms": {
-      "format": "uint64",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "max_delay_ms": {
-      "format": "uint64",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "max_retries": {
-      "format": "uint32",
-      "minimum": 0.0,
-      "type": "integer"
-    }
-  },
-  "required": [
-    "backoff_factor",
-    "initial_delay_ms",
-    "max_delay_ms",
-    "max_retries"
-  ],
-  "title": "RetryConfig",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/Segment.schema.json
-
-```json
-{
-  "$id": "primitives/Segment.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A segmented unit of content",
-  "properties": {
-    "boundaries": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentBoundaries"
-        }
-      ],
-      "description": "Segment boundaries"
-    },
-    "confidence": {
-      "description": "Confidence in segmentation decision",
-      "format": "double",
-      "type": "number"
-    },
-    "content": {
-      "description": "The segmented content",
-      "type": "string"
-    },
-    "features": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/SegmentFeatures"
-        }
-      ],
-      "description": "Extracted features"
-    },
-    "id": {
-      "description": "Unique segment ID",
-      "type": "string"
-    },
-    "index": {
-      "description": "Index in the sequence",
-      "format": "uint",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "modality": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/Modality"
-        }
-      ],
-      "description": "Original modality"
-    }
-  },
-  "required": [
-    "boundaries",
-    "confidence",
-    "content",
-    "features",
-    "id",
-    "index",
-    "modality"
-  ],
-  "title": "Segment",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/SegmentBoundaries.schema.json
-
-```json
-{
-  "$id": "primitives/SegmentBoundaries.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Boundaries of a segment within the original input",
-  "properties": {
-    "end": {
-      "description": "End position",
-      "format": "uint64",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "speaker_id": {
-      "default": null,
-      "description": "For audio/video: speaker ID if detected",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "start": {
-      "description": "Start position (char index for text, milliseconds for audio/video)",
-      "format": "uint64",
-      "minimum": 0.0,
-      "type": "integer"
-    }
-  },
-  "required": [
-    "end",
-    "start"
-  ],
-  "title": "SegmentBoundaries",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/SegmentFeatures.schema.json
-
-```json
-{
-  "$id": "primitives/SegmentFeatures.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Extracted features from a segment",
-  "properties": {
-    "emotional_tone": {
+    "accessory": {
       "anyOf": [
         {
-          "$ref": "#/definitions/EmotionalTone"
+          "$ref": "../../codegen/primitives/BlockElement.schema.json"
         },
         {
           "type": "null"
         }
-      ],
-      "default": null,
-      "description": "Emotional tone (if detectable)"
-    },
-    "keywords": {
-      "default": [],
-      "description": "Keywords extracted",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "language": {
-      "default": null,
-      "description": "Language detected",
-      "type": [
-        "string",
-        "null"
       ]
     },
-    "mentions": {
-      "default": [],
-      "description": "Entity mentions found",
+    "fields": {
       "items": {
-        "$ref": "#/definitions/EntityMention"
+        "$ref": "../../codegen/primitives/TextObject.schema.json"
       },
-      "type": "array"
-    },
-    "subject": {
-      "default": null,
-      "description": "Primary subject/actor mentioned",
       "type": [
-        "string",
+        "array",
         "null"
       ]
-    },
-    "temporal_markers": {
-      "default": [],
-      "description": "Temporal markers detected",
-      "items": {
-        "$ref": "#/definitions/TemporalMarker"
-      },
-      "type": "array"
-    }
-  },
-  "title": "SegmentFeatures",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/SessionId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A session's unique identifier",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "SessionId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/SessionToken.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "String",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/ShuttleId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for shuttles (response containers)",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "ShuttleId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/SignedNormalizedFloat.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A floating-point value normalized between -1.0 and 1.0. Used for polarity (Valence), alignment (Phase), and gradients.",
-  "format": "double",
-  "title": "SignedNormalizedFloat",
-  "type": "number",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TaskId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A unique identifier for async tasks",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "TaskId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/Temperature.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Temperature controls randomness in LLM outputs. Range: 0.0 (deterministic) to 2.0 (very random)",
-  "format": "float",
-  "title": "Temperature",
-  "type": "number",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TemporalMarker.schema.json
-
-```json
-{
-  "$id": "primitives/TemporalMarker.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A temporal marker in the segment",
-  "properties": {
-    "marker_type": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/TemporalMarkerType"
-        }
-      ],
-      "description": "Type of temporal reference"
-    },
-    "parsed": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ParsedTemporal"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Parsed temporal value (if parseable)"
     },
     "text": {
-      "description": "The text of the marker",
-      "type": "string"
+      "$ref": "../../codegen/primitives/TextObject.schema.json"
     }
   },
   "required": [
-    "marker_type",
     "text"
   ],
-  "title": "TemporalMarker",
+  "title": "SectionBlock",
   "type": "object",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/TemporalMarkerType.schema.json
+### versions/v1.1.0-alpha/json-schema/domain/ui/TextObject.schema.json
 
 ```json
 {
-  "$id": "primitives/TemporalMarkerType.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Types of temporal markers",
-  "oneOf": [
-    {
-      "description": "Specific date (January 5th)",
-      "enum": [
-        "absolute"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Relative reference (yesterday, last week)",
-      "enum": [
-        "relative"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Duration (for 2 hours)",
-      "enum": [
-        "duration"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Frequency (every day, weekly)",
-      "enum": [
-        "frequency"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Time of day (in the morning)",
-      "enum": [
-        "time_of_day"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "TemporalMarkerType",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TemporalRelation.schema.json
-
-```json
-{
-  "$id": "primitives/TemporalRelation.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Temporal relationships",
-  "enum": [
-    "before",
-    "after",
-    "during",
-    "simultaneous",
-    "overlapping"
-  ],
-  "title": "TemporalRelation",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TenantId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A tenant (family) unique identifier",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "TenantId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TextObject.schema.json
-
-```json
-{
-  "$id": "primitives/TextObject.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "oneOf": [
     {
@@ -16063,505 +23101,128 @@ tempfile = "3.0"
     }
   ],
   "title": "TextObject",
-  "x-familiar-kind": "primitive"
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ThreadId.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/actions/classification/extract-features.action.json
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A conversation thread's unique identifier",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "ThreadId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/ThreadReference.schema.json
-
-```json
-{
-  "$id": "primitives/ThreadReference.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Reference to an existing thread",
-  "properties": {
-    "aliases": {
-      "default": [],
-      "description": "Aliases for matching",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
+  "$schema": "../../../architecture/meta/Action.meta.schema.json",
+  "$id": "infrastructure/actions/classification/extract-features.action.json",
+  "id": "classification.extract-features",
+  "title": "Extract Segment Features",
+  "description": "Extract semantic and temporal features from text segments",
+  "x-familiar-kind": "action",
+  "x-familiar-compute-category": "ai",
+  "x-familiar-execution-model": "async",
+  "x-familiar-side-effects": ["ml-inference"],
+  "x-familiar-reliability": "idempotent",
+  "signature": {
+    "inputs": {
+      "segment": {
+        "schema": { "$ref": "../../../primitives/Segment.schema.json" },
+        "semantics": "borrow"
+      }
     },
-    "id": {
-      "description": "Thread ID",
-      "type": "string"
+    "output": {
+      "schema": { "$ref": "../../../primitives/SegmentFeatures.schema.json" },
+      "nature": "atomic"
     },
-    "name": {
-      "description": "Thread name/label",
-      "type": "string"
-    },
-    "thread_type": {
-      "description": "Thread type (person, place, concept, etc.)",
-      "type": "string"
+    "capabilities": {
+      "category": "feature-extraction",
+      "provides": ["semantic-features", "temporal-features"],
+      "description": "Feature extraction models for semantic understanding"
     }
+  }
+}
+```
+
+### versions/v1.1.0-alpha/json-schema/infrastructure/nodes/familiar-daemon.node.json
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "High-performance service node for LLM-connected operations. Runs Fates pipeline systems with low latency.",
+  "title": "FamiliarDaemon",
+  "x-familiar-components": [
+    {
+      "$ref": "../../codegen/components/TigerDataStore.component.json"
+    },
+    {
+      "$ref": "../../codegen/components/ContractEnforcer.component.json"
+    }
+  ],
+  "x-familiar-concurrency": 10,
+  "x-familiar-kind": "node",
+  "x-familiar-memory": "2Gi",
+  "x-familiar-meta-schema": {
+    "$ref": "../architecture/ecs/Node.meta.schema.json"
   },
-  "required": [
-    "id",
-    "name",
-    "thread_type"
+  "x-familiar-queue": "daemon-queue",
+  "x-familiar-resource-class": "llm",
+  "x-familiar-resources": [
+    {
+      "$ref": "../resources/postgres-tiger.resource.json"
+    },
+    {
+      "$ref": "../resources/openai-gpt4.resource.json"
+    },
+    {
+      "$ref": "../resources/anthropic-claude.resource.json"
+    }
   ],
-  "title": "ThreadReference",
-  "type": "object",
-  "x-familiar-kind": "primitive"
+  "x-familiar-systems": [
+    {
+      "$ref": "../systems/FatesGate.system.json"
+    },
+    {
+      "$ref": "../systems/FatesMorta.system.json"
+    },
+    {
+      "$ref": "../systems/FatesDecima.system.json"
+    },
+    {
+      "$ref": "../systems/FatesNona.system.json"
+    }
+  ]
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/ThreadRole.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/nodes/familiar-worker.node.json
 
 ```json
 {
-  "$id": "primitives/ThreadRole.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Role of entity relative to threads",
-  "oneOf": [
+  "description": "Batch processing service node for IO-bound operations. Runs non-LLM tasks like database maintenance and exports.",
+  "title": "FamiliarWorker",
+  "x-familiar-components": [
     {
-      "description": "Entity is the actor/doer",
-      "enum": [
-        "actor"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Entity is the subject being discussed",
-      "enum": [
-        "subject"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Entity is observing/witnessing",
-      "enum": [
-        "observer"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Entity is the target of action",
-      "enum": [
-        "target"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Entity is setting/location",
-      "enum": [
-        "setting"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Entity is an instrument/tool",
-      "enum": [
-        "instrument"
-      ],
-      "type": "string"
+      "$ref": "../../codegen/components/DatabasePool.component.json"
     }
   ],
-  "title": "ThreadRole",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TimeGap.schema.json
-
-```json
-{
-  "$id": "primitives/TimeGap.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Time gap between entities",
-  "properties": {
-    "approximate": {
-      "description": "Is this approximate?",
-      "type": "boolean"
-    },
-    "unit": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/TimeUnit"
-        }
-      ],
-      "description": "Duration unit"
-    },
-    "value": {
-      "description": "Duration value",
-      "format": "double",
-      "type": "number"
-    }
+  "x-familiar-concurrency": 50,
+  "x-familiar-kind": "node",
+  "x-familiar-memory": "512Mi",
+  "x-familiar-meta-schema": {
+    "$ref": "../architecture/ecs/Node.meta.schema.json"
   },
-  "required": [
-    "approximate",
-    "unit",
-    "value"
-  ],
-  "title": "TimeGap",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TimeUnit.schema.json
-
-```json
-{
-  "$id": "primitives/TimeUnit.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Time units",
-  "enum": [
-    "seconds",
-    "minutes",
-    "hours",
-    "days",
-    "weeks",
-    "months",
-    "years"
-  ],
-  "title": "TimeUnit",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/Timestamp.schema.json
-
-```json
-{
-  "$id": "primitives/Timestamp.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "An ISO 8601 timestamp (serialized as string)",
-  "format": "date-time",
-  "title": "Timestamp",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/TokenUsage.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Token usage statistics from a completion",
-  "properties": {
-    "completion_tokens": {
-      "format": "uint32",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "prompt_tokens": {
-      "format": "uint32",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "total_tokens": {
-      "format": "uint32",
-      "minimum": 0.0,
-      "type": "integer"
-    }
-  },
-  "required": [
-    "completion_tokens",
-    "prompt_tokens",
-    "total_tokens"
-  ],
-  "title": "TokenUsage",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/ToolCallStatus.schema.json
-
-```json
-{
-  "$id": "primitives/ToolCallStatus.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Status of a tool call during execution",
-  "enum": [
-    "pending",
-    "running",
-    "complete",
-    "error"
-  ],
-  "title": "ToolCallStatus",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/ToolPurpose.schema.json
-
-```json
-{
-  "$id": "primitives/ToolPurpose.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Primary purpose of user's message",
-  "oneOf": [
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-resource-class": "io",
+  "x-familiar-resources": [
     {
-      "description": "Recording memories, events, observations - wants to store",
-      "enum": [
-        "LOG"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Asking a question - wants information returned",
-      "enum": [
-        "QUERY"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Making connections, deriving insights - wants system to infer",
-      "enum": [
-        "INFER"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Looking up specific entities - wants existing data",
-      "enum": [
-        "REFERENCE"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Requesting analysis or reflection - wants patterns identified",
-      "enum": [
-        "REFLECT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "System command/instruction - wants action taken",
-      "enum": [
-        "COMMAND"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Social/conversational - greeting, acknowledgment",
-      "enum": [
-        "SOCIAL"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Clarifying or continuing previous message",
-      "enum": [
-        "CONTINUATION"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Editing or correcting previous input",
-      "enum": [
-        "CORRECTION"
-      ],
-      "type": "string"
+      "$ref": "../resources/postgres-main.resource.json"
     }
   ],
-  "title": "ToolPurpose",
-  "x-familiar-kind": "primitive"
+  "x-familiar-systems": []
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/primitives/UIClassification.schema.json
-
-```json
-{
-  "$id": "primitives/UIClassification.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A classification result",
-  "properties": {
-    "confidence": {
-      "format": "double",
-      "type": "number"
-    },
-    "entity_type": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "confidence",
-    "entity_type"
-  ],
-  "title": "UIClassification",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/UIHeddleSegment.schema.json
-
-```json
-{
-  "$id": "primitives/UIHeddleSegment.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A segment from Heddle",
-  "properties": {
-    "content": {
-      "type": "string"
-    },
-    "subject": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "content"
-  ],
-  "title": "UIHeddleSegment",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/UIPhysicsResult.schema.json
-
-```json
-{
-  "$id": "primitives/UIPhysicsResult.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Physics simulation result",
-  "properties": {
-    "energy": {
-      "format": "double",
-      "type": "number"
-    },
-    "position": {
-      "items": {
-        "format": "double",
-        "type": "number"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "temperature": {
-      "format": "double",
-      "type": "number"
-    }
-  },
-  "required": [
-    "energy",
-    "position",
-    "temperature"
-  ],
-  "title": "UIPhysicsResult",
-  "type": "object",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/UUID.schema.json
-
-```json
-{
-  "$id": "primitives/UUID.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A UUID (serialized as string)",
-  "format": "uuid",
-  "title": "UUID",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/UserId.schema.json
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A user's unique identifier",
-  "examples": [
-    "550e8400-e29b-41d4-a716-446655440000"
-  ],
-  "format": "uuid",
-  "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-  "title": "UserId",
-  "type": "string",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/primitives/VerbCategory.schema.json
-
-```json
-{
-  "$id": "primitives/VerbCategory.schema.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Categories of verbs for classification",
-  "oneOf": [
-    {
-      "description": "Action verbs (went, did, called) → MOMENT",
-      "enum": [
-        "action"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "State verbs (was, felt, is) → often PULSE",
-      "enum": [
-        "state"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Stative + evaluative (was nice, felt good) → PULSE",
-      "enum": [
-        "evaluative"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Relational verbs (met, talked with) → may indicate BOND",
-      "enum": [
-        "relational"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Habitual (always, usually does) → may indicate MOTIF/FILAMENT",
-      "enum": [
-        "habitual"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Intentional (want to, plan to) → INTENT",
-      "enum": [
-        "intentional"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "VerbCategory",
-  "x-familiar-kind": "primitive"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/queues/daemon-queue.queue.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/queues/daemon-queue.queue.json
 
 ```json
 {
@@ -16576,7 +23237,7 @@ tempfile = "3.0"
   ],
   "x-familiar-kind": "queue",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Queue.meta.schema.json"
+    "$ref": "../architecture/ecs/Queue.meta.schema.json"
   },
   "x-familiar-queue-type": "temporal",
   "x-familiar-resource-class": "llm",
@@ -16585,7 +23246,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/queues/worker-queue.queue.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/queues/worker-queue.queue.json
 
 ```json
 {
@@ -16600,7 +23261,7 @@ tempfile = "3.0"
   ],
   "x-familiar-kind": "queue",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Queue.meta.schema.json"
+    "$ref": "../architecture/ecs/Queue.meta.schema.json"
   },
   "x-familiar-queue-type": "temporal",
   "x-familiar-resource-class": "io",
@@ -16609,7 +23270,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/resources/anthropic-claude.resource.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/resources/anthropic-claude.resource.json
 
 ```json
 {
@@ -16623,7 +23284,7 @@ tempfile = "3.0"
   },
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Resource.meta.schema.json"
+    "$ref": "../architecture/ecs/Resource.meta.schema.json"
   },
   "x-familiar-models": [
     "claude-3-5-sonnet-20241022",
@@ -16637,7 +23298,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/resources/openai-gpt4.resource.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/resources/openai-gpt4.resource.json
 
 ```json
 {
@@ -16651,7 +23312,7 @@ tempfile = "3.0"
   },
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Resource.meta.schema.json"
+    "$ref": "../architecture/ecs/Resource.meta.schema.json"
   },
   "x-familiar-models": [
     "gpt-4",
@@ -16666,7 +23327,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/resources/postgres-main.resource.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/resources/postgres-main.resource.json
 
 ```json
 {
@@ -16674,7 +23335,7 @@ tempfile = "3.0"
   "description": "Primary PostgreSQL database for core application data including auth, users, and configuration.",
   "title": "PostgresMain",
   "x-familiar-config": {
-    "$ref": "../components/DbPoolConfig.schema.json"
+    "$ref": "../../codegen/components/DbPoolConfig.schema.json"
   },
   "x-familiar-connection-pool": {
     "max": 20,
@@ -16686,7 +23347,7 @@ tempfile = "3.0"
   },
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Resource.meta.schema.json"
+    "$ref": "../architecture/ecs/Resource.meta.schema.json"
   },
   "x-familiar-resource-type": "database",
   "x-familiar-tables": [
@@ -16703,7 +23364,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/resources/postgres-tiger.resource.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/resources/postgres-tiger.resource.json
 
 ```json
 {
@@ -16711,7 +23372,7 @@ tempfile = "3.0"
   "description": "TimescaleDB instance for Tiger physics engine data - moments, pulses, bonds, and filaments.",
   "title": "PostgresTiger",
   "x-familiar-config": {
-    "$ref": "../components/DbPoolConfig.schema.json"
+    "$ref": "../../codegen/components/DbPoolConfig.schema.json"
   },
   "x-familiar-connection-pool": {
     "max": 50,
@@ -16723,7 +23384,7 @@ tempfile = "3.0"
   },
   "x-familiar-kind": "resource",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/Resource.meta.schema.json"
+    "$ref": "../architecture/ecs/Resource.meta.schema.json"
   },
   "x-familiar-resource-type": "database",
   "x-familiar-tables": [
@@ -16740,7 +23401,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/systems/FatesDecima.system.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/systems/FatesDecima.system.json
 
 ```json
 {
@@ -16749,20 +23410,20 @@ tempfile = "3.0"
   "title": "FatesDecima",
   "x-familiar-depends": [
     {
-      "$ref": "../components/TigerDataStore.component.json"
+      "$ref": "../../codegen/components/TigerDataStore.component.json"
     }
   ],
   "x-familiar-kind": "system",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/System.meta.schema.json"
+    "$ref": "../architecture/ecs/System.meta.schema.json"
   },
   "x-familiar-queue": "daemon-queue",
   "x-familiar-reads": [
     {
-      "$ref": "../entities/Shuttle.schema.json"
+      "$ref": "../../codegen/entities/Shuttle.schema.json"
     },
     {
-      "$ref": "../entities/Moment.schema.json"
+      "$ref": "../../codegen/entities/Moment.schema.json"
     }
   ],
   "x-familiar-retries": 3,
@@ -16772,13 +23433,13 @@ tempfile = "3.0"
   "x-familiar-timeout": "45s",
   "x-familiar-writes": [
     {
-      "$ref": "../entities/Bond.schema.json"
+      "$ref": "../../codegen/entities/Bond.schema.json"
     }
   ]
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/systems/FatesGate.system.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/systems/FatesGate.system.json
 
 ```json
 {
@@ -16787,10 +23448,10 @@ tempfile = "3.0"
   "title": "FatesGate",
   "x-familiar-depends": [
     {
-      "$ref": "../components/TigerDataStore.component.json"
+      "$ref": "../../codegen/components/TigerDataStore.component.json"
     },
     {
-      "$ref": "../components/ContractEnforcer.component.json"
+      "$ref": "../../codegen/components/ContractEnforcer.component.json"
     }
   ],
   "x-familiar-input": {
@@ -16798,7 +23459,7 @@ tempfile = "3.0"
   },
   "x-familiar-kind": "system",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/System.meta.schema.json"
+    "$ref": "../architecture/ecs/System.meta.schema.json"
   },
   "x-familiar-output": {
     "$ref": "../tools/GateOutput.schema.json"
@@ -16806,13 +23467,13 @@ tempfile = "3.0"
   "x-familiar-queue": "daemon-queue",
   "x-familiar-reads": [
     {
-      "$ref": "../entities/Moment.schema.json"
+      "$ref": "../../codegen/entities/Moment.schema.json"
     },
     {
-      "$ref": "../entities/Thread.schema.json"
+      "$ref": "../../codegen/entities/Thread.schema.json"
     },
     {
-      "$ref": "../entities/Course.schema.json"
+      "$ref": "../../codegen/entities/Course.schema.json"
     }
   ],
   "x-familiar-retries": 3,
@@ -16822,13 +23483,13 @@ tempfile = "3.0"
   "x-familiar-timeout": "30s",
   "x-familiar-writes": [
     {
-      "$ref": "../entities/Shuttle.schema.json"
+      "$ref": "../../codegen/entities/Shuttle.schema.json"
     }
   ]
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/systems/FatesMorta.system.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/systems/FatesMorta.system.json
 
 ```json
 {
@@ -16837,20 +23498,20 @@ tempfile = "3.0"
   "title": "FatesMorta",
   "x-familiar-depends": [
     {
-      "$ref": "../components/TigerDataStore.component.json"
+      "$ref": "../../codegen/components/TigerDataStore.component.json"
     }
   ],
   "x-familiar-kind": "system",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/System.meta.schema.json"
+    "$ref": "../architecture/ecs/System.meta.schema.json"
   },
   "x-familiar-queue": "daemon-queue",
   "x-familiar-reads": [
     {
-      "$ref": "../entities/Shuttle.schema.json"
+      "$ref": "../../codegen/entities/Shuttle.schema.json"
     },
     {
-      "$ref": "../entities/Thread.schema.json"
+      "$ref": "../../codegen/entities/Thread.schema.json"
     }
   ],
   "x-familiar-retries": 2,
@@ -16860,13 +23521,13 @@ tempfile = "3.0"
   "x-familiar-timeout": "60s",
   "x-familiar-writes": [
     {
-      "$ref": "../entities/Pulse.schema.json"
+      "$ref": "../../codegen/entities/Pulse.schema.json"
     }
   ]
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/systems/FatesNona.system.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/systems/FatesNona.system.json
 
 ```json
 {
@@ -16875,20 +23536,20 @@ tempfile = "3.0"
   "title": "FatesNona",
   "x-familiar-depends": [
     {
-      "$ref": "../components/TigerDataStore.component.json"
+      "$ref": "../../codegen/components/TigerDataStore.component.json"
     }
   ],
   "x-familiar-kind": "system",
   "x-familiar-meta-schema": {
-    "$ref": "../ecs/System.meta.schema.json"
+    "$ref": "../architecture/ecs/System.meta.schema.json"
   },
   "x-familiar-queue": "daemon-queue",
   "x-familiar-reads": [
     {
-      "$ref": "../entities/Shuttle.schema.json"
+      "$ref": "../../codegen/entities/Shuttle.schema.json"
     },
     {
-      "$ref": "../entities/Bond.schema.json"
+      "$ref": "../../codegen/entities/Bond.schema.json"
     }
   ],
   "x-familiar-retries": 3,
@@ -16898,79 +23559,13 @@ tempfile = "3.0"
   "x-familiar-timeout": "60s",
   "x-familiar-writes": [
     {
-      "$ref": "../entities/Filament.schema.json"
+      "$ref": "../../codegen/entities/Filament.schema.json"
     }
   ]
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tenant/CreateTenantInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input for creating a new tenant",
-  "properties": {
-    "name": {
-      "type": "string"
-    },
-    "settings": {
-      "default": null
-    }
-  },
-  "required": [
-    "name"
-  ],
-  "title": "CreateTenantInput",
-  "type": "object",
-  "x-familiar-kind": "tenant",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/tenant/Tenant.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A tenant (family) in the system\n\nUses `SystemEntityMeta` because tenants are top-level entities that don't belong to another tenant.",
-  "properties": {
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "settings": {
-      "default": null
-    },
-    "updated_at": {
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "name",
-    "updated_at"
-  ],
-  "title": "Tenant",
-  "type": "object",
-  "x-familiar-kind": "tenant",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-daemon.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/tools/AudioFeatures.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/AudioFeatures.schema.json
 
 ```json
 {
@@ -17022,7 +23617,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/AudioSegmentFeatures.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/AudioSegmentFeatures.schema.json
 
 ```json
 {
@@ -17106,7 +23701,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingCharacteristics.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingCharacteristics.schema.json
 
 ```json
 {
@@ -17148,7 +23743,7 @@ tempfile = "3.0"
         "gap": {
           "anyOf": [
             {
-              "$ref": "../primitives/TimeGap.schema.json"
+              "$ref": "../../codegen/primitives/TimeGap.schema.json"
             },
             {
               "type": "null"
@@ -17165,7 +23760,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relation"
@@ -17182,7 +23777,7 @@ tempfile = "3.0"
     "binding_type": {
       "allOf": [
         {
-          "$ref": "../primitives/BindingType.schema.json"
+          "$ref": "../../codegen/primitives/BindingType.schema.json"
         }
       ],
       "description": "Type of cognitive binding"
@@ -17190,7 +23785,7 @@ tempfile = "3.0"
     "directionality": {
       "allOf": [
         {
-          "$ref": "../primitives/Directionality.schema.json"
+          "$ref": "../../codegen/primitives/Directionality.schema.json"
         }
       ],
       "description": "Directionality"
@@ -17246,7 +23841,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingEvidence.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingEvidence.schema.json
 
 ```json
 {
@@ -17356,7 +23951,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingEvidenceType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingEvidenceType.schema.json
 
 ```json
 {
@@ -17429,7 +24024,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingGraphUpdate.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingGraphUpdate.schema.json
 
 ```json
 {
@@ -17441,7 +24036,7 @@ tempfile = "3.0"
         "binding_type": {
           "allOf": [
             {
-              "$ref": "../primitives/BindingType.schema.json"
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
             }
           ],
           "description": "Type of cognitive binding"
@@ -17449,7 +24044,7 @@ tempfile = "3.0"
         "directionality": {
           "allOf": [
             {
-              "$ref": "../primitives/Directionality.schema.json"
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
             }
           ],
           "description": "Directionality"
@@ -17573,7 +24168,7 @@ tempfile = "3.0"
         "gap": {
           "anyOf": [
             {
-              "$ref": "../primitives/TimeGap.schema.json"
+              "$ref": "../../codegen/primitives/TimeGap.schema.json"
             },
             {
               "type": "null"
@@ -17590,7 +24185,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relation"
@@ -17651,7 +24246,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingHintInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingHintInput.schema.json
 
 ```json
 {
@@ -17698,7 +24293,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -17760,7 +24355,7 @@ tempfile = "3.0"
     "segment": {
       "allOf": [
         {
-          "$ref": "../primitives/Segment.schema.json"
+          "$ref": "../../codegen/primitives/Segment.schema.json"
         }
       ],
       "description": "The current segment"
@@ -17781,7 +24376,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingHintOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingHintOutput.schema.json
 
 ```json
 {
@@ -17793,7 +24388,7 @@ tempfile = "3.0"
         "binding_type": {
           "allOf": [
             {
-              "$ref": "../primitives/BindingType.schema.json"
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
             }
           ],
           "description": "Type of cognitive binding"
@@ -17801,7 +24396,7 @@ tempfile = "3.0"
         "directionality": {
           "allOf": [
             {
-              "$ref": "../primitives/Directionality.schema.json"
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
             }
           ],
           "description": "Directionality"
@@ -18047,7 +24642,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -18151,7 +24746,7 @@ tempfile = "3.0"
         "gap": {
           "anyOf": [
             {
-              "$ref": "../primitives/TimeGap.schema.json"
+              "$ref": "../../codegen/primitives/TimeGap.schema.json"
             },
             {
               "type": "null"
@@ -18168,7 +24763,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relation"
@@ -18212,7 +24807,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingHints.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingHints.schema.json
 
 ```json
 {
@@ -18228,7 +24823,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -18262,7 +24857,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relationship"
@@ -18279,7 +24874,7 @@ tempfile = "3.0"
     "binding_type": {
       "allOf": [
         {
-          "$ref": "../primitives/BindingType.schema.json"
+          "$ref": "../../codegen/primitives/BindingType.schema.json"
         }
       ],
       "description": "Type of cognitive binding"
@@ -18295,7 +24890,7 @@ tempfile = "3.0"
     "directionality": {
       "allOf": [
         {
-          "$ref": "../primitives/Directionality.schema.json"
+          "$ref": "../../codegen/primitives/Directionality.schema.json"
         }
       ],
       "description": "Directionality of binding"
@@ -18351,7 +24946,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingPattern.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingPattern.schema.json
 
 ```json
 {
@@ -18361,7 +24956,7 @@ tempfile = "3.0"
     "binding_type": {
       "allOf": [
         {
-          "$ref": "../primitives/BindingType.schema.json"
+          "$ref": "../../codegen/primitives/BindingType.schema.json"
         }
       ],
       "description": "Binding type this pattern indicates"
@@ -18396,7 +24991,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BindingType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BindingType.schema.json
 
 ```json
 {
@@ -18469,7 +25064,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondChanges.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondChanges.schema.json
 
 ```json
 {
@@ -18479,7 +25074,7 @@ tempfile = "3.0"
     "new_relationship_type": {
       "anyOf": [
         {
-          "$ref": "../primitives/RelationshipType.schema.json"
+          "$ref": "../../codegen/primitives/RelationshipType.schema.json"
         },
         {
           "type": "null"
@@ -18522,7 +25117,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondCharacteristics.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondCharacteristics.schema.json
 
 ```json
 {
@@ -18625,7 +25220,7 @@ tempfile = "3.0"
     "relationship_type": {
       "allOf": [
         {
-          "$ref": "../primitives/RelationshipType.schema.json"
+          "$ref": "../../codegen/primitives/RelationshipType.schema.json"
         }
       ],
       "description": "Type of relationship"
@@ -18664,7 +25259,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondEvidence.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondEvidence.schema.json
 
 ```json
 {
@@ -18755,7 +25350,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondHintInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondHintInput.schema.json
 
 ```json
 {
@@ -18771,7 +25366,7 @@ tempfile = "3.0"
           "type": "string"
         },
         "relationship_type": {
-          "$ref": "../primitives/RelationshipType.schema.json"
+          "$ref": "../../codegen/primitives/RelationshipType.schema.json"
         },
         "strength": {
           "format": "double",
@@ -18804,7 +25399,7 @@ tempfile = "3.0"
     "segment": {
       "allOf": [
         {
-          "$ref": "../primitives/Segment.schema.json"
+          "$ref": "../../codegen/primitives/Segment.schema.json"
         }
       ],
       "description": "The segment containing relationship information"
@@ -18812,7 +25407,7 @@ tempfile = "3.0"
     "threads": {
       "description": "Detected threads in the segment",
       "items": {
-        "$ref": "../primitives/ThreadReference.schema.json"
+        "$ref": "../../codegen/primitives/ThreadReference.schema.json"
       },
       "type": "array"
     }
@@ -18832,7 +25427,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondHintOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondHintOutput.schema.json
 
 ```json
 {
@@ -18844,7 +25439,7 @@ tempfile = "3.0"
         "new_relationship_type": {
           "anyOf": [
             {
-              "$ref": "../primitives/RelationshipType.schema.json"
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
             },
             {
               "type": "null"
@@ -18919,7 +25514,7 @@ tempfile = "3.0"
         "relationship_type": {
           "allOf": [
             {
-              "$ref": "../primitives/RelationshipType.schema.json"
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
             }
           ],
           "description": "Type of relationship"
@@ -19081,7 +25676,7 @@ tempfile = "3.0"
         "head": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Source entity (head)"
@@ -19089,7 +25684,7 @@ tempfile = "3.0"
         "tail": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Target entity (tail)"
@@ -19194,7 +25789,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondHints.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondHints.schema.json
 
 ```json
 {
@@ -19218,7 +25813,7 @@ tempfile = "3.0"
     "relationship_type": {
       "allOf": [
         {
-          "$ref": "../primitives/RelationshipType.schema.json"
+          "$ref": "../../codegen/primitives/RelationshipType.schema.json"
         }
       ],
       "description": "Relationship type"
@@ -19226,7 +25821,7 @@ tempfile = "3.0"
     "source": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadReference.schema.json"
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
         }
       ],
       "description": "Source entity (head of relationship)"
@@ -19239,7 +25834,7 @@ tempfile = "3.0"
     "target": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadReference.schema.json"
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
         }
       ],
       "description": "Target entity (tail of relationship)"
@@ -19267,7 +25862,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondIndicatorType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondIndicatorType.schema.json
 
 ```json
 {
@@ -19326,7 +25921,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BondUpdate.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BondUpdate.schema.json
 
 ```json
 {
@@ -19338,7 +25933,7 @@ tempfile = "3.0"
         "new_relationship_type": {
           "anyOf": [
             {
-              "$ref": "../primitives/RelationshipType.schema.json"
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
             },
             {
               "type": "null"
@@ -19408,7 +26003,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/BoundingBox.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/BoundingBox.schema.json
 
 ```json
 {
@@ -19448,7 +26043,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ClassificationEvidence.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ClassificationEvidence.schema.json
 
 ```json
 {
@@ -19551,7 +26146,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ClassificationReasoning.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ClassificationReasoning.schema.json
 
 ```json
 {
@@ -19585,7 +26180,7 @@ tempfile = "3.0"
     "verb_category": {
       "anyOf": [
         {
-          "$ref": "../primitives/VerbCategory.schema.json"
+          "$ref": "../../codegen/primitives/VerbCategory.schema.json"
         },
         {
           "type": "null"
@@ -19605,7 +26200,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ClassifiedPurpose.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ClassifiedPurpose.schema.json
 
 ```json
 {
@@ -19628,7 +26223,7 @@ tempfile = "3.0"
     "purpose": {
       "allOf": [
         {
-          "$ref": "../primitives/ToolPurpose.schema.json"
+          "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
         }
       ],
       "description": "The purpose of the message"
@@ -19648,7 +26243,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/CommandAnalysis.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/CommandAnalysis.schema.json
 
 ```json
 {
@@ -19771,7 +26366,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/CommandType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/CommandType.schema.json
 
 ```json
 {
@@ -19851,7 +26446,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ConditionOperator.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ConditionOperator.schema.json
 
 ```json
 {
@@ -19878,7 +26473,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ConditionType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ConditionType.schema.json
 
 ```json
 {
@@ -19923,7 +26518,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ContextStrategy.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ContextStrategy.schema.json
 
 ```json
 {
@@ -19968,7 +26563,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ContextWindow.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ContextWindow.schema.json
 
 ```json
 {
@@ -20011,7 +26606,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectedAction.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectedAction.schema.json
 
 ```json
 {
@@ -20047,7 +26642,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectedBinding.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectedBinding.schema.json
 
 ```json
 {
@@ -20059,7 +26654,7 @@ tempfile = "3.0"
         "binding_type": {
           "allOf": [
             {
-              "$ref": "../primitives/BindingType.schema.json"
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
             }
           ],
           "description": "Type of cognitive binding"
@@ -20067,7 +26662,7 @@ tempfile = "3.0"
         "directionality": {
           "allOf": [
             {
-              "$ref": "../primitives/Directionality.schema.json"
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
             }
           ],
           "description": "Directionality"
@@ -20221,7 +26816,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -20285,7 +26880,7 @@ tempfile = "3.0"
         "gap": {
           "anyOf": [
             {
-              "$ref": "../primitives/TimeGap.schema.json"
+              "$ref": "../../codegen/primitives/TimeGap.schema.json"
             },
             {
               "type": "null"
@@ -20302,7 +26897,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relation"
@@ -20371,7 +26966,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectedBond.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectedBond.schema.json
 
 ```json
 {
@@ -20417,7 +27012,7 @@ tempfile = "3.0"
         "relationship_type": {
           "allOf": [
             {
-              "$ref": "../primitives/RelationshipType.schema.json"
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
             }
           ],
           "description": "Type of relationship"
@@ -20609,7 +27204,7 @@ tempfile = "3.0"
     "head": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadReference.schema.json"
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
         }
       ],
       "description": "Source entity (head)"
@@ -20617,7 +27212,7 @@ tempfile = "3.0"
     "tail": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadReference.schema.json"
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
         }
       ],
       "description": "Target entity (tail)"
@@ -20640,7 +27235,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectedEmotion.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectedEmotion.schema.json
 
 ```json
 {
@@ -20676,7 +27271,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectedObject.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectedObject.schema.json
 
 ```json
 {
@@ -20746,7 +27341,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectedPerson.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectedPerson.schema.json
 
 ```json
 {
@@ -20819,7 +27414,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectedThread.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectedThread.schema.json
 
 ```json
 {
@@ -20891,7 +27486,7 @@ tempfile = "3.0"
     "role": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadRole.schema.json"
+          "$ref": "../../codegen/primitives/ThreadRole.schema.json"
         }
       ],
       "description": "Role in this entity"
@@ -20899,7 +27494,7 @@ tempfile = "3.0"
     "thread": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadReference.schema.json"
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
         }
       ],
       "description": "The matched thread"
@@ -20926,7 +27521,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DetectionMethod.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DetectionMethod.schema.json
 
 ```json
 {
@@ -20985,7 +27580,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/Directionality.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/Directionality.schema.json
 
 ```json
 {
@@ -21023,7 +27618,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/DurationCategory.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/DurationCategory.schema.json
 
 ```json
 {
@@ -21046,7 +27641,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EmotionalTone.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EmotionalTone.schema.json
 
 ```json
 {
@@ -21089,7 +27684,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityClassification.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityClassification.schema.json
 
 ```json
 {
@@ -21190,7 +27785,7 @@ tempfile = "3.0"
     "entity_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         }
       ],
       "description": "Entity type"
@@ -21223,7 +27818,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityClassificationContext.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityClassificationContext.schema.json
 
 ```json
 {
@@ -21244,7 +27839,7 @@ tempfile = "3.0"
         "primary_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Most common entity type"
@@ -21270,7 +27865,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Known threads for reference",
       "items": {
-        "$ref": "../primitives/ThreadReference.schema.json"
+        "$ref": "../../codegen/primitives/ThreadReference.schema.json"
       },
       "type": "array"
     },
@@ -21305,7 +27900,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityClassifierInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityClassifierInput.schema.json
 
 ```json
 {
@@ -21330,7 +27925,7 @@ tempfile = "3.0"
         "purpose": {
           "allOf": [
             {
-              "$ref": "../primitives/ToolPurpose.schema.json"
+              "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
             }
           ],
           "description": "The purpose of the message"
@@ -21357,7 +27952,7 @@ tempfile = "3.0"
           "default": [],
           "description": "Known threads for reference",
           "items": {
-            "$ref": "../primitives/ThreadReference.schema.json"
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
           },
           "type": "array"
         },
@@ -21399,7 +27994,7 @@ tempfile = "3.0"
         "primary_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Most common entity type"
@@ -21436,7 +28031,7 @@ tempfile = "3.0"
     "segment": {
       "allOf": [
         {
-          "$ref": "../primitives/Segment.schema.json"
+          "$ref": "../../codegen/primitives/Segment.schema.json"
         }
       ],
       "description": "The segment to classify"
@@ -21457,7 +28052,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityClassifierOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityClassifierOutput.schema.json
 
 ```json
 {
@@ -21521,7 +28116,7 @@ tempfile = "3.0"
         "verb_category": {
           "anyOf": [
             {
-              "$ref": "../primitives/VerbCategory.schema.json"
+              "$ref": "../../codegen/primitives/VerbCategory.schema.json"
             },
             {
               "type": "null"
@@ -21539,7 +28134,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -21646,7 +28241,7 @@ tempfile = "3.0"
     "primary_thread": {
       "anyOf": [
         {
-          "$ref": "../primitives/ThreadReference.schema.json"
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
         },
         {
           "type": "null"
@@ -21667,7 +28262,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Secondary thread references",
       "items": {
-        "$ref": "../primitives/ThreadReference.schema.json"
+        "$ref": "../../codegen/primitives/ThreadReference.schema.json"
       },
       "type": "array"
     },
@@ -21695,7 +28290,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityContent.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityContent.schema.json
 
 ```json
 {
@@ -21744,7 +28339,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityMention.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityMention.schema.json
 
 ```json
 {
@@ -21764,7 +28359,7 @@ tempfile = "3.0"
     "entity_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityMentionType.schema.json"
+          "$ref": "../../codegen/primitives/EntityMentionType.schema.json"
         }
       ],
       "description": "Type of entity mentioned"
@@ -21805,7 +28400,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityMentionType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityMentionType.schema.json
 
 ```json
 {
@@ -21831,7 +28426,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityPatterns.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityPatterns.schema.json
 
 ```json
 {
@@ -21850,7 +28445,7 @@ tempfile = "3.0"
     "primary_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         }
       ],
       "description": "Most common entity type"
@@ -21869,7 +28464,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityRef.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityRef.schema.json
 
 ```json
 {
@@ -21883,7 +28478,7 @@ tempfile = "3.0"
     "entity_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         }
       ],
       "description": "Entity type"
@@ -21919,7 +28514,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityReference.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityReference.schema.json
 
 ```json
 {
@@ -21933,7 +28528,7 @@ tempfile = "3.0"
     "entity_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         }
       ],
       "description": "Entity type"
@@ -21961,7 +28556,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EntityType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EntityType.schema.json
 
 ```json
 {
@@ -22034,7 +28629,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ErrorStrategy.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ErrorStrategy.schema.json
 
 ```json
 {
@@ -22079,7 +28674,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/EvidenceType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/EvidenceType.schema.json
 
 ```json
 {
@@ -22152,7 +28747,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ExecutionOrder.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ExecutionOrder.schema.json
 
 ```json
 {
@@ -22197,7 +28792,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ExistingBond.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ExistingBond.schema.json
 
 ```json
 {
@@ -22211,7 +28806,7 @@ tempfile = "3.0"
       "type": "string"
     },
     "relationship_type": {
-      "$ref": "../primitives/RelationshipType.schema.json"
+      "$ref": "../../codegen/primitives/RelationshipType.schema.json"
     },
     "strength": {
       "format": "double",
@@ -22238,7 +28833,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/FilterOperator.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/FilterOperator.schema.json
 
 ```json
 {
@@ -22266,7 +28861,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/GateInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/GateInput.schema.json
 
 ```json
 {
@@ -22274,15 +28869,15 @@ tempfile = "3.0"
   "description": "Input schema for the FatesGate system - entry point to the Fates pipeline.",
   "properties": {
     "context": {
-      "$ref": "../components/RequestContext.schema.json",
+      "$ref": "../../codegen/components/RequestContext.schema.json",
       "description": "Additional request context"
     },
     "message": {
-      "$ref": "../primitives/PlainTextObject.schema.json",
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json",
       "description": "The incoming message to process"
     },
     "thread_id": {
-      "$ref": "../primitives/UUID.schema.json",
+      "$ref": "../../codegen/primitives/UUID.schema.json",
       "description": "Thread identifier for context"
     }
   },
@@ -22304,7 +28899,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/GateOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/GateOutput.schema.json
 
 ```json
 {
@@ -22339,7 +28934,7 @@ tempfile = "3.0"
       "type": "string"
     },
     "shuttle_id": {
-      "$ref": "../primitives/UUID.schema.json",
+      "$ref": "../../codegen/primitives/UUID.schema.json",
       "description": "ID of the created Shuttle for pipeline routing"
     }
   },
@@ -22360,7 +28955,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/GraphUpdateType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/GraphUpdateType.schema.json
 
 ```json
 {
@@ -22412,7 +29007,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/IdentifiedVerb.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/IdentifiedVerb.schema.json
 
 ```json
 {
@@ -22434,7 +29029,7 @@ tempfile = "3.0"
     "category": {
       "allOf": [
         {
-          "$ref": "../primitives/VerbCategory.schema.json"
+          "$ref": "../../codegen/primitives/VerbCategory.schema.json"
         }
       ],
       "description": "Verb category"
@@ -22475,7 +29070,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/InputMapping.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/InputMapping.schema.json
 
 ```json
 {
@@ -22645,7 +29240,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/InputTransform.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/InputTransform.schema.json
 
 ```json
 {
@@ -22778,7 +29373,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/InteractionFrequency.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/InteractionFrequency.schema.json
 
 ```json
 {
@@ -22802,7 +29397,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/KnownEntity.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/KnownEntity.schema.json
 
 ```json
 {
@@ -22841,7 +29436,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/LinguisticAnalysis.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/LinguisticAnalysis.schema.json
 
 ```json
 {
@@ -22853,7 +29448,7 @@ tempfile = "3.0"
         "category": {
           "allOf": [
             {
-              "$ref": "../primitives/VerbCategory.schema.json"
+              "$ref": "../../codegen/primitives/VerbCategory.schema.json"
             }
           ],
           "description": "Verb category"
@@ -22944,7 +29539,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/Modality.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/Modality.schema.json
 
 ```json
 {
@@ -22966,7 +29561,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ModalityInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ModalityInput.schema.json
 
 ```json
 {
@@ -23127,7 +29722,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ParameterConstraints.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ParameterConstraints.schema.json
 
 ```json
 {
@@ -23182,7 +29777,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ParameterType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ParameterType.schema.json
 
 ```json
 {
@@ -23224,7 +29819,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ParsedTemporal.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ParsedTemporal.schema.json
 
 ```json
 {
@@ -23267,7 +29862,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PhysicsAnalysis.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PhysicsAnalysis.schema.json
 
 ```json
 {
@@ -23342,7 +29937,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PhysicsHintInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PhysicsHintInput.schema.json
 
 ```json
 {
@@ -23384,7 +29979,7 @@ tempfile = "3.0"
     "entity_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         }
       ],
       "description": "Entity type being spawned"
@@ -23400,7 +29995,7 @@ tempfile = "3.0"
     "segment": {
       "allOf": [
         {
-          "$ref": "../primitives/Segment.schema.json"
+          "$ref": "../../codegen/primitives/Segment.schema.json"
         }
       ],
       "description": "The segment to analyze"
@@ -23422,7 +30017,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PhysicsHintOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PhysicsHintOutput.schema.json
 
 ```json
 {
@@ -23603,7 +30198,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PhysicsHintValues.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PhysicsHintValues.schema.json
 
 ```json
 {
@@ -23659,7 +30254,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PhysicsHints.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PhysicsHints.schema.json
 
 ```json
 {
@@ -23711,7 +30306,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PipelineTrigger.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PipelineTrigger.schema.json
 
 ```json
 {
@@ -23794,7 +30389,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PipelineType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PipelineType.schema.json
 
 ```json
 {
@@ -23853,7 +30448,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PurposeClassifierInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PurposeClassifierInput.schema.json
 
 ```json
 {
@@ -23878,7 +30473,7 @@ tempfile = "3.0"
         "purpose": {
           "allOf": [
             {
-              "$ref": "../primitives/ToolPurpose.schema.json"
+              "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
             }
           ],
           "description": "The purpose of the message"
@@ -23897,7 +30492,7 @@ tempfile = "3.0"
           "default": [],
           "description": "Previous messages in conversation",
           "items": {
-            "$ref": "../primitives/ConversationTurn.schema.json"
+            "$ref": "../../codegen/primitives/ConversationTurn.schema.json"
           },
           "type": "array"
         },
@@ -23930,7 +30525,7 @@ tempfile = "3.0"
         "primary_purpose": {
           "allOf": [
             {
-              "$ref": "../primitives/ToolPurpose.schema.json"
+              "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
             }
           ],
           "description": "Most common purpose"
@@ -23968,7 +30563,7 @@ tempfile = "3.0"
     "segment": {
       "allOf": [
         {
-          "$ref": "../primitives/Segment.schema.json"
+          "$ref": "../../codegen/primitives/Segment.schema.json"
         }
       ],
       "description": "The segment to classify"
@@ -23988,7 +30583,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PurposeClassifierOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PurposeClassifierOutput.schema.json
 
 ```json
 {
@@ -24013,7 +30608,7 @@ tempfile = "3.0"
         "purpose": {
           "allOf": [
             {
-              "$ref": "../primitives/ToolPurpose.schema.json"
+              "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
             }
           ],
           "description": "The purpose of the message"
@@ -24204,7 +30799,7 @@ tempfile = "3.0"
         "query_type": {
           "allOf": [
             {
-              "$ref": "../primitives/QueryType.schema.json"
+              "$ref": "../../codegen/primitives/QueryType.schema.json"
             }
           ],
           "description": "Type of query"
@@ -24219,7 +30814,7 @@ tempfile = "3.0"
         "target": {
           "allOf": [
             {
-              "$ref": "../primitives/QueryTarget.schema.json"
+              "$ref": "../../codegen/primitives/QueryTarget.schema.json"
             }
           ],
           "description": "What the query is targeting"
@@ -24325,7 +30920,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PurposeContext.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PurposeContext.schema.json
 
 ```json
 {
@@ -24350,7 +30945,7 @@ tempfile = "3.0"
         "purpose": {
           "allOf": [
             {
-              "$ref": "../primitives/ToolPurpose.schema.json"
+              "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
             }
           ],
           "description": "The purpose of the message"
@@ -24368,7 +30963,7 @@ tempfile = "3.0"
         "primary_purpose": {
           "allOf": [
             {
-              "$ref": "../primitives/ToolPurpose.schema.json"
+              "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
             }
           ],
           "description": "Most common purpose"
@@ -24395,7 +30990,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Previous messages in conversation",
       "items": {
-        "$ref": "../primitives/ConversationTurn.schema.json"
+        "$ref": "../../codegen/primitives/ConversationTurn.schema.json"
       },
       "type": "array"
     },
@@ -24430,7 +31025,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/PurposePipeline.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/PurposePipeline.schema.json
 
 ```json
 {
@@ -24482,7 +31077,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/QueryAnalysis.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/QueryAnalysis.schema.json
 
 ```json
 {
@@ -24544,7 +31139,7 @@ tempfile = "3.0"
     "query_type": {
       "allOf": [
         {
-          "$ref": "../primitives/QueryType.schema.json"
+          "$ref": "../../codegen/primitives/QueryType.schema.json"
         }
       ],
       "description": "Type of query"
@@ -24559,7 +31154,7 @@ tempfile = "3.0"
     "target": {
       "allOf": [
         {
-          "$ref": "../primitives/QueryTarget.schema.json"
+          "$ref": "../../codegen/primitives/QueryTarget.schema.json"
         }
       ],
       "description": "What the query is targeting"
@@ -24580,7 +31175,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/QueryFilter.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/QueryFilter.schema.json
 
 ```json
 {
@@ -24636,7 +31231,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/RecentThread.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/RecentThread.schema.json
 
 ```json
 {
@@ -24658,7 +31253,7 @@ tempfile = "3.0"
     "thread": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadReference.schema.json"
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
         }
       ],
       "description": "Thread reference"
@@ -24679,7 +31274,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/RelationshipDuration.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/RelationshipDuration.schema.json
 
 ```json
 {
@@ -24738,7 +31333,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/RelationshipType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/RelationshipType.schema.json
 
 ```json
 {
@@ -24782,7 +31377,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/Segment.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/Segment.schema.json
 
 ```json
 {
@@ -24792,7 +31387,7 @@ tempfile = "3.0"
     "boundaries": {
       "allOf": [
         {
-          "$ref": "../primitives/SegmentBoundaries.schema.json"
+          "$ref": "../../codegen/primitives/SegmentBoundaries.schema.json"
         }
       ],
       "description": "Segment boundaries"
@@ -24809,7 +31404,7 @@ tempfile = "3.0"
     "features": {
       "allOf": [
         {
-          "$ref": "../primitives/SegmentFeatures.schema.json"
+          "$ref": "../../codegen/primitives/SegmentFeatures.schema.json"
         }
       ],
       "description": "Extracted features"
@@ -24827,7 +31422,7 @@ tempfile = "3.0"
     "modality": {
       "allOf": [
         {
-          "$ref": "../primitives/Modality.schema.json"
+          "$ref": "../../codegen/primitives/Modality.schema.json"
         }
       ],
       "description": "Original modality"
@@ -24852,7 +31447,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SegmentBoundaries.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SegmentBoundaries.schema.json
 
 ```json
 {
@@ -24894,7 +31489,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SegmentFeatures.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SegmentFeatures.schema.json
 
 ```json
 {
@@ -24904,7 +31499,7 @@ tempfile = "3.0"
     "emotional_tone": {
       "anyOf": [
         {
-          "$ref": "../primitives/EmotionalTone.schema.json"
+          "$ref": "../../codegen/primitives/EmotionalTone.schema.json"
         },
         {
           "type": "null"
@@ -24933,7 +31528,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Entity mentions found",
       "items": {
-        "$ref": "../primitives/EntityMention.schema.json"
+        "$ref": "../../codegen/primitives/EntityMention.schema.json"
       },
       "type": "array"
     },
@@ -24949,7 +31544,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Temporal markers detected",
       "items": {
-        "$ref": "../primitives/TemporalMarker.schema.json"
+        "$ref": "../../codegen/primitives/TemporalMarker.schema.json"
       },
       "type": "array"
     }
@@ -24964,7 +31559,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SegmentationConfig.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SegmentationConfig.schema.json
 
 ```json
 {
@@ -25016,7 +31611,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SegmentationContext.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SegmentationContext.schema.json
 
 ```json
 {
@@ -25072,7 +31667,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Previous segments in the conversation",
       "items": {
-        "$ref": "../primitives/Segment.schema.json"
+        "$ref": "../../codegen/primitives/Segment.schema.json"
       },
       "type": "array"
     },
@@ -25094,7 +31689,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SegmentationInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SegmentationInput.schema.json
 
 ```json
 {
@@ -25338,7 +31933,7 @@ tempfile = "3.0"
           "default": [],
           "description": "Previous segments in the conversation",
           "items": {
-            "$ref": "../primitives/Segment.schema.json"
+            "$ref": "../../codegen/primitives/Segment.schema.json"
           },
           "type": "array"
         },
@@ -25405,7 +32000,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SegmentationMetadata.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SegmentationMetadata.schema.json
 
 ```json
 {
@@ -25429,7 +32024,7 @@ tempfile = "3.0"
     "modality": {
       "allOf": [
         {
-          "$ref": "../primitives/Modality.schema.json"
+          "$ref": "../../codegen/primitives/Modality.schema.json"
         }
       ],
       "description": "Input modality"
@@ -25473,7 +32068,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SegmentationOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SegmentationOutput.schema.json
 
 ```json
 {
@@ -25499,7 +32094,7 @@ tempfile = "3.0"
         "modality": {
           "allOf": [
             {
-              "$ref": "../primitives/Modality.schema.json"
+              "$ref": "../../codegen/primitives/Modality.schema.json"
             }
           ],
           "description": "Input modality"
@@ -25549,7 +32144,7 @@ tempfile = "3.0"
     "segments": {
       "description": "The resulting segments",
       "items": {
-        "$ref": "../primitives/Segment.schema.json"
+        "$ref": "../../codegen/primitives/Segment.schema.json"
       },
       "type": "array"
     }
@@ -25569,7 +32164,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SemanticProperties.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SemanticProperties.schema.json
 
 ```json
 {
@@ -25611,7 +32206,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SpawnAction.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SpawnAction.schema.json
 
 ```json
 {
@@ -25656,7 +32251,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SpawnConfig.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SpawnConfig.schema.json
 
 ```json
 {
@@ -25684,7 +32279,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Entity types that should never auto-spawn",
       "items": {
-        "$ref": "../primitives/EntityType.schema.json"
+        "$ref": "../../codegen/primitives/EntityType.schema.json"
       },
       "type": "array"
     },
@@ -25712,7 +32307,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SpawnHints.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SpawnHints.schema.json
 
 ```json
 {
@@ -25724,7 +32319,7 @@ tempfile = "3.0"
         "binding_type": {
           "allOf": [
             {
-              "$ref": "../primitives/BindingType.schema.json"
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
             }
           ],
           "description": "Type of cognitive binding"
@@ -25740,7 +32335,7 @@ tempfile = "3.0"
         "directionality": {
           "allOf": [
             {
-              "$ref": "../primitives/Directionality.schema.json"
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
             }
           ],
           "description": "Directionality of binding"
@@ -25808,7 +32403,7 @@ tempfile = "3.0"
         "relationship_type": {
           "allOf": [
             {
-              "$ref": "../primitives/RelationshipType.schema.json"
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
             }
           ],
           "description": "Relationship type"
@@ -25816,7 +32411,7 @@ tempfile = "3.0"
         "source": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Source entity (head of relationship)"
@@ -25829,7 +32424,7 @@ tempfile = "3.0"
         "target": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Target entity (tail of relationship)"
@@ -25859,7 +32454,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -25933,7 +32528,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relationship"
@@ -25968,14 +32563,14 @@ tempfile = "3.0"
           "default": [],
           "description": "Related threads to link",
           "items": {
-            "$ref": "../primitives/ThreadReference.schema.json"
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
           },
           "type": "array"
         },
         "thread_role": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadRole.schema.json"
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
             }
           ],
           "description": "Role of entity in narrative"
@@ -26045,7 +32640,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SpawnSuggesterInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SpawnSuggesterInput.schema.json
 
 ```json
 {
@@ -26109,7 +32704,7 @@ tempfile = "3.0"
         "verb_category": {
           "anyOf": [
             {
-              "$ref": "../primitives/VerbCategory.schema.json"
+              "$ref": "../../codegen/primitives/VerbCategory.schema.json"
             },
             {
               "type": "null"
@@ -26127,7 +32722,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -26173,7 +32768,7 @@ tempfile = "3.0"
         "primary_thread": {
           "anyOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             },
             {
               "type": "null"
@@ -26194,7 +32789,7 @@ tempfile = "3.0"
           "default": [],
           "description": "Secondary thread references",
           "items": {
-            "$ref": "../primitives/ThreadReference.schema.json"
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
           },
           "type": "array"
         },
@@ -26298,7 +32893,7 @@ tempfile = "3.0"
           "default": [],
           "description": "Entity types that should never auto-spawn",
           "items": {
-            "$ref": "../primitives/EntityType.schema.json"
+            "$ref": "../../codegen/primitives/EntityType.schema.json"
           },
           "type": "array"
         },
@@ -26348,7 +32943,7 @@ tempfile = "3.0"
     "segment": {
       "allOf": [
         {
-          "$ref": "../primitives/Segment.schema.json"
+          "$ref": "../../codegen/primitives/Segment.schema.json"
         }
       ],
       "description": "Original segment"
@@ -26369,7 +32964,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SpawnSuggesterOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SpawnSuggesterOutput.schema.json
 
 ```json
 {
@@ -26381,7 +32976,7 @@ tempfile = "3.0"
         "binding_type": {
           "allOf": [
             {
-              "$ref": "../primitives/BindingType.schema.json"
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
             }
           ],
           "description": "Type of cognitive binding"
@@ -26397,7 +32992,7 @@ tempfile = "3.0"
         "directionality": {
           "allOf": [
             {
-              "$ref": "../primitives/Directionality.schema.json"
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
             }
           ],
           "description": "Directionality of binding"
@@ -26465,7 +33060,7 @@ tempfile = "3.0"
         "relationship_type": {
           "allOf": [
             {
-              "$ref": "../primitives/RelationshipType.schema.json"
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
             }
           ],
           "description": "Relationship type"
@@ -26473,7 +33068,7 @@ tempfile = "3.0"
         "source": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Source entity (head of relationship)"
@@ -26486,7 +33081,7 @@ tempfile = "3.0"
         "target": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Target entity (tail of relationship)"
@@ -26553,7 +33148,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -26723,7 +33318,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type to spawn"
@@ -26763,7 +33358,7 @@ tempfile = "3.0"
         "primary_type": {
           "anyOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             },
             {
               "type": "null"
@@ -26813,7 +33408,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relationship"
@@ -26848,14 +33443,14 @@ tempfile = "3.0"
           "default": [],
           "description": "Related threads to link",
           "items": {
-            "$ref": "../primitives/ThreadReference.schema.json"
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
           },
           "type": "array"
         },
         "thread_role": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadRole.schema.json"
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
             }
           ],
           "description": "Role of entity in narrative"
@@ -26901,7 +33496,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SpawnSuggestion.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SpawnSuggestion.schema.json
 
 ```json
 {
@@ -26913,7 +33508,7 @@ tempfile = "3.0"
         "binding_type": {
           "allOf": [
             {
-              "$ref": "../primitives/BindingType.schema.json"
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
             }
           ],
           "description": "Type of cognitive binding"
@@ -26929,7 +33524,7 @@ tempfile = "3.0"
         "directionality": {
           "allOf": [
             {
-              "$ref": "../primitives/Directionality.schema.json"
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
             }
           ],
           "description": "Directionality of binding"
@@ -26997,7 +33592,7 @@ tempfile = "3.0"
         "relationship_type": {
           "allOf": [
             {
-              "$ref": "../primitives/RelationshipType.schema.json"
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
             }
           ],
           "description": "Relationship type"
@@ -27005,7 +33600,7 @@ tempfile = "3.0"
         "source": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Source entity (head of relationship)"
@@ -27018,7 +33613,7 @@ tempfile = "3.0"
         "target": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Target entity (tail of relationship)"
@@ -27085,7 +33680,7 @@ tempfile = "3.0"
         "entity_type": {
           "allOf": [
             {
-              "$ref": "../primitives/EntityType.schema.json"
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
             }
           ],
           "description": "Entity type"
@@ -27242,7 +33837,7 @@ tempfile = "3.0"
         "relation": {
           "allOf": [
             {
-              "$ref": "../primitives/TemporalRelation.schema.json"
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
             }
           ],
           "description": "Time relationship"
@@ -27277,14 +33872,14 @@ tempfile = "3.0"
           "default": [],
           "description": "Related threads to link",
           "items": {
-            "$ref": "../primitives/ThreadReference.schema.json"
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
           },
           "type": "array"
         },
         "thread_role": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadRole.schema.json"
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
             }
           ],
           "description": "Role of entity in narrative"
@@ -27323,7 +33918,7 @@ tempfile = "3.0"
     "entity_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         }
       ],
       "description": "Entity type to spawn"
@@ -27359,7 +33954,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SpawnSummary.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SpawnSummary.schema.json
 
 ```json
 {
@@ -27375,7 +33970,7 @@ tempfile = "3.0"
     "primary_type": {
       "anyOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         },
         {
           "type": "null"
@@ -27419,7 +34014,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/StandardPipeline.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/StandardPipeline.schema.json
 
 ```json
 {
@@ -28045,7 +34640,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/StepCondition.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/StepCondition.schema.json
 
 ```json
 {
@@ -28147,7 +34742,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SubjectReference.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SubjectReference.schema.json
 
 ```json
 {
@@ -28258,7 +34853,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SubjectType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SubjectType.schema.json
 
 ```json
 {
@@ -28331,7 +34926,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/SuggestedThread.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/SuggestedThread.schema.json
 
 ```json
 {
@@ -28531,7 +35126,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TemporalBinding.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TemporalBinding.schema.json
 
 ```json
 {
@@ -28549,7 +35144,7 @@ tempfile = "3.0"
     "relation": {
       "allOf": [
         {
-          "$ref": "../primitives/TemporalRelation.schema.json"
+          "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
         }
       ],
       "description": "Time relationship"
@@ -28568,7 +35163,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TemporalMarker.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TemporalMarker.schema.json
 
 ```json
 {
@@ -28578,7 +35173,7 @@ tempfile = "3.0"
     "marker_type": {
       "allOf": [
         {
-          "$ref": "../primitives/TemporalMarkerType.schema.json"
+          "$ref": "../../codegen/primitives/TemporalMarkerType.schema.json"
         }
       ],
       "description": "Type of temporal reference"
@@ -28586,7 +35181,7 @@ tempfile = "3.0"
     "parsed": {
       "anyOf": [
         {
-          "$ref": "../primitives/ParsedTemporal.schema.json"
+          "$ref": "../../codegen/primitives/ParsedTemporal.schema.json"
         },
         {
           "type": "null"
@@ -28614,7 +35209,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TemporalMarkerType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TemporalMarkerType.schema.json
 
 ```json
 {
@@ -28666,7 +35261,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TemporalProperties.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TemporalProperties.schema.json
 
 ```json
 {
@@ -28676,7 +35271,7 @@ tempfile = "3.0"
     "gap": {
       "anyOf": [
         {
-          "$ref": "../primitives/TimeGap.schema.json"
+          "$ref": "../../codegen/primitives/TimeGap.schema.json"
         },
         {
           "type": "null"
@@ -28693,7 +35288,7 @@ tempfile = "3.0"
     "relation": {
       "allOf": [
         {
-          "$ref": "../primitives/TemporalRelation.schema.json"
+          "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
         }
       ],
       "description": "Time relation"
@@ -28712,7 +35307,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TemporalRelation.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TemporalRelation.schema.json
 
 ```json
 {
@@ -28735,7 +35330,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TemporalScope.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TemporalScope.schema.json
 
 ```json
 {
@@ -28777,7 +35372,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadCategory.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadCategory.schema.json
 
 ```json
 {
@@ -28864,7 +35459,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadHintInput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadHintInput.schema.json
 
 ```json
 {
@@ -28888,7 +35483,7 @@ tempfile = "3.0"
         "thread": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "Thread reference"
@@ -28907,7 +35502,7 @@ tempfile = "3.0"
     "entity_type": {
       "allOf": [
         {
-          "$ref": "../primitives/EntityType.schema.json"
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
         }
       ],
       "description": "Entity type being spawned"
@@ -28916,7 +35511,7 @@ tempfile = "3.0"
       "default": [],
       "description": "Known threads for matching",
       "items": {
-        "$ref": "../primitives/ThreadReference.schema.json"
+        "$ref": "../../codegen/primitives/ThreadReference.schema.json"
       },
       "type": "array"
     },
@@ -28931,7 +35526,7 @@ tempfile = "3.0"
     "segment": {
       "allOf": [
         {
-          "$ref": "../primitives/Segment.schema.json"
+          "$ref": "../../codegen/primitives/Segment.schema.json"
         }
       ],
       "description": "The segment to analyze"
@@ -28952,7 +35547,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadHintOutput.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadHintOutput.schema.json
 
 ```json
 {
@@ -28977,7 +35572,7 @@ tempfile = "3.0"
         "role": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadRole.schema.json"
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
             }
           ],
           "description": "Role in this entity"
@@ -28985,7 +35580,7 @@ tempfile = "3.0"
         "thread": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadReference.schema.json"
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
             }
           ],
           "description": "The matched thread"
@@ -29309,14 +35904,14 @@ tempfile = "3.0"
           "default": [],
           "description": "Related threads",
           "items": {
-            "$ref": "../primitives/ThreadReference.schema.json"
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
           },
           "type": "array"
         },
         "thread_role": {
           "allOf": [
             {
-              "$ref": "../primitives/ThreadRole.schema.json"
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
             }
           ],
           "description": "Role of entity relative to thread"
@@ -29370,7 +35965,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadHintValues.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadHintValues.schema.json
 
 ```json
 {
@@ -29584,14 +36179,14 @@ tempfile = "3.0"
       "default": [],
       "description": "Related threads",
       "items": {
-        "$ref": "../primitives/ThreadReference.schema.json"
+        "$ref": "../../codegen/primitives/ThreadReference.schema.json"
       },
       "type": "array"
     },
     "thread_role": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadRole.schema.json"
+          "$ref": "../../codegen/primitives/ThreadRole.schema.json"
         }
       ],
       "description": "Role of entity relative to thread"
@@ -29611,7 +36206,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadHints.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadHints.schema.json
 
 ```json
 {
@@ -29639,14 +36234,14 @@ tempfile = "3.0"
       "default": [],
       "description": "Related threads to link",
       "items": {
-        "$ref": "../primitives/ThreadReference.schema.json"
+        "$ref": "../../codegen/primitives/ThreadReference.schema.json"
       },
       "type": "array"
     },
     "thread_role": {
       "allOf": [
         {
-          "$ref": "../primitives/ThreadRole.schema.json"
+          "$ref": "../../codegen/primitives/ThreadRole.schema.json"
         }
       ],
       "description": "Role of entity in narrative"
@@ -29666,7 +36261,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadReference.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadReference.schema.json
 
 ```json
 {
@@ -29709,7 +36304,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadRelation.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadRelation.schema.json
 
 ```json
 {
@@ -29803,7 +36398,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadRelationType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadRelationType.schema.json
 
 ```json
 {
@@ -29862,7 +36457,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ThreadRole.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ThreadRole.schema.json
 
 ```json
 {
@@ -29921,7 +36516,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TimeGap.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TimeGap.schema.json
 
 ```json
 {
@@ -29935,7 +36530,7 @@ tempfile = "3.0"
     "unit": {
       "allOf": [
         {
-          "$ref": "../primitives/TimeUnit.schema.json"
+          "$ref": "../../codegen/primitives/TimeUnit.schema.json"
         }
       ],
       "description": "Duration unit"
@@ -29961,7 +36556,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TimeUnit.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TimeUnit.schema.json
 
 ```json
 {
@@ -29986,7 +36581,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolCategory.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolCategory.schema.json
 
 ```json
 {
@@ -30045,7 +36640,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolChain.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolChain.schema.json
 
 ```json
 {
@@ -30521,7 +37116,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolChainStep.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolChainStep.schema.json
 
 ```json
 {
@@ -30882,7 +37477,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolDefinition.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolDefinition.schema.json
 
 ```json
 {
@@ -31119,7 +37714,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolError.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolError.schema.json
 
 ```json
 {
@@ -31239,7 +37834,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolErrorCode.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolErrorCode.schema.json
 
 ```json
 {
@@ -31326,7 +37921,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolExecutionMetadata.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolExecutionMetadata.schema.json
 
 ```json
 {
@@ -31354,7 +37949,7 @@ tempfile = "3.0"
     "token_usage": {
       "anyOf": [
         {
-          "$ref": "../primitives/TokenUsage.schema.json"
+          "$ref": "../../codegen/primitives/TokenUsage.schema.json"
         },
         {
           "type": "null"
@@ -31391,7 +37986,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolParameter.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolParameter.schema.json
 
 ```json
 {
@@ -31526,7 +38121,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/ToolPurpose.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/ToolPurpose.schema.json
 
 ```json
 {
@@ -31606,7 +38201,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/TriggerType.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/TriggerType.schema.json
 
 ```json
 {
@@ -31658,7 +38253,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/UserPurposePatterns.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/UserPurposePatterns.schema.json
 
 ```json
 {
@@ -31668,7 +38263,7 @@ tempfile = "3.0"
     "primary_purpose": {
       "allOf": [
         {
-          "$ref": "../primitives/ToolPurpose.schema.json"
+          "$ref": "../../codegen/primitives/ToolPurpose.schema.json"
         }
       ],
       "description": "Most common purpose"
@@ -31696,7 +38291,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/VAEPosition.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/VAEPosition.schema.json
 
 ```json
 {
@@ -31734,7 +38329,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/VerbCategory.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/VerbCategory.schema.json
 
 ```json
 {
@@ -31793,7 +38388,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/VerbTense.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/VerbTense.schema.json
 
 ```json
 {
@@ -31815,7 +38410,7 @@ tempfile = "3.0"
 }
 ```
 
-### versions/v1.1.0-alpha/json-schema/tools/VisionSegmentFeatures.schema.json
+### versions/v1.1.0-alpha/json-schema/infrastructure/tools/VisionSegmentFeatures.schema.json
 
 ```json
 {
@@ -31982,7470 +38577,6 @@ tempfile = "3.0"
   "x-familiar-service": {
     "$ref": "../nodes/familiar-worker.node.json"
   }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/AgenticCommand.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ConversationHistoryItem": {
-      "description": "A single item in conversation history",
-      "properties": {
-        "content": {
-          "description": "Content of the message",
-          "type": "string"
-        },
-        "role": {
-          "description": "Role: \"user\" or \"assistant\"",
-          "type": "string"
-        }
-      },
-      "required": [
-        "content",
-        "role"
-      ],
-      "type": "object"
-    },
-    "WeaveBlock": {
-      "description": "Input block types for multimodal weave requests",
-      "oneOf": [
-        {
-          "properties": {
-            "content": {
-              "type": "string"
-            },
-            "type": {
-              "enum": [
-                "text"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "content",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "properties": {
-            "alt_text": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "analyze": {
-              "default": true,
-              "description": "Request vision analysis",
-              "type": "boolean"
-            },
-            "source": {
-              "description": "base64 data URI or URL",
-              "type": "string"
-            },
-            "type": {
-              "enum": [
-                "image"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "source",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "properties": {
-            "duration_secs": {
-              "format": "double",
-              "type": [
-                "number",
-                "null"
-              ]
-            },
-            "source": {
-              "type": "string"
-            },
-            "transcript": {
-              "description": "Pre-transcribed (skip Whisper)",
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "type": {
-              "enum": [
-                "audio"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "source",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "properties": {
-            "filename": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "mime_type": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "source": {
-              "type": "string"
-            },
-            "type": {
-              "enum": [
-                "document"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "source",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "properties": {
-            "extract_images": {
-              "default": false,
-              "description": "Whether to extract images from the page",
-              "type": "boolean"
-            },
-            "selector": {
-              "description": "Optional CSS selector to extract specific content",
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "type": {
-              "enum": [
-                "webpage"
-              ],
-              "type": "string"
-            },
-            "url": {
-              "description": "URL to scrape",
-              "type": "string"
-            }
-          },
-          "required": [
-            "type",
-            "url"
-          ],
-          "type": "object"
-        }
-      ]
-    }
-  },
-  "description": "Commands that can be sent to the agentic system\n\nThese commands are the primary interface for interacting with the multi-agent orchestration system. They can be sent directly via HTTP or published to a message broker.",
-  "oneOf": [
-    {
-      "description": "Send a new message to the agentic system",
-      "properties": {
-        "blocks": {
-          "default": null,
-          "description": "Optional multimodal blocks (images, audio, etc.)",
-          "items": {
-            "$ref": "#/definitions/WeaveBlock"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        },
-        "command_type": {
-          "enum": [
-            "send_message"
-          ],
-          "type": "string"
-        },
-        "content": {
-          "description": "Text content of the message",
-          "type": "string"
-        },
-        "conversation_history": {
-          "default": null,
-          "description": "Conversation history for context",
-          "items": {
-            "$ref": "#/definitions/ConversationHistoryItem"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        },
-        "flow_path": {
-          "default": null,
-          "description": "Override the default flow path (e.g., \"u/phaiel/loom\")",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "request_id": {
-          "description": "Request ID for tracing",
-          "type": "string"
-        },
-        "tenant_id": {
-          "description": "Tenant ID",
-          "type": "string"
-        },
-        "thread_id": {
-          "default": null,
-          "description": "Thread ID (None = start new thread)",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "command_type",
-        "content",
-        "request_id",
-        "tenant_id"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Continue processing in an existing thread",
-      "properties": {
-        "command_type": {
-          "enum": [
-            "continue_thread"
-          ],
-          "type": "string"
-        },
-        "request_id": {
-          "description": "Request ID for tracing",
-          "type": "string"
-        },
-        "thread_id": {
-          "description": "ID of the thread to continue",
-          "type": "string"
-        }
-      },
-      "required": [
-        "command_type",
-        "request_id",
-        "thread_id"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Cancel a running task",
-      "properties": {
-        "command_type": {
-          "enum": [
-            "cancel_task"
-          ],
-          "type": "string"
-        },
-        "reason": {
-          "default": null,
-          "description": "Reason for cancellation",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "task_id": {
-          "description": "ID of the task to cancel",
-          "type": "string"
-        }
-      },
-      "required": [
-        "command_type",
-        "task_id"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Request thread history",
-      "properties": {
-        "command_type": {
-          "enum": [
-            "get_thread_history"
-          ],
-          "type": "string"
-        },
-        "limit": {
-          "default": null,
-          "description": "Maximum number of messages to return",
-          "format": "uint",
-          "minimum": 0.0,
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "thread_id": {
-          "description": "ID of the thread",
-          "type": "string"
-        }
-      },
-      "required": [
-        "command_type",
-        "thread_id"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "AgenticCommand",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/AgenticEvent.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AgentMessageType": {
-      "description": "Agent message types for different response formats\n\nThe agentic system can produce various types of responses depending on what the agent is doing. This enum captures all possible message types.",
-      "oneOf": [
-        {
-          "description": "A log message from the agent (debugging, status updates)",
-          "properties": {
-            "content": {
-              "type": "string"
-            },
-            "level": {
-              "$ref": "#/definitions/LogLevel"
-            },
-            "message_type": {
-              "enum": [
-                "log"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "content",
-            "level",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A question the agent is asking the user",
-          "properties": {
-            "message_type": {
-              "enum": [
-                "question"
-              ],
-              "type": "string"
-            },
-            "options": {
-              "default": null,
-              "items": {
-                "type": "string"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
-            "prompt": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message_type",
-            "prompt"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "An insight derived by the agent",
-          "properties": {
-            "confidence": {
-              "format": "double",
-              "type": "number"
-            },
-            "domain": {
-              "default": null,
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "message_type": {
-              "enum": [
-                "insight"
-              ],
-              "type": "string"
-            },
-            "summary": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "confidence",
-            "message_type",
-            "summary"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A detailed analysis result",
-          "properties": {
-            "domain": {
-              "type": "string"
-            },
-            "findings": {
-              "items": {
-                "$ref": "#/definitions/Finding"
-              },
-              "type": "array"
-            },
-            "message_type": {
-              "enum": [
-                "analysis"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "domain",
-            "findings",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A command/action the agent wants to execute",
-          "properties": {
-            "action": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "command"
-              ],
-              "type": "string"
-            },
-            "parameters": true
-          },
-          "required": [
-            "action",
-            "message_type",
-            "parameters"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A simple text response",
-          "properties": {
-            "content": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "text"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "content",
-            "message_type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Progress update during long-running tasks",
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "message_type": {
-              "enum": [
-                "progress"
-              ],
-              "type": "string"
-            },
-            "percent_complete": {
-              "default": null,
-              "format": "double",
-              "type": [
-                "number",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "message",
-            "message_type"
-          ],
-          "type": "object"
-        }
-      ]
-    },
-    "AgentState": {
-      "description": "Global state shared across all agents in the orchestration loop\n\nThis state is passed between agents and maintains context about the current conversation, authentication status, and which agent is currently \"speaking\".",
-      "properties": {
-        "conversation_context": {
-          "default": [],
-          "description": "Conversation history for context",
-          "items": {
-            "$ref": "../primitives/ConversationTurn.schema.json"
-          },
-          "type": "array"
-        },
-        "current_speaker": {
-          "default": null,
-          "description": "Currently active speaker (None means orchestrator decides)",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "is_authenticated": {
-          "default": false,
-          "description": "Whether the user is authenticated",
-          "type": "boolean"
-        },
-        "just_finished": {
-          "default": false,
-          "description": "Whether the current agent just finished its task",
-          "type": "boolean"
-        },
-        "metadata": {
-          "default": null,
-          "description": "Custom metadata for extensibility"
-        },
-        "tenant_id": {
-          "description": "Tenant ID for multi-tenancy",
-          "type": "string"
-        },
-        "thread_id": {
-          "default": null,
-          "description": "Current thread ID (if in a thread)",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "tenant_id"
-      ],
-      "type": "object"
-    },
-    "Finding": {
-      "description": "A finding from an analysis agent",
-      "properties": {
-        "confidence": {
-          "default": null,
-          "description": "Confidence score (0.0 to 1.0)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "description": {
-          "description": "Detailed description",
-          "type": "string"
-        },
-        "related_entities": {
-          "default": [],
-          "description": "Related entity IDs",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "title": {
-          "description": "Title or label of the finding",
-          "type": "string"
-        }
-      },
-      "required": [
-        "description",
-        "title"
-      ],
-      "type": "object"
-    },
-    "LogLevel": {
-      "description": "Log level for agent log messages",
-      "enum": [
-        "debug",
-        "info",
-        "warning",
-        "error"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Events emitted by the agentic system\n\nThese events notify clients about state changes and results from the multi-agent system. They can be delivered via WebSocket, SSE, or consumed from a message broker.",
-  "oneOf": [
-    {
-      "description": "A new message was received/generated",
-      "properties": {
-        "agent": {
-          "default": null,
-          "description": "Which agent sent this",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "content": {
-          "default": null,
-          "description": "Message content",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "event_type": {
-          "enum": [
-            "message_received"
-          ],
-          "type": "string"
-        },
-        "message_id": {
-          "description": "Message ID",
-          "type": "string"
-        },
-        "message_type": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/AgentMessageType"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Structured message type"
-        },
-        "role": {
-          "description": "Role (user, assistant, system)",
-          "type": "string"
-        },
-        "thread_id": {
-          "description": "Thread ID",
-          "type": "string"
-        },
-        "timestamp": {
-          "description": "Timestamp",
-          "type": "string"
-        }
-      },
-      "required": [
-        "event_type",
-        "message_id",
-        "role",
-        "thread_id",
-        "timestamp"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "An agent is now speaking/processing",
-      "properties": {
-        "agent": {
-          "description": "Which agent is speaking",
-          "type": "string"
-        },
-        "event_type": {
-          "enum": [
-            "agent_speaking"
-          ],
-          "type": "string"
-        },
-        "status": {
-          "default": null,
-          "description": "Optional status message",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "thread_id": {
-          "description": "Thread ID",
-          "type": "string"
-        }
-      },
-      "required": [
-        "agent",
-        "event_type",
-        "thread_id"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A task was completed successfully",
-      "properties": {
-        "event_type": {
-          "enum": [
-            "task_completed"
-          ],
-          "type": "string"
-        },
-        "result": {
-          "description": "Result data"
-        },
-        "task_id": {
-          "description": "Task ID (same as request_id)",
-          "type": "string"
-        },
-        "thread_id": {
-          "description": "Thread ID",
-          "type": "string"
-        }
-      },
-      "required": [
-        "event_type",
-        "result",
-        "task_id",
-        "thread_id"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "An error occurred",
-      "properties": {
-        "code": {
-          "description": "Error code",
-          "type": "string"
-        },
-        "details": {
-          "default": null,
-          "description": "Additional details"
-        },
-        "error": {
-          "description": "Error message",
-          "type": "string"
-        },
-        "event_type": {
-          "enum": [
-            "error"
-          ],
-          "type": "string"
-        },
-        "thread_id": {
-          "default": null,
-          "description": "Thread ID (if applicable)",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "code",
-        "error",
-        "event_type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Thread state was updated",
-      "properties": {
-        "event_type": {
-          "enum": [
-            "thread_state_changed"
-          ],
-          "type": "string"
-        },
-        "state": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/AgentState"
-            }
-          ],
-          "description": "Updated agent state"
-        },
-        "thread_id": {
-          "description": "Thread ID",
-          "type": "string"
-        }
-      },
-      "required": [
-        "event_type",
-        "state",
-        "thread_id"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Progress update for long-running operations",
-      "properties": {
-        "event_type": {
-          "enum": [
-            "progress"
-          ],
-          "type": "string"
-        },
-        "message": {
-          "description": "Progress message",
-          "type": "string"
-        },
-        "percent": {
-          "default": null,
-          "description": "Percent complete (0-100)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "task_id": {
-          "description": "Task ID",
-          "type": "string"
-        },
-        "thread_id": {
-          "description": "Thread ID",
-          "type": "string"
-        }
-      },
-      "required": [
-        "event_type",
-        "message",
-        "task_id",
-        "thread_id"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "AgenticEvent",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/AgenticFlowResponse.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "UIHeddleResult": {
-      "description": "Structured result from the Heddle classification pipeline",
-      "properties": {
-        "classifications": {
-          "default": [],
-          "description": "Classification results",
-          "items": {
-            "$ref": "../primitives/UIClassification.schema.json"
-          },
-          "type": "array"
-        },
-        "physics": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/UIPhysicsResult.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Physics hints"
-        },
-        "purpose": {
-          "default": null,
-          "description": "Detected purpose/intent",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "segments": {
-          "default": [],
-          "description": "Segmented content",
-          "items": {
-            "$ref": "../primitives/UIHeddleSegment.schema.json"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "UIThinkingStep": {
-      "description": "A thinking/reasoning step for chain-of-thought visibility",
-      "properties": {
-        "agent": {
-          "description": "Which agent produced this thought",
-          "type": "string"
-        },
-        "id": {
-          "description": "Unique ID",
-          "type": "string"
-        },
-        "thought": {
-          "description": "The thought/reasoning content",
-          "type": "string"
-        },
-        "timestamp": {
-          "default": null,
-          "description": "Timestamp",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "agent",
-        "id",
-        "thought"
-      ],
-      "type": "object"
-    },
-    "UIToolCall": {
-      "description": "A tool call with real-time status updates for UI display",
-      "properties": {
-        "arguments": {
-          "default": null,
-          "description": "Arguments passed to the tool"
-        },
-        "id": {
-          "description": "Unique ID for this tool call",
-          "type": "string"
-        },
-        "result": {
-          "default": null,
-          "description": "Result from the tool"
-        },
-        "status": {
-          "allOf": [
-            {
-              "$ref": "../primitives/ToolCallStatus.schema.json"
-            }
-          ],
-          "description": "Current status"
-        },
-        "tool": {
-          "description": "Name of the tool",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "status",
-        "tool"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Full response from the agentic Windmill flow This is what the API returns to the UI",
-  "properties": {
-    "agent": {
-      "description": "Which agent responded",
-      "type": "string"
-    },
-    "has_more_tasks": {
-      "default": false,
-      "description": "Whether there are more tasks",
-      "type": "boolean"
-    },
-    "heddle_result": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/UIHeddleResult"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Heddle classification result (if applicable)"
-    },
-    "next_request": {
-      "default": null,
-      "description": "Next request (if continuation needed)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "request_id": {
-      "description": "Request ID for tracing",
-      "type": "string"
-    },
-    "response": {
-      "description": "The conversational response text",
-      "type": "string"
-    },
-    "state": {
-      "default": null,
-      "description": "Updated agent state"
-    },
-    "thinking_steps": {
-      "default": [],
-      "description": "Thinking steps (for chain-of-thought visibility)",
-      "items": {
-        "$ref": "#/definitions/UIThinkingStep"
-      },
-      "type": "array"
-    },
-    "thread_id": {
-      "description": "Thread ID",
-      "type": "string"
-    },
-    "tool_calls": {
-      "default": [],
-      "description": "Tool calls made",
-      "items": {
-        "$ref": "#/definitions/UIToolCall"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "agent",
-    "request_id",
-    "response",
-    "thread_id"
-  ],
-  "title": "AgenticFlowResponse",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/ClassificationPhysics.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Physics hints extracted during classification",
-  "properties": {
-    "arousal": {
-      "default": null,
-      "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "clarity": {
-      "default": null,
-      "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "significance": {
-      "default": null,
-      "description": "How significant/important: 0.0 to 1.0",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "valence": {
-      "default": null,
-      "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    }
-  },
-  "title": "ClassificationPhysics",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/CommandResult.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Result of processing a command",
-  "properties": {
-    "accepted": {
-      "description": "Whether the command was accepted",
-      "type": "boolean"
-    },
-    "error": {
-      "default": null,
-      "description": "Error message if not accepted",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "job_id": {
-      "default": null,
-      "description": "Job ID for async tracking",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "thread_id": {
-      "default": null,
-      "description": "Thread ID (for SendMessage commands)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "ws_url": {
-      "default": null,
-      "description": "WebSocket URL for streaming events",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "accepted"
-  ],
-  "title": "CommandResult",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/ContentClassificationResponse.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ClassificationPhysics": {
-      "description": "Physics hints extracted during classification",
-      "properties": {
-        "arousal": {
-          "default": null,
-          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "clarity": {
-          "default": null,
-          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "significance": {
-          "default": null,
-          "description": "How significant/important: 0.0 to 1.0",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "valence": {
-          "default": null,
-          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      },
-      "type": "object"
-    },
-    "SegmentClassification": {
-      "description": "Classification for a single segment",
-      "properties": {
-        "entity_type": {
-          "allOf": [
-            {
-              "$ref": "../primitives/HeddleEntityType.schema.json"
-            }
-          ],
-          "description": "The entity type (MOMENT, PULSE, INTENT) - relevant for LOG purpose"
-        },
-        "physics": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ClassificationPhysics"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Physics hints for entity spawning (only for LOG purpose)"
-        },
-        "purpose": {
-          "allOf": [
-            {
-              "$ref": "../primitives/MessageIntent.schema.json"
-            }
-          ],
-          "default": "LOG",
-          "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
-        },
-        "segment_index": {
-          "description": "Index of the segment being classified",
-          "format": "uint",
-          "minimum": 0.0,
-          "type": "integer"
-        },
-        "weight": {
-          "default": 1.0,
-          "description": "Confidence weight (0.0 to 1.0)",
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "required": [
-        "entity_type",
-        "segment_index"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Phase 3 response: Classifications for each segment",
-  "properties": {
-    "classifications": {
-      "description": "Classifications for each segment",
-      "items": {
-        "$ref": "#/definitions/SegmentClassification"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "classifications"
-  ],
-  "title": "ContentClassificationResponse",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/ConversationHistoryItem.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A single item in conversation history",
-  "properties": {
-    "content": {
-      "description": "Content of the message",
-      "type": "string"
-    },
-    "role": {
-      "description": "Role: \"user\" or \"assistant\"",
-      "type": "string"
-    }
-  },
-  "required": [
-    "content",
-    "role"
-  ],
-  "title": "ConversationHistoryItem",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/CourseStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Processing status for a Course",
-  "oneOf": [
-    {
-      "description": "User input received, not yet segmented",
-      "enum": [
-        "received"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Segmenting the input via Heddle",
-      "enum": [
-        "segmenting"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "All shuttles are processing segments",
-      "enum": [
-        "processing"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "All shuttles complete, generating response",
-      "enum": [
-        "responding"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Course complete with response",
-      "enum": [
-        "complete"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Course failed",
-      "enum": [
-        "failed"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "CourseStatus",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/CreateMemberInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "MemberRole": {
-      "description": "Role of a tenant member",
-      "enum": [
-        "admin",
-        "member",
-        "guest"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Input for creating a new tenant member",
-  "properties": {
-    "avatar_url": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "email": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "name": {
-      "type": "string"
-    },
-    "role": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/MemberRole"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    }
-  },
-  "required": [
-    "name",
-    "tenant_id"
-  ],
-  "title": "CreateMemberInput",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/CreateTenantInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input for creating a new tenant",
-  "properties": {
-    "name": {
-      "type": "string"
-    },
-    "settings": {
-      "default": null
-    }
-  },
-  "required": [
-    "name"
-  ],
-  "title": "CreateTenantInput",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/DbComponentTable.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Component tables (hypertables for time-series, regular for static)",
-  "oneOf": [
-    {
-      "description": "Field excitations (hypertable - time-series physics state)",
-      "enum": [
-        "FieldExcitations"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Quantum states (vector table for embeddings)",
-      "enum": [
-        "QuantumStates"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Content payloads",
-      "enum": [
-        "Content"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Cognitive optics",
-      "enum": [
-        "CognitiveOptics"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Relational dynamics",
-      "enum": [
-        "RelationalDynamics"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Bond physics",
-      "enum": [
-        "BondPhysics"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Task dynamics",
-      "enum": [
-        "TaskDynamics"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "DbComponentTable",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/DbEntityTable.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Entity types stored in the database",
-  "enum": [
-    "Pulse",
-    "Thread",
-    "Bond",
-    "Moment",
-    "Intent",
-    "Focus",
-    "Motif",
-    "Filament"
-  ],
-  "title": "DbEntityTable",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/DbStoreError.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Errors that can occur during database operations",
-  "oneOf": [
-    {
-      "description": "Connection failed",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Connection"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Query execution failed",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "query": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Query"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Entity not found",
-      "properties": {
-        "details": {
-          "properties": {
-            "entity_type": {
-              "type": "string"
-            },
-            "id": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "entity_type",
-            "id"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "NotFound"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Constraint violation (unique, foreign key, etc.)",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Constraint"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Serialization/deserialization error",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Serialization"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Transaction failed",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Transaction"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Migration error",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Migration"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Operation failed (e.g. S3/MinIO)",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Operation"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "DbStoreError",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/HeddleEntityType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "The fundamental Entity Types recognized by The Heddle Classification Engine. These map to the Symmetric Seven ontology.",
-  "oneOf": [
-    {
-      "description": "A specific event that happened in the past (Narrative/External Particle)",
-      "enum": [
-        "MOMENT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A task or goal for the future (Operational/Intentional Particle)",
-      "enum": [
-        "INTENT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A definition of a person, place, or concept (Definitional/Object)",
-      "enum": [
-        "THREAD"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A statement about the quality of a relationship (Relational/Connection)",
-      "enum": [
-        "BOND"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A recurring external pattern (External Wave)",
-      "enum": [
-        "MOTIF"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "A recurring internal pattern (Internal Wave)",
-      "enum": [
-        "FILAMENT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "An active thematic goal (Intentional Wave)",
-      "enum": [
-        "FOCUS"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "An internal state snapshot (Internal Particle)",
-      "enum": [
-        "PULSE"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "HeddleEntityType",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/HeddleResponse.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "RawClassification": {
-      "description": "Raw classification from LLM output",
-      "properties": {
-        "entity_type": {
-          "$ref": "../primitives/HeddleEntityType.schema.json"
-        },
-        "weight": {
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "required": [
-        "entity_type",
-        "weight"
-      ],
-      "type": "object"
-    },
-    "RawMessageIntent": {
-      "description": "Raw message intent classification from LLM",
-      "properties": {
-        "confidence": {
-          "default": 1.0,
-          "description": "Confidence in classification (0.0 to 1.0)",
-          "format": "double",
-          "type": "number"
-        },
-        "intent": {
-          "allOf": [
-            {
-              "$ref": "../primitives/MessageIntent.schema.json"
-            }
-          ],
-          "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)"
-        },
-        "query_target": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/QueryTarget.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "If QUERY: what entities/threads are being queried"
-        },
-        "query_type": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/QueryType.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "If QUERY: what type of query"
-        }
-      },
-      "required": [
-        "intent"
-      ],
-      "type": "object"
-    },
-    "RawPhysicsHint": {
-      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
-      "properties": {
-        "arousal": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "clarity": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "intrusiveness": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "significance": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "valence": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "volatility": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      },
-      "type": "object"
-    },
-    "RawWeaveUnit": {
-      "description": "Raw weave unit from LLM output (before validation)",
-      "properties": {
-        "classifications": {
-          "description": "Classifications in superposition",
-          "items": {
-            "$ref": "#/definitions/RawClassification"
-          },
-          "type": "array"
-        },
-        "content": {
-          "description": "The extracted/cleaned text content for this weave unit",
-          "type": "string"
-        },
-        "physics_hint": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/RawPhysicsHint"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
-        },
-        "primary_thread": {
-          "default": null,
-          "description": "Primary thread: the main subject/actor of this unit",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "purpose": {
-          "allOf": [
-            {
-              "$ref": "../primitives/MessageIntent.schema.json"
-            }
-          ],
-          "default": "LOG",
-          "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
-        },
-        "secondary_threads": {
-          "default": null,
-          "description": "Secondary threads: other people/places/things mentioned",
-          "items": {
-            "type": "string"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        },
-        "temporal_marker": {
-          "default": null,
-          "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "classifications",
-        "content"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "The full response from the Heddle LLM",
-  "properties": {
-    "message_intent": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/RawMessageIntent"
-        }
-      ],
-      "default": {
-        "confidence": 1.0,
-        "intent": "LOG"
-      },
-      "description": "Message intent classification (WHAT is user trying to do?)"
-    },
-    "weave_units": {
-      "default": [],
-      "description": "Array of weave units extracted from the input (for LOG intent) May be empty for QUERY/REFERENCE intents",
-      "items": {
-        "$ref": "#/definitions/RawWeaveUnit"
-      },
-      "type": "array"
-    }
-  },
-  "title": "HeddleResponse",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/InternalStateType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "emotional_shift",
-    "realization",
-    "reflection",
-    "observation",
-    "reaction"
-  ],
-  "title": "InternalStateType",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/MemberRole.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Role of a tenant member",
-  "enum": [
-    "admin",
-    "member",
-    "guest"
-  ],
-  "title": "MemberRole",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/MessageClassification.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Complete message classification (intent + optional details)",
-  "properties": {
-    "confidence": {
-      "description": "Confidence in the classification (0.0 to 1.0)",
-      "format": "double",
-      "type": "number"
-    },
-    "intent": {
-      "allOf": [
-        {
-          "$ref": "../primitives/MessageIntent.schema.json"
-        }
-      ],
-      "description": "Primary intent of the message"
-    },
-    "query_target": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/QueryTarget.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "If QUERY, what data is being requested"
-    },
-    "query_type": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/QueryType.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "If QUERY, what type of query"
-    },
-    "secondary_intents": {
-      "description": "Alternative intents that might also apply",
-      "items": {
-        "items": [
-          {
-            "$ref": "../primitives/MessageIntent.schema.json"
-          },
-          {
-            "format": "double",
-            "type": "number"
-          }
-        ],
-        "maxItems": 2,
-        "minItems": 2,
-        "type": "array"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "confidence",
-    "intent"
-  ],
-  "title": "MessageClassification",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/MessageIntent.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "The primary intent of the user's message",
-  "oneOf": [
-    {
-      "description": "Recording something - events, states, observations (current default)",
-      "enum": [
-        "LOG"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Asking a question - wants information back",
-      "enum": [
-        "QUERY"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Requesting system to make connections or derive insights",
-      "enum": [
-        "INFER"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Looking up specific entities, threads, or past entries",
-      "enum": [
-        "REFERENCE"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Requesting analysis, patterns, or reflection on data",
-      "enum": [
-        "REFLECT"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Giving a command/instruction to the system",
-      "enum": [
-        "COMMAND"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Conversational/social - greetings, acknowledgments",
-      "enum": [
-        "SOCIAL"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "MessageIntent",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/MessageRole.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Role in a chat conversation",
-  "oneOf": [
-    {
-      "description": "System instructions",
-      "enum": [
-        "system"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "User input",
-      "enum": [
-        "user"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Assistant response",
-      "enum": [
-        "assistant"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "MessageRole",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/MessageStatusType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Message delivery status",
-  "enum": [
-    "sending",
-    "sent",
-    "delivered",
-    "read",
-    "failed"
-  ],
-  "title": "MessageStatusType",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/MomentType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Event",
-    "Realization",
-    "Interaction",
-    "Observation"
-  ],
-  "title": "MomentType",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/ObserverError.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Errors that can occur during AI observation",
-  "oneOf": [
-    {
-      "description": "Configuration error (missing API key, invalid model, etc.)",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Configuration"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "The AI provider returned an invalid response",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "provider": {
-              "$ref": "../primitives/AIProvider.schema.json"
-            },
-            "raw_response": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "message",
-            "provider"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "InvalidResponse"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Network or API error",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "provider": {
-              "$ref": "../primitives/AIProvider.schema.json"
-            },
-            "status_code": {
-              "format": "uint16",
-              "minimum": 0.0,
-              "type": [
-                "integer",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "message",
-            "provider"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Network"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Rate limit exceeded",
-      "properties": {
-        "details": {
-          "properties": {
-            "provider": {
-              "$ref": "../primitives/AIProvider.schema.json"
-            },
-            "retry_after_ms": {
-              "format": "uint64",
-              "minimum": 0.0,
-              "type": [
-                "integer",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "provider"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "RateLimited"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "The AI refused to process (content policy)",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "provider": {
-              "$ref": "../primitives/AIProvider.schema.json"
-            }
-          },
-          "required": [
-            "message",
-            "provider"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "ContentFiltered"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Deserialization failed",
-      "properties": {
-        "details": {
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "raw_content": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "message"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "ParseError"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Timeout",
-      "properties": {
-        "details": {
-          "properties": {
-            "provider": {
-              "$ref": "../primitives/AIProvider.schema.json"
-            },
-            "timeout_ms": {
-              "format": "uint64",
-              "minimum": 0.0,
-              "type": "integer"
-            }
-          },
-          "required": [
-            "provider",
-            "timeout_ms"
-          ],
-          "type": "object"
-        },
-        "type": {
-          "enum": [
-            "Timeout"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "details",
-        "type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "ObserverError",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/PromptConfig.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "PromptPhase": {
-      "enum": [
-        "Segmentation",
-        "Purpose",
-        "Classification"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "Schema for TypeScript prompt configuration Runtime prompts are in services/windmill/scripts/*.ts",
-  "properties": {
-    "max_tokens": {
-      "format": "uint32",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "model": {
-      "type": "string"
-    },
-    "phase": {
-      "$ref": "#/definitions/PromptPhase"
-    },
-    "temperature": {
-      "format": "float",
-      "type": "number"
-    }
-  },
-  "required": [
-    "max_tokens",
-    "model",
-    "phase",
-    "temperature"
-  ],
-  "title": "PromptConfig",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/PromptPhase.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Segmentation",
-    "Purpose",
-    "Classification"
-  ],
-  "title": "PromptPhase",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/QueryTarget.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Query target - what data is the query looking for?",
-  "properties": {
-    "entity_types": {
-      "default": [],
-      "description": "The entity/thread types being queried (e.g., \"moments\", \"threads\", \"pulses\")",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "keywords": {
-      "default": [],
-      "description": "Keywords extracted from the query",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "temporal_scope": {
-      "default": null,
-      "description": "Temporal scope (e.g., \"today\", \"last week\", \"all time\")",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "thread_hints": {
-      "default": [],
-      "description": "Specific thread hints (names, concepts) to search for",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    }
-  },
-  "title": "QueryTarget",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/QueryType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "The type of query (when MessageIntent is QUERY)",
-  "oneOf": [
-    {
-      "description": "When did X happen? Time-based lookup",
-      "enum": [
-        "TEMPORAL"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Who/what questions - entity lookup",
-      "enum": [
-        "ENTITY"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "How often? Pattern/frequency questions",
-      "enum": [
-        "PATTERN"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Compare X and Y",
-      "enum": [
-        "COMPARISON"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Give me a summary/overview",
-      "enum": [
-        "SUMMARY"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Count/quantity questions (how many?)",
-      "enum": [
-        "QUANTITATIVE"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Yes/no questions (did X happen?)",
-      "enum": [
-        "BOOLEAN"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Why questions - causation",
-      "enum": [
-        "CAUSAL"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Location-based questions",
-      "enum": [
-        "SPATIAL"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Open-ended/exploratory",
-      "enum": [
-        "EXPLORATORY"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "QueryType",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/RawClassification.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Raw classification from LLM output",
-  "properties": {
-    "entity_type": {
-      "$ref": "../primitives/HeddleEntityType.schema.json"
-    },
-    "weight": {
-      "format": "double",
-      "type": "number"
-    }
-  },
-  "required": [
-    "entity_type",
-    "weight"
-  ],
-  "title": "RawClassification",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/RawMessageIntent.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Raw message intent classification from LLM",
-  "properties": {
-    "confidence": {
-      "default": 1.0,
-      "description": "Confidence in classification (0.0 to 1.0)",
-      "format": "double",
-      "type": "number"
-    },
-    "intent": {
-      "allOf": [
-        {
-          "$ref": "../primitives/MessageIntent.schema.json"
-        }
-      ],
-      "description": "Primary intent (LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL)"
-    },
-    "query_target": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/QueryTarget.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "If QUERY: what entities/threads are being queried"
-    },
-    "query_type": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/QueryType.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "If QUERY: what type of query"
-    }
-  },
-  "required": [
-    "intent"
-  ],
-  "title": "RawMessageIntent",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/RawPhysicsHint.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Raw physics hints from LLM (will be applied to spawned entities)",
-  "properties": {
-    "arousal": {
-      "default": null,
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "clarity": {
-      "default": null,
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "intrusiveness": {
-      "default": null,
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "significance": {
-      "default": null,
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "valence": {
-      "default": null,
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "volatility": {
-      "default": null,
-      "format": "double",
-      "type": [
-        "number",
-        "null"
-      ]
-    }
-  },
-  "title": "RawPhysicsHint",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/RawSegment.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A raw segment from Phase 1 - NO classification, just text",
-  "properties": {
-    "content": {
-      "description": "The extracted semantic content",
-      "type": "string"
-    },
-    "mentions": {
-      "default": [],
-      "description": "Other entities/things mentioned",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "subject": {
-      "default": null,
-      "description": "Who/what is the primary subject? (for context, not classification)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "temporal": {
-      "default": null,
-      "description": "Any temporal reference found",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "content"
-  ],
-  "title": "RawSegment",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/RawWeaveUnit.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "RawClassification": {
-      "description": "Raw classification from LLM output",
-      "properties": {
-        "entity_type": {
-          "$ref": "../primitives/HeddleEntityType.schema.json"
-        },
-        "weight": {
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "required": [
-        "entity_type",
-        "weight"
-      ],
-      "type": "object"
-    },
-    "RawPhysicsHint": {
-      "description": "Raw physics hints from LLM (will be applied to spawned entities)",
-      "properties": {
-        "arousal": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "clarity": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "intrusiveness": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "significance": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "valence": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "volatility": {
-          "default": null,
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      },
-      "type": "object"
-    }
-  },
-  "description": "Raw weave unit from LLM output (before validation)",
-  "properties": {
-    "classifications": {
-      "description": "Classifications in superposition",
-      "items": {
-        "$ref": "#/definitions/RawClassification"
-      },
-      "type": "array"
-    },
-    "content": {
-      "description": "The extracted/cleaned text content for this weave unit",
-      "type": "string"
-    },
-    "physics_hint": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/RawPhysicsHint"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Physics hints (passed to spawned entities, not stored on WeaveUnit)"
-    },
-    "primary_thread": {
-      "default": null,
-      "description": "Primary thread: the main subject/actor of this unit",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "purpose": {
-      "allOf": [
-        {
-          "$ref": "../primitives/MessageIntent.schema.json"
-        }
-      ],
-      "default": "LOG",
-      "description": "Purpose of this specific unit (LOG, QUERY, COMMAND, etc.) Only LOG units spawn entities"
-    },
-    "secondary_threads": {
-      "default": null,
-      "description": "Secondary threads: other people/places/things mentioned",
-      "items": {
-        "type": "string"
-      },
-      "type": [
-        "array",
-        "null"
-      ]
-    },
-    "temporal_marker": {
-      "default": null,
-      "description": "Temporal marker: when this happened (absolute, relative, or frequency) Examples: \"6pm\", \"today\", \"yesterday\", \"once per hour\", \"every morning\"",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "classifications",
-    "content"
-  ],
-  "title": "RawWeaveUnit",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/SegmentClassification.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ClassificationPhysics": {
-      "description": "Physics hints extracted during classification",
-      "properties": {
-        "arousal": {
-          "default": null,
-          "description": "Activation level: 0.0 (calm) to 1.0 (activated)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "clarity": {
-          "default": null,
-          "description": "How clear/specific: 0.0 (vague) to 1.0 (clear)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "significance": {
-          "default": null,
-          "description": "How significant/important: 0.0 to 1.0",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "valence": {
-          "default": null,
-          "description": "Emotional valence: -1.0 (negative) to 1.0 (positive)",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      },
-      "type": "object"
-    }
-  },
-  "description": "Classification for a single segment",
-  "properties": {
-    "entity_type": {
-      "allOf": [
-        {
-          "$ref": "../primitives/HeddleEntityType.schema.json"
-        }
-      ],
-      "description": "The entity type (MOMENT, PULSE, INTENT) - relevant for LOG purpose"
-    },
-    "physics": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ClassificationPhysics"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Physics hints for entity spawning (only for LOG purpose)"
-    },
-    "purpose": {
-      "allOf": [
-        {
-          "$ref": "../primitives/MessageIntent.schema.json"
-        }
-      ],
-      "default": "LOG",
-      "description": "Purpose of this specific segment (LOG, QUERY, COMMAND, etc.) Only LOG segments spawn entities"
-    },
-    "segment_index": {
-      "description": "Index of the segment being classified",
-      "format": "uint",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "weight": {
-      "default": 1.0,
-      "description": "Confidence weight (0.0 to 1.0)",
-      "format": "double",
-      "type": "number"
-    }
-  },
-  "required": [
-    "entity_type",
-    "segment_index"
-  ],
-  "title": "SegmentClassification",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/SegmentationResponse.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "RawSegment": {
-      "description": "A raw segment from Phase 1 - NO classification, just text",
-      "properties": {
-        "content": {
-          "description": "The extracted semantic content",
-          "type": "string"
-        },
-        "mentions": {
-          "default": [],
-          "description": "Other entities/things mentioned",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "subject": {
-          "default": null,
-          "description": "Who/what is the primary subject? (for context, not classification)",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "temporal": {
-          "default": null,
-          "description": "Any temporal reference found",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "content"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Phase 1 response: Just segments, no classification",
-  "properties": {
-    "segments": {
-      "description": "The semantic segments extracted from the input",
-      "items": {
-        "$ref": "#/definitions/RawSegment"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "segments"
-  ],
-  "title": "SegmentationResponse",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/ShuttleStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Processing status for a Shuttle",
-  "oneOf": [
-    {
-      "description": "Segment received, not yet processed",
-      "enum": [
-        "pending"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Currently being classified by LLM",
-      "enum": [
-        "classifying"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Classification complete, spawning entities",
-      "enum": [
-        "spawning"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "All processing complete",
-      "enum": [
-        "complete"
-      ],
-      "type": "string"
-    },
-    {
-      "description": "Processing failed",
-      "enum": [
-        "failed"
-      ],
-      "type": "string"
-    }
-  ],
-  "title": "ShuttleStatus",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/Tenant.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A tenant (family) in the system\n\nUses `SystemEntityMeta` because tenants are top-level entities that don't belong to another tenant.",
-  "properties": {
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "settings": {
-      "default": null
-    },
-    "updated_at": {
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "name",
-    "updated_at"
-  ],
-  "title": "Tenant",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/TenantMember.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "MemberRole": {
-      "description": "Role of a tenant member",
-      "enum": [
-        "admin",
-        "member",
-        "guest"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A member of a tenant (user-tenant association with role)\n\nNote: Uses UserId as the entity ID since this is a join table where the user_id + tenant_id forms the unique key.",
-  "properties": {
-    "avatar_url": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "created_at": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "email": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "name": {
-      "type": "string"
-    },
-    "role": {
-      "$ref": "#/definitions/MemberRole"
-    },
-    "settings": {
-      "default": null
-    },
-    "tenant_id": {
-      "$ref": "../primitives/TenantId.schema.json"
-    },
-    "updated_at": {
-      "format": "date-time",
-      "type": "string"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "name",
-    "role",
-    "tenant_id",
-    "updated_at"
-  ],
-  "title": "TenantMember",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/ThreadType.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "Person",
-    "Place",
-    "Concept",
-    "GenericObject"
-  ],
-  "title": "ThreadType",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/ToolCallStatus.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Status of a tool call during execution",
-  "enum": [
-    "pending",
-    "running",
-    "complete",
-    "error"
-  ],
-  "title": "ToolCallStatus",
-  "type": "string",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIChannel.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "UIChannelMessage": {
-      "description": "A user message that starts a thread in a channel",
-      "properties": {
-        "content": {
-          "description": "Original user message content",
-          "type": "string"
-        },
-        "id": {
-          "description": "Unique ID",
-          "type": "string"
-        },
-        "is_active": {
-          "default": false,
-          "description": "Is this the active/latest message?",
-          "type": "boolean"
-        },
-        "is_expanded": {
-          "default": false,
-          "description": "Is thread expanded in UI?",
-          "type": "boolean"
-        },
-        "thread": {
-          "description": "Thread of responses and follow-ups",
-          "items": {
-            "$ref": "#/definitions/UIThreadItem"
-          },
-          "type": "array"
-        },
-        "timestamp": {
-          "description": "When posted",
-          "type": "string"
-        }
-      },
-      "required": [
-        "content",
-        "id",
-        "thread",
-        "timestamp"
-      ],
-      "type": "object"
-    },
-    "UIHeddleResult": {
-      "description": "Structured result from the Heddle classification pipeline",
-      "properties": {
-        "classifications": {
-          "default": [],
-          "description": "Classification results",
-          "items": {
-            "$ref": "../primitives/UIClassification.schema.json"
-          },
-          "type": "array"
-        },
-        "physics": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/UIPhysicsResult.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Physics hints"
-        },
-        "purpose": {
-          "default": null,
-          "description": "Detected purpose/intent",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "segments": {
-          "default": [],
-          "description": "Segmented content",
-          "items": {
-            "$ref": "../primitives/UIHeddleSegment.schema.json"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "UIThinkingStep": {
-      "description": "A thinking/reasoning step for chain-of-thought visibility",
-      "properties": {
-        "agent": {
-          "description": "Which agent produced this thought",
-          "type": "string"
-        },
-        "id": {
-          "description": "Unique ID",
-          "type": "string"
-        },
-        "thought": {
-          "description": "The thought/reasoning content",
-          "type": "string"
-        },
-        "timestamp": {
-          "default": null,
-          "description": "Timestamp",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "agent",
-        "id",
-        "thought"
-      ],
-      "type": "object"
-    },
-    "UIThreadItem": {
-      "description": "An item in a conversation thread (user message or AI response)",
-      "properties": {
-        "agent_speaker": {
-          "default": null,
-          "description": "For assistant messages: which agent",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "content": {
-          "description": "Text content",
-          "type": "string"
-        },
-        "current_activity": {
-          "default": null,
-          "description": "Activity description for typing state",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "heddle_result": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/UIHeddleResult"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Heddle classification result"
-        },
-        "id": {
-          "description": "Unique ID",
-          "type": "string"
-        },
-        "is_typing": {
-          "default": false,
-          "description": "Is this message still being generated?",
-          "type": "boolean"
-        },
-        "role": {
-          "description": "Role: \"user\" or \"assistant\"",
-          "type": "string"
-        },
-        "status": {
-          "default": null,
-          "description": "Current status",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "summary": {
-          "default": null,
-          "description": "Summary for collapsed display",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "thinking_steps": {
-          "default": [],
-          "description": "Chain of thought steps",
-          "items": {
-            "$ref": "#/definitions/UIThinkingStep"
-          },
-          "type": "array"
-        },
-        "timestamp": {
-          "description": "Timestamp",
-          "type": "string"
-        },
-        "tool_calls": {
-          "default": [],
-          "description": "Tool calls made",
-          "items": {
-            "$ref": "#/definitions/UIToolCall"
-          },
-          "type": "array"
-        }
-      },
-      "required": [
-        "content",
-        "id",
-        "role",
-        "timestamp"
-      ],
-      "type": "object"
-    },
-    "UIToolCall": {
-      "description": "A tool call with real-time status updates for UI display",
-      "properties": {
-        "arguments": {
-          "default": null,
-          "description": "Arguments passed to the tool"
-        },
-        "id": {
-          "description": "Unique ID for this tool call",
-          "type": "string"
-        },
-        "result": {
-          "default": null,
-          "description": "Result from the tool"
-        },
-        "status": {
-          "allOf": [
-            {
-              "$ref": "../primitives/ToolCallStatus.schema.json"
-            }
-          ],
-          "description": "Current status"
-        },
-        "tool": {
-          "description": "Name of the tool",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "status",
-        "tool"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "A channel (persistent conversation space)",
-  "properties": {
-    "created_at": {
-      "description": "When created",
-      "type": "string"
-    },
-    "id": {
-      "description": "Unique ID",
-      "type": "string"
-    },
-    "messages": {
-      "description": "Messages in this channel",
-      "items": {
-        "$ref": "#/definitions/UIChannelMessage"
-      },
-      "type": "array"
-    },
-    "name": {
-      "description": "Display name",
-      "type": "string"
-    },
-    "updated_at": {
-      "description": "When last updated",
-      "type": "string"
-    }
-  },
-  "required": [
-    "created_at",
-    "id",
-    "messages",
-    "name",
-    "updated_at"
-  ],
-  "title": "UIChannel",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIChannelMessage.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "UIHeddleResult": {
-      "description": "Structured result from the Heddle classification pipeline",
-      "properties": {
-        "classifications": {
-          "default": [],
-          "description": "Classification results",
-          "items": {
-            "$ref": "../primitives/UIClassification.schema.json"
-          },
-          "type": "array"
-        },
-        "physics": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/UIPhysicsResult.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Physics hints"
-        },
-        "purpose": {
-          "default": null,
-          "description": "Detected purpose/intent",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "segments": {
-          "default": [],
-          "description": "Segmented content",
-          "items": {
-            "$ref": "../primitives/UIHeddleSegment.schema.json"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "UIThinkingStep": {
-      "description": "A thinking/reasoning step for chain-of-thought visibility",
-      "properties": {
-        "agent": {
-          "description": "Which agent produced this thought",
-          "type": "string"
-        },
-        "id": {
-          "description": "Unique ID",
-          "type": "string"
-        },
-        "thought": {
-          "description": "The thought/reasoning content",
-          "type": "string"
-        },
-        "timestamp": {
-          "default": null,
-          "description": "Timestamp",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "agent",
-        "id",
-        "thought"
-      ],
-      "type": "object"
-    },
-    "UIThreadItem": {
-      "description": "An item in a conversation thread (user message or AI response)",
-      "properties": {
-        "agent_speaker": {
-          "default": null,
-          "description": "For assistant messages: which agent",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "content": {
-          "description": "Text content",
-          "type": "string"
-        },
-        "current_activity": {
-          "default": null,
-          "description": "Activity description for typing state",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "heddle_result": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/UIHeddleResult"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Heddle classification result"
-        },
-        "id": {
-          "description": "Unique ID",
-          "type": "string"
-        },
-        "is_typing": {
-          "default": false,
-          "description": "Is this message still being generated?",
-          "type": "boolean"
-        },
-        "role": {
-          "description": "Role: \"user\" or \"assistant\"",
-          "type": "string"
-        },
-        "status": {
-          "default": null,
-          "description": "Current status",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "summary": {
-          "default": null,
-          "description": "Summary for collapsed display",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "thinking_steps": {
-          "default": [],
-          "description": "Chain of thought steps",
-          "items": {
-            "$ref": "#/definitions/UIThinkingStep"
-          },
-          "type": "array"
-        },
-        "timestamp": {
-          "description": "Timestamp",
-          "type": "string"
-        },
-        "tool_calls": {
-          "default": [],
-          "description": "Tool calls made",
-          "items": {
-            "$ref": "#/definitions/UIToolCall"
-          },
-          "type": "array"
-        }
-      },
-      "required": [
-        "content",
-        "id",
-        "role",
-        "timestamp"
-      ],
-      "type": "object"
-    },
-    "UIToolCall": {
-      "description": "A tool call with real-time status updates for UI display",
-      "properties": {
-        "arguments": {
-          "default": null,
-          "description": "Arguments passed to the tool"
-        },
-        "id": {
-          "description": "Unique ID for this tool call",
-          "type": "string"
-        },
-        "result": {
-          "default": null,
-          "description": "Result from the tool"
-        },
-        "status": {
-          "allOf": [
-            {
-              "$ref": "../primitives/ToolCallStatus.schema.json"
-            }
-          ],
-          "description": "Current status"
-        },
-        "tool": {
-          "description": "Name of the tool",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "status",
-        "tool"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "A user message that starts a thread in a channel",
-  "properties": {
-    "content": {
-      "description": "Original user message content",
-      "type": "string"
-    },
-    "id": {
-      "description": "Unique ID",
-      "type": "string"
-    },
-    "is_active": {
-      "default": false,
-      "description": "Is this the active/latest message?",
-      "type": "boolean"
-    },
-    "is_expanded": {
-      "default": false,
-      "description": "Is thread expanded in UI?",
-      "type": "boolean"
-    },
-    "thread": {
-      "description": "Thread of responses and follow-ups",
-      "items": {
-        "$ref": "#/definitions/UIThreadItem"
-      },
-      "type": "array"
-    },
-    "timestamp": {
-      "description": "When posted",
-      "type": "string"
-    }
-  },
-  "required": [
-    "content",
-    "id",
-    "thread",
-    "timestamp"
-  ],
-  "title": "UIChannelMessage",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIClassification.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A classification result",
-  "properties": {
-    "confidence": {
-      "format": "double",
-      "type": "number"
-    },
-    "entity_type": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "confidence",
-    "entity_type"
-  ],
-  "title": "UIClassification",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIHeddleResult.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Structured result from the Heddle classification pipeline",
-  "properties": {
-    "classifications": {
-      "default": [],
-      "description": "Classification results",
-      "items": {
-        "$ref": "../primitives/UIClassification.schema.json"
-      },
-      "type": "array"
-    },
-    "physics": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/UIPhysicsResult.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Physics hints"
-    },
-    "purpose": {
-      "default": null,
-      "description": "Detected purpose/intent",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "segments": {
-      "default": [],
-      "description": "Segmented content",
-      "items": {
-        "$ref": "../primitives/UIHeddleSegment.schema.json"
-      },
-      "type": "array"
-    }
-  },
-  "title": "UIHeddleResult",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIHeddleSegment.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A segment from Heddle",
-  "properties": {
-    "content": {
-      "type": "string"
-    },
-    "subject": {
-      "default": null,
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "content"
-  ],
-  "title": "UIHeddleSegment",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIPhysicsResult.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Physics simulation result",
-  "properties": {
-    "energy": {
-      "format": "double",
-      "type": "number"
-    },
-    "position": {
-      "items": {
-        "format": "double",
-        "type": "number"
-      },
-      "maxItems": 3,
-      "minItems": 3,
-      "type": "array"
-    },
-    "temperature": {
-      "format": "double",
-      "type": "number"
-    }
-  },
-  "required": [
-    "energy",
-    "position",
-    "temperature"
-  ],
-  "title": "UIPhysicsResult",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIThinkingStep.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A thinking/reasoning step for chain-of-thought visibility",
-  "properties": {
-    "agent": {
-      "description": "Which agent produced this thought",
-      "type": "string"
-    },
-    "id": {
-      "description": "Unique ID",
-      "type": "string"
-    },
-    "thought": {
-      "description": "The thought/reasoning content",
-      "type": "string"
-    },
-    "timestamp": {
-      "default": null,
-      "description": "Timestamp",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "agent",
-    "id",
-    "thought"
-  ],
-  "title": "UIThinkingStep",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIThreadItem.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "UIHeddleResult": {
-      "description": "Structured result from the Heddle classification pipeline",
-      "properties": {
-        "classifications": {
-          "default": [],
-          "description": "Classification results",
-          "items": {
-            "$ref": "../primitives/UIClassification.schema.json"
-          },
-          "type": "array"
-        },
-        "physics": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/UIPhysicsResult.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Physics hints"
-        },
-        "purpose": {
-          "default": null,
-          "description": "Detected purpose/intent",
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "segments": {
-          "default": [],
-          "description": "Segmented content",
-          "items": {
-            "$ref": "../primitives/UIHeddleSegment.schema.json"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "UIThinkingStep": {
-      "description": "A thinking/reasoning step for chain-of-thought visibility",
-      "properties": {
-        "agent": {
-          "description": "Which agent produced this thought",
-          "type": "string"
-        },
-        "id": {
-          "description": "Unique ID",
-          "type": "string"
-        },
-        "thought": {
-          "description": "The thought/reasoning content",
-          "type": "string"
-        },
-        "timestamp": {
-          "default": null,
-          "description": "Timestamp",
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "agent",
-        "id",
-        "thought"
-      ],
-      "type": "object"
-    },
-    "UIToolCall": {
-      "description": "A tool call with real-time status updates for UI display",
-      "properties": {
-        "arguments": {
-          "default": null,
-          "description": "Arguments passed to the tool"
-        },
-        "id": {
-          "description": "Unique ID for this tool call",
-          "type": "string"
-        },
-        "result": {
-          "default": null,
-          "description": "Result from the tool"
-        },
-        "status": {
-          "allOf": [
-            {
-              "$ref": "../primitives/ToolCallStatus.schema.json"
-            }
-          ],
-          "description": "Current status"
-        },
-        "tool": {
-          "description": "Name of the tool",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "status",
-        "tool"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "An item in a conversation thread (user message or AI response)",
-  "properties": {
-    "agent_speaker": {
-      "default": null,
-      "description": "For assistant messages: which agent",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "content": {
-      "description": "Text content",
-      "type": "string"
-    },
-    "current_activity": {
-      "default": null,
-      "description": "Activity description for typing state",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "heddle_result": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/UIHeddleResult"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Heddle classification result"
-    },
-    "id": {
-      "description": "Unique ID",
-      "type": "string"
-    },
-    "is_typing": {
-      "default": false,
-      "description": "Is this message still being generated?",
-      "type": "boolean"
-    },
-    "role": {
-      "description": "Role: \"user\" or \"assistant\"",
-      "type": "string"
-    },
-    "status": {
-      "default": null,
-      "description": "Current status",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "summary": {
-      "default": null,
-      "description": "Summary for collapsed display",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "thinking_steps": {
-      "default": [],
-      "description": "Chain of thought steps",
-      "items": {
-        "$ref": "#/definitions/UIThinkingStep"
-      },
-      "type": "array"
-    },
-    "timestamp": {
-      "description": "Timestamp",
-      "type": "string"
-    },
-    "tool_calls": {
-      "default": [],
-      "description": "Tool calls made",
-      "items": {
-        "$ref": "#/definitions/UIToolCall"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "content",
-    "id",
-    "role",
-    "timestamp"
-  ],
-  "title": "UIThreadItem",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/UIToolCall.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A tool call with real-time status updates for UI display",
-  "properties": {
-    "arguments": {
-      "default": null,
-      "description": "Arguments passed to the tool"
-    },
-    "id": {
-      "description": "Unique ID for this tool call",
-      "type": "string"
-    },
-    "result": {
-      "default": null,
-      "description": "Result from the tool"
-    },
-    "status": {
-      "allOf": [
-        {
-          "$ref": "../primitives/ToolCallStatus.schema.json"
-        }
-      ],
-      "description": "Current status"
-    },
-    "tool": {
-      "description": "Name of the tool",
-      "type": "string"
-    }
-  },
-  "required": [
-    "id",
-    "status",
-    "tool"
-  ],
-  "title": "UIToolCall",
-  "type": "object",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/types/WsMessage.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AccordionState": {
-      "enum": [
-        "collapsed",
-        "expanded"
-      ],
-      "type": "string"
-    },
-    "Block": {
-      "description": "A single visual block in a message",
-      "oneOf": [
-        {
-          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
-          "properties": {
-            "accessory": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/BlockElement.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "fields": {
-              "items": {
-                "$ref": "../primitives/TextObject.schema.json"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
-            "text": {
-              "$ref": "../primitives/TextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "section"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A visual separator",
-          "properties": {
-            "type": {
-              "enum": [
-                "divider"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays an image with optional title",
-          "properties": {
-            "alt_text": {
-              "type": "string"
-            },
-            "image_url": {
-              "type": "string"
-            },
-            "title": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "type": {
-              "enum": [
-                "image"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "alt_text",
-            "image_url",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A container for interactive elements (buttons, selects, etc.)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/BlockElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "actions"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays contextual info (small grey text, images)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/ContextElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "context"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A header with large, bold text",
-          "properties": {
-            "text": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "header"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "An input field",
-          "properties": {
-            "element": {
-              "$ref": "../primitives/BlockElement.schema.json"
-            },
-            "hint": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "label": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "optional": {
-              "default": false,
-              "type": "boolean"
-            },
-            "type": {
-              "enum": [
-                "input"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "element",
-            "label",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A collapsible container",
-          "properties": {
-            "blocks": {
-              "items": {
-                "$ref": "#/definitions/Block"
-              },
-              "type": "array"
-            },
-            "initial_state": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/AccordionState"
-                }
-              ],
-              "default": "collapsed"
-            },
-            "summary": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "accordion"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "blocks",
-            "summary",
-            "type"
-          ],
-          "type": "object"
-        }
-      ]
-    },
-    "BlockMessage": {
-      "description": "The root container for a Block Kit message",
-      "properties": {
-        "blocks": {
-          "items": {
-            "$ref": "#/definitions/Block"
-          },
-          "type": "array"
-        }
-      },
-      "required": [
-        "blocks"
-      ],
-      "type": "object"
-    },
-    "MessageStatusType": {
-      "description": "Message delivery status",
-      "enum": [
-        "sending",
-        "sent",
-        "delivered",
-        "read",
-        "failed"
-      ],
-      "type": "string"
-    }
-  },
-  "description": "A message sent from the server to the client via WebSocket",
-  "oneOf": [
-    {
-      "description": "Connection status / Handshake",
-      "properties": {
-        "job_id": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "status"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "job_id",
-        "status",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Typing indicator (agent is processing)",
-      "properties": {
-        "job_id": {
-          "type": "string"
-        },
-        "message": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "type": {
-          "enum": [
-            "typing"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "job_id",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Job progress update (with optional Block Kit content)",
-      "properties": {
-        "blocks": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BlockMessage"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "details": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "status": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "progress"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "status",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Job completed successfully (with Block Kit content)",
-      "properties": {
-        "blocks": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BlockMessage"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "job_id": {
-          "type": "string"
-        },
-        "result": true,
-        "type": {
-          "enum": [
-            "complete"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "job_id",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Error occurred (with Block Kit content)",
-      "properties": {
-        "blocks": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/BlockMessage"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "job_id": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "message": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "error"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "message",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Message status update (sent, delivered, read)",
-      "properties": {
-        "message_id": {
-          "type": "string"
-        },
-        "status": {
-          "$ref": "#/definitions/MessageStatusType"
-        },
-        "type": {
-          "enum": [
-            "message_status"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "message_id",
-        "status",
-        "type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "WsMessage",
-  "x-familiar-kind": "type"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/AccordionBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AccordionState": {
-      "enum": [
-        "collapsed",
-        "expanded"
-      ],
-      "type": "string"
-    },
-    "Block": {
-      "description": "A single visual block in a message",
-      "oneOf": [
-        {
-          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
-          "properties": {
-            "accessory": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/BlockElement.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "fields": {
-              "items": {
-                "$ref": "../primitives/TextObject.schema.json"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
-            "text": {
-              "$ref": "../primitives/TextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "section"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A visual separator",
-          "properties": {
-            "type": {
-              "enum": [
-                "divider"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays an image with optional title",
-          "properties": {
-            "alt_text": {
-              "type": "string"
-            },
-            "image_url": {
-              "type": "string"
-            },
-            "title": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "type": {
-              "enum": [
-                "image"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "alt_text",
-            "image_url",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A container for interactive elements (buttons, selects, etc.)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/BlockElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "actions"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays contextual info (small grey text, images)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/ContextElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "context"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A header with large, bold text",
-          "properties": {
-            "text": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "header"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "An input field",
-          "properties": {
-            "element": {
-              "$ref": "../primitives/BlockElement.schema.json"
-            },
-            "hint": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "label": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "optional": {
-              "default": false,
-              "type": "boolean"
-            },
-            "type": {
-              "enum": [
-                "input"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "element",
-            "label",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A collapsible container",
-          "properties": {
-            "blocks": {
-              "items": {
-                "$ref": "#/definitions/Block"
-              },
-              "type": "array"
-            },
-            "initial_state": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/AccordionState"
-                }
-              ],
-              "default": "collapsed"
-            },
-            "summary": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "accordion"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "blocks",
-            "summary",
-            "type"
-          ],
-          "type": "object"
-        }
-      ]
-    }
-  },
-  "description": "A collapsible container",
-  "properties": {
-    "blocks": {
-      "items": {
-        "$ref": "#/definitions/Block"
-      },
-      "type": "array"
-    },
-    "initial_state": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/AccordionState"
-        }
-      ],
-      "default": "collapsed"
-    },
-    "summary": {
-      "$ref": "../primitives/PlainTextObject.schema.json"
-    }
-  },
-  "required": [
-    "blocks",
-    "summary"
-  ],
-  "title": "AccordionBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/AccordionState.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "collapsed",
-    "expanded"
-  ],
-  "title": "AccordionState",
-  "type": "string",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/ActionsBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A container for interactive elements (buttons, selects, etc.)",
-  "properties": {
-    "elements": {
-      "items": {
-        "$ref": "../primitives/BlockElement.schema.json"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "elements"
-  ],
-  "title": "ActionsBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/Block.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AccordionState": {
-      "enum": [
-        "collapsed",
-        "expanded"
-      ],
-      "type": "string"
-    },
-    "Block": {
-      "description": "A single visual block in a message",
-      "oneOf": [
-        {
-          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
-          "properties": {
-            "accessory": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/BlockElement.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "fields": {
-              "items": {
-                "$ref": "../primitives/TextObject.schema.json"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
-            "text": {
-              "$ref": "../primitives/TextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "section"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A visual separator",
-          "properties": {
-            "type": {
-              "enum": [
-                "divider"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays an image with optional title",
-          "properties": {
-            "alt_text": {
-              "type": "string"
-            },
-            "image_url": {
-              "type": "string"
-            },
-            "title": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "type": {
-              "enum": [
-                "image"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "alt_text",
-            "image_url",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A container for interactive elements (buttons, selects, etc.)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/BlockElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "actions"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays contextual info (small grey text, images)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/ContextElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "context"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A header with large, bold text",
-          "properties": {
-            "text": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "header"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "An input field",
-          "properties": {
-            "element": {
-              "$ref": "../primitives/BlockElement.schema.json"
-            },
-            "hint": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "label": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "optional": {
-              "default": false,
-              "type": "boolean"
-            },
-            "type": {
-              "enum": [
-                "input"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "element",
-            "label",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A collapsible container",
-          "properties": {
-            "blocks": {
-              "items": {
-                "$ref": "#/definitions/Block"
-              },
-              "type": "array"
-            },
-            "initial_state": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/AccordionState"
-                }
-              ],
-              "default": "collapsed"
-            },
-            "summary": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "accordion"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "blocks",
-            "summary",
-            "type"
-          ],
-          "type": "object"
-        }
-      ]
-    }
-  },
-  "description": "A single visual block in a message",
-  "oneOf": [
-    {
-      "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
-      "properties": {
-        "accessory": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/BlockElement.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "fields": {
-          "items": {
-            "$ref": "../primitives/TextObject.schema.json"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        },
-        "text": {
-          "$ref": "../primitives/TextObject.schema.json"
-        },
-        "type": {
-          "enum": [
-            "section"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "text",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A visual separator",
-      "properties": {
-        "type": {
-          "enum": [
-            "divider"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Displays an image with optional title",
-      "properties": {
-        "alt_text": {
-          "type": "string"
-        },
-        "image_url": {
-          "type": "string"
-        },
-        "title": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "type": {
-          "enum": [
-            "image"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "alt_text",
-        "image_url",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A container for interactive elements (buttons, selects, etc.)",
-      "properties": {
-        "elements": {
-          "items": {
-            "$ref": "../primitives/BlockElement.schema.json"
-          },
-          "type": "array"
-        },
-        "type": {
-          "enum": [
-            "actions"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "elements",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "Displays contextual info (small grey text, images)",
-      "properties": {
-        "elements": {
-          "items": {
-            "$ref": "../primitives/ContextElement.schema.json"
-          },
-          "type": "array"
-        },
-        "type": {
-          "enum": [
-            "context"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "elements",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A header with large, bold text",
-      "properties": {
-        "text": {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        "type": {
-          "enum": [
-            "header"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "text",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "An input field",
-      "properties": {
-        "element": {
-          "$ref": "../primitives/BlockElement.schema.json"
-        },
-        "hint": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "label": {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        "optional": {
-          "default": false,
-          "type": "boolean"
-        },
-        "type": {
-          "enum": [
-            "input"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "element",
-        "label",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "description": "A collapsible container",
-      "properties": {
-        "blocks": {
-          "items": {
-            "$ref": "#/definitions/Block"
-          },
-          "type": "array"
-        },
-        "initial_state": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/AccordionState"
-            }
-          ],
-          "default": "collapsed"
-        },
-        "summary": {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        "type": {
-          "enum": [
-            "accordion"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "blocks",
-        "summary",
-        "type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "Block",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/BlockElement.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "oneOf": [
-    {
-      "properties": {
-        "action_id": {
-          "type": "string"
-        },
-        "style": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/ButtonStyle.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "text": {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        "type": {
-          "enum": [
-            "button"
-          ],
-          "type": "string"
-        },
-        "url": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "value": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "action_id",
-        "text",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "properties": {
-        "alt_text": {
-          "type": "string"
-        },
-        "image_url": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "image"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "alt_text",
-        "image_url",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "properties": {
-        "action_id": {
-          "type": "string"
-        },
-        "options": {
-          "items": {
-            "$ref": "../primitives/OptionObject.schema.json"
-          },
-          "type": "array"
-        },
-        "type": {
-          "enum": [
-            "overflow"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "action_id",
-        "options",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "properties": {
-        "action_id": {
-          "type": "string"
-        },
-        "initial_value": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "multiline": {
-          "default": false,
-          "type": "boolean"
-        },
-        "placeholder": {
-          "anyOf": [
-            {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "type": {
-          "enum": [
-            "plain_text_input"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "action_id",
-        "type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "BlockElement",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/BlockMessage.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AccordionState": {
-      "enum": [
-        "collapsed",
-        "expanded"
-      ],
-      "type": "string"
-    },
-    "Block": {
-      "description": "A single visual block in a message",
-      "oneOf": [
-        {
-          "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
-          "properties": {
-            "accessory": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/BlockElement.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "fields": {
-              "items": {
-                "$ref": "../primitives/TextObject.schema.json"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
-            "text": {
-              "$ref": "../primitives/TextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "section"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A visual separator",
-          "properties": {
-            "type": {
-              "enum": [
-                "divider"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays an image with optional title",
-          "properties": {
-            "alt_text": {
-              "type": "string"
-            },
-            "image_url": {
-              "type": "string"
-            },
-            "title": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "type": {
-              "enum": [
-                "image"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "alt_text",
-            "image_url",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A container for interactive elements (buttons, selects, etc.)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/BlockElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "actions"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "Displays contextual info (small grey text, images)",
-          "properties": {
-            "elements": {
-              "items": {
-                "$ref": "../primitives/ContextElement.schema.json"
-              },
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "context"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "elements",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A header with large, bold text",
-          "properties": {
-            "text": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "header"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "An input field",
-          "properties": {
-            "element": {
-              "$ref": "../primitives/BlockElement.schema.json"
-            },
-            "hint": {
-              "anyOf": [
-                {
-                  "$ref": "../primitives/PlainTextObject.schema.json"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "label": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "optional": {
-              "default": false,
-              "type": "boolean"
-            },
-            "type": {
-              "enum": [
-                "input"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "element",
-            "label",
-            "type"
-          ],
-          "type": "object"
-        },
-        {
-          "description": "A collapsible container",
-          "properties": {
-            "blocks": {
-              "items": {
-                "$ref": "#/definitions/Block"
-              },
-              "type": "array"
-            },
-            "initial_state": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/AccordionState"
-                }
-              ],
-              "default": "collapsed"
-            },
-            "summary": {
-              "$ref": "../primitives/PlainTextObject.schema.json"
-            },
-            "type": {
-              "enum": [
-                "accordion"
-              ],
-              "type": "string"
-            }
-          },
-          "required": [
-            "blocks",
-            "summary",
-            "type"
-          ],
-          "type": "object"
-        }
-      ]
-    }
-  },
-  "description": "The root container for a Block Kit message",
-  "properties": {
-    "blocks": {
-      "items": {
-        "$ref": "#/definitions/Block"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "blocks"
-  ],
-  "title": "BlockMessage",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/ButtonElement.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "properties": {
-    "action_id": {
-      "type": "string"
-    },
-    "style": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/ButtonStyle.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "text": {
-      "$ref": "../primitives/PlainTextObject.schema.json"
-    },
-    "url": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "value": {
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "action_id",
-    "text"
-  ],
-  "title": "ButtonElement",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/ButtonStyle.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "enum": [
-    "primary",
-    "danger"
-  ],
-  "title": "ButtonStyle",
-  "type": "string",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/ContextBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Displays contextual info (small grey text, images)",
-  "properties": {
-    "elements": {
-      "items": {
-        "$ref": "../primitives/ContextElement.schema.json"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "elements"
-  ],
-  "title": "ContextBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/ContextElement.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "oneOf": [
-    {
-      "properties": {
-        "alt_text": {
-          "type": "string"
-        },
-        "image_url": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "image"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "alt_text",
-        "image_url",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "properties": {
-        "text": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "mrkdwn"
-          ],
-          "type": "string"
-        },
-        "verbatim": {
-          "default": false,
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "text",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "properties": {
-        "emoji": {
-          "default": false,
-          "type": "boolean"
-        },
-        "text": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "plain_text"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "text",
-        "type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "ContextElement",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/DividerBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A visual separator",
-  "title": "DividerBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/HeaderBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A header with large, bold text",
-  "properties": {
-    "text": {
-      "$ref": "../primitives/PlainTextObject.schema.json"
-    }
-  },
-  "required": [
-    "text"
-  ],
-  "title": "HeaderBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/ImageBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Displays an image with optional title",
-  "properties": {
-    "alt_text": {
-      "type": "string"
-    },
-    "image_url": {
-      "type": "string"
-    },
-    "title": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    }
-  },
-  "required": [
-    "alt_text",
-    "image_url"
-  ],
-  "title": "ImageBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/ImageElement.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "properties": {
-    "alt_text": {
-      "type": "string"
-    },
-    "image_url": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "alt_text",
-    "image_url"
-  ],
-  "title": "ImageElement",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/InputBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "An input field",
-  "properties": {
-    "element": {
-      "$ref": "../primitives/BlockElement.schema.json"
-    },
-    "hint": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "label": {
-      "$ref": "../primitives/PlainTextObject.schema.json"
-    },
-    "optional": {
-      "default": false,
-      "type": "boolean"
-    }
-  },
-  "required": [
-    "element",
-    "label"
-  ],
-  "title": "InputBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/MarkdownTextObject.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "properties": {
-    "text": {
-      "type": "string"
-    },
-    "verbatim": {
-      "default": false,
-      "type": "boolean"
-    }
-  },
-  "required": [
-    "text"
-  ],
-  "title": "MarkdownTextObject",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/OptionObject.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "properties": {
-    "description": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "text": {
-      "$ref": "../primitives/PlainTextObject.schema.json"
-    },
-    "url": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "value": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "text",
-    "value"
-  ],
-  "title": "OptionObject",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/OverflowElement.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "properties": {
-    "action_id": {
-      "type": "string"
-    },
-    "options": {
-      "items": {
-        "$ref": "../primitives/OptionObject.schema.json"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "action_id",
-    "options"
-  ],
-  "title": "OverflowElement",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/PlainTextInputElement.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "properties": {
-    "action_id": {
-      "type": "string"
-    },
-    "initial_value": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "multiline": {
-      "default": false,
-      "type": "boolean"
-    },
-    "placeholder": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/PlainTextObject.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    }
-  },
-  "required": [
-    "action_id"
-  ],
-  "title": "PlainTextInputElement",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/PlainTextObject.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "properties": {
-    "emoji": {
-      "default": false,
-      "type": "boolean"
-    },
-    "text": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "text"
-  ],
-  "title": "PlainTextObject",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/SectionBlock.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Displays text, possibly alongside an accessory (image, button, etc.)",
-  "properties": {
-    "accessory": {
-      "anyOf": [
-        {
-          "$ref": "../primitives/BlockElement.schema.json"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "fields": {
-      "items": {
-        "$ref": "../primitives/TextObject.schema.json"
-      },
-      "type": [
-        "array",
-        "null"
-      ]
-    },
-    "text": {
-      "$ref": "../primitives/TextObject.schema.json"
-    }
-  },
-  "required": [
-    "text"
-  ],
-  "title": "SectionBlock",
-  "type": "object",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/ui/TextObject.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "oneOf": [
-    {
-      "properties": {
-        "emoji": {
-          "default": false,
-          "type": "boolean"
-        },
-        "text": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "plain_text"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "text",
-        "type"
-      ],
-      "type": "object"
-    },
-    {
-      "properties": {
-        "text": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "mrkdwn"
-          ],
-          "type": "string"
-        },
-        "verbatim": {
-          "default": false,
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "text",
-        "type"
-      ],
-      "type": "object"
-    }
-  ],
-  "title": "TextObject",
-  "x-familiar-kind": "ui",
-  "x-familiar-service": {
-    "$ref": "../nodes/familiar-worker.node.json"
-  }
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/AgentResponse.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Response from an agent",
-  "properties": {
-    "content": {
-      "description": "Content of the response",
-      "type": "string"
-    },
-    "message_type": {
-      "default": "text",
-      "description": "Type of message (text, question, etc.)",
-      "type": "string"
-    },
-    "options": {
-      "default": null,
-      "description": "Options for questions",
-      "items": {
-        "type": "string"
-      },
-      "type": [
-        "array",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "content"
-  ],
-  "title": "AgentResponse",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/ClassificationResult.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Result of classification",
-  "properties": {
-    "entity_type": {
-      "description": "Entity type",
-      "type": "string"
-    },
-    "probability": {
-      "description": "Probability score",
-      "format": "double",
-      "type": "number"
-    }
-  },
-  "required": [
-    "entity_type",
-    "probability"
-  ],
-  "title": "ClassificationResult",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/ClassifierInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input to the classifier agent",
-  "properties": {
-    "request_id": {
-      "description": "Request ID for tracing",
-      "type": "string"
-    },
-    "state": {
-      "description": "Current agent state"
-    },
-    "text": {
-      "description": "Text to classify",
-      "type": "string"
-    }
-  },
-  "required": [
-    "request_id",
-    "state",
-    "text"
-  ],
-  "title": "ClassifierInput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/ClassifierOutput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "ClassificationResult": {
-      "description": "Result of classification",
-      "properties": {
-        "entity_type": {
-          "description": "Entity type",
-          "type": "string"
-        },
-        "probability": {
-          "description": "Probability score",
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "required": [
-        "entity_type",
-        "probability"
-      ],
-      "type": "object"
-    },
-    "PhysicsHint": {
-      "description": "Sparse container for physics hints extracted from text by the LLM. All fields are Option<f64>. If None, the system applies Vacuum State defaults. This is the \"raw\" output from classification before collapse.",
-      "properties": {
-        "arousal": {
-          "description": "Energy/Activation: 0.0 (Calm) to 1.0 (Excited) Maps to: VAE Arousal axis",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "clarity": {
-          "description": "Specificity/Coherence: 0.0 (Vague) to 1.0 (Factual) Maps to: QuantumState.coherence and VAE Epistemic axis",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "intrusiveness": {
-          "description": "Intrusiveness: 0.0 (Passive) to 1.0 (Demanding attention) Maps to: CognitiveOptics.emissivity",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "significance": {
-          "description": "Importance/Mass: 0.0 (Mundane) to 1.0 (Critical) Maps to: FieldExcitation.amplitude",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "valence": {
-          "description": "Emotional polarity: -1.0 (Negative) to 1.0 (Positive) Maps to: VAE Valence axis",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "volatility": {
-          "description": "Volatility: 0.0 (Stable) to 1.0 (Fluctuating) Maps to: FieldExcitation.temperature",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      },
-      "type": "object"
-    }
-  },
-  "description": "Output from the classifier agent",
-  "properties": {
-    "classifications": {
-      "description": "Classification results",
-      "items": {
-        "$ref": "#/definitions/ClassificationResult"
-      },
-      "type": "array"
-    },
-    "done": {
-      "default": true,
-      "description": "Whether the task is done",
-      "type": "boolean"
-    },
-    "physics_hint": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/PhysicsHint"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Physics hints"
-    },
-    "primary_thread": {
-      "default": null,
-      "description": "Primary thread reference",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "response_message": {
-      "description": "Response message",
-      "type": "string"
-    },
-    "secondary_threads": {
-      "default": [],
-      "description": "Secondary thread references",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "state": {
-      "description": "Updated state"
-    },
-    "temporal_marker": {
-      "default": null,
-      "description": "Temporal marker (today, yesterday, etc.)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "text": {
-      "description": "Original text",
-      "type": "string"
-    }
-  },
-  "required": [
-    "classifications",
-    "response_message",
-    "state",
-    "text"
-  ],
-  "title": "ClassifierOutput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/ConciergeInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input to the concierge agent",
-  "properties": {
-    "is_first_message": {
-      "default": false,
-      "description": "Whether this is the first message in a conversation",
-      "type": "boolean"
-    },
-    "request_id": {
-      "description": "Request ID for tracing",
-      "type": "string"
-    },
-    "state": {
-      "description": "Current agent state"
-    },
-    "user_message": {
-      "default": null,
-      "description": "User message content",
-      "type": [
-        "string",
-        "null"
-      ]
-    }
-  },
-  "required": [
-    "request_id",
-    "state"
-  ],
-  "title": "ConciergeInput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/ConciergeOutput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "AgentResponse": {
-      "description": "Response from an agent",
-      "properties": {
-        "content": {
-          "description": "Content of the response",
-          "type": "string"
-        },
-        "message_type": {
-          "default": "text",
-          "description": "Type of message (text, question, etc.)",
-          "type": "string"
-        },
-        "options": {
-          "default": null,
-          "description": "Options for questions",
-          "items": {
-            "type": "string"
-          },
-          "type": [
-            "array",
-            "null"
-          ]
-        }
-      },
-      "required": [
-        "content"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Output from the concierge agent",
-  "properties": {
-    "done": {
-      "default": false,
-      "description": "Whether the task is done",
-      "type": "boolean"
-    },
-    "response": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/AgentResponse"
-        }
-      ],
-      "description": "Response to send to user"
-    },
-    "state": {
-      "description": "Updated state"
-    }
-  },
-  "required": [
-    "response",
-    "state"
-  ],
-  "title": "ConciergeOutput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/ContinuationInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input to the continuation agent",
-  "properties": {
-    "original_request": {
-      "default": null,
-      "description": "Original user request",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "request_id": {
-      "description": "Request ID for tracing",
-      "type": "string"
-    },
-    "state": {
-      "description": "Current agent state"
-    }
-  },
-  "required": [
-    "request_id",
-    "state"
-  ],
-  "title": "ContinuationInput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/ContinuationOutput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Output from the continuation agent",
-  "properties": {
-    "has_more_tasks": {
-      "description": "Whether there are more tasks to do",
-      "type": "boolean"
-    },
-    "message": {
-      "description": "Message describing the decision",
-      "type": "string"
-    },
-    "next_request": {
-      "default": null,
-      "description": "Next request to process",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "state": {
-      "description": "Updated state"
-    }
-  },
-  "required": [
-    "has_more_tasks",
-    "message",
-    "state"
-  ],
-  "title": "ContinuationOutput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/PhysicsInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "PhysicsHint": {
-      "description": "Sparse container for physics hints extracted from text by the LLM. All fields are Option<f64>. If None, the system applies Vacuum State defaults. This is the \"raw\" output from classification before collapse.",
-      "properties": {
-        "arousal": {
-          "description": "Energy/Activation: 0.0 (Calm) to 1.0 (Excited) Maps to: VAE Arousal axis",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "clarity": {
-          "description": "Specificity/Coherence: 0.0 (Vague) to 1.0 (Factual) Maps to: QuantumState.coherence and VAE Epistemic axis",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "intrusiveness": {
-          "description": "Intrusiveness: 0.0 (Passive) to 1.0 (Demanding attention) Maps to: CognitiveOptics.emissivity",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "significance": {
-          "description": "Importance/Mass: 0.0 (Mundane) to 1.0 (Critical) Maps to: FieldExcitation.amplitude",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "valence": {
-          "description": "Emotional polarity: -1.0 (Negative) to 1.0 (Positive) Maps to: VAE Valence axis",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "volatility": {
-          "description": "Volatility: 0.0 (Stable) to 1.0 (Fluctuating) Maps to: FieldExcitation.temperature",
-          "format": "double",
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      },
-      "type": "object"
-    },
-    "VAEPosition": {
-      "description": "VAE space position (quantized for physics)",
-      "properties": {
-        "x": {
-          "description": "X: Valence (emotional polarity)",
-          "format": "int64",
-          "type": "integer"
-        },
-        "y": {
-          "description": "Y: Arousal (energy/activation)",
-          "format": "int64",
-          "type": "integer"
-        },
-        "z": {
-          "description": "Z: Epistemic (certainty)",
-          "format": "int64",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Input to the physics agent",
-  "properties": {
-    "current_position": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/VAEPosition"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Current position (for calculations)"
-    },
-    "entity_type": {
-      "default": null,
-      "description": "Entity type (for spawn_position)",
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "operation": {
-      "description": "Operation to perform",
-      "type": "string"
-    },
-    "physics_hint": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/PhysicsHint"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Physics hints"
-    },
-    "request_id": {
-      "description": "Request ID for tracing",
-      "type": "string"
-    },
-    "state": {
-      "description": "Current agent state"
-    }
-  },
-  "required": [
-    "operation",
-    "request_id",
-    "state"
-  ],
-  "title": "PhysicsInput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/PhysicsOutput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Output from the physics agent",
-  "properties": {
-    "done": {
-      "default": true,
-      "description": "Whether the task is done",
-      "type": "boolean"
-    },
-    "operation": {
-      "description": "Operation performed",
-      "type": "string"
-    },
-    "response_message": {
-      "description": "Response message",
-      "type": "string"
-    },
-    "result": {
-      "description": "Result data"
-    },
-    "state": {
-      "description": "Updated state"
-    }
-  },
-  "required": [
-    "operation",
-    "response_message",
-    "result",
-    "state"
-  ],
-  "title": "PhysicsOutput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/PhysicsState.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "VAEPosition": {
-      "description": "VAE space position (quantized for physics)",
-      "properties": {
-        "x": {
-          "description": "X: Valence (emotional polarity)",
-          "format": "int64",
-          "type": "integer"
-        },
-        "y": {
-          "description": "Y: Arousal (energy/activation)",
-          "format": "int64",
-          "type": "integer"
-        },
-        "z": {
-          "description": "Z: Epistemic (certainty)",
-          "format": "int64",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "x",
-        "y",
-        "z"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Full physics state for an entity",
-  "properties": {
-    "energy": {
-      "default": 0.5,
-      "description": "Energy (0.0 to 1.0)",
-      "format": "double",
-      "type": "number"
-    },
-    "mass": {
-      "default": 0.5,
-      "description": "Mass (0.0 to 1.0)",
-      "format": "double",
-      "type": "number"
-    },
-    "position": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/VAEPosition"
-        }
-      ],
-      "description": "Position in VAE space"
-    },
-    "temperature": {
-      "default": 0.5,
-      "description": "Temperature (0.0 to 1.0)",
-      "format": "double",
-      "type": "number"
-    },
-    "velocity": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/VAEPosition"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Velocity vector"
-    }
-  },
-  "required": [
-    "position"
-  ],
-  "title": "PhysicsState",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/RAGInput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Input to the RAG agent",
-  "properties": {
-    "filters": {
-      "default": null,
-      "description": "Optional filters"
-    },
-    "limit": {
-      "default": 10,
-      "description": "Maximum results to return",
-      "format": "uint",
-      "minimum": 0.0,
-      "type": "integer"
-    },
-    "query": {
-      "description": "Search query",
-      "type": "string"
-    },
-    "request_id": {
-      "description": "Request ID for tracing",
-      "type": "string"
-    },
-    "state": {
-      "description": "Current agent state"
-    }
-  },
-  "required": [
-    "query",
-    "request_id",
-    "state"
-  ],
-  "title": "RAGInput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/RAGOutput.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "RAGResult": {
-      "description": "A single RAG result",
-      "properties": {
-        "content": {
-          "description": "Content text",
-          "type": "string"
-        },
-        "entity_type": {
-          "description": "Entity type",
-          "type": "string"
-        },
-        "id": {
-          "description": "Result ID",
-          "type": "string"
-        },
-        "metadata": {
-          "default": null,
-          "description": "Optional metadata"
-        },
-        "score": {
-          "description": "Relevance score",
-          "format": "double",
-          "type": "number"
-        }
-      },
-      "required": [
-        "content",
-        "entity_type",
-        "id",
-        "score"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Output from the RAG agent",
-  "properties": {
-    "done": {
-      "default": true,
-      "description": "Whether the task is done",
-      "type": "boolean"
-    },
-    "query": {
-      "description": "Original query",
-      "type": "string"
-    },
-    "response_message": {
-      "description": "Response message",
-      "type": "string"
-    },
-    "results": {
-      "description": "Search results",
-      "items": {
-        "$ref": "#/definitions/RAGResult"
-      },
-      "type": "array"
-    },
-    "state": {
-      "description": "Updated state"
-    },
-    "total_count": {
-      "description": "Total count (may be more than returned)",
-      "format": "uint",
-      "minimum": 0.0,
-      "type": "integer"
-    }
-  },
-  "required": [
-    "query",
-    "response_message",
-    "results",
-    "state",
-    "total_count"
-  ],
-  "title": "RAGOutput",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
-}
-```
-
-### versions/v1.1.0-alpha/json-schema/windmill/RAGResult.schema.json
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "A single RAG result",
-  "properties": {
-    "content": {
-      "description": "Content text",
-      "type": "string"
-    },
-    "entity_type": {
-      "description": "Entity type",
-      "type": "string"
-    },
-    "id": {
-      "description": "Result ID",
-      "type": "string"
-    },
-    "metadata": {
-      "default": null,
-      "description": "Optional metadata"
-    },
-    "score": {
-      "description": "Relevance score",
-      "format": "double",
-      "type": "number"
-    }
-  },
-  "required": [
-    "content",
-    "entity_type",
-    "id",
-    "score"
-  ],
-  "title": "RAGResult",
-  "type": "object",
-  "x-familiar-deprecated": true,
-  "x-familiar-kind": "windmill"
 }
 ```
 
@@ -46258,13 +45389,13 @@ impl EdgeInheritanceResolver {
             Ok("architecture".to_string())
         } else if path_str.contains("json-schema/infrastructure/") {
             Ok("infrastructure".to_string())
-        } else if path_str.contains("json-schema/codegen/") ||
-                  path_str.contains("json-schema/entities/") ||
-                  path_str.contains("json-schema/components/") {
+        } else if path_str.contains("json-schema/codegen/") {
             Ok("codegen".to_string())
+        } else if path_str.contains("json-schema/domain/") {
+            Ok("domain".to_string())
         } else {
             Err(SchemaArchitectureError::UnauthorizedExtension {
-                extension: "unknown_directory".to_string(),
+                extension: "unknown_directory_structure".to_string(),
                 path: path_str.to_string(),
             })
         }
