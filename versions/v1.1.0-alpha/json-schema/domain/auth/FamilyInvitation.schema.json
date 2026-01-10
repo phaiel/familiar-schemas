@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InviteType": {
+      "description": "Type of family invitation",
+      "oneOf": [
+        {
+          "description": "Sent to a specific email address",
+          "enum": [
+            "email"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Shareable code (like Discord)",
+          "enum": [
+            "code"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "A family invitation",
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expires_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "invite_code": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "invite_type": {
+      "$ref": "#/definitions/InviteType"
+    },
+    "invited_by": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "max_uses": {
+      "format": "int32",
+      "type": "integer"
+    },
+    "role": {
+      "$ref": "../../codegen/primitives/InviteRole.schema.json"
+    },
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "use_count": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "invite_type",
+    "max_uses",
+    "role",
+    "tenant_id",
+    "use_count"
+  ],
+  "title": "FamilyInvitation",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

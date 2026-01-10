@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "VAEPosition": {
+      "description": "VAE space position (quantized for physics)",
+      "properties": {
+        "x": {
+          "description": "X: Valence (emotional polarity)",
+          "format": "int64",
+          "type": "integer"
+        },
+        "y": {
+          "description": "Y: Arousal (energy/activation)",
+          "format": "int64",
+          "type": "integer"
+        },
+        "z": {
+          "description": "Z: Epistemic (certainty)",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Input for physics hint generation",
+  "properties": {
+    "content": {
+      "description": "Content text",
+      "type": "string"
+    },
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
+        }
+      ],
+      "description": "Entity type being spawned"
+    },
+    "previous_positions": {
+      "default": [],
+      "description": "Previous entity positions for continuity",
+      "items": {
+        "$ref": "#/definitions/VAEPosition"
+      },
+      "type": "array"
+    },
+    "segment": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/Segment.schema.json"
+        }
+      ],
+      "description": "The segment to analyze"
+    }
+  },
+  "required": [
+    "content",
+    "entity_type",
+    "segment"
+  ],
+  "title": "PhysicsHintInput",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "input",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

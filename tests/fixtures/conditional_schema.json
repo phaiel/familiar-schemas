@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/conditional_schema.json",
+  "title": "Conditional Schema Validation",
+  "description": "Schema demonstrating conditional validation with if/then/else",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["standard", "premium", "enterprise"]
+    },
+    "basePrice": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": ["type", "basePrice"],
+  "if": {
+    "properties": {
+      "type": {
+        "const": "premium"
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "premiumFeatures": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["advanced", "priority", "analytics"]
+        },
+        "minItems": 1
+      },
+      "supportLevel": {
+        "type": "string",
+        "enum": ["gold", "platinum"],
+        "default": "gold"
+      }
+    },
+    "required": ["premiumFeatures"]
+  },
+  "else": {
+    "properties": {
+      "premiumFeatures": {
+        "type": "array",
+        "maxItems": 0
+      },
+      "supportLevel": {
+        "type": "string",
+        "enum": ["basic", "standard"],
+        "default": "basic"
+      }
+    }
+  },
+  "x-familiar-kind": "entity",
+  "x-familiar-description": "Tests conditional schema validation with if/then/else"
+}

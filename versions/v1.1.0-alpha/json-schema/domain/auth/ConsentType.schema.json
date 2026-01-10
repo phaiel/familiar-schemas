@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Type of consent",
+  "enum": [
+    "terms_of_service",
+    "privacy_policy",
+    "marketing_emails",
+    "ai_processing",
+    "data_sharing",
+    "analytics"
+  ],
+  "title": "ConsentType",
+  "type": "string",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

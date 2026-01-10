@@ -25,6 +25,7 @@ pub struct ValidationRule {
     pub parameters: HashMap<String, serde_json::Value>,
 }
 
+#[derive(Clone)]
 pub struct NickelProcessor;
 
 impl NickelProcessor {
@@ -122,7 +123,7 @@ impl NickelProcessor {
     }
 
     /// Execute Nickel schema composition with extension understanding
-    fn execute_nickel_composition(&self, schema_json: &serde_json::Value, nickel_path: &Path) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+    fn execute_nickel_composition(&self, schema_json: &serde_json::Value, _nickel_path: &Path) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
         // In a real implementation, this would:
         // 1. Create a Nickel program that imports the composer
         // 2. Passes the schema JSON as input

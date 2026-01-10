@@ -1,118 +1,39 @@
-/**
- * Actions Infrastructure Module - Pure Compute Resources Governance
- *
- * Ensures schemas in infrastructure/actions/ represent pure COMPUTE RESOURCES
- * for action execution and processing capabilities.
- *
- * @orthology This module enforces pure compute specifications for actions
- * @guarantees NO business logic, NO data definitions, NO entity schemas
- *
- * @example
- *   # Extract compute resources from mixed schema
- *   let compute_resources = (import "actions/_directory.ncl").files._.extract_compute_resources(raw_schema)
- *
- *   # Validate compute resource purity
- *   let result = (import "actions/_directory.ncl").files._.validate_pure_compute(compute_resources)
- */
+# Infrastructure Actions Directory - Basic action validation and capability querying
+let Composer = import "../../composers/directory_composer.ncl" in
+let Libraries = import "../../libraries/all_libraries.ncl" in
 
-{
-  # ============================================================================
-  # ACTIONS INFRASTRUCTURE CONTRACTS - Compute Resource Rules
-  # ============================================================================
+# Specialized action validation for infrastructure layer
+Libraries & {
+  # Action-specific validation
+  action_validation = {
+    # Validate infrastructure actions (atomic operations)
+    validate_infrastructure_action = fun action_json =>
+      # Basic action validation
+      Libraries.ActionValidation.validate_action action_json &&
 
-  # Contract for all files in infrastructure/actions/ - must be pure compute resources
-  files = {
-    _ : {
-      # Implement NodeContract interface with type safety for action infrastructure
-      extract_compute_resources = fun raw_schema => extract_compute_resources raw_schema,
-      validate_pure_compute = fun schema => validate_pure_compute schema,
-      get_layer = `node,
+      # Infrastructure-specific constraints
+      std.record.has_field "x-familiar-compute-category" action_json &&
 
-      # extract_compute_resources : Schema -> ComputeResources
-      # Transforms mixed schemas into pure compute resource specifications
-      # Actions infrastructure focuses on execution environments and processing capabilities
-      extract_compute_resources = fun raw_schema => {
-        # Strip ALL business logic and data concerns from compute resources
-        let forbidden_business = [
-          "x-familiar-business-rules", "x-familiar-domain-events", "x-familiar-aggregates",
-          "properties", "type", "enum", "format",  # No data definitions
-          "x-familiar-codegen-targets", "x-familiar-component-type"  # No entity concerns
-        ] in
+      # Validate execution model is appropriate for infrastructure
+      let valid_models = ["sync", "async", "stream"] in
+      if std.record.has_field "x-familiar-execution-model" action_json then
+        std.array.elem action_json."x-familiar-execution-model" valid_models
+      else
+        true  # execution-model is optional
+    ,
 
-        let pure_compute = std.record.remove_all forbidden_business raw_schema in
-
-        # Ensure required infrastructure metadata for actions
-        let with_infra = if std.record.has_field "x-familiar-node-type" pure_compute then
-          pure_compute
-        else
-          pure_compute & {
-            "x-familiar-node-type" = "action_execution"
-          } in
-
-        with_infra & {
-          "x-familiar-layer" = "node",
-          "x-familiar-orthology" = "action_compute_only"
-        }
-      },
-
-      # validate_pure_compute : ComputeResources -> ValidationResult
-      # Validates that extracted compute resources contain no business logic
-      # Ensures orthological purity - compute resources must be pure infrastructure only
-      validate_pure_compute = fun compute_schema => {
-        let business_indicators = [
-          "x-familiar-business-rules", "x-familiar-domain-events", "x-familiar-aggregates",
-          "properties", "type", "enum", "format",  # No data definitions
-          "x-familiar-codegen-targets", "x-familiar-component-type"  # No entity concerns
-        ] in
-
-        let has_business = std.array.any (fun field =>
-          std.record.has_field field compute_schema
-        ) business_indicators in
-
-        if has_business then
-          { valid = false, errors = ["Action infrastructure schemas cannot contain business logic. Extract to domain layer."], warnings = [] }
-        else
-          { valid = true, errors = [], warnings = [] }
-      },
-
-      # validate_compute_resources : ComputeResources -> ValidationResult
-      # Ensures compute resources have proper infrastructure structure
-      # Validates that compute resources represent meaningful action execution capabilities
-      validate_compute_resources = fun compute_schema => {
-        # Must have infrastructure-like properties (compute specifications)
-        let has_node_type = std.record.has_field "x-familiar-node-type" compute_schema in
-        let has_resources = std.record.has_field "x-familiar-resources" compute_schema in
-        let has_capabilities = std.record.has_field "x-familiar-capabilities" compute_schema in
-        let has_execution = std.record.has_field "x-familiar-execution-mode" compute_schema in
-
-        if has_node_type || has_resources || has_capabilities || has_execution then
-          { valid = true, errors = [], warnings = [] }
-        else
-          { valid = false, errors = ["Action infrastructure schemas must define compute resources (node type, resources, capabilities, or execution mode)"], warnings = [] }
-      }
-    }
+    # Validate action capabilities for infrastructure compatibility
+    validate_action_capabilities = fun action_json =>
+      if std.record.has_field "capabilities" action_json.signature then
+        Libraries.ActionValidation.validate_capabilities action_json.signature.capabilities
+      else
+        true  # capabilities are optional
   },
 
-  # ============================================================================
-  # ACTIONS INFRASTRUCTURE HYDRATION - Pure Compute Resource Context
-  # ============================================================================
-
-  hydration = (import "../_directory.ncl").hydration & {
-    "_infrastructure" = (import "../_directory.ncl").hydration."_infrastructure" & {
-      action_execution = true,
-      processing_capabilities = true,
-      workflow_orchestration = true
-    },
-
-    "_metadata" = (import "../_directory.ncl").hydration."_metadata" & {
-      governance_level = "infrastructure.actions",
-      orthological_role = "action_compute_resources"
-    },
-
-    "_observability" = (import "../_directory.ncl").hydration."_observability" & {
-      action_usage_metrics = true,
-      execution_monitoring = true,
-      performance_tracking = true
-    }
-  }
+  # Export validation functions for subdirectory inheritance
+  ActionValidation = action_validation
+} & Composer.infrastructure.Contract.compose {
+  extract_from_raw = Composer.infrastructure.extraction,
+  validate_pure = Composer.infrastructure.validation,
+  get_layer = "node"
 }

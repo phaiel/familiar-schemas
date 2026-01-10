@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "DeletionStatus": {
+      "description": "Status of a deletion request",
+      "enum": [
+        "pending",
+        "cancelled",
+        "processing",
+        "completed"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A deletion request",
+  "properties": {
+    "completed_at": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "reason": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scheduled_for": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/definitions/DeletionStatus"
+    },
+    "user_id": {
+      "default": null,
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "id",
+    "status"
+  ],
+  "title": "DeletionRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

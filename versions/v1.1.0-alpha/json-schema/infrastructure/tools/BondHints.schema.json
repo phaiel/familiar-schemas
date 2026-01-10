@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Hints for relationship bonds",
+  "properties": {
+    "description": {
+      "default": null,
+      "description": "Description of relationship",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reciprocity": {
+      "default": 0.5,
+      "description": "Reciprocity (0.0 one-way to 1.0 mutual)",
+      "format": "double",
+      "type": "number"
+    },
+    "relationship_type": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/RelationshipType.schema.json"
+        }
+      ],
+      "description": "Relationship type"
+    },
+    "source": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+        }
+      ],
+      "description": "Source entity (head of relationship)"
+    },
+    "strength": {
+      "description": "Strength of relationship (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    },
+    "target": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+        }
+      ],
+      "description": "Target entity (tail of relationship)"
+    },
+    "valence": {
+      "description": "Valence of relationship (-1.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "relationship_type",
+    "source",
+    "strength",
+    "target",
+    "valence"
+  ],
+  "title": "BondHints",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

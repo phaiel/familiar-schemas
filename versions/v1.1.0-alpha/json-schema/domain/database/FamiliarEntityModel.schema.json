@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "EntityStatus": {
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected",
+        "AutoSpawned"
+      ],
+      "type": "string"
+    },
+    "FamiliarEntityType": {
+      "enum": [
+        "Moment",
+        "Pulse",
+        "Intent",
+        "Thread",
+        "Bond",
+        "Motif",
+        "Filament",
+        "Focus"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "content": {
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "entity_type": {
+      "$ref": "#/definitions/FamiliarEntityType"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "metadata": true,
+    "physics": true,
+    "qdrant_collection": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "qdrant_point_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_by": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_channel_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_message_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "$ref": "#/definitions/EntityStatus"
+    },
+    "subject": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "content",
+    "created_at",
+    "entity_type",
+    "id",
+    "metadata",
+    "status",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

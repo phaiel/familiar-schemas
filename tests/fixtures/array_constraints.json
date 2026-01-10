@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/array_constraints.json",
+  "title": "Array Constraints Schema",
+  "description": "Schema demonstrating advanced array validation constraints",
+  "type": "object",
+  "properties": {
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 20 },
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true
+    },
+    "scores": {
+      "type": "array",
+      "items": { "type": "number", "minimum": 0, "maximum": 100 },
+      "minItems": 3,
+      "maxItems": 5,
+      "contains": { "type": "number", "minimum": 90 }
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["read", "write", "delete"] },
+          "resource": { "type": "string" }
+        },
+        "required": ["action", "resource"],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": ["tags"],
+  "x-familiar-kind": "entity",
+  "x-familiar-description": "Tests advanced array validation constraints"
+}

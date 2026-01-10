@@ -29,6 +29,9 @@ pub mod checksum;
 pub mod error;
 pub mod compiler;
 pub mod nickel_validator;
+pub mod nickel;
+pub mod edge_inheritance;
+pub mod frame_graph;
 
 pub use schema::{Schema, SchemaType, SchemaEntry};
 pub use version::SchemaVersion;
@@ -36,4 +39,6 @@ pub use checksum::Checksum;
 pub use error::{SchemaError, Result};
 pub use compiler::{SchemaArchitectureError, CompilerConfig, Casing};
 pub use nickel_validator::{NickelValidator, ValidationError};
+pub use edge_inheritance::{EdgeInheritanceResolver, EdgeMetadata, TypedEdge};
+pub use frame_graph::{FrameGraph, FrameGraphBuilder, CompilationPlan, FrameGraphError};
 

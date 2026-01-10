@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ChannelType": {
+      "enum": [
+        "Personal",
+        "Family",
+        "Shared"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "channel_type": {
+      "$ref": "#/definitions/ChannelType"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../../codegen/primitives/ChannelId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "owner_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "settings": true,
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "channel_type",
+    "created_at",
+    "id",
+    "name",
+    "settings",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

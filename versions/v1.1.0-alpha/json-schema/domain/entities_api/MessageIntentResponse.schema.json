@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Classified message intent (what the user is trying to do)",
+  "properties": {
+    "confidence": {
+      "description": "Confidence score 0.0-1.0",
+      "format": "double",
+      "type": "number"
+    },
+    "intent": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/MessageIntent.schema.json"
+        }
+      ],
+      "description": "Primary intent: LOG, QUERY, INFER, REFERENCE, REFLECT, COMMAND, SOCIAL"
+    },
+    "query_target": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/QueryTarget.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY: what is being queried"
+    },
+    "query_type": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/QueryType.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "If QUERY: what type of query"
+    }
+  },
+  "required": [
+    "confidence",
+    "intent"
+  ],
+  "title": "MessageIntentResponse",
+  "type": "object",
+  "x-familiar-kind": "entities_api",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

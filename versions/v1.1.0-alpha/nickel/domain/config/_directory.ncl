@@ -1,67 +1,7 @@
-# Config Directory - Configuration validation rules
-
-{
-  allowed_extensions = [
-    "x-familiar-kind",
-    "x-familiar-description",
-    "x-familiar-meta-schema"
-  ],
-
-  forbidden_extensions = [
-    "x-familiar-service",
-    "x-familiar-queue",
-    "x-familiar-persistence",
-    "x-familiar-visual"
-  ],
-
-  required_extensions = [
-    "x-familiar-kind",
-    "x-familiar-description"
-  ],
-
-  validation_rules = [],
-
-  hydration = {
-    "_config" = {
-      validation_layer = "strict",
-      environment_separation = true,
-      hot_reload = "supported"
-    }
-  },
-
-  validate = fun schema_content => {
-    let schema = try {
-      std.from_json schema_content
-    } catch _ => {
-      valid = false,
-      errors = ["Invalid JSON schema content"],
-      warnings = []
-    },
-
-    let missing_required = std.array.filter
-      (fun ext => !(std.record.has_field ext schema))
-      required_extensions,
-
-    let required_errors = if std.array.length missing_required > 0 then
-      std.array.map (fun ext => "Missing required extension: ${ext}") missing_required
-    else [],
-
-    let schema_keys = std.record.fields schema,
-    let extension_keys = std.array.filter (std.string.starts_with "x-familiar-") schema_keys,
-    let forbidden_found = std.array.filter
-      (fun ext => std.array.elem ext forbidden_extensions)
-      extension_keys,
-
-    let forbidden_errors = if std.array.length forbidden_found > 0 then
-      std.array.map (fun ext => "Forbidden extension found: ${ext}") forbidden_found
-    else [],
-
-    let all_errors = required_errors @ forbidden_errors,
-
-    {
-      valid = std.array.length all_errors == 0,
-      errors = all_errors,
-      warnings = []
-    }
-  }
+# Domain subdirectory - minimal merged blocks
+let Composer = import "../../composers/directory_composer.ncl" in
+Composer.domain.Contract.compose {
+  extract_from_raw = Composer.domain.extraction,
+  validate_pure = Composer.codegen.validation,
+  get_layer = "domain"
 }

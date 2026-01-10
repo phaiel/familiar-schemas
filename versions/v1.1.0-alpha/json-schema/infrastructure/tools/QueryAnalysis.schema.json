@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "FilterOperator": {
+      "description": "Filter operators",
+      "enum": [
+        "equals",
+        "not_equals",
+        "contains",
+        "starts_with",
+        "ends_with",
+        "greater_than",
+        "less_than",
+        "between",
+        "in",
+        "not_in"
+      ],
+      "type": "string"
+    },
+    "QueryFilter": {
+      "description": "A filter for queries",
+      "properties": {
+        "field": {
+          "description": "Field to filter on",
+          "type": "string"
+        },
+        "operator": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/FilterOperator"
+            }
+          ],
+          "description": "Filter operator"
+        },
+        "value": {
+          "description": "Filter value"
+        }
+      },
+      "required": [
+        "field",
+        "operator",
+        "value"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Analysis of a query purpose",
+  "properties": {
+    "filters": {
+      "default": [],
+      "description": "Filters to apply",
+      "items": {
+        "$ref": "#/definitions/QueryFilter"
+      },
+      "type": "array"
+    },
+    "query_type": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/QueryType.schema.json"
+        }
+      ],
+      "description": "Type of query"
+    },
+    "search_terms": {
+      "description": "Extracted search terms",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "target": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/QueryTarget.schema.json"
+        }
+      ],
+      "description": "What the query is targeting"
+    }
+  },
+  "required": [
+    "query_type",
+    "search_terms",
+    "target"
+  ],
+  "title": "QueryAnalysis",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

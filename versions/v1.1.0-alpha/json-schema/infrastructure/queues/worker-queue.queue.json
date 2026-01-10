@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Temporal task queue for IO-bound batch operations. Routes work to familiar-worker nodes.",
+  "title": "WorkerQueue",
+  "x-familiar-concurrency": 50,
+  "x-familiar-consumers": [
+    {
+      "$ref": "../nodes/familiar-worker.node.json"
+    }
+  ],
+  "x-familiar-kind": "queue",
+  "x-familiar-meta-schema": {
+    "$ref": "../architecture/ecs/Queue.meta.schema.json"
+  },
+  "x-familiar-queue-type": "temporal",
+  "x-familiar-resource-class": "io",
+  "x-familiar-retention": "7d",
+  "x-familiar-visibility-timeout": "30s"
+}

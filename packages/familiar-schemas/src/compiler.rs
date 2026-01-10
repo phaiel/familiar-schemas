@@ -18,9 +18,6 @@
 //! This will create a direct mapping between filesystem structure and
 //! compilation graph topology, enabling better optimization and caching.
 
-use serde_json::Value;
-use std::path::Path;
-use std::collections::HashSet;
 use thiserror::Error;
 
 /// Metaschema validation for directory-specific schema rules

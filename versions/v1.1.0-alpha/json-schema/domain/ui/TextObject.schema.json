@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "oneOf": [
+    {
+      "properties": {
+        "emoji": {
+          "default": false,
+          "type": "boolean"
+        },
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "plain_text"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "type"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "mrkdwn"
+          ],
+          "type": "string"
+        },
+        "verbatim": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "text",
+        "type"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "TextObject",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "User consent flags for signup",
+  "properties": {
+    "privacy": {
+      "description": "User accepted privacy policy",
+      "type": "boolean"
+    },
+    "terms": {
+      "description": "User accepted terms of service",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "privacy",
+    "terms"
+  ],
+  "title": "SignupConsents",
+  "type": "object",
+  "x-familiar-kind": "contract",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

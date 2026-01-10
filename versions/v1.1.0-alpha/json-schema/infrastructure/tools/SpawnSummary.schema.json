@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Summary of spawn decisions",
+  "properties": {
+    "auto_spawn_count": {
+      "description": "Auto-spawn count",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "primary_type": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Primary entity type suggested"
+    },
+    "review_count": {
+      "description": "Needs review count",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "skipped_count": {
+      "description": "Skipped count",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    },
+    "total_suggestions": {
+      "description": "Total suggestions",
+      "format": "uint",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "auto_spawn_count",
+    "review_count",
+    "skipped_count",
+    "total_suggestions"
+  ],
+  "title": "SpawnSummary",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Temporal task queue for LLM-bound operations. Routes work to familiar-daemon nodes.",
+  "title": "DaemonQueue",
+  "x-familiar-concurrency": 10,
+  "x-familiar-consumers": [
+    {
+      "$ref": "../nodes/familiar-daemon.node.json"
+    }
+  ],
+  "x-familiar-kind": "queue",
+  "x-familiar-meta-schema": {
+    "$ref": "../architecture/ecs/Queue.meta.schema.json"
+  },
+  "x-familiar-queue-type": "temporal",
+  "x-familiar-resource-class": "llm",
+  "x-familiar-retention": "24h",
+  "x-familiar-visibility-timeout": "5m"
+}

@@ -10,6 +10,7 @@
 //! - Clean separation from other Nickel capabilities in specialized crates
 
 use serde::Deserialize;
+use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -20,9 +21,7 @@ pub struct NickelValidator {
 }
 
 /// Internal Nickel runtime for validation execution
-struct NickelRuntime {
-    workspace_root: PathBuf,
-}
+struct NickelRuntime;
 
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
@@ -43,7 +42,6 @@ pub enum ValidationError {
 struct ValidationResult {
     valid: bool,
     errors: Vec<String>,
-    warnings: Vec<String>,
 }
 
 impl NickelRuntime {
@@ -63,28 +61,39 @@ impl NickelRuntime {
         }
     }
 
-    /// Execute Nickel validation for a schema
-    fn execute_nickel_validation(&self, nickel_config: &Path, schema: &serde_json::Value, _schema_path: &Path) -> Result<ValidationResult, ValidationError> {
-        // Read the base validation script
-        let base_script = std::fs::read_to_string(nickel_config)
-            .map_err(|e| ValidationError::ConfigError {
-                message: format!("Failed to read validation config: {}", e),
-            })?;
+    /// Find the edge declaration contract for a schema path
+    fn find_edge_contract_path(&self, _schema_path: &Path) -> Result<PathBuf, ValidationError> {
+        let contract_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../familiar-schemas/versions/latest/nickel/extensions/edge-declaration-contract.ncl");
 
-        // Create a JSON string representation of the schema for Nickel
-        let schema_json = serde_json::to_string(schema)
-            .map_err(|e| ValidationError::ConfigError {
+        if contract_path.exists() {
+            Ok(contract_path)
+        } else {
+            Err(ValidationError::ConfigError {
+                message: format!("Edge declaration contract not found at {}", contract_path.display()),
+            })
+        }
+    }
+
+    /// Execute edge declaration contract validation
+    fn execute_contract_validation(&self, schema: &Value, contract_path: &Path) -> Result<ValidationResult, ValidationError> {
+        // Create a Nickel script that imports the contract and validates the schema
+        let nickel_script = format!(
+            r#"
+let contract = import "{}" in
+let schema_to_validate = {} in
+
+# Apply the contract
+contract.contract schema_to_validate
+"#,
+            contract_path.display(),
+            serde_json::to_string_pretty(schema).map_err(|e| ValidationError::ConfigError {
                 message: format!("Failed to serialize schema: {}", e),
-            })?;
-
-        // Inject the schema content into the Nickel script
-        let nickel_script = base_script.replace(
-            "let schema_content = \"\" in",
-            &format!("let schema_content = {} in", serde_json::to_string(&schema_json).unwrap())
+            })?
         );
 
-        // Execute nickel export with the script
-        let mut child = Command::new("nickel")
+        // Execute the script
+        let mut output = std::process::Command::new("nickel")
             .args(&["export", "--format", "json"])
             .stdin(std::process::Stdio::piped())
             .stdout(std::process::Stdio::piped())
@@ -94,13 +103,110 @@ impl NickelRuntime {
                 message: format!("Failed to spawn nickel: {}", e),
             })?;
 
-        // Write the script to stdin
-        if let Some(mut stdin) = child.stdin.take() {
-            std::io::Write::write_all(&mut stdin, nickel_script.as_bytes())
+        // Write script to stdin
+        if let Some(ref mut stdin) = output.stdin {
+            use std::io::Write;
+            stdin.write_all(nickel_script.as_bytes())
                 .map_err(|e| ValidationError::NickelExecution {
                     message: format!("Failed to write to nickel stdin: {}", e),
                 })?;
         }
+
+        // Read result
+        let output_result = output.wait_with_output()
+            .map_err(|e| ValidationError::NickelExecution {
+                message: format!("Failed to read nickel output: {}", e),
+            })?;
+
+        if output_result.status.success() {
+            let result: ValidationResult = serde_json::from_slice(&output_result.stdout)
+                .map_err(|e| ValidationError::NickelExecution {
+                    message: format!("Failed to parse nickel result: {}", e),
+                })?;
+            Ok(result)
+        } else {
+            let stderr = String::from_utf8_lossy(&output_result.stderr);
+            Err(ValidationError::NickelExecution {
+                message: format!("Nickel contract validation failed: {}", stderr),
+            })
+        }
+    }
+
+    /// Execute edge extraction from schema
+    fn execute_edge_extraction(&self, schema: &Value, contract_path: &Path) -> Result<Vec<Value>, ValidationError> {
+        // Create a Nickel script that extracts edges
+        let nickel_script = format!(
+            r#"
+let contract = import "{}" in
+let schema_to_extract = {} in
+
+# Extract edges using the contract
+contract.functions.extract_edges schema_to_extract
+"#,
+            contract_path.display(),
+            serde_json::to_string_pretty(schema).map_err(|e| ValidationError::ConfigError {
+                message: format!("Failed to serialize schema: {}", e),
+            })?
+        );
+
+        // Execute the script
+        let mut output = std::process::Command::new("nickel")
+            .args(&["export", "--format", "json"])
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .map_err(|e| ValidationError::NickelExecution {
+                message: format!("Failed to spawn nickel: {}", e),
+            })?;
+
+        // Write script to stdin
+        if let Some(ref mut stdin) = output.stdin {
+            use std::io::Write;
+            stdin.write_all(nickel_script.as_bytes())
+                .map_err(|e| ValidationError::NickelExecution {
+                    message: format!("Failed to write to nickel stdin: {}", e),
+                })?;
+        }
+
+        // Read result
+        let output_result = output.wait_with_output()
+            .map_err(|e| ValidationError::NickelExecution {
+                message: format!("Failed to read nickel output: {}", e),
+            })?;
+
+        if output_result.status.success() {
+            let edges: Vec<Value> = serde_json::from_slice(&output_result.stdout)
+                .map_err(|e| ValidationError::NickelExecution {
+                    message: format!("Failed to parse nickel edge extraction result: {}", e),
+                })?;
+            Ok(edges)
+        } else {
+            let stderr = String::from_utf8_lossy(&output_result.stderr);
+            Err(ValidationError::NickelExecution {
+                message: format!("Nickel edge extraction failed: {}", stderr),
+            })
+        }
+    }
+
+    /// Execute Nickel validation for a schema
+    fn execute_nickel_validation(&self, nickel_config: &Path, schema: &Value, _schema_path: &Path) -> Result<ValidationResult, ValidationError> {
+        // Create a JSON string representation of the schema for Nickel environment variable
+        let schema_json = serde_json::to_string(schema)
+            .map_err(|e| ValidationError::ConfigError {
+                message: format!("Failed to serialize schema: {}", e),
+            })?;
+
+        // Execute nickel eval directly on the validation file with environment variables
+        let child = Command::new("nickel")
+            .args(&["eval", &nickel_config.to_string_lossy()])
+            .env("SCHEMA_FILE", &schema_json)
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .map_err(|e| ValidationError::NickelExecution {
+                message: format!("Failed to spawn nickel: {}", e),
+            })?;
 
         let output = child.wait_with_output()
             .map_err(|e| ValidationError::NickelExecution {
@@ -127,8 +233,6 @@ impl NickelRuntime {
 impl NickelValidator {
     /// Create a new Nickel validator
     pub fn new() -> Result<Self, ValidationError> {
-        let workspace_root = Self::find_workspace_root()?;
-
         // Check if nickel is available
         let nickel_available = std::process::Command::new("nickel")
             .arg("--version")
@@ -137,7 +241,7 @@ impl NickelValidator {
             .unwrap_or(false);
 
         let nickel_runtime = if nickel_available {
-            Some(NickelRuntime { workspace_root })
+            Some(NickelRuntime)
         } else {
             None
         };
@@ -151,7 +255,7 @@ impl NickelValidator {
     /// Validate a single schema file
     ///
     /// Returns Ok(()) if valid, ValidationError if invalid or execution failed
-    pub fn validate_schema(&self, schema: &serde_json::Value, schema_path: &Path) -> Result<(), ValidationError> {
+    pub fn validate_schema(&self, schema: &Value, schema_path: &Path) -> Result<(), ValidationError> {
         if !self.nickel_available {
             // Fallback to basic validation when nickel is not available
             return self.fallback_validation(schema, schema_path);
@@ -179,18 +283,64 @@ impl NickelValidator {
     }
 
     /// Validate multiple schemas (convenience method)
-    pub fn validate_schemas(&self, schemas: &[(serde_json::Value, PathBuf)]) -> Result<(), ValidationError> {
+    pub fn validate_schemas(&self, schemas: &[(Value, PathBuf)]) -> Result<(), ValidationError> {
         for (schema, path) in schemas {
             self.validate_schema(schema, path)?;
         }
         Ok(())
     }
 
+    /// Validate schema against edge declaration contract
+    pub fn validate_edge_contract(&self, schema: &Value, schema_path: &Path) -> Result<(), ValidationError> {
+        if !self.nickel_available {
+            return Err(ValidationError::ConfigError {
+                message: "Nickel not available for edge contract validation".to_string()
+            });
+        }
+
+        let runtime = self.nickel_runtime.as_ref()
+            .ok_or_else(|| ValidationError::ConfigError { message: "Nickel runtime not initialized".to_string() })?;
+
+        // Find the edge declaration contract
+        let contract_path = runtime.find_edge_contract_path(schema_path)?;
+
+        // Execute Nickel contract validation
+        let result = runtime.execute_contract_validation(schema, &contract_path)?;
+
+        if result.valid {
+            Ok(())
+        } else {
+            Err(ValidationError::SchemaInvalid {
+                details: format!(
+                    "Edge Declaration Contract violations: {}",
+                    result.errors.join("; ")
+                )
+            })
+        }
+    }
+
+    /// Extract typed edges from schema using edge contract
+    pub fn extract_typed_edges(&self, schema: &Value, schema_path: &Path) -> Result<Vec<Value>, ValidationError> {
+        if !self.nickel_available {
+            return Err(ValidationError::ConfigError {
+                message: "Nickel not available for edge extraction".to_string()
+            });
+        }
+
+        let runtime = self.nickel_runtime.as_ref()
+            .ok_or_else(|| ValidationError::ConfigError { message: "Nickel runtime not initialized".to_string() })?;
+
+        // Find the edge declaration contract
+        let contract_path = runtime.find_edge_contract_path(schema_path)?;
+
+        // Execute Nickel edge extraction
+        runtime.execute_edge_extraction(schema, &contract_path)
+    }
 
     /// Fallback validation when nickel is not available
     ///
     /// Performs basic structural validation without the full Nickel rule engine
-    fn fallback_validation(&self, schema: &serde_json::Value, _schema_path: &Path) -> Result<(), ValidationError> {
+    fn fallback_validation(&self, schema: &Value, _schema_path: &Path) -> Result<(), ValidationError> {
         let mut errors = Vec::new();
 
         // Check required fields
@@ -241,48 +391,11 @@ impl NickelValidator {
         }
     }
 
-    /// Find the workspace root by looking for Cargo.toml or similar markers
-    fn find_workspace_root() -> Result<PathBuf, ValidationError> {
-        // First try CARGO_MANIFEST_DIR approach (most reliable for build scripts)
-        if let Ok(manifest_dir) = std::env::var("CARGO_MANIFEST_DIR") {
-            let manifest_path = PathBuf::from(manifest_dir);
-            // From familiar-contracts/build.rs, workspace root is ../../../../
-            let workspace_candidate = manifest_path.join("../../../..");
-            if workspace_candidate.join("Cargo.toml").exists() {
-                return Ok(workspace_candidate);
-            }
-        }
-
-        // Fallback: walk up from current directory
-        let mut current = std::env::current_dir()?;
-
-        loop {
-            if current.join("Cargo.toml").exists() {
-                // Check if this is a workspace root by looking for workspace members
-                let cargo_content = std::fs::read_to_string(current.join("Cargo.toml"))
-                    .unwrap_or_default();
-                if cargo_content.contains("[workspace]") {
-                    return Ok(current);
-                }
-            }
-
-            if let Some(parent) = current.parent() {
-                current = parent.to_path_buf();
-            } else {
-                break;
-            }
-        }
-
-        Err(ValidationError::ConfigError {
-            message: "Could not find workspace root".to_string(),
-        })
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
 
     #[test]
     fn test_nickel_validator_creation() {

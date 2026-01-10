@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Virtual resource representing Anthropic's Claude API. Acts as a proxy contract defining expected capabilities.",
+  "title": "AnthropicClaude",
+  "x-familiar-endpoint": "https://api.anthropic.com/v1/messages",
+  "x-familiar-health-check": {
+    "endpoint": "https://api.anthropic.com/v1/models",
+    "interval": "5m"
+  },
+  "x-familiar-kind": "resource",
+  "x-familiar-meta-schema": {
+    "$ref": "../architecture/ecs/Resource.meta.schema.json"
+  },
+  "x-familiar-models": [
+    "claude-3-5-sonnet-20241022",
+    "claude-3-5-haiku-20241022",
+    "claude-3-opus-20240229",
+    "claude-3-sonnet-20240229"
+  ],
+  "x-familiar-rate-limit": 4000,
+  "x-familiar-resource-type": "llm-api",
+  "x-familiar-virtual": true
+}

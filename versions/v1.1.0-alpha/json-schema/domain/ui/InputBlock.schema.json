@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "An input field",
+  "properties": {
+    "element": {
+      "$ref": "../../codegen/primitives/BlockElement.schema.json"
+    },
+    "hint": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "label": {
+      "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+    },
+    "optional": {
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "element",
+    "label"
+  ],
+  "title": "InputBlock",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

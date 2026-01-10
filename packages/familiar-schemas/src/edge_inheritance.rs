@@ -1,0 +1,382 @@
+//! Edge Inheritance Resolution for Frame Graph Architecture
+//!
+//! Resolves edge semantics through inheritance hierarchy:
+//! directory-specific edges → global edges → compilation metadata
+
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::path::Path;
+use crate::SchemaArchitectureError;
+
+/// Resolved edge metadata after inheritance resolution
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EdgeMetadata {
+    /// Edge type name (e.g., "depends_on", "orchestrates")
+    pub edge_type: String,
+
+    /// Directionality of the relationship
+    pub directionality: EdgeDirectionality,
+
+    /// Cardinality constraints
+    pub cardinality: EdgeCardinality,
+
+    /// Whether relationship supports transitivity (A→B→C ⇒ A→C)
+    pub transitivity: bool,
+
+    /// Whether cycles are allowed
+    pub cyclicity: EdgeCyclicity,
+
+    /// Type of data flow
+    pub data_flow: String,
+
+    /// Relationship strength (weak/medium/strong)
+    pub strength: String,
+
+    /// Context-specific usage
+    pub context: String,
+
+    /// Compilation implications for code generation
+    pub compilation_implications: CompilationImplications,
+
+    /// Traversal rules for graph algorithms
+    pub traversal_rules: TraversalRules,
+
+    /// Additional metadata from directory specialization
+    pub metadata: HashMap<String, serde_json::Value>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum EdgeDirectionality {
+    Directed,
+    Bidirectional,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum EdgeCardinality {
+    OneToOne,
+    OneToMany,
+    ManyToOne,
+    ManyToMany,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum EdgeCyclicity {
+    Acyclic,
+    CyclicAllowed,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CompilationImplications {
+    /// Whether to generate dependency injection code
+    pub generate_dependency_injection: bool,
+
+    /// Whether to generate initialization ordering
+    pub generate_initialization_order: bool,
+
+    /// Whether to generate lifecycle management
+    pub generate_lifecycle_management: bool,
+
+    /// Additional context-specific implications
+    pub additional: HashMap<String, bool>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TraversalRules {
+    /// Whether this edge can be traversed
+    pub can_traverse: bool,
+
+    /// Whether cycles are allowed (for cycle detection)
+    pub allows_cycles: bool,
+
+    /// Whether topological sorting is required
+    pub topological_sort_required: bool,
+
+    /// Additional traversal metadata
+    pub additional: HashMap<String, serde_json::Value>,
+}
+
+/// Edge inheritance resolver
+#[derive(Clone)]
+pub struct EdgeInheritanceResolver {
+    global_edges: HashMap<String, EdgeMetadata>,
+    directory_edges: HashMap<String, HashMap<String, EdgeMetadata>>,
+}
+
+impl EdgeInheritanceResolver {
+    pub fn new() -> Self {
+        Self {
+            global_edges: HashMap::new(),
+            directory_edges: HashMap::new(),
+        }
+    }
+
+    /// Load global edge definitions from extensions/edge-type.ncl
+    pub fn load_global_edges(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let global_path = Path::new("versions/latest/nickel/extensions/edge-type.ncl");
+
+        // Execute nickel directly to get the resolved configuration
+        let output = std::process::Command::new("nickel")
+            .args(&["export", "--format", "json"])
+            .arg(global_path)
+            .output()?;
+
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            return Err(format!("Nickel execution failed: {}", stderr).into());
+        }
+
+        let json_str = String::from_utf8(output.stdout)?;
+        let nickel_config: serde_json::Value = serde_json::from_str(&json_str)?;
+
+        // Parse edge types from Nickel config
+        if let Some(edge_types) = nickel_config.get("edge_types") {
+            if let serde_json::Value::Object(edge_map) = edge_types {
+                for (edge_name, edge_config) in edge_map {
+                    let metadata = self.parse_edge_metadata(&edge_name, &edge_config)?;
+                    self.global_edges.insert(edge_name.to_string(), metadata);
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Load directory-specific edge specializations
+    pub fn load_directory_edges(&mut self, directory_path: &str) -> Result<(), Box<dyn std::error::Error>> {
+        let nickel_path_str = format!("versions/latest/nickel/{}/edge-semantics.ncl", directory_path);
+        let nickel_path = Path::new(&nickel_path_str);
+
+        // Execute nickel directly
+        let output = std::process::Command::new("nickel")
+            .args(&["export", "--format", "json"])
+            .arg(nickel_path)
+            .output()?;
+
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            return Err(format!("Nickel execution failed: {}", stderr).into());
+        }
+
+        let json_str = String::from_utf8(output.stdout)?;
+        let nickel_config: serde_json::Value = serde_json::from_str(&json_str)?;
+
+        let mut dir_edges = HashMap::new();
+
+        // Parse specialized edge types
+        if let Some(edge_types) = nickel_config.get("edge_types") {
+            if let serde_json::Value::Object(edge_map) = edge_types {
+                for (edge_name, edge_config) in edge_map {
+                    let metadata = self.parse_edge_metadata(&edge_name, &edge_config)?;
+                    dir_edges.insert(edge_name.to_string(), metadata);
+                }
+            }
+        }
+
+        self.directory_edges.insert(directory_path.to_string(), dir_edges);
+        Ok(())
+    }
+
+    /// Resolve edge semantics for a schema path with inheritance
+    pub fn resolve_edge_semantics(&self, schema_path: &Path, edge_type: &str) -> Result<EdgeMetadata, SchemaArchitectureError> {
+        // Determine directory from schema path
+        let directory = self.infer_directory_from_path(schema_path)?;
+
+        // Try directory-specific edge first
+        if let Some(dir_edges) = self.directory_edges.get(&directory) {
+            if let Some(dir_edge) = dir_edges.get(edge_type) {
+                return Ok(dir_edge.clone());
+            }
+        }
+
+        // Fall back to global edge
+        self.global_edges.get(edge_type)
+            .cloned()
+            .ok_or_else(|| SchemaArchitectureError::UnauthorizedExtension {
+                extension: format!("edge_type:{}", edge_type),
+                path: schema_path.to_string_lossy().to_string(),
+            })
+    }
+
+    /// Infer directory type from schema path
+    fn infer_directory_from_path(&self, schema_path: &Path) -> Result<String, SchemaArchitectureError> {
+        let path_str = schema_path.to_string_lossy();
+
+        if path_str.contains("json-schema/architecture/") {
+            Ok("architecture".to_string())
+        } else if path_str.contains("json-schema/infrastructure/") {
+            Ok("infrastructure".to_string())
+        } else if path_str.contains("json-schema/codegen/") {
+            Ok("codegen".to_string())
+        } else if path_str.contains("json-schema/domain/") {
+            Ok("domain".to_string())
+        } else {
+            Err(SchemaArchitectureError::UnauthorizedExtension {
+                extension: "unknown_directory_structure".to_string(),
+                path: path_str.to_string(),
+            })
+        }
+    }
+
+    /// Parse edge metadata from Nickel JSON output
+    fn parse_edge_metadata(&self, edge_name: &str, config: &serde_json::Value) -> Result<EdgeMetadata, Box<dyn std::error::Error>> {
+        let config_obj = config.as_object()
+            .ok_or("Edge config must be an object")?;
+
+        let directionality = match config_obj.get("directionality").and_then(|v| v.as_str()) {
+            Some("directed") => EdgeDirectionality::Directed,
+            Some("bidirectional") => EdgeDirectionality::Bidirectional,
+            _ => EdgeDirectionality::Directed,
+        };
+
+        let cardinality = match config_obj.get("cardinality").and_then(|v| v.as_str()) {
+            Some("one_to_one") => EdgeCardinality::OneToOne,
+            Some("one_to_many") => EdgeCardinality::OneToMany,
+            Some("many_to_one") => EdgeCardinality::ManyToOne,
+            Some("many_to_many") => EdgeCardinality::ManyToMany,
+            _ => EdgeCardinality::ManyToOne,
+        };
+
+        let transitivity = config_obj.get("transitivity").and_then(|v| v.as_bool()).unwrap_or(false);
+
+        let cyclicity = match config_obj.get("cyclicity").and_then(|v| v.as_str()) {
+            Some("acyclic") => EdgeCyclicity::Acyclic,
+            Some("cyclic_allowed") => EdgeCyclicity::CyclicAllowed,
+            _ => EdgeCyclicity::Acyclic,
+        };
+
+        let data_flow = config_obj.get("data_flow").and_then(|v| v.as_str()).unwrap_or("none").to_string();
+        let strength = config_obj.get("strength").and_then(|v| v.as_str()).unwrap_or("medium").to_string();
+        let context = config_obj.get("context").and_then(|v| v.as_str()).unwrap_or("general").to_string();
+
+        // Parse compilation implications
+        let compilation_implications = if let Some(compilation) = config_obj.get("compilation_implications") {
+            self.parse_compilation_implications(compilation)?
+        } else {
+            CompilationImplications {
+                generate_dependency_injection: false,
+                generate_initialization_order: false,
+                generate_lifecycle_management: false,
+                additional: HashMap::new(),
+            }
+        };
+
+        // Parse traversal rules
+        let traversal_rules = if let Some(traversal) = config_obj.get("traversal_rules") {
+            self.parse_traversal_rules(traversal)?
+        } else {
+            TraversalRules {
+                can_traverse: true,
+                allows_cycles: matches!(cyclicity, EdgeCyclicity::CyclicAllowed),
+                topological_sort_required: matches!(cyclicity, EdgeCyclicity::Acyclic),
+                additional: HashMap::new(),
+            }
+        };
+
+        let mut metadata = HashMap::new();
+        if let Some(meta) = config_obj.get("metadata") {
+            if let serde_json::Value::Object(meta_obj) = meta {
+                for (k, v) in meta_obj {
+                    metadata.insert(k.clone(), v.clone());
+                }
+            }
+        }
+
+        Ok(EdgeMetadata {
+            edge_type: edge_name.to_string(),
+            directionality,
+            cardinality,
+            transitivity,
+            cyclicity,
+            data_flow,
+            strength,
+            context,
+            compilation_implications,
+            traversal_rules,
+            metadata,
+        })
+    }
+
+    fn parse_compilation_implications(&self, config: &serde_json::Value) -> Result<CompilationImplications, Box<dyn std::error::Error>> {
+        let obj = config.as_object().ok_or("Compilation implications must be an object")?;
+
+        let mut additional = HashMap::new();
+        for (key, value) in obj {
+            if !matches!(key.as_str(), "generate_dependency_injection" | "generate_initialization_order" | "generate_lifecycle_management") {
+                if let serde_json::Value::Bool(bool_val) = value {
+                    additional.insert(key.clone(), *bool_val);
+                }
+            }
+        }
+
+        Ok(CompilationImplications {
+            generate_dependency_injection: obj.get("generate_dependency_injection").and_then(|v| v.as_bool()).unwrap_or(false),
+            generate_initialization_order: obj.get("generate_initialization_order").and_then(|v| v.as_bool()).unwrap_or(false),
+            generate_lifecycle_management: obj.get("generate_lifecycle_management").and_then(|v| v.as_bool()).unwrap_or(false),
+            additional,
+        })
+    }
+
+    fn parse_traversal_rules(&self, config: &serde_json::Value) -> Result<TraversalRules, Box<dyn std::error::Error>> {
+        let obj = config.as_object().ok_or("Traversal rules must be an object")?;
+
+        let mut additional = HashMap::new();
+        for (key, value) in obj {
+            if !matches!(key.as_str(), "can_traverse" | "allows_cycles" | "topological_sort_required") {
+                additional.insert(key.clone(), value.clone());
+            }
+        }
+
+        Ok(TraversalRules {
+            can_traverse: obj.get("can_traverse").and_then(|v| v.as_bool()).unwrap_or(true),
+            allows_cycles: obj.get("allows_cycles").and_then(|v| v.as_bool()).unwrap_or(false),
+            topological_sort_required: obj.get("topological_sort_required").and_then(|v| v.as_bool()).unwrap_or(false),
+            additional,
+        })
+    }
+
+    /// Validate that all required directories are loaded
+    pub fn validate_completeness(&self) -> Result<(), SchemaArchitectureError> {
+        let required_directories = ["architecture", "infrastructure", "codegen"];
+
+        for dir in &required_directories {
+            if !self.directory_edges.contains_key(*dir) {
+                return Err(SchemaArchitectureError::UnauthorizedExtension {
+                    extension: format!("missing_directory:{}", dir),
+                    path: "edge_inheritance_resolver".to_string(),
+                });
+            }
+        }
+
+        Ok(())
+    }
+}
+
+/// Typed edge for Frame Graph construction
+#[derive(Debug, Clone)]
+pub struct TypedEdge {
+    pub source: String,
+    pub target: String,
+    pub edge_type: String,
+    pub metadata: EdgeMetadata,
+}
+
+impl TypedEdge {
+    pub fn new(source: String, target: String, edge_type: String, metadata: EdgeMetadata) -> Self {
+        Self {
+            source,
+            target,
+            edge_type,
+            metadata,
+        }
+    }
+
+    /// Check if this edge requires topological sorting
+    pub fn requires_topological_sort(&self) -> bool {
+        self.metadata.traversal_rules.topological_sort_required
+    }
+
+    /// Check if cycles are allowed for this edge
+    pub fn allows_cycles(&self) -> bool {
+        self.metadata.traversal_rules.allows_cycles
+    }
+}

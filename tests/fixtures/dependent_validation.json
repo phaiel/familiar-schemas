@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/dependent_validation.json",
+  "title": "Dependent Validation Schema",
+  "description": "Schema demonstrating dependentSchemas and dependentRequired",
+  "type": "object",
+  "properties": {
+    "creditCard": {
+      "type": "string",
+      "pattern": "^\\d{16}$"
+    },
+    "billingAddress": {
+      "type": "object",
+      "properties": {
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "zipCode": { "type": "string", "pattern": "^\\d{5}$" }
+      },
+      "required": ["street", "city", "state", "zipCode"]
+    },
+    "shippingAddress": {
+      "type": "object",
+      "properties": {
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "zipCode": { "type": "string", "pattern": "^\\d{5}$" }
+      },
+      "required": ["street", "city", "state", "zipCode"]
+    }
+  },
+  "dependentSchemas": {
+    "creditCard": {
+      "required": ["billingAddress"],
+      "properties": {
+        "billingAddress": {
+          "properties": {
+            "country": { "const": "US" }
+          }
+        }
+      }
+    }
+  },
+  "dependentRequired": {
+    "billingAddress": ["creditCard"],
+    "shippingAddress": ["billingAddress"]
+  },
+  "x-familiar-kind": "entity",
+  "x-familiar-description": "Tests dependent validation patterns"
+}

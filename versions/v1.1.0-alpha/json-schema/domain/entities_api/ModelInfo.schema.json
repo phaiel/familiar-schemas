@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Model information component",
+  "properties": {
+    "api_model_id": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "api_model_id",
+    "id",
+    "name",
+    "provider"
+  ],
+  "title": "ModelInfo",
+  "type": "object",
+  "x-familiar-kind": "entities_api",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

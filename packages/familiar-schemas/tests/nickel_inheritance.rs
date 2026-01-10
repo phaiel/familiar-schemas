@@ -1,6 +1,6 @@
 //! Tests for Nickel configuration inheritance system
 
-use familiar_schemas::NickelProcessor;
+use familiar_schemas::nickel::NickelProcessor;
 
 #[test]
 fn test_processor_creation() {

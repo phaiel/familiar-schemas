@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MemberRole": {
+      "enum": [
+        "Admin",
+        "Member",
+        "Guest"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "email": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "$ref": "#/definitions/MemberRole"
+    },
+    "settings": true,
+    "tenant_id": {
+      "$ref": "../../codegen/primitives/TenantId.schema.json"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "id",
+    "name",
+    "role",
+    "settings",
+    "tenant_id",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

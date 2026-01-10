@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "avatar_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "deletion_requested_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "email": {
+      "type": "string"
+    },
+    "email_verified": {
+      "type": "boolean"
+    },
+    "gdpr_consents": true,
+    "id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "password_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "primary_tenant_id": {
+      "format": "uuid",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "settings": true,
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "email",
+    "email_verified",
+    "gdpr_consents",
+    "id",
+    "name",
+    "settings",
+    "updated_at"
+  ],
+  "title": "Model",
+  "type": "object",
+  "x-familiar-kind": "database",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

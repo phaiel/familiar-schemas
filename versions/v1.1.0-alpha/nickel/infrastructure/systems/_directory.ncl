@@ -1,15 +1,7 @@
-# Infrastructure Systems Directory - Inherits from infrastructure
-(import "../_directory.ncl") & {
-  # Systems coordinate multiple nodes and services
-
-  required_extensions = (import "../_directory.ncl").required_extensions @ [
-    "x-familiar-nodes"  # Systems manage nodes
-  ],
-
-  hydration = (import "../_directory.ncl").hydration & {
-    "_operations" = (import "../_directory.ncl").hydration."_operations" & {
-      monitoring_category = "system",
-      orchestration_enabled = true
-    }
-  }
+# Infrastructure subdirectory - minimal merged blocks
+let Composer = import "../../composers/directory_composer.ncl" in
+Composer.infrastructure.Contract.compose {
+  extract_from_raw = Composer.infrastructure.extraction,
+  validate_pure = Composer.infrastructure.validation,
+  get_layer = "node"
 }

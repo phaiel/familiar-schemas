@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Schema metadata for validation and evolution",
+  "properties": {
+    "format": {
+      "description": "Serialization format (\"json\", \"protobuf\", \"avro\")",
+      "type": "string"
+    },
+    "subject": {
+      "description": "Schema subject in Schema Registry",
+      "type": "string"
+    },
+    "version": {
+      "description": "Schema version",
+      "format": "uint32",
+      "minimum": 0.0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "format",
+    "subject",
+    "version"
+  ],
+  "title": "SchemaInfo",
+  "type": "object",
+  "x-familiar-kind": "contract",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}

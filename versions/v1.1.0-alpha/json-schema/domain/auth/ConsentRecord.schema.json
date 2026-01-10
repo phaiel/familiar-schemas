@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ConsentType": {
+      "description": "Type of consent",
+      "enum": [
+        "terms_of_service",
+        "privacy_policy",
+        "marketing_emails",
+        "ai_processing",
+        "data_sharing",
+        "analytics"
+      ],
+      "type": "string"
+    }
+  },
+  "description": "A consent record",
+  "properties": {
+    "consent_type": {
+      "$ref": "#/definitions/ConsentType"
+    },
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "granted": {
+      "type": "boolean"
+    },
+    "id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "ip_address": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_agent": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "$ref": "../../codegen/primitives/UserId.schema.json"
+    },
+    "version": {
+      "default": null,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "consent_type",
+    "created_at",
+    "granted",
+    "id",
+    "user_id"
+  ],
+  "title": "ConsentRecord",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

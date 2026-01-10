@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fixtures/pattern_properties.json",
+  "title": "Pattern Properties Schema",
+  "description": "Schema demonstrating patternProperties for dynamic property validation",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "age": { "type": "integer", "minimum": 0 }
+  },
+  "patternProperties": {
+    "^config_": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "value": { "type": ["string", "number", "boolean"] }
+      },
+      "additionalProperties": false
+    },
+    "^metadata_": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "^data_\\d+$": {
+      "type": "array",
+      "items": { "type": "number" },
+      "maxItems": 10
+    }
+  },
+  "propertyNames": {
+    "pattern": "^[a-z][a-zA-Z0-9_]*$"
+  },
+  "additionalProperties": false,
+  "x-familiar-kind": "entity",
+  "x-familiar-description": "Tests pattern properties and property name constraints"
+}

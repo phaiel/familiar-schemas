@@ -1,0 +1,453 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BindingHints": {
+      "description": "Hints for cognitive binding between entities",
+      "properties": {
+        "binding_type": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
+            }
+          ],
+          "description": "Type of cognitive binding"
+        },
+        "context": {
+          "default": null,
+          "description": "Context explaining the binding",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "directionality": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
+            }
+          ],
+          "description": "Directionality of binding"
+        },
+        "source": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityReference"
+            }
+          ],
+          "description": "Source entity"
+        },
+        "strength": {
+          "description": "Strength of binding (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "target": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EntityReference"
+            }
+          ],
+          "description": "Target entity"
+        },
+        "temporal": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TemporalBinding"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Temporal aspect of binding"
+        }
+      },
+      "required": [
+        "binding_type",
+        "directionality",
+        "source",
+        "strength",
+        "target"
+      ],
+      "type": "object"
+    },
+    "BondHints": {
+      "description": "Hints for relationship bonds",
+      "properties": {
+        "description": {
+          "default": null,
+          "description": "Description of relationship",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reciprocity": {
+          "default": 0.5,
+          "description": "Reciprocity (0.0 one-way to 1.0 mutual)",
+          "format": "double",
+          "type": "number"
+        },
+        "relationship_type": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/RelationshipType.schema.json"
+            }
+          ],
+          "description": "Relationship type"
+        },
+        "source": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+            }
+          ],
+          "description": "Source entity (head of relationship)"
+        },
+        "strength": {
+          "description": "Strength of relationship (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "target": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+            }
+          ],
+          "description": "Target entity (tail of relationship)"
+        },
+        "valence": {
+          "description": "Valence of relationship (-1.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "relationship_type",
+        "source",
+        "strength",
+        "target",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "EntityContent": {
+      "description": "Content for the spawned entity",
+      "properties": {
+        "enriched_text": {
+          "default": null,
+          "description": "Enriched/contextualized content",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "default": [],
+          "description": "Tags extracted",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "text": {
+          "description": "Primary content text",
+          "type": "string"
+        },
+        "title": {
+          "default": null,
+          "description": "Title/summary",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "type": "object"
+    },
+    "EntityReference": {
+      "description": "Reference to an entity for binding",
+      "properties": {
+        "description": {
+          "description": "Description for matching",
+          "type": "string"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
+            }
+          ],
+          "description": "Entity type"
+        },
+        "id": {
+          "default": null,
+          "description": "Entity ID (if existing)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "description",
+        "entity_type"
+      ],
+      "type": "object"
+    },
+    "PhysicsHints": {
+      "description": "Hints for physics/VAE space positioning",
+      "properties": {
+        "arousal": {
+          "description": "Arousal: 0.0 (calm) to 1.0 (excited/energized)",
+          "format": "double",
+          "type": "number"
+        },
+        "certainty": {
+          "default": 0.5,
+          "description": "Epistemic certainty: 0.0 (uncertain) to 1.0 (certain)",
+          "format": "double",
+          "type": "number"
+        },
+        "reasoning": {
+          "default": null,
+          "description": "Reasoning for physics values",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "significance": {
+          "description": "Significance/mass: 0.0 (trivial) to 1.0 (very important)",
+          "format": "double",
+          "type": "number"
+        },
+        "valence": {
+          "description": "Valence: -1.0 (negative) to 1.0 (positive)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "arousal",
+        "significance",
+        "valence"
+      ],
+      "type": "object"
+    },
+    "SpawnAction": {
+      "description": "Action to take for spawn",
+      "oneOf": [
+        {
+          "description": "Auto-spawn without user confirmation",
+          "enum": [
+            "auto_spawn"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Suggest to user for review",
+          "enum": [
+            "suggest"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Skip but log for analysis",
+          "enum": [
+            "skip"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Request clarification from user",
+          "enum": [
+            "clarify"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "SpawnHints": {
+      "description": "All hints for a spawned entity",
+      "properties": {
+        "binding": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BindingHints"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Binding hints for cognitive connections"
+        },
+        "bond": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BondHints"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Bond hints for relationships"
+        },
+        "physics": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/PhysicsHints"
+            }
+          ],
+          "description": "Physics hints for VAE space positioning"
+        },
+        "thread": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ThreadHints"
+            }
+          ],
+          "description": "Thread hints for narrative connections"
+        }
+      },
+      "required": [
+        "physics",
+        "thread"
+      ],
+      "type": "object"
+    },
+    "TemporalBinding": {
+      "description": "Temporal aspect of binding",
+      "properties": {
+        "gap": {
+          "default": null,
+          "description": "Time gap (if known)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relation": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
+            }
+          ],
+          "description": "Time relationship"
+        }
+      },
+      "required": [
+        "relation"
+      ],
+      "type": "object"
+    },
+    "ThreadHints": {
+      "description": "Hints for thread/narrative connections",
+      "properties": {
+        "create_if_missing": {
+          "default": false,
+          "description": "Should create new thread if no match?",
+          "type": "boolean"
+        },
+        "keywords": {
+          "default": [],
+          "description": "Keywords for thread matching",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "primary_subject": {
+          "description": "Primary subject/actor",
+          "type": "string"
+        },
+        "related_threads": {
+          "default": [],
+          "description": "Related threads to link",
+          "items": {
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+          },
+          "type": "array"
+        },
+        "thread_role": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/ThreadRole.schema.json"
+            }
+          ],
+          "description": "Role of entity in narrative"
+        }
+      },
+      "required": [
+        "primary_subject",
+        "thread_role"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A suggestion to spawn an entity",
+  "properties": {
+    "action": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SpawnAction"
+        }
+      ],
+      "description": "Spawn action"
+    },
+    "confidence": {
+      "description": "Confidence in this spawn",
+      "format": "double",
+      "type": "number"
+    },
+    "content": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityContent"
+        }
+      ],
+      "description": "Content to use for entity"
+    },
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
+        }
+      ],
+      "description": "Entity type to spawn"
+    },
+    "hints": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SpawnHints"
+        }
+      ],
+      "description": "All hints for the entity"
+    },
+    "reason": {
+      "description": "Reason for suggestion",
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "confidence",
+    "content",
+    "entity_type",
+    "hints",
+    "reason"
+  ],
+  "title": "SpawnSuggestion",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

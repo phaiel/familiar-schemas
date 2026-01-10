@@ -32,3 +32,9 @@ walkdir = "2.4"
 jsonschema = { version = "0.38", optional = true }
 miette = { version = "7.0", optional = true, features = ["fancy"] }
 serde_yaml = { version = "0.9", optional = true }
+petgraph = "0.8.3"
+
+[dev-dependencies]
+# Parameterized testing
+rstest = "0.18"
+tempfile = "3.0"

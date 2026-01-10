@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Temporal properties of binding",
+  "properties": {
+    "gap": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/TimeGap.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Time gap between entities"
+    },
+    "recurring": {
+      "default": false,
+      "description": "Is this a recurring pattern?",
+      "type": "boolean"
+    },
+    "relation": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
+        }
+      ],
+      "description": "Time relation"
+    }
+  },
+  "required": [
+    "relation"
+  ],
+  "title": "TemporalProperties",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

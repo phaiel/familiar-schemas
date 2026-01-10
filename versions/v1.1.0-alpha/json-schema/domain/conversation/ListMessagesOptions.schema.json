@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Options for listing messages",
+  "properties": {
+    "after": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "before": {
+      "default": null,
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "limit": {
+      "default": null,
+      "format": "int64",
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "title": "ListMessagesOptions",
+  "type": "object",
+  "x-familiar-kind": "conversation",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

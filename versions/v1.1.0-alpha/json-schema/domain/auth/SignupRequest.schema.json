@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Request for email+password signup",
+  "properties": {
+    "accept_privacy": {
+      "type": "boolean"
+    },
+    "accept_terms": {
+      "description": "Consent to required terms",
+      "type": "boolean"
+    },
+    "email": {
+      "type": "string"
+    },
+    "invite_code": {
+      "default": null,
+      "description": "Optional invite code to join a family",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "accept_privacy",
+    "accept_terms",
+    "email",
+    "name",
+    "password"
+  ],
+  "title": "SignupRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

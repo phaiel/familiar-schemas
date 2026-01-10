@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../architecture/meta/Action.meta.schema.json",
+  "$id": "infrastructure/actions/classification/extract-features.action.json",
+  "id": "classification.extract-features",
+  "title": "Extract Segment Features",
+  "description": "Extract semantic and temporal features from text segments",
+  "x-familiar-kind": "action",
+  "x-familiar-compute-category": "ai",
+  "x-familiar-execution-model": "async",
+  "x-familiar-side-effects": ["ml-inference"],
+  "x-familiar-reliability": "idempotent",
+  "signature": {
+    "inputs": {
+      "segment": {
+        "schema": { "$ref": "../../../primitives/Segment.schema.json" },
+        "semantics": "borrow"
+      }
+    },
+    "output": {
+      "schema": { "$ref": "../../../primitives/SegmentFeatures.schema.json" },
+      "nature": "atomic"
+    },
+    "capabilities": {
+      "category": "feature-extraction",
+      "provides": ["semantic-features", "temporal-features"],
+      "description": "Feature extraction models for semantic understanding"
+    }
+  }
+}

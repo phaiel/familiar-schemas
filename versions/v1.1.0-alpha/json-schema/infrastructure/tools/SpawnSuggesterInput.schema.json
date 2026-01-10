@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationEvidence": {
+      "description": "Evidence for a classification",
+      "properties": {
+        "description": {
+          "description": "Description of evidence",
+          "type": "string"
+        },
+        "evidence_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EvidenceType"
+            }
+          ],
+          "description": "Type of evidence"
+        },
+        "weight": {
+          "description": "How much this evidence contributes",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "description",
+        "evidence_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "ClassificationReasoning": {
+      "description": "Reasoning behind classification",
+      "properties": {
+        "explanations": {
+          "default": [],
+          "description": "Why certain types were included/excluded",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "key_phrases": {
+          "default": [],
+          "description": "Key phrases that influenced classification",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "main_verb": {
+          "default": null,
+          "description": "Main verb identified",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "verb_category": {
+          "anyOf": [
+            {
+              "$ref": "../../codegen/primitives/VerbCategory.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Verb category"
+        }
+      },
+      "type": "object"
+    },
+    "EntityClassification": {
+      "description": "A single entity classification with probability",
+      "properties": {
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
+            }
+          ],
+          "description": "Entity type"
+        },
+        "evidence": {
+          "default": [],
+          "description": "Evidence supporting this classification",
+          "items": {
+            "$ref": "#/definitions/ClassificationEvidence"
+          },
+          "type": "array"
+        },
+        "probability": {
+          "description": "Probability (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity_type",
+        "probability"
+      ],
+      "type": "object"
+    },
+    "EntityClassifierOutput": {
+      "description": "Output from entity classification",
+      "properties": {
+        "classifications": {
+          "description": "All classifications with probabilities (sorted by probability)",
+          "items": {
+            "$ref": "#/definitions/EntityClassification"
+          },
+          "type": "array"
+        },
+        "enriched_content": {
+          "default": null,
+          "description": "Enriched content (e.g., Pulse with context added)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "primary_thread": {
+          "anyOf": [
+            {
+              "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Primary thread reference (main subject/actor)"
+        },
+        "reasoning": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ClassificationReasoning"
+            }
+          ],
+          "description": "Classification reasoning"
+        },
+        "secondary_threads": {
+          "default": [],
+          "description": "Secondary thread references",
+          "items": {
+            "$ref": "../../codegen/primitives/ThreadReference.schema.json"
+          },
+          "type": "array"
+        },
+        "temporal_marker": {
+          "default": null,
+          "description": "Temporal marker extracted",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "classifications",
+        "reasoning"
+      ],
+      "type": "object"
+    },
+    "EvidenceType": {
+      "description": "Types of evidence for classification",
+      "oneOf": [
+        {
+          "description": "Verb type (action vs state)",
+          "enum": [
+            "verb_type"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Keywords detected",
+          "enum": [
+            "keywords"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal indicators",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional indicators",
+          "enum": [
+            "emotional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity mentions",
+          "enum": [
+            "entity_mention"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relational language",
+          "enum": [
+            "relational"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Pattern indicators",
+          "enum": [
+            "pattern"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Context from surrounding content",
+          "enum": [
+            "context"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "SpawnConfig": {
+      "description": "Configuration for spawn decisions",
+      "properties": {
+        "auto_spawn_enabled": {
+          "default": true,
+          "description": "Whether to auto-spawn high confidence entities",
+          "type": "boolean"
+        },
+        "high_confidence_threshold": {
+          "default": 0.8,
+          "description": "High confidence threshold (auto-spawn above this)",
+          "format": "double",
+          "type": "number"
+        },
+        "low_confidence_threshold": {
+          "default": 0.3,
+          "description": "Low confidence threshold (skip below this)",
+          "format": "double",
+          "type": "number"
+        },
+        "manual_only_types": {
+          "default": [],
+          "description": "Entity types that should never auto-spawn",
+          "items": {
+            "$ref": "../../codegen/primitives/EntityType.schema.json"
+          },
+          "type": "array"
+        },
+        "max_entities_per_segment": {
+          "default": 3,
+          "description": "Maximum entities to spawn from one segment",
+          "format": "uint",
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "medium_confidence_threshold": {
+          "default": 0.5,
+          "description": "Medium confidence threshold (suggest above this)",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "description": "Input for spawn suggestion tool",
+  "properties": {
+    "classification": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityClassifierOutput"
+        }
+      ],
+      "description": "Entity classification result"
+    },
+    "config": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SpawnConfig"
+        }
+      ],
+      "default": {
+        "auto_spawn_enabled": true,
+        "high_confidence_threshold": 0.8,
+        "low_confidence_threshold": 0.3,
+        "manual_only_types": [],
+        "max_entities_per_segment": 3,
+        "medium_confidence_threshold": 0.5
+      },
+      "description": "Spawn configuration"
+    },
+    "segment": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/Segment.schema.json"
+        }
+      ],
+      "description": "Original segment"
+    }
+  },
+  "required": [
+    "classification",
+    "segment"
+  ],
+  "title": "SpawnSuggesterInput",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-role": "input",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

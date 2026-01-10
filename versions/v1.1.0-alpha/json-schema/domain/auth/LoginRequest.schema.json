@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Request for email+password login",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "email",
+    "password"
+  ],
+  "title": "LoginRequest",
+  "type": "object",
+  "x-familiar-kind": "auth",
+  "x-familiar-requires-auth": true,
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ClassificationEvidence": {
+      "description": "Evidence for a classification",
+      "properties": {
+        "description": {
+          "description": "Description of evidence",
+          "type": "string"
+        },
+        "evidence_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/EvidenceType"
+            }
+          ],
+          "description": "Type of evidence"
+        },
+        "weight": {
+          "description": "How much this evidence contributes",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "description",
+        "evidence_type",
+        "weight"
+      ],
+      "type": "object"
+    },
+    "EvidenceType": {
+      "description": "Types of evidence for classification",
+      "oneOf": [
+        {
+          "description": "Verb type (action vs state)",
+          "enum": [
+            "verb_type"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Keywords detected",
+          "enum": [
+            "keywords"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal indicators",
+          "enum": [
+            "temporal"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional indicators",
+          "enum": [
+            "emotional"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity mentions",
+          "enum": [
+            "entity_mention"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Relational language",
+          "enum": [
+            "relational"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Pattern indicators",
+          "enum": [
+            "pattern"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Context from surrounding content",
+          "enum": [
+            "context"
+          ],
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "description": "A single entity classification with probability",
+  "properties": {
+    "entity_type": {
+      "allOf": [
+        {
+          "$ref": "../../codegen/primitives/EntityType.schema.json"
+        }
+      ],
+      "description": "Entity type"
+    },
+    "evidence": {
+      "default": [],
+      "description": "Evidence supporting this classification",
+      "items": {
+        "$ref": "#/definitions/ClassificationEvidence"
+      },
+      "type": "array"
+    },
+    "probability": {
+      "description": "Probability (0.0 to 1.0)",
+      "format": "double",
+      "type": "number"
+    }
+  },
+  "required": [
+    "entity_type",
+    "probability"
+  ],
+  "title": "EntityClassification",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

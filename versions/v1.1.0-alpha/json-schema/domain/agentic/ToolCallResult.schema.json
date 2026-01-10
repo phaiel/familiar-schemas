@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Result from a tool invocation",
+  "properties": {
+    "call_id": {
+      "description": "ID of the original call",
+      "type": "string"
+    },
+    "error": {
+      "default": null,
+      "description": "Error message (if failed)",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result": {
+      "default": null,
+      "description": "Result data (if successful)"
+    },
+    "success": {
+      "description": "Whether the call succeeded",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "call_id",
+    "success"
+  ],
+  "title": "ToolCallResult",
+  "type": "object",
+  "x-familiar-kind": "agentic",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-daemon.node.json"
+  }
+}

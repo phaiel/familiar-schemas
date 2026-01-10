@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BindingCharacteristics": {
+      "description": "Binding characteristics",
+      "properties": {
+        "binding_type": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/BindingType.schema.json"
+            }
+          ],
+          "description": "Type of cognitive binding"
+        },
+        "directionality": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/Directionality.schema.json"
+            }
+          ],
+          "description": "Directionality"
+        },
+        "salience": {
+          "description": "Salience (how notable/memorable)",
+          "format": "double",
+          "type": "number"
+        },
+        "semantic": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SemanticProperties"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Semantic properties"
+        },
+        "strength": {
+          "description": "Strength of binding (0.0 to 1.0)",
+          "format": "double",
+          "type": "number"
+        },
+        "temporal": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TemporalProperties"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Temporal properties"
+        }
+      },
+      "required": [
+        "binding_type",
+        "directionality",
+        "salience",
+        "strength"
+      ],
+      "type": "object"
+    },
+    "BindingEvidence": {
+      "description": "Evidence for a detected binding",
+      "properties": {
+        "evidence_type": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/BindingEvidenceType"
+            }
+          ],
+          "description": "Type of evidence"
+        },
+        "explanation": {
+          "description": "Explanation",
+          "type": "string"
+        },
+        "markers": {
+          "default": [],
+          "description": "Specific markers found",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "trigger_text": {
+          "description": "Text that triggered detection",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_type",
+        "explanation",
+        "trigger_text"
+      ],
+      "type": "object"
+    },
+    "BindingEvidenceType": {
+      "description": "Types of binding evidence",
+      "oneOf": [
+        {
+          "description": "Explicit linguistic marker",
+          "enum": [
+            "linguistic_marker"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Temporal proximity",
+          "enum": [
+            "temporal_proximity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Semantic similarity",
+          "enum": [
+            "semantic_similarity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Entity co-reference",
+          "enum": [
+            "co_reference"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Emotional similarity",
+          "enum": [
+            "emotional_similarity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Narrative continuity",
+          "enum": [
+            "narrative_continuity"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "User explicit statement",
+          "enum": [
+            "explicit_statement"
+          ],
+          "type": "string"
+        },
+        {
+          "description": "Inferred from context",
+          "enum": [
+            "contextual_inference"
+          ],
+          "type": "string"
+        }
+      ]
+    },
+    "EntityRef": {
+      "description": "Reference to an entity for binding",
+      "properties": {
+        "content": {
+          "description": "Content/description",
+          "type": "string"
+        },
+        "entity_type": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/EntityType.schema.json"
+            }
+          ],
+          "description": "Entity type"
+        },
+        "id": {
+          "default": null,
+          "description": "Entity ID (if existing)",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp": {
+          "default": null,
+          "description": "When created (for temporal binding)",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "content",
+        "entity_type"
+      ],
+      "type": "object"
+    },
+    "SemanticProperties": {
+      "description": "Semantic properties of binding",
+      "properties": {
+        "relationship_description": {
+          "default": null,
+          "description": "Relationship description",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shared_concepts": {
+          "default": [],
+          "description": "Shared concepts/topics",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "similarity": {
+          "description": "Semantic similarity score",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "similarity"
+      ],
+      "type": "object"
+    },
+    "TemporalProperties": {
+      "description": "Temporal properties of binding",
+      "properties": {
+        "gap": {
+          "anyOf": [
+            {
+              "$ref": "../../codegen/primitives/TimeGap.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Time gap between entities"
+        },
+        "recurring": {
+          "default": false,
+          "description": "Is this a recurring pattern?",
+          "type": "boolean"
+        },
+        "relation": {
+          "allOf": [
+            {
+              "$ref": "../../codegen/primitives/TemporalRelation.schema.json"
+            }
+          ],
+          "description": "Time relation"
+        }
+      },
+      "required": [
+        "relation"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A detected binding between entities",
+  "properties": {
+    "binding": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BindingCharacteristics"
+        }
+      ],
+      "description": "Binding characteristics"
+    },
+    "confidence": {
+      "description": "Confidence in detection",
+      "format": "double",
+      "type": "number"
+    },
+    "evidence": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BindingEvidence"
+        }
+      ],
+      "description": "Evidence for the binding"
+    },
+    "source": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityRef"
+        }
+      ],
+      "description": "Source entity"
+    },
+    "target": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityRef"
+        }
+      ],
+      "description": "Target entity"
+    }
+  },
+  "required": [
+    "binding",
+    "confidence",
+    "evidence",
+    "source",
+    "target"
+  ],
+  "title": "DetectedBinding",
+  "type": "object",
+  "x-familiar-kind": "tool",
+  "x-familiar-queue": "worker-queue",
+  "x-familiar-service": {
+    "$ref": "../nodes/familiar-worker.node.json"
+  }
+}

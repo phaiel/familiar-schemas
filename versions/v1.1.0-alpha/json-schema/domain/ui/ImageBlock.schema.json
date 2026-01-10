@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Displays an image with optional title",
+  "properties": {
+    "alt_text": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "title": {
+      "anyOf": [
+        {
+          "$ref": "../../codegen/primitives/PlainTextObject.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "alt_text",
+    "image_url"
+  ],
+  "title": "ImageBlock",
+  "type": "object",
+  "x-familiar-kind": "ui",
+  "x-familiar-service": {
+    "$ref": "../../infrastructure/nodes/familiar-worker.node.json"
+  }
+}
