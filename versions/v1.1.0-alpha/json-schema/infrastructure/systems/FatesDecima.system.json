@@ -14,10 +14,10 @@
   "x-familiar-queue": "daemon-queue",
   "x-familiar-reads": [
     {
-      "$ref": "../../codegen/entities/Shuttle.schema.json"
+      "$ref": "../../codegen/entities/misc/Shuttle.schema.json"
     },
     {
-      "$ref": "../../codegen/entities/Moment.schema.json"
+      "$ref": "../../codegen/entities/misc/Moment.schema.json"
     }
   ],
   "x-familiar-retries": 3,
@@ -27,7 +27,7 @@
   "x-familiar-timeout": "45s",
   "x-familiar-writes": [
     {
-      "$ref": "../../codegen/entities/Bond.schema.json"
+      "$ref": "../../codegen/entities/relationships/Bond.schema.json"
     }
   ]
 }
